@@ -1,0 +1,106 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package de.appsolve.padelcampus.db.model;
+
+import static de.appsolve.padelcampus.constants.Constants.UTF8;
+import de.appsolve.padelcampus.utils.CryptUtil;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
+/**
+ *
+ * @author dominik
+ */
+@Entity
+public class Game extends BaseEntity{
+    
+    @Transient
+    private static final long serialVersionUID = 1L;
+    
+    @ManyToOne
+    private Event event;
+    
+    @ManyToMany(fetch=FetchType.EAGER)
+    private Set<Participant> participants;
+    
+    @OneToMany(fetch=FetchType.EAGER)
+    private Set<GameSet> gameSets;
+    
+    @OneToOne(fetch=FetchType.EAGER)
+    private Player scoreReporter;
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+    
+    public Set<Participant> getParticipants() {
+        return participants == null ? new LinkedHashSet<Participant>() : participants;
+    }
+
+    public void setParticipants(Set<Participant> participant) {
+        this.participants = participant;
+    }
+
+    public Set<GameSet> getGameSets() {
+        return gameSets == null ? new LinkedHashSet<GameSet>() : gameSets;
+    }
+
+    public void setGameSets(Set<GameSet> gameSets) {
+        this.gameSets = gameSets;
+    }
+
+    public Player getScoreReporter() {
+        return scoreReporter;
+    }
+
+    public void setScoreReporter(Player scoreReporter) {
+        this.scoreReporter = scoreReporter;
+    }
+    
+    public String getObfuscatedMailTo() throws UnsupportedEncodingException{
+        StringBuilder builder = new StringBuilder(CryptUtil.rot47("?cc="));
+        for (Participant participant: getParticipants()){
+            if (participant instanceof Team){
+                Team team = (Team) participant;
+                for (Player player: team.getPlayers()){
+                    builder.append(player.getObfuscatedEmail());
+                    builder.append(CryptUtil.rot47(","));
+                }
+            } else if (participant instanceof Player){
+                Player player = (Player) participant;
+                builder.append(player.getObfuscatedEmail());
+                builder.append(CryptUtil.rot47(","));
+            }
+        }
+        if (builder.length()>4){
+            int i = 0;
+                builder.append(CryptUtil.rot47("&subject="));
+            for (Participant participant: getParticipants()){
+                builder.append(CryptUtil.rot47(URLEncoder.encode(participant.getDisplayName(), UTF8)));
+                if (i<getParticipants().size()-1){
+                    builder.append(CryptUtil.rot47(" vs. "));
+                }
+                i++;
+            }
+            return builder.toString();
+        }
+        return "";
+    }
+}

@@ -1,0 +1,12 @@
+# DB Migrations
+
+By default all maven profiles have the Hibernate "hbm2ddl.auto" 
+property set to "update", which means that trivial SQL statements, such as field 
+or table additions triggered by means of JPA or Hibernate annotations are generated 
+and executed by Hibernate automatically upon application start. However, the 
+Hibernate update mechanims is limited to only support secure operations. That means 
+that you will have to write custom SQL scripts containing UPDATE, DELETE, ALTER or other 
+statements that change the DB to the desired state. Simply put these SQL scripts 
+in the src/main/resources/db/migration folder and adhere to the FlywayDB naming 
+conventions: http://flywaydb.org/documentation/migration/sql.html.
+Scripts within the migration folder will be executed AFTER any automatic Hibernate statements.

@@ -1,0 +1,436 @@
+/*
+ * Main.js
+ * project specific functionality
+ */
+var app = app || {};
+app.main = {};
+
+(function () {
+
+    var self = this;
+
+    self.showShadow = function () {
+        $('#shadow').show();
+    };
+
+    self.hideShadow = function () {
+        $('#shadow').hide();
+    };
+
+    self.showSpinner = function () {
+        self.showShadow();
+        $('#spinner').css('display', 'block');
+    };
+
+    self.hideSpinner = function () {
+        self.hideShadow();
+        $('#spinner').css('display', 'none');
+    };
+
+    self.enableBackButton = function () {
+        $('.btn-back').livequery(function(){
+            $(this).on('click tap', function () {
+                window.History.back();
+            });
+        });
+    };
+
+    self.enableForms = function () {
+        //prevent duplicate form submission
+        $('form').livequery(function(){
+            $(this).on('submit', function () {
+                window.addEventListener("pagehide", function(){
+                   self.hideSpinner();
+                   $('form :submit').removeAttr("disabled");
+                });
+                self.showSpinner();
+                $('form :submit').attr("disabled", "disabled");
+            });
+        });
+
+        //enable target switching
+        $('.btn-form-submit').livequery(function(){
+            $(this).on('click tap', function () {
+                if (!!$(this).attr('data-href')) {
+                    $(this).parents('form').attr('action', $(this).attr('data-href'));
+                }
+            });
+        });
+    };
+
+    self.enableDatePicker = function () {
+
+        var addLeadingZero = function(str){
+           return ("0" + str).slice(-2);
+        };
+
+        var getSimpleDate = function (date) {
+            return date.getFullYear() + "-" + addLeadingZero(date.getMonth()+1) + "-" + addLeadingZero(date.getDate());
+        };
+        
+        // parse a date in yyyy-mm-dd format
+        var parseDate = function(input) {
+            var parts = input.split('-');
+            // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
+            return new Date(parts[0], parts[1]-1, parts[2]); // Note: months are 0-based
+        };
+
+        $('.datepicker-container').livequery(function () {
+            var datepicker = $(this).find('.datepicker'),
+                    altField = $(this).find('.datepicker-input'),
+                    datePickerIcon = $(this).find('.datepicker-icon'),
+                    textField = $(this).find('.datepicker-text'),
+                    textContainer = $(this).find('.datepicker-text-container'),
+                    maxDate = $(datepicker).attr('data-max-date'),
+                    allowPast = $(datepicker).attr('data-allow-past'),
+                    dayConfigs = $(datepicker).attr('data-day-config');
+
+            if (!maxDate) {
+                //no maximum date by default
+                maxDate = null;
+            }
+            
+            if (!allowPast){
+                allowPast = false;
+            }
+
+            if (!!dayConfigs) {
+                dayConfigs = JSON.parse(dayConfigs);
+            }
+            
+            var defaultDate = new Date();
+            var dateValue = altField.val();
+            if (!!dateValue) {
+                defaultDate = parseDate(dateValue);
+            }
+            datepicker.datepicker({
+                dateFormat: "DD, d. MM yy",
+                defaultDate: defaultDate,
+                altField: altField,
+                altFormat: "yy-mm-dd",
+                nextText: "",
+                prevText: "",
+                minDate: (allowPast) ? null : new Date(),
+                maxDate: maxDate,
+                onSelect: function (dateText) {
+                    textField.text(dateText);
+                    var redirectURL = datepicker.attr('data-redirect-on-select');
+                    if (!redirectURL) {
+                        datepicker.slideUp();
+                    } else {
+                        var selectedDate = datepicker.datepicker("getDate");
+                        var formattedDate = $.datepicker.formatDate('yy-mm-dd', selectedDate);
+                        $('#dummy-link').attr('href', redirectURL.replace(/{date}/, formattedDate));
+                        $('#dummy-link').click();
+                    }
+                },
+                beforeShowDay: function (date) {
+                    if (!!dayConfigs) {
+                        var dayConfig = dayConfigs[getSimpleDate(date)];
+                        if (!!dayConfig){
+                            return [dayConfig.selectable, ""];
+                        }
+                    } else {
+                        return [true, ""];
+                    }
+                    return [false, ""];
+                }
+            });
+
+            $(".datepicker").datepicker("option", "showAnim", 'slideDown');
+
+            var toggleDatePicker = function () {
+                if ($(datepicker.datepicker()).css('display') === 'none') {
+                    datepicker.slideDown();
+                    $('body', 'html').animate({scrollTop: textContainer.offset().top - $('.navbar-fixed-top').height()});
+                } else {
+                    datepicker.slideUp();
+                }
+            };
+
+            textField.on('click tap', function () {
+                toggleDatePicker();
+            });
+
+            datePickerIcon.on('click tap', function () {
+                toggleDatePicker();
+            });
+
+            textField.text($.datepicker.formatDate("DD, d. MM yy", datepicker.datepicker("getDate")));
+
+            if (datepicker.attr('data-show-on-init') !== 'true') {
+                datepicker.hide();
+            }
+        });
+    };
+
+    self.enablePrivateDataLinks = function () {
+        $('.private-data').livequery(function(){
+            $(this).on('click tap', function () {
+                var prefix = $(this).attr('data-prefix');
+                var fake = $(this).attr('data-fake');
+                document.location.href = prefix + app.main.rot47(fake);
+            });
+        });
+    };
+
+    self.rot47 = function (s) {
+        var x = [];
+        for (var i = 0; i < s.length; i++) {
+            var j = s.charCodeAt(i);
+            if ((j >= 33) && (j <= 126)) {
+                x[i] = String.fromCharCode(33 + ((j + 14) % 94));
+            } else {
+                x[i] = String.fromCharCode(j);
+            }
+        }
+        return x.join('');
+    };
+
+    self.enableSideMenu = function () {
+        var isOpen = function () {
+            return $('#site-canvas').hasClass('show-nav');
+        };
+
+        var toggleMenu = function () {
+            if (isOpen()) {
+                // close side menu
+                if (navigator.userAgent.match(/iemobile/i)) {
+                    $('#site-canvas, #site-shadow, .footer').removeClass('show-nav');
+                    $('#site-menu').css('right', '');
+                } else {
+                    $('#site-canvas, #site-shadow, #site-menu, .footer').removeClass('show-nav');
+                }
+                // reenable scrolling of content
+                $('#site-canvas, .footer').css('position', 'relative');
+            } else {
+                // open side menu
+                if (navigator.userAgent.match(/iemobile/i)) {
+                    $('#site-canvas, #site-shadow, .footer').addClass('show-nav');
+                    $('#site-menu').css('right', '0px');
+                } else {
+                    $('#site-canvas, #site-shadow, #site-menu, .footer').addClass('show-nav');
+                }
+                // prevent scrolling of content when interacting with site menu
+                $('#site-canvas, .footer').css('position', 'fixed');
+            }
+        };
+
+        $('.navbar-toggle, #site-shadow, #site-menu a').livequery(function(){
+            $(this).on('tap click', function () {
+                var btn = $('.navbar-toggle');
+                if (btn.hasClass('active')){
+                    btn.removeClass('active');
+                } else {
+                    btn.addClass('active');
+                }
+                toggleMenu();
+                return true;
+            });
+        });
+    };
+
+    self.enableAccordion = function () {
+        $('.accordion').livequery(function(){
+            $(this).accordion({"heightStyle": "content"});
+        });
+    };
+
+    self.enableBookingLoginSelection = function () {
+        $('.btn-booking-submit').livequery(function(){
+            $(this).on('tap click', function () {
+                $('#bookingType').val($(this).attr('data-booking-type'));
+            });
+        });
+    };
+
+    self.enableSelectPicker = function () {
+        var selector = '.select-simple, .select-multiple';
+        $(selector).livequery(function(){
+            $(this).selectpicker({
+                iconBase: 'fa',
+                tickIcon: 'fa-check',
+                dropupAuto: false
+            });
+        });
+    };
+
+    self.enablePlusMinusInputFields = function () {
+        $('.btn-plus-minus').livequery(function(){
+            $(this).on('tap click', function (e) {
+                e.preventDefault();
+
+                fieldName = $(this).attr('data-field');
+                type = $(this).attr('data-type');
+                var input = $("input[name='" + fieldName + "']");
+                var currentVal = parseInt(input.val());
+                if (!isNaN(currentVal)) {
+                    if (type === 'minus') {
+                        if (currentVal > input.attr('min')) {
+                            input.val(currentVal - 1).change();
+                        }
+                        if (parseInt(input.val()) === input.attr('min')) {
+                            $(this).attr('disabled', true);
+                        }
+                    } else if (type === 'plus') {
+
+                        if (currentVal < input.attr('max')) {
+                            input.val(currentVal + 1).change();
+                        }
+                        if (parseInt(input.val()) === input.attr('max')) {
+                            $(this).attr('disabled', true);
+                        }
+                    }
+                } else {
+                    input.val(0);
+                }
+            });
+        });
+        $('.input-plus-minus').livequery(function(){
+            $(this).focusin(function () {
+                $(this).data('oldValue', $(this).val());
+            });
+            $(this).change(function () {
+
+                minValue = parseInt($(this).attr('min'));
+                maxValue = parseInt($(this).attr('max'));
+                valueCurrent = parseInt($(this).val());
+
+                name = $(this).attr('name');
+                if (valueCurrent >= minValue) {
+                    $(".btn-plus-minus[data-type='minus'][data-field='" + name + "']").removeAttr('disabled');
+                } else {
+                    $(this).val($(this).data('oldValue'));
+                }
+                if (valueCurrent <= maxValue) {
+                    $(".btn-plus-minus[data-type='plus'][data-field='" + name + "']").removeAttr('disabled');
+                } else {
+                    $(this).val($(this).data('oldValue'));
+                }
+            });
+        });
+    };
+
+    self.enableAddToHomeScreen = function () {
+        //addToHomeScreen will be called on the relevant pages
+        
+        //fix 20px status bar overlapping
+        var fixStatusBar = function(){
+            var statusBarHeight = 20;
+            if (("standalone" in window.navigator) && window.navigator.standalone) {
+                $('body, .navbar-fixed-top').css('margin-top', statusBarHeight+'px');
+                $('.navbar-nav').css('padding-bottom', $('.navbar-header').outerHeight() + statusBarHeight + 'px');
+                $('.mobile-web-app-capable-status-bar').show();
+            }
+        };
+        
+        $(window).on('statechangecomplete', function(){
+            fixStatusBar();
+        });
+        fixStatusBar();
+    };
+
+    self.enableUpdateBookingPrice = function () {
+        $('select[id="booking-duration"]').livequery(function(){
+            $(this).on('change', function () {
+                var duration = $(this).val(),
+                    target = $('#booking-price'),
+                    basePrice = target.attr('data-base-price'),
+                    minDuration = target.attr('data-min-duration');
+                target.html((basePrice / minDuration * duration).toFixed(2));
+            });
+        });
+    };
+
+    self.enablePayMill = function () {
+
+        var formIdentifier = '.paymill-form';
+
+        function PaymillResponseHandler(error, result) {
+            self.hideSpinner();
+            self.hideShadow();
+            $(formIdentifier).removeAttr("disabled");
+            $(formIdentifier).find('button').removeAttr("disabled");
+            if (error) {
+                console.log(error);
+                // Shows the error above the form
+                $.ajax({
+                    url: "translate",
+                    dataType: 'text',
+                    data: "key="+error.apierror
+                    }).done(function (data) {
+                        $("#error").text(data);
+                    }).fail(function () {
+                        $("#error").text(error.apierror);
+                });
+            } else {
+                $('#token').val(result.token);
+                $('#token-form').submit();
+            }
+        }
+
+        $(formIdentifier).submit(function (event) {
+            // Deactivate submit button to avoid further clicks
+            $(this).attr("disabled", "disabled");
+            var paymentType = $(this).attr('data-payment-type');
+            switch(paymentType){
+                
+                case 'creditcard':
+                    paymill.createToken({
+                        number:         $('.card-number').val().replace(/\s+/g, "").replace(/-/g, ""), // required, ohne Leerzeichen und Bindestriche
+                        exp_month:      $('.card-expiry-month').val(), // required
+                        exp_year:       $('.card-expiry-year').val(), // required, vierstellig z.B. "2016"
+                        cvc:            $('.card-cvc').val(), // required
+                        amount_int:     $('.card-amount-int').val(), // required, integer, z.B. "15" für 0,15 Euro 
+                        currency:       $('.card-currency').val(), // required, ISO 4217 z.B. "EUR" od. "GBP"
+                        cardholder:     $('.card-holdername').val() // optional
+                    }, PaymillResponseHandler);    
+                    break;
+                    
+                case 'directdebit':
+                    paymill.createToken({
+                        iban:           $('.iban').val().replace(/\s+/g, ""),
+                        bic:            $('.bic').val(),
+                        accountholder:  $('.holdername').val()
+                    }, PaymillResponseHandler);
+                    break;
+            }
+
+            return false;
+        });
+    };
+    
+    self.enableRegexChecksOnInputs = function(){
+        $('input[type="text"]').livequery(function(){
+            var regex = new RegExp($(this).attr('data-valid-chars'));
+            if (!!regex) {
+                $(this).on('keypress', function (e) {
+                    var charCode = !e.charCode ? e.which : e.charCode;
+
+                    if (!regex.test(String.fromCharCode(charCode))) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        });
+    };
+    return app;
+}).apply(app.main);
+
+
+$(document).ready(function () {
+
+    app.main.enableBackButton();
+    app.main.enableForms();
+    app.main.enablePrivateDataLinks();
+    app.main.enableDatePicker();
+    app.main.enableSideMenu();
+    app.main.enableAccordion();
+    app.main.enableBookingLoginSelection();
+    app.main.enableSelectPicker();
+    app.main.enablePlusMinusInputFields();
+    app.main.enableAddToHomeScreen();
+    app.main.enableUpdateBookingPrice();
+    app.main.enableRegexChecksOnInputs();
+    app.main.enablePayMill();
+});

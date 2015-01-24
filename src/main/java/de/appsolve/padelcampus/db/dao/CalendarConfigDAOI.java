@@ -1,0 +1,24 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package de.appsolve.padelcampus.db.dao;
+
+import de.appsolve.padelcampus.db.model.CalendarConfig;
+import de.appsolve.padelcampus.exceptions.CalendarConfigException;
+import java.util.List;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+
+/**
+ *
+ * @author dominik
+ */
+public interface CalendarConfigDAOI extends GenericDAOI<CalendarConfig>{
+    
+    List<CalendarConfig> findBetween(LocalDate startDate, LocalDate endDate);
+    List<CalendarConfig> findFor(LocalDate date) throws CalendarConfigException;
+    CalendarConfig findFor(LocalDate date, LocalTime time) throws CalendarConfigException;
+}
