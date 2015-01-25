@@ -68,13 +68,13 @@ public abstract class AdminBaseController<T extends BaseEntity> extends BaseCont
     }
     
     @RequestMapping(value = "/{id}/delete")
-    public ModelAndView getDeleteSettings(@PathVariable("id") Long id){
+    public ModelAndView getDelete(@PathVariable("id") Long id){
         T model = (T)getDAO().findById(id);
         return getDeleteView(model);
     }
 
     @RequestMapping(value = "/{id}/delete", method = POST)
-    public ModelAndView deleteSettings(@PathVariable("id") Long id){
+    public ModelAndView postDelete(@PathVariable("id") Long id){
         try {
             getDAO().deleteById(id);
         } catch (DataIntegrityViolationException e){
@@ -106,7 +106,7 @@ public abstract class AdminBaseController<T extends BaseEntity> extends BaseCont
         return null;
     }
 
-    private ModelAndView getDeleteView(T model) {
+    protected ModelAndView getDeleteView(T model) {
         return new ModelAndView("/admin/include/delete", "Model", model);
     }
 }
