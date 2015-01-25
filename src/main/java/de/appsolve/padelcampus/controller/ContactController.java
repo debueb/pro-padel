@@ -80,6 +80,4 @@ public class ContactController extends BaseController{
     private ModelAndView getIndexView(Mail mail) {
         return new ModelAndView("contact/index", "Model", mail);
     }
-    
-    
 }
