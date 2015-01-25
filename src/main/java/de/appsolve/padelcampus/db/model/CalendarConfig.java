@@ -6,9 +6,9 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import de.appsolve.padelcampus.constants.CalendarConfigType;
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Currency;
+import static de.appsolve.padelcampus.utils.FormatUtils.DATE_MEDIUM;
 import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -212,10 +212,11 @@ public class CalendarConfig extends BaseEntity{
     @Override
     public String getDisplayName() {
         StringBuilder sb = new StringBuilder();
-        for (CalendarWeekDay weekDay: calendarWeekDays){
+        sb.append(startDate.toString(DATE_MEDIUM)).append(" - ").append(endDate.toString(DATE_MEDIUM)).append(": ");
+        for (CalendarWeekDay weekDay: getCalendarWeekDays()){
             sb.append(weekDay.name()).append(" ");
         }
-        sb.append(startDate).append(" - ").append(endDate);
+        sb.append(getStartTime().toString(TIME_HUMAN_READABLE)).append(" - ").append(getEndTime().toString(TIME_HUMAN_READABLE));
         return sb.toString();
     }
 
