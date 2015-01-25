@@ -34,8 +34,8 @@
             <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Select"/></button>
         </spf:form>
         
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered unit table-centered">
+        <div class="table-responsive" style="margin-top: 40px;">
+            <table class="table table-striped table-bordered table-centered dynatable">
                 <thead>
                     <th><fmt:message key="Date"/></th>
                     <th><fmt:message key="Day"/></th>
@@ -52,20 +52,21 @@
                         <td><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></td>
                         <td>${Booking.player}</td>
                         <td>${Booking.paymentMethod}</td>
-                        <td>${Booking.amount} ${Booking.currency}</td>
+                        <td>${Booking.amount} ${Booking.currency.symbol}</td>
                     </tr>
                 </c:forEach>
                 </tbody>
             </table>
         </div>
         <div class="unit">
-            <fmt:message key="TotalAmountBetween">
-                <fmt:param value="${DateRange.startDate}"/>
-                <fmt:param value="${DateRange.endDate}"/>
+            <fmt:message key="TotalAmount">
                 <fmt:param value="${Total}"/>
             </fmt:message>
         </div>
     </div>
 </div>
-
+<link href="/css/noconcat/jquery.dynatable.css" rel="stylesheet"/>
+<link href="/css/noconcat/jquery.dynatable.project.css" rel="stylesheet"/>
+<script defer type="text/javascript" src="/js/noconcat/jquery.dynatable.js"></script>
+<script defer type="text/javascript" src="/js/noconcat/jquery.dynatable.project.js"></script>
 <jsp:include page="/jsp/include/footer.jsp"/>
