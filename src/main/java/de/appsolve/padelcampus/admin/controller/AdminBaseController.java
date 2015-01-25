@@ -79,7 +79,7 @@ public abstract class AdminBaseController<T extends BaseEntity> extends BaseCont
             getDAO().deleteById(id);
         } catch (DataIntegrityViolationException e){
             T model = (T)getDAO().findById(id);
-            log.warn("Attempt to delete "+model.getDisplayName()+" failed to to "+e);
+            log.warn("Attempt to delete "+model.getDisplayName()+" failed due to "+e);
             ModelAndView deleteView = getDeleteView(model);
             deleteView.addObject("error", msg.get("CannotDeleteDueToRefrence", new Object[]{model.getDisplayName()}));
             return deleteView;
