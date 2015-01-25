@@ -35,19 +35,20 @@
         </spf:form>
         
         <div class="table-responsive">
-            <table class="table table-striped table-bordered unit">
+            <table class="table table-striped table-bordered unit table-centered">
                 <thead>
                     <th><fmt:message key="Date"/></th>
+                    <th><fmt:message key="Day"/></th>
                     <th><fmt:message key="Time"/></th>
                     <th><fmt:message key="Player"/></th>
                     <th><fmt:message key="PaymentMethod"/></th>
                     <th><fmt:message key="Price"/></th>
-
                 </thead>
                 <tbody>
                 <c:forEach items="${Bookings}" var="Booking">
                     <tr>
                         <td>${Booking.bookingDate}</td>
+                        <td><joda:format value="${Booking.bookingDate}" pattern="EEE"/></td>
                         <td><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></td>
                         <td>${Booking.player}</td>
                         <td>${Booking.paymentMethod}</td>

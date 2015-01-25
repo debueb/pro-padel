@@ -8,14 +8,19 @@ package de.appsolve.padelcampus.admin.controller;
 
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Constants;
+import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
 import de.appsolve.padelcampus.db.dao.GenericDAOI;
+import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.HolidayUtil;
+import de.appsolve.padelcampus.utils.Msg;
+import java.util.Iterator;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,6 +43,12 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
     
     @Autowired
     CalendarConfigDAOI calendarConfigDAO;
+    
+    @Autowired
+    BookingDAOI bookingDAO;
+    
+    @Autowired
+    Msg msg;
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -69,6 +80,37 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
         editView.addObject("WeekDays", CalendarWeekDay.values());
         editView.addObject("HolidayKeys", HolidayUtil.getHolidayKeys());
         return editView;
+    }
+    
+    @Override
+    public ModelAndView getDelete(@PathVariable("id") Long id){
+        CalendarConfig config = calendarConfigDAO.findById(id);
+        ModelAndView mav = getDeleteView(config);
+        //add warning about existing bookings that are affected by deleting this calendar configuration
+        List<Booking> bookings = bookingDAO.findActiveBookingsBetween(config.getStartDate(), config.getEndDate());
+        Iterator<Booking> iterator = bookings.iterator();
+        while (iterator.hasNext()){
+            Booking booking = iterator.next();
+            //remove bookings that do not match the week day
+            CalendarWeekDay weekDay = CalendarWeekDay.values()[booking.getBookingDate().getDayOfWeek()-1];
+            if (!config.getCalendarWeekDays().contains(weekDay)){
+                iterator.remove();
+                break;
+            }
+            //remove bookings that start and end before the selected calendar config
+            if (booking.getBookingTime().isBefore(config.getStartTime()) && booking.getBookingEndTime().isBefore(config.getStartTime())){
+                iterator.remove();
+                break;
+            }
+            //remove bookings that start after the selected calendar config
+            if (booking.getBookingTime().isAfter(config.getEndTime())){
+                iterator.remove();
+            }
+        }
+        if (!bookings.isEmpty()){
+            mav.addObject("error", msg.get("TheFollowingBookingsAreAffected", new Object[]{StringUtils.join(bookings, "<br/>")}));
+        }
+        return mav;
     }
     
     private CalendarConfig getDefaultCalendarConfig() {
