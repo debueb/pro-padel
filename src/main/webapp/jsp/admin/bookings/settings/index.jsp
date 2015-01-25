@@ -11,17 +11,17 @@
             <table class="table table-bordered table-centered">
                 <thead>
                     <tr>
-                        <th class="text-center"><fmt:message key="Priority"/></th>
-                        <th class="text-center"><fmt:message key="WeekDay"/></th>
-                        <th class="text-center"><fmt:message key="StartDate"/></th>
-                        <th class="text-center"><fmt:message key="EndDate"/></th>
-                        <th class="text-center"><fmt:message key="StartTime"/></th>
-                        <th class="text-center"><fmt:message key="EndTime"/></th>
-                        <th class="text-center"><fmt:message key="NumberOfCourts"/></th>
-                        <th class="text-center"><fmt:message key="MinDuration"/></th>
-                        <th class="text-center"><fmt:message key="MinInterval"/></th>
-                        <th class="text-center"><fmt:message key="PricePerMinDuration"/></th>
-                        <th class="text-center"><fmt:message key="Delete"/></th>
+                        <th><fmt:message key="Priority"/></th>
+                        <th><fmt:message key="WeekDay"/></th>
+                        <th><fmt:message key="StartDate"/></th>
+                        <th><fmt:message key="EndDate"/></th>
+                        <th><fmt:message key="StartTime"/></th>
+                        <th><fmt:message key="EndTime"/></th>
+                        <th><fmt:message key="NumberOfCourts"/></th>
+                        <th><fmt:message key="MinDuration"/></th>
+                        <th><fmt:message key="MinInterval"/></th>
+                        <th><fmt:message key="PricePerMinDuration"/></th>
+                        <th><fmt:message key="Delete"/></th>
                     </tr>
                 </thead>
                 <tbody>

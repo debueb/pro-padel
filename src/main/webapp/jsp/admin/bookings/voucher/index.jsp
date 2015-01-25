@@ -11,12 +11,12 @@
             <table class="table table-bordered table-centered">
                 <thead>
                     <tr>
-                        <th class="text-center"><fmt:message key="Voucher"/></th>
-                        <th class="text-center"><fmt:message key="ValidUntil"/></th>
-                        <th class="text-center"><fmt:message key="Duration"/></th>
-                        <th class="text-center"><fmt:message key="Comment"/></th>
-                        <th class="text-center"><fmt:message key="Used"/></th>
-                        <th class="text-center"><fmt:message key="Delete"/></th>
+                        <th><fmt:message key="Voucher"/></th>
+                        <th><fmt:message key="ValidUntil"/></th>
+                        <th><fmt:message key="Duration"/></th>
+                        <th><fmt:message key="Comment"/></th>
+                        <th><fmt:message key="Used"/></th>
+                        <th><fmt:message key="Delete"/></th>
                     </tr>
                 </thead>
                 <tbody>
