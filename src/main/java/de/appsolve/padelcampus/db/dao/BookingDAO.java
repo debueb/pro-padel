@@ -42,11 +42,13 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
     }
 
     @Override
-    public List<Booking> findBetween(LocalDate startDate, LocalDate endDate) {
+    public List<Booking> findActiveBookingsBetween(LocalDate startDate, LocalDate endDate) {
         Session session = entityManager.unwrap(Session.class);
         Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
         criteria.add(Restrictions.ge("bookingDate", startDate));
         criteria.add(Restrictions.le("bookingDate", endDate));
+        criteria.add(Restrictions.eq("paymentConfirmed", true));
+        criteria.add(Restrictions.or(Restrictions.isNull("cancelled"), Restrictions.eq("cancelled", false)));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<Booking>) criteria.list();
     }

@@ -65,7 +65,7 @@ public class AdminBookingsReportsController extends BaseController{
     }
 
     private ModelAndView getBookingListView(DateRange dateRange) {
-        List<Booking> bookings = bookingDAO.findBetween(dateRange.getStartDate(), dateRange.getEndDate());
+        List<Booking> bookings = bookingDAO.findActiveBookingsBetween(dateRange.getStartDate(), dateRange.getEndDate());
         
         BigDecimal total = new BigDecimal(0);
         for (Booking booking: bookings){

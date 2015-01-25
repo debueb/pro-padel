@@ -20,6 +20,6 @@ public interface BookingDAOI extends GenericDAOI<Booking>{
     
     public List<Booking> findBlockedBookingsForDate(LocalDate date);
     public List<Booking> findBlockedBookings();
-    public List<Booking> findBetween(LocalDate startDate, LocalDate endDate);
+    public List<Booking> findActiveBookingsBetween(LocalDate startDate, LocalDate endDate);
     public List<Booking> findReservations();
 }
