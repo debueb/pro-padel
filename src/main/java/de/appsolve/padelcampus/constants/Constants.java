@@ -51,7 +51,7 @@ public class Constants {
     
     
     public static final String DEFAULT_LOCALE_STRING        = "de_DE";
-    public static final Locale DEFAULT_LOCALE               = new Locale(DEFAULT_LOCALE_STRING);
+    public static final Locale DEFAULT_LOCALE               = new Locale("de", "DE");
     public static final String DEFAULT_TIMEZONE_STRING      = "Europe/Berlin";
     public static final DateTimeZone DEFAULT_TIMEZONE       = DateTimeZone.forID(DEFAULT_TIMEZONE_STRING);
     public static final String DEFAULT_HOLIDAY_KEY          = "GERMANY-nw";
