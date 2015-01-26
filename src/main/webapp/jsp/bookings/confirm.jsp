@@ -38,7 +38,7 @@
             <label class="checkbox" for="accept-cancellation-policy"><small><fmt:message key="BookingCancellationPolicy"><fmt:param value="${CancellationPolicyDeadline}"/></fmt:message></small></label>
 
             <button class="btn btn-primary btn-block unit" type="submit"><fmt:message key="Confirm"/></button>
-            <a class="btn btn-primary btn-block unit" href="/bookings"><fmt:message key="Cancel"/></a>
+            <a class="btn btn-primary btn-block unit ajaxify" href="/bookings"><fmt:message key="Cancel"/></a>
         </spf:form>
     </div>
 </div>
