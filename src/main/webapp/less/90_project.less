@@ -632,6 +632,9 @@ span.error{
     text-align: center;
     vertical-align: middle;
 }
+.table.table-booking > tbody > tr > td{
+    word-wrap: break-word;
+}
 .table.table-booking > tbody > tr > td:not(:last-child){
     border-right: 1px solid @gray;
 }
@@ -797,6 +800,9 @@ h4{
     h1{
         font-size: 24px;
     }
+    .booking-time > span {
+        display: block;
+    }
 }
 @media (max-width: @screen-xs) {
     h1{
@@ -807,9 +813,6 @@ h4{
     }
     .table-booking{
         font-size: 11px;
-    }
-    .booking-time > span {
-        display: block;
     }
     .table.table-booking > tbody > tr > td, .table.table-booking > thead > tr:first-child > th{
        padding: 1px; 
