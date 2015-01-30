@@ -11,9 +11,9 @@
 
         <div class="list-group">
             <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/admingroups"/>
-                <jsp:param name="key" value="AdminGroups"/>
-                <jsp:param name="icon" value="fire"/>
+                <jsp:param name="href" value="/admin/general"/>
+                <jsp:param name="key" value="General"/>
+                <jsp:param name="icon" value="gears"/>
             </jsp:include>
             <jsp:include page="/jsp/include/list-group-item.jsp">
                 <jsp:param name="href" value="/admin/news"/>

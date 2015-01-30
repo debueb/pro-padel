@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public enum Privilege {
     
     AccessAdminInterface("/admin"),
-    ManageAdminGroups("/admin/admingroups.*"),
+    ManageGeneral("/admin/general.*"),
     ManageNews("/admin/news.*"),
     ManageEvents("/admin/events.*"),
     ManagePlayers("/admin/players.*"),

@@ -29,8 +29,8 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  */
 @Controller()
-@RequestMapping("/admin/admingroups")
-public class AdminGroupsController extends AdminBaseController<AdminGroup> {
+@RequestMapping("/admin/general/admingroups")
+public class AdminGeneralAdminGroupsController extends AdminBaseController<AdminGroup> {
     
     @Autowired
     PlayerDAOI playerDAO;
@@ -58,7 +58,7 @@ public class AdminGroupsController extends AdminBaseController<AdminGroup> {
     
     @Override
     public ModelAndView getEditView(AdminGroup adminGroup) {
-        ModelAndView mav = new ModelAndView("admin/admingroups/edit", "Model", adminGroup);
+        ModelAndView mav = new ModelAndView("admin/general/admingroups/edit", "Model", adminGroup);
         mav.addObject("AdminPlayers", adminGroup.getPlayers());
         List<Player> allPlayers = playerDAO.findAll();
         allPlayers.removeAll(adminGroup.getPlayers());
@@ -77,6 +77,6 @@ public class AdminGroupsController extends AdminBaseController<AdminGroup> {
 
     @Override
     public String getModuleName() {
-        return "admingroups";
+        return "general/admingroups";
     }
 }

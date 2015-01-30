@@ -17,19 +17,19 @@
                 <tbody>
                     <c:forEach var="AdminGroup" items="${Models}">
                     <tr>
-                        <td><a class="ajaxify" href="/admin/admingroups/edit/${AdminGroup.id}">${AdminGroup.name}</a></td>
+                        <td><a class="ajaxify" href="/admin/general/admingroups/edit/${AdminGroup.id}">${AdminGroup.name}</a></td>
                         <td>
                             <c:forEach var="Player" items="${AdminGroup.players}" varStatus="status">
                                 <a class="ajaxify" href="/admin/players/edit/${Player.id}">${Player.displayName}</a>${status.last ? "" : ", "}
                             </c:forEach>
                         </td>
-                        <td class="delete"><a href="/admin/admingroups/${AdminGroup.id}/delete" class="fa fa-minus-circle ajaxify"></a></td>
+                        <td class="delete"><a href="/admin/general/admingroups/${AdminGroup.id}/delete" class="fa fa-minus-circle ajaxify"></a></td>
                     </tr>
                     </c:forEach>
                 </tbody>
             </table>
         </div>
-        <a href="/admin/admingroups/add" class="btn btn-primary unit ajaxify"><fmt:message key="NewAdminGroup"/></a>
+        <a href="/admin/general/admingroups/add" class="btn btn-primary unit ajaxify"><fmt:message key="NewAdminGroup"/></a>
     </div>
 </div>
 
