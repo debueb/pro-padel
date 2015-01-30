@@ -524,9 +524,7 @@ public class BookingsController extends BaseController {
 
         //determine valid payment methods
         List<PaymentMethod> paymentMethods = new ArrayList<>();
-        //always support vouchers
-        paymentMethods.add(PaymentMethod.Voucher);
-
+        
         //check if PayPal config exists and is active
         PayPalConfig paypalConfig = payPalConfigDAO.findFirst();
         if (paypalConfig != null && paypalConfig.getActive()) {
@@ -543,6 +541,9 @@ public class BookingsController extends BaseController {
                 paymentMethods.add(PaymentMethod.CreditCard);
             }
         }
+        
+        //always support vouchers
+        paymentMethods.add(PaymentMethod.Voucher);
 
         if (mav!=null){
             mav.addObject("Booking", booking);
