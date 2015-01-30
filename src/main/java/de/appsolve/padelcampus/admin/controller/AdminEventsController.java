@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -75,6 +76,22 @@ public class AdminEventsController extends AdminBaseController<Event>{
     @RequestMapping(value={"add", "edit/{modelId}"}, method=POST)
     public ModelAndView postEditView(@ModelAttribute("Model") Event model, HttpServletRequest request, BindingResult result){
         validator.validate(model, result);
+        
+        //prevent removal of a team it has already played a game
+        if (model.getId()!=null){
+            Event existingEvent = eventDAO.findById(model.getId());
+            if (!existingEvent.getParticipants().equals(model.getParticipants())){
+                for (Participant participant: existingEvent.getParticipants()){
+                    if (!model.getParticipants().contains(participant)){
+                        List<Game> existingGames = gameDAO.findByParticipantAndEvent(participant, model);
+                        if (!existingGames.isEmpty()){
+                            result.reject("TeamHasAlreadyPlayedInEvent", new Object[]{participant.getDisplayName(), existingGames.size(), model.getDisplayName()}, null);
+                        }
+                    }
+                }
+            }
+        }
+        
         if (result.hasErrors()){
             return getEditView(model);
         }
