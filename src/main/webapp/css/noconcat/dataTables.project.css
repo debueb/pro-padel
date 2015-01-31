@@ -1,0 +1,14 @@
+.dataTables_wrapper .dataTables_paginate .paginate_button{
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+.pagination > .active > a{
+    border-color: #dddddd;
+}
+table.dataTable.no-footer, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active, .dataTables_wrapper .dataTables_paginate .paginate_button:hover{
+    border: 0;
+}
+table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_desc{
+    background: white;
+}

@@ -34,8 +34,8 @@
             <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Select"/></button>
         </spf:form>
         
-        <div class="table-responsive" style="margin-top: 40px;">
-            <table class="table table-striped table-bordered table-centered dynatable">
+        <div style="margin-top: 40px;">
+            <table class="table table-striped table-bordered table-centered datatable">
                 <thead>
                     <th><fmt:message key="BookingDate"/></th>
                     <th><fmt:message key="GameDate"/></th>
@@ -65,8 +65,10 @@
         </div>
     </div>
 </div>
-<link href="/css/noconcat/jquery.dynatable.css" rel="stylesheet"/>
-<link href="/css/noconcat/jquery.dynatable.project.css" rel="stylesheet"/>
-<script defer type="text/javascript" src="/js/noconcat/jquery.dynatable.js"></script>
-<script defer type="text/javascript" src="/js/noconcat/jquery.dynatable.project.js"></script>
+<link href="/css/noconcat/dataTables.min.css" rel="stylesheet"/>
+<link href="/css/noconcat/dataTables.bootstrap.css" rel="stylesheet"/>
+<link href="/css/noconcat/dataTables.project.css" rel="stylesheet"/>
+<script defer type="text/javascript" src="/js/noconcat/dataTables.min.js"></script>
+<script defer type="text/javascript" src="/js/noconcat/dataTables.bootstrap.js"></script>
+<script defer type="text/javascript" src="/js/noconcat/dataTables.project.js"></script>
 <jsp:include page="/jsp/include/footer.jsp"/>
