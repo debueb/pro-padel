@@ -37,8 +37,8 @@
         <div class="table-responsive" style="margin-top: 40px;">
             <table class="table table-striped table-bordered table-centered dynatable">
                 <thead>
-                    <th><fmt:message key="Date"/></th>
-                    <th><fmt:message key="Day"/></th>
+                    <th><fmt:message key="BookingDate"/></th>
+                    <th><fmt:message key="GameDate"/></th>
                     <th><fmt:message key="Time"/></th>
                     <th><fmt:message key="Player"/></th>
                     <th><fmt:message key="PaymentMethod"/></th>
@@ -47,8 +47,8 @@
                 <tbody>
                 <c:forEach items="${Bookings}" var="Booking">
                     <tr>
-                        <td>${Booking.bookingDate}</td>
-                        <td><joda:format value="${Booking.bookingDate}" pattern="EEE"/></td>
+                        <td><joda:format value="${Booking.blockingTime}" pattern="yyyy-MM-dd"/></td>
+                        <td><joda:format value="${Booking.bookingDate}" pattern="yyyy-MM-dd"/></td>
                         <td><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></td>
                         <td>${Booking.player}</td>
                         <td>${Booking.paymentMethod}</td>
