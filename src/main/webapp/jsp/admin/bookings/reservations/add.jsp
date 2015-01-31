@@ -12,9 +12,14 @@
             <div class="alert alert-danger"><spf:errors path="*" cssClass="error" htmlEscape="false"/></div>
             <spf:input path="id" type="hidden"/>
             
+            <fmt:message key="Comment" var="CommentPlaceholder"/>
+            <div class="relative">
+                <spf:input type="text" path="comment" class="form-control form-top-element" />
+                  <div class="explanation">${CommentPlaceholder}</div>
+            </div>              
             <%-- Wochentage --%>
             <div class="relative">
-                <spf:select path="calendarWeekDays" class="select-multiple form-control" data-style="form-top-element" multiple="true">
+                <spf:select path="calendarWeekDays" class="select-multiple form-control" data-style="form-center-element" multiple="true">
                     <c:forEach items="${WeekDays}" var="WeekDay"><fmt:message var="WeekDayLabel" key="${WeekDay}"/>
                         <spf:option value="${WeekDay}" label="${WeekDayLabel}"/>
                     </c:forEach>

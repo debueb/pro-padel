@@ -66,6 +66,9 @@ public class Booking extends BaseEntity{
     @OneToOne
     private Voucher voucher;
     
+    @Column
+    private String comment;
+    
     /**
      * indicates the time that the user has entered the checkout (payment) phase
      * to indicate that the court should be blocked to avoid duplicate bookings
@@ -261,6 +264,14 @@ public class Booking extends BaseEntity{
 
     public void setVoucher(Voucher voucher) {
         this.voucher = voucher;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
     
     @Override

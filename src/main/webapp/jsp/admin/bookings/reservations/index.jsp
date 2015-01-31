@@ -14,6 +14,7 @@
                     <th><fmt:message key="Time"/></th>
                     <th><fmt:message key="Duration"/></th>
                     <th><fmt:message key="Court"/></th>
+                    <th><fmt:message key="Comment"/></th>
                     <th><fmt:message key="ReservedBy"/></th>
                     <th class="text-center"><fmt:message key="Delete"/></th>
                 </thead>
@@ -24,6 +25,7 @@
                         <td><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/></td>
                         <td>${Booking.duration}</td>
                         <td>${Booking.courtNumber+1}</td>
+                        <td>${Booking.comment}</td>
                         <td><a href="${contextPath}/players/player/${Booking.player.id}" class="ajaxify">${Booking.player.displayName}</a></td>
                         <td class="text-center"><a class="ajaxify fa fa-minus-circle" href="/admin/bookings/reservations/${Booking.id}/delete"></a></td>
                     </tr>

@@ -99,6 +99,9 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     @Override
     public ModelAndView postEditView(@Valid @ModelAttribute("Model") ReservationRequest reservationRequest, HttpServletRequest request, BindingResult bindingResult){
         try {
+            if (StringUtils.isEmpty(reservationRequest.getComment())){
+                throw new Exception(msg.get("PleaseEnterAComment"));
+            }
             if (reservationRequest.getCalendarWeekDays().isEmpty()){
                 throw new Exception(msg.get("SelectAtLeastOneWeekDay"));
             }
@@ -131,6 +134,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                                     booking.setBookingDate(date);
                                     booking.setBookingTime(reservationRequest.getStartTime());
                                     booking.setBookingType(BookingType.reservation);
+                                    booking.setComment(reservationRequest.getComment());
                                     booking.setConfirmed(true);
                                     booking.setCurrency(Currency.EUR);
                                     int minutes = Minutes.minutesBetween(reservationRequest.getStartTime(), reservationRequest.getEndTime()).getMinutes(); 
@@ -142,7 +146,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                                     booking.setPaymentMethod(PaymentMethod.Reservation);
                                     booking.setPlayer(player);
                                     booking.setUUID(BookingUtil.generateUUID());
-
+                                    
                                     //throws exception if there are not enough free courts for desired booking
                                     try {
                                         Integer courtNumber = bookingUtil.getCourtNumber(booking);

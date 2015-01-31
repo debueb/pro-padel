@@ -42,6 +42,8 @@ public class ReservationRequest extends BaseEntity{
     private String holidayKey;
     
     private Integer courtCount;
+    
+    private String comment;
 
     public Set<CalendarWeekDay> getCalendarWeekDays() {
         if (calendarWeekDays!=null && !calendarWeekDays.isEmpty()){
@@ -124,6 +126,14 @@ public class ReservationRequest extends BaseEntity{
 
     public void setCourtCount(Integer courtCount) {
         this.courtCount = courtCount;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
     
     @Override
