@@ -7,8 +7,8 @@
             <h1><fmt:message key="Vouchers"/></h1>
         </div>
 
-        <div class="table-responsive unit">
-            <table class="table table-bordered table-centered">
+        <div class="unit">
+            <table class="table table-bordered table-centered datatable">
                 <thead>
                     <tr>
                         <th><fmt:message key="Voucher"/></th>
@@ -37,4 +37,5 @@
     </div>
 </div>
 
+<jsp:include page="/jsp/include/datatables.jsp"/>
 <jsp:include page="/jsp/include/footer.jsp"/>
