@@ -30,7 +30,7 @@
                                     <th class="text-center ${Day == WeekDay ? 'booking-selected-date' : ''}">
                                         <a href="/bookings/${WeekDay}" class="ajaxify">
                                             <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>
-                                            <br /><joda:format value="${WeekDay}" pattern="dd.MM"/>
+                                            <br /><joda:format value="${WeekDay}" pattern="dd.MM."/>
                                         </a>
                                     </th>
                                 </c:forEach>
