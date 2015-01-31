@@ -95,12 +95,12 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
             CalendarWeekDay weekDay = CalendarWeekDay.values()[booking.getBookingDate().getDayOfWeek()-1];
             if (!config.getCalendarWeekDays().contains(weekDay)){
                 iterator.remove();
-                break;
+                continue;
             }
             //remove bookings that start and end before the selected calendar config
             if (booking.getBookingTime().isBefore(config.getStartTime()) && booking.getBookingEndTime().isBefore(config.getStartTime())){
                 iterator.remove();
-                break;
+                continue;
             }
             //remove bookings that start after the selected calendar config
             if (booking.getBookingTime().isAfter(config.getEndTime())){
