@@ -50,17 +50,10 @@
                                         <c:forEach var="TimeSlot" items="${TimeSlots}">
                                             <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
                                                 <c:set var="containsTimeSlot" value="true"/>
-                                                <c:choose>
-                                                    <c:when test="${TimeSlot.freeCourtCount > 0}">
-                                                        <c:set var="urlDetail" value="/admin/bookings/reports/bookinglist/${TimeSlot.date}"/>
-                                                        <td class="booking-bookable ${fn:length(TimeSlot.bookings) == 0 ? 'booking-bookable-last' : ''}">
-                                                            <a class="block ajaxify" href="${urlDetail}">${fn:length(TimeSlot.bookings)}</a>
-                                                        </td>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <td class="booking-booked"></td>
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                <c:set var="urlDetail" value="/admin/bookings/reports/bookinglist/${TimeSlot.date}"/>
+                                                <td class="booking-bookable ${fn:length(TimeSlot.bookings) == 0 ? 'booking-bookable-last' : ''}">
+                                                    <a class="block ajaxify" href="${urlDetail}">${fn:length(TimeSlot.bookings)}</a>
+                                                </td>
                                             </c:if>
                                         </c:forEach>
                                         <c:if test="${containsTimeSlot == false}">
