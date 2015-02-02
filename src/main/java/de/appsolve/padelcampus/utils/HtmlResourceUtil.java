@@ -46,6 +46,9 @@ public class HtmlResourceUtil {
     public static void updateCss(String rootPath, Set<CssAttribute> cssAttributes) throws Exception{
         if (!cssAttributes.isEmpty()){
             
+            //PROBLEM: on openshift, the war file is not extracted. Thus, files cannot be overwritten
+            
+            
             //replace variables in variables.less
             Path path = Paths.get(rootPath  + VARIABLES_LESS);
             String content = IOUtils.toString(Files.newInputStream(path), Constants.UTF8);

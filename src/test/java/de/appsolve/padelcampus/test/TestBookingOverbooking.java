@@ -29,8 +29,8 @@ public class TestBookingOverbooking extends TestBookingVoucher {
     public void testBookingOverbooking() throws Exception {
         log.info("Test booking overbooking");
                
-        bookViaVoucherAndNoLogin();
-        bookViaVoucherAndNoLogin();
+        bookViaVoucherAndNoLogin(offer1);
+        bookViaVoucherAndNoLogin(offer2);
         
         LocalDate nextMonday = getNextMonday();
         mockMvc.perform(get("/bookings/" + nextMonday + "/10:00")
@@ -42,6 +42,7 @@ public class TestBookingOverbooking extends TestBookingVoucher {
                 .session(session)
                 .param("bookingDate", nextMonday.toString())
                 .param("bookingTime", "10:00")
+                .param("offer", offer1.getId().toString())
                 .param("bookingType", BookingType.nologin.name())
                 .param("duration", "60")
                 .param("paymentMethod", PaymentMethod.Voucher.name()))

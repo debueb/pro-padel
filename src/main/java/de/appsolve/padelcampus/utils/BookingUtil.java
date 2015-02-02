@@ -5,29 +5,37 @@
  */
 package de.appsolve.padelcampus.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.appsolve.padelcampus.constants.CalendarWeekDay;
+import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
 import static de.appsolve.padelcampus.constants.Constants.NO_HOLIDAY_KEY;
-import de.appsolve.padelcampus.data.Court;
+import de.appsolve.padelcampus.data.DatePickerDayConfig;
+import de.appsolve.padelcampus.data.TimeRange;
 import de.appsolve.padelcampus.data.TimeSlot;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
-import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
-import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
+import de.appsolve.padelcampus.db.model.Offer;
+import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  *
@@ -47,7 +55,10 @@ public class BookingUtil {
     @Autowired
     CalendarConfigDAOI calendarConfigDAO;
     
-    public List<TimeSlot> getTimeSlotsForDateAndCalendarConfigs(LocalDate selectedDate, List<CalendarConfig> calendarConfigs, Boolean onlyFutureTimeSlots){
+    @Autowired
+    ObjectMapper objectMapper;
+    
+    public List<TimeSlot> getTimeSlotsForDateAndCalendarConfigs(LocalDate selectedDate, List<CalendarConfig> calendarConfigs, Boolean onlyFutureTimeSlots, Boolean preventOverlapping){
         LocalDate today = new LocalDate(DEFAULT_TIMEZONE);
         
         //sort all calendar configurations for selected date by priority
@@ -76,7 +87,7 @@ public class BookingUtil {
         //decrease court count for every blocking booking
         List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(selectedDate);
         for (TimeSlot timeSlot : timeSlots) {
-            checkForBookedCourts(timeSlot, confirmedBookings);
+            checkForBookedCourts(timeSlot, confirmedBookings, preventOverlapping);
         }
         return timeSlots;
     }
@@ -117,74 +128,36 @@ public class BookingUtil {
         return false;
     }
 
-    public Integer getCourtNumber(Booking booking) throws Exception {
-        CalendarConfig calendarConfig = calendarConfigDAO.findFor(booking.getBookingDate(), booking.getBookingTime());
-        if (calendarConfig == null){
-            throw new Exception(msg.get("UnableToFindCalendarConfigForBooking", new Object[]{booking.getBookingDate().toString(DATE_HUMAN_READABLE), booking.getBookingTime().toString(TIME_HUMAN_READABLE)}));
-        }
-        List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(booking.getBookingDate());
-        List<TimeSlot> timeSlots = getTimeSlotsForDateAndCalendarConfigs(booking.getBookingDate(), Arrays.asList(new CalendarConfig[]{calendarConfig}), true);
-        for (TimeSlot timeSlot: timeSlots){
-            
-            //if this timeslot starts at the desired booking time
-            if (timeSlot.getStartTime().equals(booking.getBookingTime())){
-                if (timeSlot.getFreeCourtCount()>0){
-                    
-                    //determine max timeSlotLatestEndTime
-                    LocalTime timeSlotLatestEndTime = booking.getBookingEndTime();
-
-                    //as long as the timeSlotLatestEndTime is before the end time configured in the calendar
-                    while (timeSlotLatestEndTime.compareTo(calendarConfig.getEndTime()) <= 0) {
-
-                        checkForBookedCourts(timeSlot, confirmedBookings);
-
-                        //stop if there are no courts available for the requested duration.
-                        //only contiguous bookings are supported
-                        if (timeSlot.getFreeCourtCount()<1){
-                            break;
-                        }
-                        timeSlotLatestEndTime = timeSlotLatestEndTime.plusMinutes(calendarConfig.getMinInterval());
-                    }
-
-                    //if the timeslot lasts at least the desired booking duration
-                    if (timeSlotLatestEndTime.compareTo(booking.getBookingEndTime()) >= 0){
-
-                        //determine courtNumber
-                        //this prevents the same court from being chosen twice if a booking gets deleted or cancelled
-                        Map<Integer, Court> courtMap = timeSlot.getCourtMap();
-                        for (Map.Entry<Integer, Court> entrySet : courtMap.entrySet()) {
-                            Court court = entrySet.getValue();
-                            if (!court.getBlocked()){
-                                int courtNumber = entrySet.getKey();
-                                return courtNumber;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        throw new Exception(msg.get("NoCourtAvailableFor", new Object[]{booking.getBookingDate().toString(FormatUtils.DATE_HUMAN_READABLE), booking.getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE), booking.getBookingEndTime().toString(FormatUtils.TIME_HUMAN_READABLE)}));
-    }
-
-    public void checkForBookedCourts(TimeSlot timeSlot, List<Booking> confirmedBookings) {
-        LocalTime selectedTime = timeSlot.getStartTime();
+    public void checkForBookedCourts(TimeSlot timeSlot, List<Booking> confirmedBookings, Boolean preventOverlapping) {
+        LocalTime startTime = timeSlot.getStartTime();
         LocalTime endTime = timeSlot.getEndTime();
-        Map<Integer, Court> courtMap = timeSlot.getCourtMap();
-
+        
         for (Booking booking : confirmedBookings) {
             LocalTime bookingStartTime = booking.getBookingTime();
             LocalTime bookingEndTime = bookingStartTime.plusMinutes(booking.getDuration().intValue());
 
-            if (selectedTime.isBefore(bookingEndTime)) {
-                if (endTime.isAfter(bookingStartTime)) {
-
-                    Court court = courtMap.get(booking.getCourtNumber());
-                    court.setBlocked(true);
-
-                    //log.info(booking.getBookingTime()+" - "+booking.getBookingEndTime()+" Court: "+booking.getCourtNumber());
-                    //log.info(timeSlot.getStartTime()+" - "+timeSlot.getEndTime()+" Free:  "+timeSlot.getFreeCourtCount());
-
-                    timeSlot.addBooking(booking);
+            Boolean addBooking = false;
+            if (preventOverlapping){
+                if (startTime.isBefore(bookingEndTime)) {
+                    if (endTime.isAfter(bookingStartTime)) {
+                        addBooking = true;
+                    }
+                }
+            } else {
+                //for displaying allocations
+                if (startTime.compareTo(bookingStartTime)>=0){
+                    if (endTime.compareTo(bookingEndTime)<=0){
+                        addBooking = true;
+                    }
+                }
+            }
+            if (addBooking){
+                Offer offer = booking.getOffer();
+                for (Offer timeSlotOffer: timeSlot.getConfig().getOffers()){
+                    if (offer.equals(timeSlotOffer)){
+                        timeSlot.addBooking(booking);
+                        break;
+                    }
                 }
             }
         }
@@ -206,5 +179,89 @@ public class BookingUtil {
     
     public static String generateUUID() {
         return UUID.randomUUID().toString();
+    }
+
+    public void addWeekView(LocalDate selectedDate, ModelAndView mav, Boolean preventOverlapping) throws JsonProcessingException {
+        //calculate date configuration for datepicker
+        LocalDate today = new LocalDate(DEFAULT_TIMEZONE);
+        LocalDate firstDay = today.dayOfMonth().withMinimumValue();
+        LocalDate lastDay = today.plusDays(Constants.CALENDAR_MAX_DATE).dayOfMonth().withMaximumValue();
+        List<CalendarConfig> calendarConfigs = calendarConfigDAO.findBetween(firstDay, lastDay);
+        Map<String, DatePickerDayConfig> dayConfigs = new HashMap<>();
+        for (LocalDate date = firstDay; date.isBefore(lastDay); date = date.plusDays(1)) {
+            DatePickerDayConfig dayConfig = new DatePickerDayConfig();
+            dayConfig.setSelectable(Boolean.FALSE);
+            for (CalendarConfig calendarConfig : calendarConfigs) {
+                for (CalendarWeekDay weekDay : calendarConfig.getCalendarWeekDays()) {
+                    if (weekDay.ordinal() + 1 == date.getDayOfWeek()) {
+                        if (!isHoliday(date, calendarConfig)) {
+                            if (calendarConfig.getStartDate().compareTo(date) <= 0 && calendarConfig.getEndDate().compareTo(date) >= 0) {
+                                dayConfig.setSelectable(Boolean.TRUE);
+                            }
+                        }
+                    }
+                }
+            }
+            dayConfigs.put(date.toString(), dayConfig);
+        }
+       
+        //calculate availble time slots
+        List<TimeSlot> timeSlots = new ArrayList<>();
+        List<LocalDate> weekDays = new ArrayList<>();
+        for (int i=1; i<=CalendarWeekDay.values().length; i++){
+            LocalDate date = selectedDate.withDayOfWeek(i);
+            weekDays.add(date);
+            if (!date.isBefore(new LocalDate())){
+                try {
+                    List<CalendarConfig> calendarConfigsForDate = calendarConfigDAO.findFor(date);
+                    Iterator<CalendarConfig> iterator = calendarConfigsForDate.iterator();
+                    while(iterator.hasNext()){
+                        CalendarConfig calendarConfig = iterator.next();
+                        if (isHoliday(date, calendarConfig)) {
+                            iterator.remove();
+                        }
+                    }
+
+                    //generate list of bookable time slots
+                    timeSlots.addAll(getTimeSlotsForDateAndCalendarConfigs(date, calendarConfigsForDate, true, preventOverlapping));
+                } catch (CalendarConfigException e){
+                    //safe to ignore
+                }
+            }
+        }
+        
+        Map<TimeRange, List<TimeSlot>> rangeMap = new TreeMap<>();
+        for (TimeSlot slot: timeSlots){
+            TimeRange range = new TimeRange();
+            range.setStartTime(slot.getStartTime());
+            range.setEndTime(slot.getEndTime());
+            
+            List<TimeSlot> rangeSlots = rangeMap.get(range);
+            if (rangeSlots == null){
+                rangeSlots = new ArrayList<>();
+            }
+            rangeSlots.add(slot);
+            rangeMap.put(range, rangeSlots);
+        }
+        
+        mav.addObject("dayConfigs", objectMapper.writeValueAsString(dayConfigs));
+        mav.addObject("maxDate", lastDay.toString());
+        mav.addObject("Day", selectedDate);
+        mav.addObject("WeekDays", weekDays);
+        mav.addObject("RangeMap", rangeMap);
+    }
+
+    public Long getBookingSlotsLeft(TimeSlot timeSlot, Offer offer, List<Booking> confirmedBookings) {
+       checkForBookedCourts(timeSlot, confirmedBookings, true);
+
+        //stop if there are no courts available for the requested duration.
+        //only contiguous bookings are supported
+        Long bookingSlotsLeft = offer.getMaxConcurrentBookings();
+        for (Booking existingBooking: timeSlot.getBookings()){
+            if (existingBooking.getOffer().equals(offer)){
+                bookingSlotsLeft--;
+            }
+        }
+        return bookingSlotsLeft;
     }
 }

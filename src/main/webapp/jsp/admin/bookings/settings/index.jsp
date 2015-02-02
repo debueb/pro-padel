@@ -17,7 +17,7 @@
                         <th><fmt:message key="EndDate"/></th>
                         <th><fmt:message key="StartTime"/></th>
                         <th><fmt:message key="EndTime"/></th>
-                        <th><fmt:message key="NumberOfCourts"/></th>
+                        <th><fmt:message key="Offers"/></th>
                         <th><fmt:message key="MinDuration"/></th>
                         <th><fmt:message key="MinInterval"/></th>
                         <th><fmt:message key="PricePerMinDuration"/></th>
@@ -40,7 +40,7 @@
                             <td><a class="ajaxify" href="${urlEdit}"><joda:format value="${Model.endDate}" pattern="yyyy-MM-dd" /></a></td>
                             <td><a class="ajaxify" href="${urlEdit}"><fmt:formatNumber value="${Model.startTimeHour}" minIntegerDigits="2"/>:<fmt:formatNumber value="${Model.startTimeMinute}" minIntegerDigits="2"/></a></td>
                             <td><a class="ajaxify" href="${urlEdit}"><fmt:formatNumber value="${Model.endTimeHour}" minIntegerDigits="2"/>:<fmt:formatNumber value="${Model.endTimeMinute}" minIntegerDigits="2"/></a></td>
-                            <td><a class="ajaxify" href="${urlEdit}">${Model.courtCount}</a></td>
+                            <td><a class="ajaxify" href="${urlEdit}">${Model.offers}</a></td>
                             <td><a class="ajaxify" href="${urlEdit}">${Model.minDuration}</a></td>
                             <td><a class="ajaxify" href="${urlEdit}">${Model.minInterval}</a></td>
                             <td><a class="ajaxify" href="${urlEdit}">${Model.basePrice}</td>

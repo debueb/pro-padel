@@ -20,6 +20,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Type;
@@ -66,8 +67,9 @@ public class CalendarConfig extends BaseEntity{
     @Column
     private Integer endTimeMinute;
     
-    @Column
-    private Integer courtCount;
+    @ManyToMany(fetch=FetchType.EAGER)
+    @NotEmpty(message = "{NotEmpty.offers}")
+    private Set<Offer> offers;
     
     @Column
     private Integer minDuration;
@@ -161,12 +163,12 @@ public class CalendarConfig extends BaseEntity{
         return TIME_HUMAN_READABLE.parseLocalTime(getEndTimeHour()+":"+getEndTimeMinute());
     }
 
-    public Integer getCourtCount() {
-        return courtCount;
+    public Set<Offer> getOffers() {
+        return offers;
     }
 
-    public void setCourtCount(Integer courtCount) {
-        this.courtCount = courtCount;
+    public void setOffers(Set<Offer> offers) {
+        this.offers = offers;
     }
 
     public Integer getMinDuration() {

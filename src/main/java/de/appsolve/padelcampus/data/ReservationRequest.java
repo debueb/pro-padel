@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 import javax.persistence.Entity;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
@@ -25,6 +26,7 @@ public class ReservationRequest extends BaseEntity{
     
     private static final long serialVersionUID = 1L;
     
+    @NotEmpty(message = "{NotEmpty.calendarWeekDays}")
     private Set<CalendarWeekDay> calendarWeekDays;
     
     private LocalDate startDate;
@@ -41,8 +43,10 @@ public class ReservationRequest extends BaseEntity{
     
     private String holidayKey;
     
-    private Integer courtCount;
+    @NotEmpty(message = "{NotEmpty.offers}")
+    private Set<Offer> offers;
     
+    @NotEmpty(message = "{NotEmpty.comment}")
     private String comment;
 
     public Set<CalendarWeekDay> getCalendarWeekDays() {
@@ -120,12 +124,12 @@ public class ReservationRequest extends BaseEntity{
         this.holidayKey = holidayKey;
     }
 
-    public Integer getCourtCount() {
-        return courtCount;
+    public Set<Offer> getOffers() {
+        return offers;
     }
 
-    public void setCourtCount(Integer courtCount) {
-        this.courtCount = courtCount;
+    public void setOffers(Set<Offer> offers) {
+        this.offers = offers;
     }
 
     public String getComment() {

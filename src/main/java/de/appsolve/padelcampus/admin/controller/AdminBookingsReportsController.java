@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
@@ -55,7 +56,15 @@ public class AdminBookingsReportsController extends BaseController{
         DateRange dateRange = new DateRange();
         dateRange.setStartDate(startDate);
         dateRange.setEndDate(endDate);
-        
+        return getBookingListView(dateRange);
+    }
+    
+    @RequestMapping("bookinglist/{date}")
+    public ModelAndView getBookingList(@PathVariable("date") String date){
+        LocalDate startDate = new LocalDate(date);
+        DateRange dateRange = new DateRange();
+        dateRange.setStartDate(startDate);
+        dateRange.setEndDate(startDate);
         return getBookingListView(dateRange);
     }
     

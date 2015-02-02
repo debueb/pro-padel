@@ -30,6 +30,7 @@ public class TestBookingCreditCardRegister extends TestBase {
                 .session(session)
                 .param("bookingDate", nextMonday.toString())
                 .param("bookingTime", "10:00")
+                .param("offer", offer1.getId().toString())
                 .param("bookingType", BookingType.register.name())
                 .param("duration", "60")
                 .param("paymentMethod", PaymentMethod.CreditCard.name()))

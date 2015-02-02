@@ -10,21 +10,38 @@
         </div>
 
         <div class="list-group">
-            <a href="/admin/bookings/reports/bookinglist" class="list-group-item ajaxify">
-                <div class="list-item-text"><fmt:message key="BookingList"/></div>
-            </a>
-            <a href="/admin/bookings/reports/players" class="list-group-item disabled ajaxify">
-                <div class="list-item-text"><fmt:message key="TopPlayer"/></div>
-            </a>
-            <a href="/admin/bookings/reports/paymentmethods" class="list-group-item disabled ajaxify">
-                <div class="list-item-text"><fmt:message key="TopPaymentMethod"/></div>
-            </a>
-            <a href="/admin/bookings/reports/weekdays" class="list-group-item disabled ajaxify">
-                <div class="list-item-text"><fmt:message key="TopWeekDay"/></div>
-            </a>
-            <a href="/admin/bookings/reports/times" class="list-group-item disabled ajaxify">
-                <div class="list-item-text"><fmt:message key="TopTimes"/></div>
-            </a>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/admin/bookings/reports/allocations"/>
+                <jsp:param name="key" value="Allocations"/>
+                <jsp:param name="icon" value="cubes"/>
+            </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/admin/bookings/reports/bookinglist"/>
+                <jsp:param name="key" value="BookingList"/>
+                <jsp:param name="icon" value="bars"/>
+            </jsp:include>
+<%--
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/admin/bookings/reports/players"/>
+                <jsp:param name="key" value="TopPlayer"/>
+                <jsp:param name="icon" value="user"/>
+            </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/admin/bookings/reports/paymentmethods"/>
+                <jsp:param name="key" value="TopPaymentMethod"/>
+                <jsp:param name="icon" value="credit-card"/>
+            </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/admin/bookings/reports/weekdays"/>
+                <jsp:param name="key" value="TopWeekDay"/>
+                <jsp:param name="icon" value="calendar"/>
+            </jsp:include>
+             <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/admin/bookings/reports/times"/>
+                <jsp:param name="key" value="TopTimes"/>
+                <jsp:param name="icon" value="calendar-o"/>
+            </jsp:include>
+--%>
         </div>
     </div>
 </div>

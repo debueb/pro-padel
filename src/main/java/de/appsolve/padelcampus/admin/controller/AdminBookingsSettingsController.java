@@ -11,18 +11,20 @@ import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
 import de.appsolve.padelcampus.db.dao.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.HolidayUtil;
-import de.appsolve.padelcampus.utils.Msg;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -48,11 +50,19 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
     BookingDAOI bookingDAO;
     
     @Autowired
-    Msg msg;
+    OfferDAOI offerDAO;
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
+        
+        binder.registerCustomEditor(Set.class, "offers", new CustomCollectionEditor(Set.class) {
+            @Override
+            protected Object convertElement(Object element) {
+                Long id = Long.parseLong((String) element);
+                return offerDAO.findById(id);
+            }
+        });
     }
     
     @Override
@@ -79,6 +89,7 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
         ModelAndView editView = new ModelAndView("/admin/"+getModuleName()+"/edit", "Model", model);
         editView.addObject("WeekDays", CalendarWeekDay.values());
         editView.addObject("HolidayKeys", HolidayUtil.getHolidayKeys());
+        editView.addObject("Offers", offerDAO.findAll());
         return editView;
     }
     
@@ -117,7 +128,6 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
         CalendarConfig calendarConfig = new CalendarConfig();
         List<CalendarConfig> configs = calendarConfigDAO.findAll();
         calendarConfig.setPriority(configs.size()+1);
-        calendarConfig.setCourtCount(Constants.BOOKING_DEFAULT_COURT_COUNT);
         LocalDate now = new LocalDate(Constants.DEFAULT_TIMEZONE);
         calendarConfig.setStartDate(now);
         calendarConfig.setEndDate(now.plusYears(1));

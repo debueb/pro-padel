@@ -17,6 +17,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
@@ -111,8 +112,8 @@ public class Booking extends BaseEntity{
     @Column
     private String UUID;
     
-    @Column
-    private Integer courtNumber;
+    @ManyToOne
+    private Offer offer;
     
     public Player getPlayer() {
         return player;
@@ -250,12 +251,12 @@ public class Booking extends BaseEntity{
         this.UUID = UUID;
     }
 
-    public Integer getCourtNumber() {
-        return courtNumber;
+    public Offer getOffer() {
+        return offer;
     }
 
-    public void setCourtNumber(Integer courtNumber) {
-        this.courtNumber = courtNumber;
+    public void setOffer(Offer offer) {
+        this.offer = offer;
     }
 
     public Voucher getVoucher() {
@@ -276,7 +277,7 @@ public class Booking extends BaseEntity{
     
     @Override
     public String getDisplayName() {
-        return getPlayer().getDisplayName()+" "+getBookingDate().toString(FormatUtils.DATE_WITH_DAY) + " " + getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE);
+        return getPlayer().getDisplayName()+" "+getBookingDate().toString(FormatUtils.DATE_WITH_DAY) + " " + getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE) + " "+offer;
     }
     
     @Override

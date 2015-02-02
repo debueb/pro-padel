@@ -23,8 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  */
 @Controller()
-@RequestMapping("/profile")
-public class ProfileController extends BaseController {
+@RequestMapping("/account/profile")
+public class AccountProfileController extends BaseController {
     
     @Autowired
     PlayerDAOI playerDAO;
@@ -60,6 +60,6 @@ public class ProfileController extends BaseController {
     }
 
     private ModelAndView getIndexView(Player user) {
-        return new ModelAndView("profile/index", "Model", user);
+        return new ModelAndView("account/profile/index", "Model", user);
     }
 }

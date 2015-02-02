@@ -107,5 +107,7 @@
         <property name="defaultLocale" value="de_DE" />
     </bean>
     
+    <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
+   
     <task:annotation-driven />
 </beans>

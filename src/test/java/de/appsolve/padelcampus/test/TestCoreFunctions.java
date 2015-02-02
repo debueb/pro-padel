@@ -68,6 +68,6 @@ public class TestCoreFunctions extends TestBase {
         mockMvc.perform(get("/bookings/" + nextMonday + "/10:00"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bookings/booking"))
-                .andExpect(model().attribute("durations", not(hasSize(0))));
+                .andExpect(model().attribute("OfferDurations", not(hasSize(0))));
     }
 }

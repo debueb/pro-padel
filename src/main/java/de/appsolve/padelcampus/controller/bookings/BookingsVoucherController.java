@@ -86,7 +86,11 @@ public class BookingsVoucherController extends BookingsPaymentController{
             
             if (voucher.getDuration().compareTo(booking.getDuration()) < 0){
                 throw new Exception(msg.get("VoucherIsOnlyValidForDuration", new Object[]{voucher.getDuration()}));
-            } 
+            }
+            
+            if (!voucher.getOffers().contains(booking.getOffer())){
+                throw new Exception(msg.get("VoucherIsOnlyValidForOffer", new Object[]{voucher.getOffers()}));
+            }
 
             LocalTime validUntilTime = voucher.getValidUntilTime();
             LocalTime bookingEndTime = booking.getBookingEndTime();

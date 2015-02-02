@@ -6,26 +6,17 @@ package de.appsolve.padelcampus.controller.bookings;
  * and open the template in the editor.
  */
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
-import de.appsolve.padelcampus.constants.CalendarWeekDay;
-import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.CANCELLATION_POLICY_DEADLINE;
 import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
-import static de.appsolve.padelcampus.constants.Constants.VOUCHER_DEFAULT_VALIDITY_IN_DAYS;
 import static de.appsolve.padelcampus.constants.Constants.MAIL_NOREPLY_SENDER_NAME;
-import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_FROM_HOUR;
-import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_FROM_MINUTE;
-import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_UNTIL_HOUR;
-import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_UNTIL_MINUTE;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.controller.BaseController;
-import de.appsolve.padelcampus.data.DatePickerDayConfig;
 import de.appsolve.padelcampus.data.Mail;
-import de.appsolve.padelcampus.data.TimeRange;
 import de.appsolve.padelcampus.data.TimeSlot;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
+import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.dao.PayMillConfigDAOI;
 import de.appsolve.padelcampus.db.dao.PayPalConfigDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
@@ -33,15 +24,14 @@ import de.appsolve.padelcampus.db.dao.VoucherDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Contact;
+import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.PayMillConfig;
 import de.appsolve.padelcampus.db.model.PayPalConfig;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Voucher;
-import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
-import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.RequestUtil;
@@ -54,10 +44,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.log4j.Logger;
@@ -101,14 +89,17 @@ public class BookingsController extends BaseController {
     VoucherDAOI voucherDAO;
 
     @Autowired
-    Msg msg;
-
-    @Autowired
     CalendarConfigDAOI calendarConfigDAO;
 
     @Autowired
-    ObjectMapper mapper;
+    PayPalConfigDAOI payPalConfigDAO;
 
+    @Autowired
+    PayMillConfigDAOI payMillConfigDAO;
+    
+    @Autowired
+    OfferDAOI offerDAO;
+    
     @Autowired
     BookingsPayPalController bookingsPayPalController;
 
@@ -119,13 +110,10 @@ public class BookingsController extends BaseController {
     BookingsVoucherController bookingsVoucherController;
 
     @Autowired
-    PayPalConfigDAOI payPalConfigDAO;
-
-    @Autowired
-    PayMillConfigDAOI payMillConfigDAO;
+    BookingUtil bookingUtil;
     
     @Autowired
-    BookingUtil bookingUtil;
+    Msg msg;
 
     @RequestMapping()
     public ModelAndView getToday() throws JsonProcessingException {
@@ -151,6 +139,9 @@ public class BookingsController extends BaseController {
     @RequestMapping(value = "{day}/{time}", method = POST)
     public ModelAndView selectBooking(@PathVariable("day") String day, @PathVariable("time") String time, @ModelAttribute("Booking") Booking booking, BindingResult bindingResult, HttpServletRequest request) throws Exception {
         ModelAndView bookingView = getBookingView();
+        String offerId = request.getParameter("offer");
+        Offer offer = offerDAO.findById(Long.parseLong(offerId));
+        booking.setOffer(offer);
         try {
             validateAndAddObjectsToView(bookingView, request, booking, day, time);
         } catch (Exception e){
@@ -252,7 +243,6 @@ public class BookingsController extends BaseController {
                 throw new Exception(msg.get("BookingAlreadyConfirmed"));
             }
 
-            booking.setCourtNumber(bookingUtil.getCourtNumber(booking));
             booking.setBlockingTime(new LocalDateTime());
             booking.setUUID(BookingUtil.generateUUID());
             bookingDAO.saveOrUpdate(booking);
@@ -300,7 +290,7 @@ public class BookingsController extends BaseController {
                 FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()),
                 FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
                 booking.getDuration() + " " + msg.get("Minutes"),
-                booking.getCourtNumber()+1,
+                booking.getOffer().getDisplayName(),
                 msg.get(booking.getPaymentMethod().toString()),
                 booking.getAmount(),
                 booking.getCurrency(),
@@ -391,76 +381,9 @@ public class BookingsController extends BaseController {
     }
 
     private ModelAndView getIndexView(String day) throws JsonProcessingException {
-        ModelAndView indexView = new ModelAndView("bookings/index");
-
         LocalDate selectedDate = DATE_HUMAN_READABLE.parseLocalDate(day);
-        //calculate date configuration for datepicker
-        LocalDate today = new LocalDate(DEFAULT_TIMEZONE);
-        LocalDate firstDay = today.dayOfMonth().withMinimumValue();
-        LocalDate lastDay = today.plusDays(Constants.CALENDAR_MAX_DATE).dayOfMonth().withMaximumValue();
-        List<CalendarConfig> calendarConfigs = calendarConfigDAO.findBetween(firstDay, lastDay);
-        Map<String, DatePickerDayConfig> dayConfigs = new HashMap<>();
-        for (LocalDate date = firstDay; date.isBefore(lastDay); date = date.plusDays(1)) {
-            DatePickerDayConfig dayConfig = new DatePickerDayConfig();
-            dayConfig.setSelectable(Boolean.FALSE);
-            for (CalendarConfig calendarConfig : calendarConfigs) {
-                for (CalendarWeekDay weekDay : calendarConfig.getCalendarWeekDays()) {
-                    if (weekDay.ordinal() + 1 == date.getDayOfWeek()) {
-                        if (!bookingUtil.isHoliday(date, calendarConfig)) {
-                            if (calendarConfig.getStartDate().compareTo(date) <= 0 && calendarConfig.getEndDate().compareTo(date) >= 0) {
-                                dayConfig.setSelectable(Boolean.TRUE);
-                            }
-                        }
-                    }
-                }
-            }
-            dayConfigs.put(date.toString(), dayConfig);
-        }
-        indexView.addObject("dayConfigs", mapper.writeValueAsString(dayConfigs));
-        indexView.addObject("maxDate", lastDay.toString());
-
-        //calculate availble time slots
-        List<TimeSlot> timeSlots = new ArrayList<>();
-        List<LocalDate> weekDays = new ArrayList<>();
-        for (int i=1; i<=CalendarWeekDay.values().length; i++){
-            LocalDate date = selectedDate.withDayOfWeek(i);
-            weekDays.add(date);
-            if (!date.isBefore(new LocalDate())){
-                try {
-                    List<CalendarConfig> calendarConfigsForDate = calendarConfigDAO.findFor(date);
-                    Iterator<CalendarConfig> iterator = calendarConfigsForDate.iterator();
-                    while(iterator.hasNext()){
-                        CalendarConfig calendarConfig = iterator.next();
-                        if (bookingUtil.isHoliday(date, calendarConfig)) {
-                            iterator.remove();
-                        }
-                    }
-
-                    //generate list of bookable time slots
-                    timeSlots.addAll(bookingUtil.getTimeSlotsForDateAndCalendarConfigs(date, calendarConfigsForDate, true));
-                } catch (CalendarConfigException e){
-                    //safe to ignore
-                }
-            }
-        }
-        
-        Map<TimeRange, List<TimeSlot>> rangeMap = new TreeMap<>();
-        for (TimeSlot slot: timeSlots){
-            TimeRange range = new TimeRange();
-            range.setStartTime(slot.getStartTime());
-            range.setEndTime(slot.getEndTime());
-            
-            List<TimeSlot> rangeSlots = rangeMap.get(range);
-            if (rangeSlots == null){
-                rangeSlots = new ArrayList<>();
-            }
-            rangeSlots.add(slot);
-            rangeMap.put(range, rangeSlots);
-        }
-        
-        indexView.addObject("Day", day);
-        indexView.addObject("WeekDays", weekDays);
-        indexView.addObject("RangeMap", rangeMap);
+        ModelAndView indexView = new ModelAndView("bookings/index");
+        bookingUtil.addWeekView(selectedDate, indexView, true);
         return indexView;
     }
 
@@ -482,35 +405,43 @@ public class BookingsController extends BaseController {
         CalendarConfig config = calendarConfigDAO.findFor(selectedDate, selectedTime);
         List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(selectedDate);
 
-        List<Integer> durations = new ArrayList<>();
-        Integer duration = config.getMinDuration();
-        Integer interval = config.getMinInterval();
-        LocalTime endTime = selectedTime.plusMinutes(duration);
-
-        //as long as the endTime is before the end time configured in the calendar
-        while (endTime.compareTo(config.getEndTime()) <= 0) {
-
-            TimeSlot timeSlot = new TimeSlot();
-            timeSlot.setStartTime(selectedTime);
-            timeSlot.setEndTime(endTime);
-            timeSlot.setConfig(config);
-            bookingUtil.checkForBookedCourts(timeSlot, confirmedBookings);
-
-            //stop if there are no courts available for the requested duration.
-            //only contiguous bookings are supported
-            if (timeSlot.getFreeCourtCount()<1){
-                break;
+        Map<Offer, List<Integer>> offerDurations = new HashMap<>();
+       
+        for (Offer offer: config.getOffers()){
+            Integer duration = config.getMinDuration();
+            Integer interval = config.getMinInterval();
+            LocalTime endTime = selectedTime.plusMinutes(duration);
+            List<Integer> durations = new ArrayList<>();
+            //as long as the endTime is before the end time configured in the calendar
+            while (endTime.compareTo(config.getEndTime()) <= 0) {
+                
+               
+                TimeSlot timeSlot = new TimeSlot();
+                timeSlot.setStartTime(selectedTime);
+                timeSlot.setEndTime(endTime);
+                timeSlot.setConfig(config);
+                Long bookingSlotsLeft = bookingUtil.getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
+                
+                if (bookingSlotsLeft<1){
+                    break;
+                }
+                
+                durations.add(duration);
+                
+                //increase the duration by the configured minimum intreval and determine the new end time for the next iteration
+                duration += interval;
+                endTime = endTime.plusMinutes(interval);
             }
-            durations.add(duration);
-            //increase the duration by the configured minimum intreval and determine the new end time for the next iteration
-            duration += interval;
-            endTime = endTime.plusMinutes(interval);
+            if (!durations.isEmpty()){
+                offerDurations.put(offer, durations);
+            }
         }
 
         //notify the user in case there are no durations bookable
-        if (durations.isEmpty()){
+        if (offerDurations.isEmpty()){
             throw new Exception(msg.get("NoFreeCourtsForSelectedTimeAndDate"));
         }
+        
 
         //store user provided data in the session booking
         booking.setBookingDate(selectedDate);
@@ -548,8 +479,8 @@ public class BookingsController extends BaseController {
         if (mav!=null){
             mav.addObject("Booking", booking);
             mav.addObject("PaymentMethods", paymentMethods);
-            mav.addObject("Durations", durations);
             mav.addObject("Config", config);
+            mav.addObject("OfferDurations", offerDurations);
         }
     }
 

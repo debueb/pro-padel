@@ -16,7 +16,16 @@
             <div class="relative">
                 <spf:input type="text" path="comment" class="form-control form-top-element" />
                   <div class="explanation">${CommentPlaceholder}</div>
-            </div>              
+            </div>
+            
+            <%-- Angebote --%>
+            <div class="relative">
+                <spf:select path="offers" class="select-multiple form-control" data-style="form-center-element">
+                    <spf:options items="${Offers}" itemValue="id"/>
+                </spf:select>
+                <span class="explanation-select"><fmt:message key="Offers"/></span>
+            </div>
+            
             <%-- Wochentage --%>
             <div class="relative">
                 <spf:select path="calendarWeekDays" class="select-multiple form-control" data-style="form-center-element" multiple="true">
@@ -71,7 +80,7 @@
 
             <%-- Bis --%>
             <span class="relative input-hour">
-                <spf:select path="endTimeHour" class="select-simple form-left-element form-center-element">
+                <spf:select path="endTimeHour" class="select-simple form-left-element form-bottom-element">
                     <c:forEach var="hour" begin="0" end="23">
                         <fmt:formatNumber value="${hour}" minIntegerDigits="2" var="hour"/>
                         <spf:option value="${hour}"/>
@@ -80,7 +89,7 @@
                 <span class="explanation-select"><fmt:message key="UntilHour"/></span>
             </span>
             <span class="relative input-hour">
-                <spf:select path="endTimeMinute" class="select-simple form-right-element form-center-element">
+                <spf:select path="endTimeMinute" class="select-simple form-right-element form-bottom-element">
                     <c:forEach var="minute" begin="0" end="55" step="5">
                         <fmt:formatNumber value="${minute}" minIntegerDigits="2" var="minute"/>
                         <spf:option value="${minute}"/>
@@ -89,25 +98,6 @@
                 <span class="explanation-select"><fmt:message key="UntilMinute"/></span>
             </span>
             <div class="clearfix"></div>
-            
-            <%-- Plätze --%>
-            <div class="input-group"> 
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-default btn-plus-minus form-control form-bottom-left-element" data-type="minus" data-field="courtCount">
-                        <span class="fa fa-minus"></span>
-                    </button>
-                </span>
-                <span class="relative">
-                    <spf:input type="text" path="courtCount" class="form-control text-center input-plus-minus form-center-element" min="0" max="10"/>
-                    <span class="explanation"><fmt:message key="Courts"/></span>
-                </span>
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-default btn-plus-minus form-control form-bottom-right-element" data-type="plus" data-field="courtCount">
-                        <span class="fa fa-plus"></span>
-                    </button>
-                </span>
-            </div>
-            
             
             <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
         </spf:form>

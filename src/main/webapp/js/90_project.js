@@ -330,14 +330,36 @@ app.main = {};
         fixStatusBar();
     };
 
-    self.enableUpdateBookingPrice = function () {
-        $('select[id="booking-duration"]').livequery(function(){
+    self.enableUpdateBooking = function () {
+        var updateDuration = function(){
+            var target = $(this).find('option:selected').attr('data-target');
+                $('.booking-duration-container').hide();
+                $('.booking-duration-container').find('select').prop('disabled', 'disabled');
+                $(target).show();
+                $(target).find('select').prop('disabled', false);
+                updatePrice.apply($(target).find('select'));
+        };
+        
+        var updatePrice = function(){
+            var duration = $(this).val(),
+                target = $('#booking-price'),
+                basePrice = target.attr('data-base-price'),
+                minDuration = target.attr('data-min-duration');
+            target.html((basePrice / minDuration * duration).toFixed(2));
+        };
+        
+        $('select[id="booking-court"]').livequery(function(){
+            //first run
+            updateDuration.apply(this);
+        
             $(this).on('change', function () {
-                var duration = $(this).val(),
-                    target = $('#booking-price'),
-                    basePrice = target.attr('data-base-price'),
-                    minDuration = target.attr('data-min-duration');
-                target.html((basePrice / minDuration * duration).toFixed(2));
+                updateDuration.apply(this);
+            });
+        });
+        
+        $('select.booking-duration').livequery(function(){
+            $(this).on('change', function () {
+                updatePrice.apply(this);
             });
         });
     };
@@ -430,7 +452,7 @@ $(document).ready(function () {
     app.main.enableSelectPicker();
     app.main.enablePlusMinusInputFields();
     app.main.enableAddToHomeScreen();
-    app.main.enableUpdateBookingPrice();
+    app.main.enableUpdateBooking();
     app.main.enableRegexChecksOnInputs();
     app.main.enablePayMill();
 });

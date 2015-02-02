@@ -16,6 +16,6 @@ public class TestBookingVoucherNoLogin extends TestBookingVoucher {
     
     @Test
     public void testBookingWorkflowVoucherNoLogin() throws Exception {
-        bookViaVoucherAndNoLogin();
+        bookViaVoucherAndNoLogin(offer1);
     }
 }

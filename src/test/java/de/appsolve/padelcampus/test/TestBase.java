@@ -10,14 +10,19 @@ import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.Currency;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
+import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
+import de.appsolve.padelcampus.db.dao.VoucherDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
+import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.db.model.Voucher;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTimeConstants;
@@ -45,6 +50,12 @@ public abstract class TestBase extends TestCase {
     protected MockMvc mockMvc;
     
     protected MockHttpSession session;
+    
+    protected Set<Offer> offers;
+    
+    protected Offer offer1;
+    
+    protected Offer offer2;
 
     protected static final Logger log = Logger.getLogger(TestBase.class);
     
@@ -53,6 +64,9 @@ public abstract class TestBase extends TestCase {
     
     @Autowired
     private MockHttpSession _session;
+    
+    @Autowired
+    private OfferDAOI offerDAO;
 
     @Autowired
     private CalendarConfigDAOI calendarConfigDAO;
@@ -63,14 +77,48 @@ public abstract class TestBase extends TestCase {
     @Autowired
     PlayerDAOI playerDAO;
     
+    @Autowired
+    VoucherDAOI voucherDAO;
+    
     @Before
     @Override
     public void setUp() {
+        
+        List<Booking> bookings = bookingDAO.findAll();
+        for(Booking booking: bookings){
+            bookingDAO.deleteById(booking.getId());
+        }
+        
+        List<Player> players = playerDAO.findAll();
+        for (Player player: players){
+            playerDAO.deleteById(player.getId());
+        }
+        
+        
         if (mockMvc == null){
+            for (CalendarConfig config: calendarConfigDAO.findAll()){
+                calendarConfigDAO.deleteById(config.getId());
+            }
+            for (Voucher voucher: voucherDAO.findAll()){
+                voucherDAO.deleteById(voucher.getId());
+            }
+            for (Offer offer: offerDAO.findAll()){
+                offerDAO.deleteById(offer.getId());
+            }
+            
+            offers = new HashSet<>();
+            offer1 = new Offer();
+            offer1.setName("Platz 1");
+            offerDAO.saveOrUpdate(offer1);
+            offers.add(offer1);
+            offer2 = new Offer();
+            offer2.setName("Platz 2");
+            offerDAO.saveOrUpdate(offer2);
+            offers.add(offer2);
             CalendarConfig calendarConfig = new CalendarConfig();
             calendarConfig.setBasePrice(BigDecimal.TEN);
             calendarConfig.setCalendarWeekDays(new HashSet<>(Arrays.asList(new CalendarWeekDay[]{CalendarWeekDay.Monday})));
-            calendarConfig.setCourtCount(2);
+            calendarConfig.setOffers(offers);
             calendarConfig.setCurrency(Currency.EUR);
             calendarConfig.setEndDate(getNextMonday());
             calendarConfig.setEndTimeHour(21);
@@ -86,15 +134,6 @@ public abstract class TestBase extends TestCase {
             
             mockMvc = webAppContextSetup(this.wac).build();
             session = _session;
-        }
-        List<Booking> bookings = bookingDAO.findAll();
-        for(Booking booking: bookings){
-            bookingDAO.deleteById(booking.getId());
-        }
-        
-        List<Player> players = playerDAO.findAll();
-        for (Player player: players){
-            playerDAO.deleteById(player.getId());
         }
     }
     

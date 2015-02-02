@@ -31,8 +31,6 @@
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_FALLBACK" />
     </bean>
     
-    <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
-    
     <!-- INTERNATIONALIZATION -->
     <!-- reloadable Messages.properties -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">

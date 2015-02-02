@@ -9,7 +9,7 @@
             <h1><fmt:message key="BookingList"/></h1>
         </div>
       
-        <spf:form method="POST" modelAttribute="DateRange">
+        <spf:form method="POST" modelAttribute="DateRange" action="/admin/bookings/reports/bookinglist">
             <%-- Start Datum --%>
             <div class="datepicker-container">
                 <div class="datepicker-text-container form-top-element">
@@ -41,6 +41,7 @@
                     <th><fmt:message key="GameDate"/></th>
                     <th><fmt:message key="Day"/></th>
                     <th><fmt:message key="Time"/></th>
+                    <th><fmt:message key="Offer"/></th>
                     <th><fmt:message key="Player"/></th>
                     <th><fmt:message key="PaymentMethod"/></th>
                     <th><fmt:message key="Price"/></th>
@@ -52,6 +53,7 @@
                         <td><joda:format value="${Booking.bookingDate}" pattern="yyyy-MM-dd"/></td>
                         <td><joda:format value="${Booking.bookingDate}" pattern="EE"/></td>
                         <td><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></td>
+                        <td>${Booking.offer}</td>
                         <td>${Booking.player}</td>
                         <td>${Booking.paymentMethod}</td>
                         <td>${Booking.amount} ${Booking.currency.symbol}</td>

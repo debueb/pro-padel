@@ -7,10 +7,9 @@ package de.appsolve.padelcampus.data;
 
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
+import de.appsolve.padelcampus.db.model.Offer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
@@ -25,8 +24,6 @@ public class TimeSlot implements Comparable<TimeSlot>{
     private LocalTime startTime;
     
     private LocalTime endTime;
-    
-    private Map<Integer, Court> courtMap;
     
     private CalendarConfig config;
     
@@ -56,31 +53,6 @@ public class TimeSlot implements Comparable<TimeSlot>{
         this.endTime = endTime;
     }
 
-    public Map<Integer, Court> getCourtMap() {
-        if (courtMap == null){
-            courtMap = new HashMap<>();
-            for (int i=0; i<config.getCourtCount(); i++){
-                Court court = new Court();
-                courtMap.put(i, court);
-            }
-        }
-        return courtMap;
-    }
-
-    public void setCourtMap(Map<Integer, Court> courtMap) {
-        this.courtMap = courtMap;
-    }
-
-    public Integer getFreeCourtCount() {
-        Integer courtCount = getCourtMap().size();
-        for (Court court: getCourtMap().values()){
-            if (court.getBlocked()){
-                courtCount--;
-            }
-        }
-        return courtCount;
-    }
-
     public CalendarConfig getConfig() {
         return config;
     }
@@ -103,6 +75,20 @@ public class TimeSlot implements Comparable<TimeSlot>{
         setBookings(_bookings);
     }
     
+    public Long getFreeCourtCount(){
+        Long freeCourtCount = 0L;
+        for (Offer offer: getConfig().getOffers()){
+            freeCourtCount += offer.getMaxConcurrentBookings();
+            for (Booking booking: getBookings()){
+                if (booking.getOffer().equals(offer)){
+                    freeCourtCount -= 1;
+                    break;
+                }
+            }
+        }
+        return freeCourtCount;
+    }
+    
     @Override
     public int compareTo(TimeSlot o) {
         return getStartTime().compareTo(o.getStartTime());
@@ -110,6 +96,6 @@ public class TimeSlot implements Comparable<TimeSlot>{
     
     @Override 
     public String toString(){
-        return getStartTime()+" - "+getEndTime()+ ": "+getFreeCourtCount();
+        return getStartTime()+" - "+getEndTime();
     }
 }

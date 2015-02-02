@@ -17,6 +17,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -37,7 +38,7 @@ public class Voucher extends BaseEntity{
     private String UUID;
     
     @Column(length=4000)
-    @NotEmpty(message = "{NotEmpty.voucherComment}")
+    @NotEmpty(message = "{NotEmpty.comment}")
     private String comment;
     
     @Column
@@ -62,11 +63,14 @@ public class Voucher extends BaseEntity{
     @Column
     private Boolean used;
     
-    @Column
     @ElementCollection(fetch=FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @NotEmpty(message = "{NotEmpty.calendarWeekDays}")
     private Set<CalendarWeekDay> calendarWeekDays;
+    
+    @ManyToMany(fetch=FetchType.EAGER)
+    @NotEmpty(message = "{NotEmpty.offers}")
+    private Set<Offer> offers;
 
     public String getUUID() {
         return UUID;
@@ -158,11 +162,6 @@ public class Voucher extends BaseEntity{
         this.validUntilMinute =  time.getMinuteOfHour();
     }
     
-    @Override
-    public String getDisplayName(){
-        return getUUID()+" ("+getComment()+")";
-    }
-    
     public Set<CalendarWeekDay> getCalendarWeekDays() {
         if (calendarWeekDays!=null && !calendarWeekDays.isEmpty()){
             return EnumSet.copyOf(calendarWeekDays);
@@ -172,5 +171,18 @@ public class Voucher extends BaseEntity{
 
     public void setCalendarWeekDays(Set<CalendarWeekDay> calendarWeekDays) {
         this.calendarWeekDays = calendarWeekDays;
+    }
+
+    public Set<Offer> getOffers() {
+        return offers;
+    }
+
+    public void setOffers(Set<Offer> offers) {
+        this.offers = offers;
+    }
+    
+    @Override
+    public String getDisplayName(){
+        return getUUID()+" ("+getComment()+")";
     }
 }

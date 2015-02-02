@@ -37,9 +37,9 @@
     </jsp:include>
     <c:if test="${not empty user}">
         <jsp:include page="/jsp/include/list-menu-item.jsp">
-            <jsp:param name="image" value="${not empty param.image ? 'wrench' : ''}"/>
-            <jsp:param name="key" value="Profile"/>
-            <jsp:param name="url" value="/profile"/>
+            <jsp:param name="image" value="${not empty param.image ? 'child' : ''}"/>
+            <jsp:param name="key" value="Account"/>
+            <jsp:param name="url" value="/account"/>
         </jsp:include>
     </c:if>
     <c:if test="${not empty privileges}">

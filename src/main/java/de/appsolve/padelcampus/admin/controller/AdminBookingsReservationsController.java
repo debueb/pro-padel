@@ -12,11 +12,14 @@ import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.Currency;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.data.ReservationRequest;
+import de.appsolve.padelcampus.data.TimeSlot;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
 import de.appsolve.padelcampus.db.dao.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
+import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.utils.BookingUtil;
@@ -26,21 +29,20 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
+import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -60,6 +62,9 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     BookingDAOI bookingDAO;
     
     @Autowired
+    OfferDAOI offerDAO;
+    
+    @Autowired
     BookingUtil bookingUtil;
     
     @Autowired
@@ -68,9 +73,19 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     @Autowired
     SessionUtil sessionUtil;
     
+    @Autowired
+    Validator validator;
+    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
+        binder.registerCustomEditor(Set.class, "offers", new CustomCollectionEditor(Set.class) {
+            @Override
+            protected Object convertElement(Object element) {
+                Long id = Long.parseLong((String) element);
+                return offerDAO.findById(id);
+            }
+        });
     }
     
     @RequestMapping()
@@ -91,24 +106,18 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         LocalTime endTime = request.getStartTime().plusMinutes(Constants.BOOKING_DEFAULT_DURATION);
         request.setEndTimeHour(endTime.getHourOfDay());
         request.setEndTimeMinute(endTime.getMinuteOfHour());
-        request.setCourtCount(1);
         return getAddView(request);
     }
     
     @RequestMapping(value="add", method=POST)
     @Override
-    public ModelAndView postEditView(@Valid @ModelAttribute("Model") ReservationRequest reservationRequest, HttpServletRequest request, BindingResult bindingResult){
+    public ModelAndView postEditView(@ModelAttribute("Model") ReservationRequest reservationRequest, HttpServletRequest request, BindingResult bindingResult){
+        ModelAndView addView = getAddView(reservationRequest);
+        validator.validate(reservationRequest, bindingResult);
+        if (bindingResult.hasErrors()){
+            return addView;
+        }
         try {
-            if (StringUtils.isEmpty(reservationRequest.getComment())){
-                throw new Exception(msg.get("PleaseEnterAComment"));
-            }
-            if (reservationRequest.getCalendarWeekDays().isEmpty()){
-                throw new Exception(msg.get("SelectAtLeastOneWeekDay"));
-            }
-            if (reservationRequest.getCourtCount() == null){
-                throw new Exception(msg.get("SpecifyCourtCount"));
-            }
-            
             Player player = sessionUtil.getUser(request);
             
             //calculate reservation bookings, taking into account holidays
@@ -116,18 +125,19 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
             LocalDate endDate = reservationRequest.getEndDate();
             
             List<Booking> bookings = new ArrayList<>();
-            Map<Booking, Exception> failedBookings = new TreeMap<>();
+            Set<Booking> failedBookings = new TreeSet<>();
             
             while (date.compareTo(endDate) <= 0){
                 Set<CalendarWeekDay> calendarWeekDays = reservationRequest.getCalendarWeekDays();
-                for (CalendarWeekDay calendarWeekDay : calendarWeekDays) {
+                for (CalendarWeekDay calendarWeekDay: calendarWeekDays) {
                     if (calendarWeekDay.ordinal()+1 == date.getDayOfWeek()){
                         List<CalendarConfig> calendarConfigsForDate = calendarConfigDAO.findFor(date);
                         Iterator<CalendarConfig> iterator = calendarConfigsForDate.iterator();
                         while(iterator.hasNext()){
                             CalendarConfig calendarConfig = iterator.next();
                             if (!bookingUtil.isHoliday(date, calendarConfig)) {
-                                for (int i=0; i<reservationRequest.getCourtCount(); i++){
+                                for (Offer offer: reservationRequest.getOffers()){
+                                    
                                     Booking booking = new Booking();
                                     booking.setAmount(BigDecimal.ZERO);
                                     booking.setBlockingTime(new LocalDateTime());
@@ -146,18 +156,23 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                                     booking.setPaymentMethod(PaymentMethod.Reservation);
                                     booking.setPlayer(player);
                                     booking.setUUID(BookingUtil.generateUUID());
+                                    booking.setOffer(offer);
                                     
-                                    //throws exception if there are not enough free courts for desired booking
-                                    try {
-                                        Integer courtNumber = bookingUtil.getCourtNumber(booking);
-                                        booking.setCourtNumber(courtNumber);
-
-                                        //we save the booking directly so that the court number gets updated correctly
-                                        bookingDAO.saveOrUpdate(booking);
-                                        bookings.add(booking);
-                                    } catch (Exception e){
-                                        failedBookings.put(booking, e);
+                                    List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(date);
+                                    TimeSlot timeSlot = new TimeSlot();
+                                    timeSlot.setStartTime(reservationRequest.getStartTime());
+                                    timeSlot.setEndTime(reservationRequest.getEndTime());
+                                    timeSlot.setConfig(calendarConfig);
+                                    Long bookingSlotsLeft = bookingUtil.getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
+                                 
+                                    if (bookingSlotsLeft<1){
+                                        failedBookings.add(booking);
+                                        continue;
                                     }
+                                    
+                                    //we save the booking directly to prevent overbookings
+                                    bookingDAO.saveOrUpdate(booking);
+                                    bookings.add(booking);
                                 }
                             }
                             break;
@@ -170,10 +185,8 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
             
             if (!failedBookings.isEmpty()){
                 StringBuilder sb = new StringBuilder();
-                for (Entry<Booking, Exception> entry: failedBookings.entrySet()){
-                    sb.append(entry.getKey().toString());
-                    sb.append(": ");
-                    sb.append(entry.getValue().getMessage());
+                for (Booking booking: failedBookings){
+                    sb.append(booking);
                     sb.append("<br/>");
                 }
                 throw new Exception(msg.get("UnableToReserveAllDesiredTimes", new Object[]{StringUtils.join(bookings, "<br/>"), sb.toString()}));
@@ -185,9 +198,8 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
             
             return new ModelAndView("redirect:/admin/bookings/reservations");
         } catch (Exception e){
-            ModelAndView mav = getAddView(reservationRequest);
-            bindingResult.addError(new ObjectError("courtCount", e.getMessage()));
-            return mav;
+            bindingResult.addError(new ObjectError("comment", e.getMessage()));
+            return addView;
         }
     }
 
@@ -195,6 +207,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         ModelAndView mav = new ModelAndView("admin/bookings/reservations/add");
         mav.addObject("Model", reservationRequest);
         mav.addObject("WeekDays", CalendarWeekDay.values());
+        mav.addObject("Offers", offerDAO.findAll());
         return mav;
     }
 

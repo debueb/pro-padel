@@ -36,11 +36,6 @@
                 <jsp:param name="icon" value="cube"/>
             </jsp:include>
             <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/bookings/allocations"/>
-                <jsp:param name="key" value="CourtAllocations"/>
-                <jsp:param name="icon" value="cubes"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
                 <jsp:param name="href" value="/admin/bookings/reports"/>
                 <jsp:param name="key" value="Reports"/>
                 <jsp:param name="icon" value="pie-chart"/>

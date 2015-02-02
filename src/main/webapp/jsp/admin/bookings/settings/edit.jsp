@@ -105,22 +105,12 @@
             
             <div class="clearfix"></div>
 
-            <%-- Plätze --%>
-            <div class="input-group"> 
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-default btn-plus-minus form-center-element form-control form-left-element" data-type="minus" data-field="courtCount">
-                        <span class="fa fa-minus"></span>
-                    </button>
-                </span>
-                <span class="relative">
-                    <spf:input type="text" path="courtCount" class="form-control text-center input-plus-minus form-center-element" min="0" max="10"/>
-                    <span class="explanation"><fmt:message key="Courts"/></span>
-                </span>
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-default btn-plus-minus form-center-element form-control form-right-element" data-type="plus" data-field="courtCount">
-                        <span class="fa fa-plus"></span>
-                    </button>
-                </span>
+            <%-- Angebote --%>
+            <div class="relative">
+                <spf:select path="offers" class="select-multiple form-control" data-style="form-center-element">
+                    <spf:options items="${Offers}" itemValue="id"/>
+                </spf:select>
+                <span class="explanation-select"><fmt:message key="Offers"/></span>
             </div>
 
             <%-- Min Dauer --%>

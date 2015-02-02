@@ -14,19 +14,19 @@ import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_
 import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_UNTIL_HOUR;
 import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_UNTIL_MINUTE;
 import de.appsolve.padelcampus.db.dao.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.dao.VoucherDAOI;
 import de.appsolve.padelcampus.db.model.Voucher;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.VoucherUtil;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -47,9 +47,19 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
     @Autowired
     VoucherDAOI voucherDAO;
     
+    @Autowired
+    OfferDAOI offerDAO;
+    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
+        binder.registerCustomEditor(Set.class, "offers", new CustomCollectionEditor(Set.class) {
+            @Override
+            protected Object convertElement(Object element) {
+                Long id = Long.parseLong((String) element);
+                return offerDAO.findById(id);
+            }
+        });
     }
     
     @Override
@@ -64,9 +74,7 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
         voucher.setValidUntilMinute(BOOKING_DEFAULT_VALID_UNTIL_MINUTE);
         voucher.setCalendarWeekDays(CalendarWeekDay.valuesAsSet());
         
-        ModelAndView editView = getEditView(voucher);
-        editView.addObject("voucherCount", 1);
-        return editView;
+        return getEditView(voucher);
     }
     
     @Override
@@ -76,6 +84,9 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
         //TODO: calculate from minDuration + minInterval
         mav.addObject("Durations", new Integer[]{60,90,120});
         mav.addObject("WeekDays", CalendarWeekDay.values());
+        mav.addObject("voucherCount", 1);
+        mav.addObject("Offers", offerDAO.findAll());
+        
         return mav;
     }
     

@@ -1,9 +1,12 @@
 package de.appsolve.padelcampus.db.dao;
 ;
+import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import java.util.List;
 import org.joda.time.LocalDate;
 import de.appsolve.padelcampus.db.model.Booking;
+import java.util.HashMap;
+import java.util.Map;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -60,5 +63,12 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
         criteria.add(Restrictions.eq("paymentMethod", PaymentMethod.Reservation));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<Booking>) criteria.list();
+    }
+
+    @Override
+    public List<Booking> findByPlayer(Player player) {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("player", player);
+        return findByAttributes(attributes);
     }
 }

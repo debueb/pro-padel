@@ -64,9 +64,9 @@
             </c:if>
             <c:if test="${not empty user}">
                 <jsp:include page="/jsp/include/list-group-item.jsp">
-                    <jsp:param name="href" value="/profile"/>
-                    <jsp:param name="key" value="Profile"/>
-                    <jsp:param name="icon" value="wrench"/>
+                    <jsp:param name="href" value="/account"/>
+                    <jsp:param name="key" value="Account"/>
+                    <jsp:param name="icon" value="child"/>
                 </jsp:include>
             </c:if>
             <c:if test="${not empty privileges}">
