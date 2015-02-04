@@ -117,7 +117,7 @@ public class BookingsPayPalController extends BookingsPaymentController{
             PaymentExecution paymentExecute = new PaymentExecution();
             paymentExecute.setPayerId(request.getParameter("PayerID"));
             payment = payment.execute(getApiContext(), paymentExecute);
-            //TODO: check payment status, throw exception if not successful
+            //check payment status, throw exception if not successful
             String state = payment.getState();
             if (!state.equals("approved")){
                 throw new Exception("PayPal returned unexpected payment status: "+state);

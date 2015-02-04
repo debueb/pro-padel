@@ -20,5 +20,5 @@ public interface CalendarConfigDAOI extends GenericDAOI<CalendarConfig>{
     
     List<CalendarConfig> findBetween(LocalDate startDate, LocalDate endDate);
     List<CalendarConfig> findFor(LocalDate date) throws CalendarConfigException;
-    CalendarConfig findFor(LocalDate date, LocalTime time) throws CalendarConfigException;
+    List<CalendarConfig> findFor(LocalDate date, LocalTime time) throws CalendarConfigException;
 }

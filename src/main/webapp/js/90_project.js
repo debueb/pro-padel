@@ -341,11 +341,9 @@ app.main = {};
         };
         
         var updatePrice = function(){
-            var duration = $(this).val(),
-                target = $('#booking-price'),
-                basePrice = target.attr('data-base-price'),
-                minDuration = target.attr('data-min-duration');
-            target.html((basePrice / minDuration * duration).toFixed(2));
+            var target = $('#booking-price'),
+                price = $(this).find('option:selected').attr('data-price');
+            target.html(price);
         };
         
         $('select[id="booking-court"]').livequery(function(){

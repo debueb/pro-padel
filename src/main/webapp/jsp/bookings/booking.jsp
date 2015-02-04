@@ -29,20 +29,21 @@
                         <div class="col-xs-4 booking-cell"><fmt:message key="Offer"/>:</div>
                         <div class="col-xs-8">
                             <spf:select path="offer" class="form-control select-simple" id="booking-court">
-                                <c:forEach items="${OfferDurations}" var="Offer">
-                                    <spf:option value="${Offer['key'].id}" data-target="#booking-duration-container-${Offer['key'].id}">${Offer['key']}</spf:option>
+                                <c:forEach items="${OfferDurationPrices}" var="OfferDurationPrice">
+                                    <spf:option value="${OfferDurationPrice.offer.id}" data-target="#booking-duration-container-${OfferDurationPrice.offer.id}">${OfferDurationPrice.offer}</spf:option>
                                 </c:forEach>
                             </spf:select>
                         </div>
                     </div>
                    
-                    <c:forEach items="${OfferDurations}" var="Offer">
-                        <div class="row unit booking-duration-container" id="booking-duration-container-${Offer['key'].id}">
+                    <c:forEach items="${OfferDurationPrices}" var="OfferDurationPrice">
+                        <div class="row unit booking-duration-container" id="booking-duration-container-${OfferDurationPrice.offer.id}">
                             <div class="col-xs-4 booking-cell"><fmt:message key="GameDuration"/>:</div>
                             <div class="col-xs-8">
                                 <spf:select path="duration" class="form-control select-simple booking-duration">
-                                    <c:forEach var="Duration" items="${Offer['value']}">
-                                        <spf:option value="${Duration}">${Duration} <fmt:message key="Minutes"/></spf:option>
+                                    <c:forEach var="DurationPrice" items="${OfferDurationPrice.durationPriceMap}">
+                                        <fmt:formatNumber var="price" value="${DurationPrice['value']}" minFractionDigits="2" maxFractionDigits="2"/>
+                                        <spf:option value="${DurationPrice['key']}" data-price="${price} ${OfferDurationPrice.currency.symbol}">${DurationPrice['key']} <fmt:message key="Minutes"/></spf:option>
                                     </c:forEach>
                                 </spf:select>
                             </div>
@@ -66,7 +67,7 @@
                     
                     <div class="row">
                         <div class="col-xs-4 booking-cell"><fmt:message key="Price"/>:</div>
-                        <div class="col-xs-8 booking-cell"><span id="booking-price" data-base-price="${Config.basePrice}" data-min-duration="${Config.minDuration}"><fmt:formatNumber value="${Booking.amount}" maxFractionDigits="2" minFractionDigits="2"/></span> ${Booking.currency}</div>
+                        <div class="col-xs-8 booking-cell"><span id="booking-price"><fmt:formatNumber value="${Booking.amount}" maxFractionDigits="2" minFractionDigits="2"/></span> ${Booking.currency}</div>
                     </div>
 
                     <div class="unit">

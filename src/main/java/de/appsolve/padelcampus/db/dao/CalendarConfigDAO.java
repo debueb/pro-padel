@@ -93,23 +93,24 @@ public class CalendarConfigDAO extends GenericDAO<CalendarConfig> implements Cal
         if (configsMatchingDate.isEmpty()){
             throw new CalendarConfigException(msg.get("NoMatchingCalendarConfigurationFound"));
         }
+        Collections.sort(configsMatchingDate);
         return configsMatchingDate;
     }
     
     @Override
     //disable auto commit on method exit as we modify the CalendarConfig's endTime in certain situations
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public CalendarConfig findFor(LocalDate date, LocalTime time) throws CalendarConfigException{
+    public List<CalendarConfig> findFor(LocalDate date, LocalTime time) throws CalendarConfigException{
         List<CalendarConfig> configsMatchingDate = findFor(date);
         List<CalendarConfig> configsMatchingDateAndTime = new ArrayList<>();
         Iterator<CalendarConfig> iterator = configsMatchingDate.iterator();
         while (iterator.hasNext()){
             CalendarConfig config = iterator.next();
             
-            //remove configurations that start after the requested time
-            if (config.getStartTime().compareTo(time) > 0){
-                continue;
-            }
+//            //remove configurations that start after the requested time
+//            if (config.getStartTime().compareTo(time) > 0){
+//                continue;
+//            }
             
             //remove configurations that end before the requested time
             if (config.getEndTime().compareTo(time) <= 0){
@@ -122,25 +123,6 @@ public class CalendarConfigDAO extends GenericDAO<CalendarConfig> implements Cal
             throw new CalendarConfigException(msg.get("NoMatchingCalendarConfigurationFound"));
         }
         
-        if (configsMatchingDateAndTime.size()>0){
-            //sort calendar configurations by priority
-            Collections.sort(configsMatchingDateAndTime);
-            CalendarConfig matchingConfig = configsMatchingDateAndTime.get(0);
-        
-            //make sure to end lower prioritized configuration before higher prioritized configs start
-            //to avoid long durations on lower prioritized time slots, which would allow bookings on lower prioritized conditions during higher prioritized time slots
-            for (CalendarConfig otherConfig: configsMatchingDate){
-                if (otherConfig.getPriority().compareTo(matchingConfig.getPriority()) > 0){
-                    if (otherConfig.getStartTime().isAfter(time)){
-                        if (otherConfig.getStartTime().compareTo(matchingConfig.getEndTime()) <= 0){
-                            matchingConfig.setEndTimeHour(otherConfig.getStartTimeHour());
-                            matchingConfig.setEndTimeMinute(otherConfig.getStartTimeMinute());
-                        }
-                    }
-                }
-            }
-            return matchingConfig;
-        }
-        return null;
+        return configsMatchingDateAndTime;
     }
 }

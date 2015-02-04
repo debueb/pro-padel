@@ -17,7 +17,7 @@
 </div>
 <div class="row">
     <div class="col-xs-4 booking-cell"><fmt:message key="Price"/>:</div>
-    <div class="col-xs-8 booking-cell"><fmt:formatNumber value="${Booking.amount}" maxFractionDigits="2"/> ${Booking.currency}</div>
+    <div class="col-xs-8 booking-cell"><fmt:formatNumber value="${Booking.amount}" minFractionDigits="2" maxFractionDigits="2"/> ${Booking.currency.symbol}</div>
 </div>
 <div class="row">
     <div class="col-xs-4 booking-cell"><fmt:message key="PaymentMethod"/>:</div>
