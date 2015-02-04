@@ -8,14 +8,14 @@
         </div>
 
         <div class="unit">
-            <table class="table table-bordered table-centered datatable">
+            <table class="table table-bordered table-centered datatable-grouped">
                 <thead>
                     <tr>
+                        <th><fmt:message key="Comment"/></th>
                         <th><fmt:message key="Voucher"/></th>
                         <th><fmt:message key="ValidUntil"/></th>
                         <th><fmt:message key="Duration"/></th>
                         <th><fmt:message key="Offers"/></th>
-                        <th><fmt:message key="Comment"/></th>
                         <th><fmt:message key="Used"/></th>
                         <th><fmt:message key="Delete"/></th>
                     </tr>
@@ -23,11 +23,11 @@
                 <tbody>
                     <c:forEach items="${Models}" var="Model">
                         <tr>
+                            <td>${Model.comment}</td>
                             <td style="text-align: left;">${Model.UUID}</td>
                             <td><joda:format value="${Model.validUntil}" pattern="yyyy-MM-dd" /></td>
                             <td>${Model.duration}</td>
                             <td>${Model.offers}</td>
-                            <td>${Model.comment}</td>
                             <td><div class="fa ${Model.used ? 'fa-check' : 'fa-close'}"></div></td>
                             <td class="delete"><a href="/admin/bookings/voucher/${Model.id}/delete" type="btn btn-primary ajaxify" class="fa fa-minus-circle"></a></td>
                         </tr>

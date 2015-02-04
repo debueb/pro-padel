@@ -15,3 +15,16 @@ table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTa
 .dataTables_wrapper .dataTables_filter input{
     width: auto;
 }
+.table > tbody > tr > td.group-item-expander{
+    background: #fafafa;
+    text-align: left;
+    border-top: 1px solid lightgray;
+} 
+.expanded-group:before{
+    font: normal normal normal 14px/1 FontAwesome;
+    content: "\f146  ";
+}
+.collapsed-group:before{
+    font: normal normal normal 14px/1 FontAwesome;
+    content: "\f0fe  ";
+}

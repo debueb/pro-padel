@@ -5,6 +5,18 @@ $(document).ready(function () {
         stateDuration: 0
     });
     
+   
+    $('.datatable-grouped').dataTable({
+        stateSave: true,
+        stateDuration: 0,
+        "bLengthChange": false,
+        "bPaginate": false})
+        .rowGrouping({
+            bExpandableGrouping: true,
+            bExpandable: false,
+            asExpandedGroups: [""]
+        });
+    
     $('.dataTables_wrapper').find('select').selectpicker({
         iconBase: 'fa',
         tickIcon: 'fa-check',
