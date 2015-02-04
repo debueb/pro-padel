@@ -109,10 +109,12 @@ public abstract class TestBase extends TestCase {
             offers = new HashSet<>();
             offer1 = new Offer();
             offer1.setName("Platz 1");
+            offer1.setMaxConcurrentBookings(1L);
             offerDAO.saveOrUpdate(offer1);
             offers.add(offer1);
             offer2 = new Offer();
             offer2.setName("Platz 2");
+            offer2.setMaxConcurrentBookings(1L);
             offerDAO.saveOrUpdate(offer2);
             offers.add(offer2);
             CalendarConfig calendarConfig = new CalendarConfig();
