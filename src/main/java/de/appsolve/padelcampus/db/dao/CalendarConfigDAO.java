@@ -12,11 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -95,29 +92,5 @@ public class CalendarConfigDAO extends GenericDAO<CalendarConfig> implements Cal
         }
         Collections.sort(configsMatchingDate);
         return configsMatchingDate;
-    }
-    
-    @Override
-    //disable auto commit on method exit as we modify the CalendarConfig's endTime in certain situations
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public List<CalendarConfig> findFor(LocalDate date, LocalTime time) throws CalendarConfigException{
-        List<CalendarConfig> configsMatchingDate = findFor(date);
-        List<CalendarConfig> configsMatchingDateAndTime = new ArrayList<>();
-        Iterator<CalendarConfig> iterator = configsMatchingDate.iterator();
-        while (iterator.hasNext()){
-            CalendarConfig config = iterator.next();
-            
-            //remove configurations that end before the requested time
-            if (config.getEndTime().compareTo(time) <= 0){
-                continue;
-            }
-            configsMatchingDateAndTime.add(config);
-        }
-        
-        if (configsMatchingDateAndTime.isEmpty()){
-            throw new CalendarConfigException(msg.get("NoMatchingCalendarConfigurationFound"));
-        }
-        
-        return configsMatchingDateAndTime;
     }
 }

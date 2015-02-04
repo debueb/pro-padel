@@ -58,36 +58,48 @@ public class BookingUtil {
     @Autowired
     ObjectMapper objectMapper;
     
-    public List<TimeSlot> getTimeSlotsForDateAndCalendarConfigs(LocalDate selectedDate, List<CalendarConfig> calendarConfigs, Boolean onlyFutureTimeSlots, Boolean preventOverlapping){
-        LocalDate today = new LocalDate(DEFAULT_TIMEZONE);
-        
-        //sort all calendar configurations for selected date by priority
-        Collections.sort(calendarConfigs);
-        
-        //generate list of bookable time slots
-        List<TimeSlot> timeSlots = new ArrayList<>();
-        for (CalendarConfig config : calendarConfigs) {
-            LocalTime time = config.getStartTime();
-            LocalTime now = new LocalTime(DEFAULT_TIMEZONE);
-            
-            while (time.plusMinutes(config.getMinDuration()).compareTo(config.getEndTime()) <= 0) {
-                if (onlyFutureTimeSlots) {
-                    if (selectedDate.isAfter(today) || time.isAfter(now)){
-                        addTimeSlot(timeSlots, selectedDate, time, config);
-                    }
-                } else {
-                    addTimeSlot(timeSlots, selectedDate, time, config);
-                }
-                time = time.plusMinutes(config.getMinInterval());
+    public List<TimeSlot> getTimeSlotsForDate(LocalDate selectedDate, Boolean onlyFutureTimeSlots, Boolean preventOverlapping) throws CalendarConfigException{
+        List<CalendarConfig> calendarConfigs = calendarConfigDAO.findFor(selectedDate);
+        Iterator<CalendarConfig> iterator = calendarConfigs.iterator();
+        while(iterator.hasNext()){
+            CalendarConfig calendarConfig = iterator.next();
+            if (isHoliday(selectedDate, calendarConfig)) {
+                iterator.remove();
             }
         }
-        //sort time slots by time
-        Collections.sort(timeSlots);
         
-        //decrease court count for every blocking booking
-        List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(selectedDate);
-        for (TimeSlot timeSlot : timeSlots) {
-            checkForBookedCourts(timeSlot, confirmedBookings, preventOverlapping);
+        List<TimeSlot> timeSlots = new ArrayList<>();
+        if (calendarConfigs.size()>0){
+            LocalDate today = new LocalDate(DEFAULT_TIMEZONE);
+
+            //sort all calendar configurations for selected date by start time
+            Collections.sort(calendarConfigs);
+
+            LocalTime time = calendarConfigs.get(0).getStartTime();
+            LocalTime now = new LocalTime(DEFAULT_TIMEZONE);
+
+            //generate list of bookable time slots
+            for (CalendarConfig config : calendarConfigs) {
+
+                while (time.plusMinutes(config.getMinDuration()).compareTo(config.getEndTime()) <= 0) {
+                    if (onlyFutureTimeSlots) {
+                        if (selectedDate.isAfter(today) || time.isAfter(now)){
+                            addTimeSlot(timeSlots, selectedDate, time, config);
+                        }
+                    } else {
+                        addTimeSlot(timeSlots, selectedDate, time, config);
+                    }
+                    time = time.plusMinutes(config.getMinInterval());
+                }
+            }
+            //sort time slots by time
+            Collections.sort(timeSlots);
+
+            //decrease court count for every blocking booking
+            List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(selectedDate);
+            for (TimeSlot timeSlot : timeSlots) {
+                checkForBookedCourts(timeSlot, confirmedBookings, preventOverlapping);
+            }
         }
         return timeSlots;
     }
@@ -115,14 +127,15 @@ public class BookingUtil {
                     return true;
                 }
             } else {
-                //only test if these time slots come from different configurations as we DO want overlapping time slots (when min interval is smaller than min duration)
-                if (!timeSlot.getConfig().equals(slot.getConfig())){
-                    
-                    //if timeSlot starts after slot, make sure it also starts before slot ends
-                    if (timeSlot.getStartTime().isBefore(slot.getEndTime())){
-                        return true;
-                    }
-                }
+                //disabled, as we do want overlapping time slots from different calendar configurations
+//                //only test if these time slots come from different configurations as we DO want overlapping time slots (when min interval is smaller than min duration)
+//                if (!timeSlot.getConfig().equals(slot.getConfig())){
+//                    
+//                    //if timeSlot starts after slot, make sure it also starts before slot ends
+//                    if (timeSlot.getStartTime().isBefore(slot.getEndTime())){
+//                        return true;
+//                    }
+//                }
             }
         }
         return false;
@@ -205,7 +218,7 @@ public class BookingUtil {
             dayConfigs.put(date.toString(), dayConfig);
         }
        
-        //calculate availble time slots
+        //calculate available time slots
         List<TimeSlot> timeSlots = new ArrayList<>();
         List<LocalDate> weekDays = new ArrayList<>();
         for (int i=1; i<=CalendarWeekDay.values().length; i++){
@@ -213,17 +226,8 @@ public class BookingUtil {
             weekDays.add(date);
             if (!date.isBefore(new LocalDate())){
                 try {
-                    List<CalendarConfig> calendarConfigsForDate = calendarConfigDAO.findFor(date);
-                    Iterator<CalendarConfig> iterator = calendarConfigsForDate.iterator();
-                    while(iterator.hasNext()){
-                        CalendarConfig calendarConfig = iterator.next();
-                        if (isHoliday(date, calendarConfig)) {
-                            iterator.remove();
-                        }
-                    }
-
                     //generate list of bookable time slots
-                    timeSlots.addAll(getTimeSlotsForDateAndCalendarConfigs(date, calendarConfigsForDate, true, preventOverlapping));
+                    timeSlots.addAll(getTimeSlotsForDate(date, true, preventOverlapping));
                 } catch (CalendarConfigException e){
                     //safe to ignore
                 }
@@ -252,10 +256,8 @@ public class BookingUtil {
     }
 
     public Long getBookingSlotsLeft(TimeSlot timeSlot, Offer offer, List<Booking> confirmedBookings) {
-       checkForBookedCourts(timeSlot, confirmedBookings, true);
+        checkForBookedCourts(timeSlot, confirmedBookings, true);
 
-        //stop if there are no courts available for the requested duration.
-        //only contiguous bookings are supported
         Long bookingSlotsLeft = offer.getMaxConcurrentBookings();
         for (Booking existingBooking: timeSlot.getBookings()){
             if (existingBooking.getOffer().equals(offer)){

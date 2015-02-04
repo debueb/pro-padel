@@ -533,7 +533,7 @@ public class BookingsController extends BaseController {
     }
 
     private Set<OfferDurationPrice> getOfferDurationPrices(LocalDate selectedDate, LocalTime selectedTime) throws CalendarConfigException {
-        List<CalendarConfig> configs = calendarConfigDAO.findFor(selectedDate, selectedTime);
+        List<CalendarConfig> configs = calendarConfigDAO.findFor(selectedDate);
         List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(selectedDate);
 
         //convert to required data structure
@@ -567,16 +567,32 @@ public class BookingsController extends BaseController {
                 break;
             }
             
-            LocalTime endTime = selectedTime.plusMinutes(firstConfig.getMinDuration());
+            LocalTime endTime = null;
             Integer duration = firstConfig.getMinDuration();
-            
+                
             BigDecimal basePricePerMinute;
             BigDecimal price = null;
             
             Map<Integer, BigDecimal> durationPriceMap = new TreeMap<>();
             Boolean isContiguous = true;
             for (CalendarConfig config: configsForOffer){
-                Integer interval = config.getMinInterval();
+                
+                //make sure there is no gap between calendar configurations
+                if (endTime == null){
+                    //first run
+                    endTime = selectedTime.plusMinutes(config.getMinDuration());
+                } else {
+                    //break if there are durations available and calendar configs are not contiguous
+                    if (!durationPriceMap.isEmpty()){
+                        //we substract min interval before the comparison as it has been added during the last iteration
+                        if (!endTime.minusMinutes(firstConfig.getMinInterval()).equals(config.getStartTime())){
+                            break;
+                        }
+                    }
+                }
+                
+                Integer interval = firstConfig.getMinInterval();
+            
                 basePricePerMinute = config.getBasePrice().divide(new BigDecimal(firstConfig.getMinDuration().toString()), MathContext.DECIMAL128);
                 
                 //as long as the endTime is before the end time configured in the calendar
