@@ -2,7 +2,8 @@ $(document).ready(function () {
 
     $('.datatable').DataTable({
         stateSave: true,
-        stateDuration: 0
+        stateDuration: 0,
+        "bPaginate": false
     });
     
    
