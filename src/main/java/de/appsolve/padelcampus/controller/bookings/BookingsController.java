@@ -7,7 +7,6 @@ package de.appsolve.padelcampus.controller.bookings;
  */
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
-import de.appsolve.padelcampus.comparators.CalendarConfigStartTimeComparator;
 import static de.appsolve.padelcampus.constants.Constants.CANCELLATION_POLICY_DEADLINE;
 import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
 import static de.appsolve.padelcampus.constants.Constants.MAIL_NOREPLY_SENDER_NAME;
@@ -47,7 +46,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -549,7 +547,7 @@ public class BookingsController extends BaseController {
                 list.add(config);
                 
                 //sort by start time
-                Collections.sort(list, new CalendarConfigStartTimeComparator());
+                Collections.sort(list);
                 offerConfigMap.put(offer, list);
             }
         }

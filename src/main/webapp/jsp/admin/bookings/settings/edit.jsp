@@ -12,30 +12,9 @@
             <div class="alert alert-danger"><spf:errors path="*" cssClass="error"/></div>
             <spf:input path="id" type="hidden"/>
             
-            <%-- Priorität --%>
-            <div class="input-group"> 
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-default btn-plus-minus form-control form-top-left-element" data-type="minus" data-field="priority">
-                        <span class="fa fa-minus"></span>
-                    </button>
-                </span>
-                <span class="relative">
-                    <spf:input type="text" path="priority" class="form-control text-center input-plus-minus form-center-element" min="1" max="99"/>
-                    <span class="explanation"><fmt:message key="Priority"/></span>
-                </span>
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-default btn-plus-minus form-control form-top-right-element" data-type="plus" data-field="priority">
-                        <span class="fa fa-plus"></span>
-                    </button>
-                </span>
-            </div>
-            
-            <%-- Wochentage --%>
-            <jsp:include page="/jsp/admin/bookings/include/weekdays-input.jsp"/>
-
             <%-- Start Datum --%>
             <div class="datepicker-container">
-                <div class="datepicker-text-container form-center-element">
+                <div class="datepicker-text-container form-top-element">
                     <div class="datepicker-label"><fmt:message key="Start"/></div>
                     <span class="fa fa-calendar datepicker-icon"></span>
                     <div class="datepicker-text"></div>
@@ -55,6 +34,9 @@
                 <div class="datepicker" data-show-on-init="false" data-allow-past="true"></div>
             </div>
                 
+            <%-- Wochentage --%>
+            <jsp:include page="/jsp/admin/bookings/include/weekdays-input.jsp"/>
+    
             <%-- Feiertage --%>
             <div class="relative">
                 <spf:select path="holidayKey" class="select-multiple form-control" data-style="form-center-element">

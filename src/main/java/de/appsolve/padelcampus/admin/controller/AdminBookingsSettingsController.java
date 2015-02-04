@@ -73,13 +73,8 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
     @Override
     public ModelAndView postEditView(@ModelAttribute("Model") CalendarConfig model, HttpServletRequest request, BindingResult result){
         if (!result.hasErrors()){
-            List<CalendarConfig> configs = calendarConfigDAO.findAll();
-            for (CalendarConfig config: configs){
-                if (!config.equals(model) && config.getPriority().equals(model.getPriority())){
-                    result.addError(new ObjectError("priority", msg.get("PriorityAlreadyExists")));
-                    break;
-                }
-            }
+            //ToDo: make sure no overlapping configurations are added
+            //result.addError(new ObjectError("priority", msg.get("PriorityAlreadyExists")));
         }
         return super.postEditView(model, request, result);
     }
@@ -127,7 +122,6 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
     private CalendarConfig getDefaultCalendarConfig() {
         CalendarConfig calendarConfig = new CalendarConfig();
         List<CalendarConfig> configs = calendarConfigDAO.findAll();
-        calendarConfig.setPriority(configs.size()+1);
         LocalDate now = new LocalDate(Constants.DEFAULT_TIMEZONE);
         calendarConfig.setStartDate(now);
         calendarConfig.setEndDate(now.plusYears(1));

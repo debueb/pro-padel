@@ -128,7 +128,6 @@ public abstract class TestBase extends TestCase {
             calendarConfig.setHolidayKey(Constants.NO_HOLIDAY_KEY);
             calendarConfig.setMinDuration(60);
             calendarConfig.setMinInterval(30);
-            calendarConfig.setPriority(0);
             calendarConfig.setStartDate(getNextMonday());
             calendarConfig.setStartTimeHour(10);
             calendarConfig.setStartTimeMinute(00);

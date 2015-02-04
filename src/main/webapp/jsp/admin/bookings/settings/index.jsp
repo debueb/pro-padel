@@ -11,7 +11,6 @@
             <table class="table table-bordered table-centered">
                 <thead>
                     <tr>
-                        <th><fmt:message key="Priority"/></th>
                         <th><fmt:message key="WeekDay"/></th>
                         <th><fmt:message key="StartDate"/></th>
                         <th><fmt:message key="EndDate"/></th>
@@ -28,7 +27,6 @@
                     <c:forEach items="${Models}" var="Model">
                         <tr>
                             <c:set var="urlEdit" value="/admin/bookings/settings/edit/${Model.id}"/>
-                            <td><a class="ajaxify" href="${urlEdit}">${Model.priority}</a></td>
                             <td>
                                 <a class="ajaxify" href="${urlEdit}">
                                     <c:forEach var="WeekDay" items="${Model.calendarWeekDays}" varStatus="status">

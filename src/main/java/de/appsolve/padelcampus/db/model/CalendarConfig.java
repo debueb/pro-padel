@@ -39,9 +39,6 @@ public class CalendarConfig extends BaseEntity{
     private static final long serialVersionUID = 1L;
     
     @Column
-    private Integer priority;
-    
-    @Column
     @ElementCollection(fetch=FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @NotEmpty(message = "{NotEmpty.calendarWeekDays}")
@@ -88,14 +85,6 @@ public class CalendarConfig extends BaseEntity{
     @Column
     private String holidayKey;
 
-    public Integer getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
-    
     public Set<CalendarWeekDay> getCalendarWeekDays() {
         if (calendarWeekDays!=null && !calendarWeekDays.isEmpty()){
             return EnumSet.copyOf(calendarWeekDays);
@@ -226,7 +215,7 @@ public class CalendarConfig extends BaseEntity{
     public int compareTo(BaseEntityI o) {
         if (o instanceof CalendarConfig){
             CalendarConfig co = (CalendarConfig) o;
-            return co.getPriority().compareTo(getPriority());
+            return getStartTime().compareTo(co.getStartTime());
         }
         return super.compareTo(o);
     }
