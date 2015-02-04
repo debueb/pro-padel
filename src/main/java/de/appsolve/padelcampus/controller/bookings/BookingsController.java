@@ -31,6 +31,7 @@ import de.appsolve.padelcampus.db.model.PayMillConfig;
 import de.appsolve.padelcampus.db.model.PayPalConfig;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Voucher;
+import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
@@ -410,10 +411,7 @@ public class BookingsController extends BaseController {
         }
 
         //create a list of possible booking durations taking into account calendar configurations and confirmed bookings
-        List<CalendarConfig> configs = calendarConfigDAO.findFor(selectedDate, selectedTime);
-        List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(selectedDate);
-
-        Set<OfferDurationPrice> offerDurationPrices = getOfferDurationPrices(selectedTime, configs, confirmedBookings);
+        Set<OfferDurationPrice> offerDurationPrices = getOfferDurationPrices(selectedDate, selectedTime);
         
         //notify the user in case there are no durations bookable
         if (offerDurationPrices.isEmpty()){
@@ -536,7 +534,10 @@ public class BookingsController extends BaseController {
         return new ModelAndView("redirect:/bookings/booking/" + booking.getUUID() + "/success");
     }
 
-    private Set<OfferDurationPrice> getOfferDurationPrices(LocalTime selectedTime, List<CalendarConfig> configs, List<Booking> confirmedBookings) {
+    private Set<OfferDurationPrice> getOfferDurationPrices(LocalDate selectedDate, LocalTime selectedTime) throws CalendarConfigException {
+        List<CalendarConfig> configs = calendarConfigDAO.findFor(selectedDate, selectedTime);
+        List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(selectedDate);
+
         //convert to required data structure
         Map<Offer, List<CalendarConfig>> offerConfigMap = new HashMap<>();
         for (CalendarConfig config: configs){
@@ -562,6 +563,11 @@ public class BookingsController extends BaseController {
             Offer offer = entry.getKey();
             List<CalendarConfig> configsForOffer = entry.getValue();
             CalendarConfig firstConfig = configsForOffer.get(0);
+            
+            //make sure the first configuration starts before the requested booking time
+            if (selectedTime.compareTo(firstConfig.getStartTime()) < 0){
+                break;
+            }
             
             LocalTime endTime = selectedTime.plusMinutes(firstConfig.getMinDuration());
             Integer duration = firstConfig.getMinDuration();

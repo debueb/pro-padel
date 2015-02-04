@@ -107,11 +107,6 @@ public class CalendarConfigDAO extends GenericDAO<CalendarConfig> implements Cal
         while (iterator.hasNext()){
             CalendarConfig config = iterator.next();
             
-//            //remove configurations that start after the requested time
-//            if (config.getStartTime().compareTo(time) > 0){
-//                continue;
-//            }
-            
             //remove configurations that end before the requested time
             if (config.getEndTime().compareTo(time) <= 0){
                 continue;
