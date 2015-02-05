@@ -7,6 +7,7 @@
 package de.appsolve.padelcampus.controller;
 
 import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
+import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.COOKIE_LOGIN_TOKEN;
 import static de.appsolve.padelcampus.constants.Constants.MAIL_NOREPLY_SENDER_NAME;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
@@ -21,7 +22,6 @@ import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +30,7 @@ import javax.validation.Valid;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -163,9 +164,8 @@ public class LoginController extends BaseController{
         String resetPasswordURL = RequestUtil.getBaseURL(request)+"/login/reset-password/"+randomUUID.toString();
         
         player.setPasswordResetUUID(randomUUID.toString());
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR, 24);
-        player.setPasswordResetExpiryDate(calendar.getTime());
+        DateTime expiryDate = new DateTime(Constants.DEFAULT_TIMEZONE).plusDays(1);
+        player.setPasswordResetExpiryDate(expiryDate);
         playerDAO.saveOrUpdate(player);
 
         Mail mail = new Mail();
@@ -210,8 +210,7 @@ public class LoginController extends BaseController{
             return mav;
         }
         
-        Date now = new Date();
-        if (now.after(player.getPasswordResetExpiryDate())){
+        if (player.getPasswordResetExpiryDate().isAfterNow()){
             bindingResult.addError(new ObjectError("email", msg.get("PasswordResetLinkExpired")));
             return mav;
         }

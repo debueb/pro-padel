@@ -16,8 +16,10 @@ import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.DateTime;
 
 /**
  *
@@ -71,8 +73,8 @@ public class Player extends Participant{
     
     @Column
     @JsonIgnore
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date passwordResetExpiryDate;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    private DateTime passwordResetExpiryDate;
     
     private String UUID;
     
@@ -140,11 +142,11 @@ public class Player extends Participant{
         this.passwordResetUUID = passwordResetUUID;
     }
 
-    public Date getPasswordResetExpiryDate() {
+    public DateTime getPasswordResetExpiryDate() {
         return passwordResetExpiryDate;
     }
 
-    public void setPasswordResetExpiryDate(Date passwordResetExpiryDate) {
+    public void setPasswordResetExpiryDate(DateTime passwordResetExpiryDate) {
         this.passwordResetExpiryDate = passwordResetExpiryDate;
     }
 
