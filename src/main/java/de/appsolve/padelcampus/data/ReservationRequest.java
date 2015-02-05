@@ -143,7 +143,7 @@ public class ReservationRequest extends BaseEntity{
     @Override
     public String getDisplayName() {
         StringBuilder sb = new StringBuilder();
-        for (CalendarWeekDay weekDay: calendarWeekDays){
+        for (CalendarWeekDay weekDay: getCalendarWeekDays()){
             sb.append(weekDay.name()).append(" ");
         }
         sb.append(startDate).append(" - ").append(endDate);
