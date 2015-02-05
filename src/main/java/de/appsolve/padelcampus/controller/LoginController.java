@@ -210,7 +210,7 @@ public class LoginController extends BaseController{
             return mav;
         }
         
-        if (player.getPasswordResetExpiryDate().isAfterNow()){
+        if (player.getPasswordResetExpiryDate().isBeforeNow()){
             bindingResult.addError(new ObjectError("email", msg.get("PasswordResetLinkExpired")));
             return mav;
         }
