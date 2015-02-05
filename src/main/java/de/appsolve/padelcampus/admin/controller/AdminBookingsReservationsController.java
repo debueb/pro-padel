@@ -151,7 +151,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                                     if (minutes < calendarConfig.getMinDuration()){
                                         throw new Exception(msg.get("MinDurationIs", new Object[]{calendarConfig.getMinDuration()}));
                                     }
-                                    booking.setDuration(new Long(minutes));
+                                    booking.setDuration(Long.valueOf(minutes));
                                     booking.setPaymentConfirmed(true);
                                     booking.setPaymentMethod(PaymentMethod.Reservation);
                                     booking.setPlayer(player);
