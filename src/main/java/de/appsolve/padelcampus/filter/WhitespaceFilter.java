@@ -111,6 +111,7 @@ public class WhitespaceFilter implements Filter {
     private static PrintWriter createTrimWriter(final HttpServletResponse response)
             throws IOException {
         return new PrintWriter(new OutputStreamWriter(response.getOutputStream(), "UTF-8"), true) {
+            private final Object lock = new  Object();
             private StringBuilder builder = new StringBuilder();
             private boolean trim = false;
 
@@ -134,7 +135,7 @@ public class WhitespaceFilter implements Filter {
             // Finally override the flush method so that it trims whitespace.
             @Override
             public void flush() {
-                synchronized (builder) {
+                synchronized (lock) {
                     BufferedReader reader = new BufferedReader(new StringReader(builder.toString()));
                     String line = null;
 
