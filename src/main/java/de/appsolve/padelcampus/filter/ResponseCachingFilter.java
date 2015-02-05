@@ -24,10 +24,12 @@ public class ResponseCachingFilter extends WebContentInterceptor implements Filt
     
     @Override
         public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-            try {
-                this.preHandle((HttpServletRequest) request, (HttpServletResponse) response, chain);
-            } catch (Exception e) {
-                throw new ServletException(e);
+            if (request instanceof HttpServletRequest && response instanceof HttpServletResponse){
+                try {
+                    this.preHandle((HttpServletRequest) request, (HttpServletResponse) response, chain);
+                } catch (Exception e) {
+                    throw new ServletException(e);
+                }
             }
             chain.doFilter(request, response);
         }
