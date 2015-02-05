@@ -44,7 +44,7 @@ public class ScoresController extends BaseController{
     @Autowired
     GameSetDAOI gameSetDAO;
     
-    private List<GameSet> eventGameSets;
+    private List<GameSet> eventGameSets = new ArrayList<>();
     
     @RequestMapping("/event/{eventId}")
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
