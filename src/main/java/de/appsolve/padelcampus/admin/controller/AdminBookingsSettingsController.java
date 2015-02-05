@@ -121,7 +121,6 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
     
     private CalendarConfig getDefaultCalendarConfig() {
         CalendarConfig calendarConfig = new CalendarConfig();
-        List<CalendarConfig> configs = calendarConfigDAO.findAll();
         LocalDate now = new LocalDate(Constants.DEFAULT_TIMEZONE);
         calendarConfig.setStartDate(now);
         calendarConfig.setEndDate(now.plusYears(1));
