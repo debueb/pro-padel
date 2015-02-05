@@ -4,6 +4,7 @@
  */
 package de.appsolve.padelcampus.filter;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -41,6 +42,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
    }
 
    @Override
+   @SuppressFBWarnings(value="PZLA_PREFER_ZERO_LENGTH_ARRAYS", justification = "do not change method return types")
    public String[] getParameterValues(String parameter) {
       String[] values = super.getParameterValues(parameter);
 
