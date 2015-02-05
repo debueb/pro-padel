@@ -55,7 +55,7 @@ public class AdminFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException
     {
-        if (request instanceof HttpServletRequest) {
+        if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             Player player = sessionUtil.getUser(httpRequest);
