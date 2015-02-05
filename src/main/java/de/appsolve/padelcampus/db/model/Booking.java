@@ -277,7 +277,7 @@ public class Booking extends BaseEntity{
     
     @Override
     public String getDisplayName() {
-        return getPlayer().getDisplayName()+" "+getBookingDate().toString(FormatUtils.DATE_WITH_DAY) + " " + getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE) + " "+offer;
+        return getPlayer().getDisplayName()+" "+getBookingDate().toString(FormatUtils.DATE_WITH_DAY) + " " + getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE) + " - " + getBookingEndTime().toString(FormatUtils.TIME_HUMAN_READABLE) +" "+offer;
     }
     
     @Override

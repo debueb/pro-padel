@@ -14,6 +14,7 @@ import de.appsolve.padelcampus.db.dao.GenericDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
+import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.HolidayUtil;
@@ -71,12 +72,44 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
     }
     
     @Override
-    public ModelAndView postEditView(@ModelAttribute("Model") CalendarConfig model, HttpServletRequest request, BindingResult result){
-        if (!result.hasErrors()){
-            //ToDo: make sure no overlapping configurations are added
-            //result.addError(new ObjectError("priority", msg.get("PriorityAlreadyExists")));
+    public ModelAndView postEditView(@ModelAttribute("Model") CalendarConfig config, HttpServletRequest request, BindingResult result){
+
+        //make sure no overlapping configurations are added
+        List<CalendarConfig> existingConfigs = calendarConfigDAO.findAll();
+        for (CalendarConfig existingConfig: existingConfigs){
+            //skip self
+            if (config.getId() == null || !config.getId().equals(existingConfig.getId())){
+                //make sure this config starts before the exising config ends (date)
+                if(config.getStartDate().compareTo(existingConfig.getEndDate())<0){
+                    //make sure this config ends after the existing config starts (date)
+                    if (config.getEndDate().compareTo(existingConfig.getStartDate())>0){
+                        //make sure week day matches
+                        for (CalendarWeekDay weekDay: config.getCalendarWeekDays()){
+                            for (CalendarWeekDay existingWeekDay: existingConfig.getCalendarWeekDays()){
+                                if (weekDay.equals(existingWeekDay)){
+                                    //make sure this config starts before the existing config ends (time)
+                                    if (config.getStartTime().compareTo(existingConfig.getEndTime())<0){
+                                        //make sure this config ends after the exising config starts (time)
+                                        if (config.getEndTime().compareTo(existingConfig.getStartTime())>0){
+                                            //make sure offer matches
+                                            for (Offer offer: config.getOffers()){
+                                                for (Offer existingOffer: existingConfig.getOffers()){
+                                                    if (offer.equals(existingOffer)){
+                                                        result.addError(new ObjectError("id", msg.get("CannotAddCalendarConfigurationDueToOverlap")));
+                                                        return super.postEditView(config, request, result);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-        return super.postEditView(model, request, result);
+        return super.postEditView(config, request, result);
     }
     
     @Override
@@ -104,12 +137,12 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
                 continue;
             }
             //remove bookings that start and end before the selected calendar config
-            if (booking.getBookingTime().isBefore(config.getStartTime()) && booking.getBookingEndTime().isBefore(config.getStartTime())){
+            if (booking.getBookingTime().compareTo(config.getStartTime()) <= 0 && booking.getBookingEndTime().compareTo(config.getStartTime()) <= 0){
                 iterator.remove();
                 continue;
             }
-            //remove bookings that start after the selected calendar config
-            if (booking.getBookingTime().isAfter(config.getEndTime())){
+            //remove bookings that start after the selected calendar config ends
+            if (booking.getBookingTime().compareTo(config.getEndTime()) >= 0){
                 iterator.remove();
             }
         }
