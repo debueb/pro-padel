@@ -5,11 +5,8 @@
  */
 package de.appsolve.padelcampus.db.model;
 
-import de.appsolve.padelcampus.constants.PayPalEndpoint;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -18,6 +15,8 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 @Entity
 public class PayMillConfig extends BaseEntity{
+    
+    private static final long serialVersionUID = 1L;
     
     @Column
     private Boolean enableDirectDebit;
