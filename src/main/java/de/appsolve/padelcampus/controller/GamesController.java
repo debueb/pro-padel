@@ -81,63 +81,58 @@ public class GamesController extends BaseController{
     
     @RequestMapping(value="/game/{gameId}/edit", method=POST)
     public ModelAndView postGame(@PathVariable("gameId") Long gameId,HttpServletRequest request){
-        try {
-            Player user = sessionUtil.getUser(request);
-            if (user == null){
-                return getLoginView(request);
-            }
-            Game game = gameDAO.findById(gameId);
-            List<GameSet> gameSets = new ArrayList<>();
-            Set<GameSet> gameSetsToRemove = new HashSet<>();
-            for (Participant participant: game.getParticipants()){
-                for (int set=FIRST_SET; set<=NUMBER_OF_SETS; set++){
-                    String setGames = request.getParameter(getKey(game, participant, set));
-                    Integer numSetGames = Integer.parseInt(setGames);
-                    GameSet gameSet = gameSetDAO.findBy(game, participant, set);
-                    if (numSetGames>=0){
-                        if (gameSet == null){
-                            gameSet = new GameSet();
-                            gameSet.setGame(game);
-                            gameSet.setParticipant(participant);
-                            gameSet.setSetNumber(set);
-                            gameSet.setEvent(game.getEvent());
-                        }
-                        gameSet.setSetGames(numSetGames);
-                        gameSets.add(gameSet);
-                    } else {
-                        //mark set for deletion in case it exists and user changed it to "-"
-                        if (gameSet!=null){
-                            gameSetsToRemove.add(gameSet);
-                        }
+        
+        Player user = sessionUtil.getUser(request);
+        if (user == null){
+            return getLoginView(request);
+        }
+        Game game = gameDAO.findById(gameId);
+        List<GameSet> gameSets = new ArrayList<>();
+        Set<GameSet> gameSetsToRemove = new HashSet<>();
+        for (Participant participant: game.getParticipants()){
+            for (int set=FIRST_SET; set<=NUMBER_OF_SETS; set++){
+                String setGames = request.getParameter(getKey(game, participant, set));
+                Integer numSetGames = Integer.parseInt(setGames);
+                GameSet gameSet = gameSetDAO.findBy(game, participant, set);
+                if (numSetGames>=0){
+                    if (gameSet == null){
+                        gameSet = new GameSet();
+                        gameSet.setGame(game);
+                        gameSet.setParticipant(participant);
+                        gameSet.setSetNumber(set);
+                        gameSet.setEvent(game.getEvent());
+                    }
+                    gameSet.setSetGames(numSetGames);
+                    gameSets.add(gameSet);
+                } else {
+                    //mark set for deletion in case it exists and user changed it to "-"
+                    if (gameSet!=null){
+                        gameSetsToRemove.add(gameSet);
                     }
                 }
             }
-            
-            //save game sets
-            for (GameSet gameSet: gameSets){
-                gameSetDAO.saveOrUpdate(gameSet);
-            }
-            
-            //remove unwanted game sets
-            if (gameSetsToRemove.size()>0){
-                game.getGameSets().removeAll(gameSetsToRemove);
-                gameDAO.saveOrUpdate(game);
-
-                for (GameSet gameSet: gameSetsToRemove){
-                    //if we do not delete by ID, we get an "removing detached entity exception" presumably because the session object that the entity was retrieved by has been closed
-                    gameSetDAO.deleteById(gameSet.getId());
-                }
-            }
-            
-            //save game
-            game.setGameSets(new LinkedHashSet<>(gameSets));
-            game.setScoreReporter(user);
-            gameDAO.saveOrUpdate(game);
-        } catch (Exception e){
-            ModelAndView editView = getEditView(gameId);
-            editView.addObject("error", e);
-            return editView;
         }
+
+        //save game sets
+        for (GameSet gameSet: gameSets){
+            gameSetDAO.saveOrUpdate(gameSet);
+        }
+
+        //remove unwanted game sets
+        if (gameSetsToRemove.size()>0){
+            game.getGameSets().removeAll(gameSetsToRemove);
+            gameDAO.saveOrUpdate(game);
+
+            for (GameSet gameSet: gameSetsToRemove){
+                //if we do not delete by ID, we get an "removing detached entity exception" presumably because the session object that the entity was retrieved by has been closed
+                gameSetDAO.deleteById(gameSet.getId());
+            }
+        }
+
+        //save game
+        game.setGameSets(new LinkedHashSet<>(gameSets));
+        game.setScoreReporter(user);
+        gameDAO.saveOrUpdate(game);
         return new ModelAndView("redirect:/games/game/"+gameId);
     }
     
