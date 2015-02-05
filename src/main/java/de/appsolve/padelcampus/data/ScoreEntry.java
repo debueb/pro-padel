@@ -108,7 +108,9 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
         if (gamesWonDiff!=0){
             return gamesWonDiff;
         }
-        
-        return participant.getDisplayName().compareToIgnoreCase(o.getParticipant().getDisplayName());
+        if (participant!=null && o.getParticipant()!=null){
+            return participant.getDisplayName().compareToIgnoreCase(o.getParticipant().getDisplayName());
+        }
+        return -1;
     }
 }

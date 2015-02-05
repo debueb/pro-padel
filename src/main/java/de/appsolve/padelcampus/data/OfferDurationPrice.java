@@ -48,6 +48,9 @@ public class OfferDurationPrice implements Comparable<OfferDurationPrice> {
 
     @Override
     public int compareTo(OfferDurationPrice o) {
+        if (offer==null || o==null || o.getOffer() == null){
+            return -1;
+        }
         return offer.getName().compareTo(o.getOffer().getName());
     }
 }

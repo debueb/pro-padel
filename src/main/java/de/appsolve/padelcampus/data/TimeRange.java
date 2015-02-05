@@ -60,6 +60,9 @@ public class TimeRange implements Comparable<TimeRange> {
 
     @Override
     public int compareTo(TimeRange o) {
-        return this.startTime.compareTo(o.startTime);
+        if (startTime!=null && o!=null && o.startTime!=null){
+            return this.startTime.compareTo(o.startTime);
+        }
+        return -1;
     }
 }
