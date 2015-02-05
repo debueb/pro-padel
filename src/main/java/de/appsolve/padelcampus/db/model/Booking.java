@@ -196,7 +196,7 @@ public class Booking extends BaseEntity{
     }
 
     public Boolean getConfirmed() {
-        return confirmed == null ? false : confirmed;
+        return confirmed == null ? Boolean.FALSE : confirmed;
     }
 
     public void setConfirmed(Boolean confirmed) {
@@ -204,7 +204,7 @@ public class Booking extends BaseEntity{
     }
 
     public Boolean getCancelled() {
-        return cancelled == null ? false : cancelled;
+        return cancelled == null ? Boolean.FALSE : cancelled;
     }
 
     public void setCancelled(Boolean cancelled) {
@@ -228,7 +228,7 @@ public class Booking extends BaseEntity{
     }
 
     public Boolean getPaymentConfirmed() {
-        return paymentConfirmed == null ? false : paymentConfirmed;
+        return paymentConfirmed == null ? Boolean.FALSE : paymentConfirmed;
     }
 
     public void setPaymentConfirmed(Boolean paymentConfirmed) {

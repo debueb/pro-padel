@@ -63,7 +63,7 @@ public class News extends BaseEntity{
     }
 
     public Boolean getShowOnHomepage() {
-        return showOnHomepage == null ? false : showOnHomepage;
+        return showOnHomepage == null ? Boolean.FALSE : showOnHomepage;
     }
 
     public void setShowOnHomepage(Boolean showOnHomepage) {

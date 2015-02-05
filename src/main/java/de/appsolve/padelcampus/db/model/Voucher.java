@@ -97,7 +97,7 @@ public class Voucher extends BaseEntity{
     }
 
     public Boolean getUsed() {
-        return used == null ? false : used;
+        return used == null ? Boolean.FALSE : used;
     }
 
     public void setUsed(Boolean used) {
