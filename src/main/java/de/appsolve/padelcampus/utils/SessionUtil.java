@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.utils;
 
+import static de.appsolve.padelcampus.constants.Constants.SESSION_ACCESS_LEVEL;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_BOOKING;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_LOGIN_REDIRECT_PATH;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_PRIVILEGES;
@@ -117,5 +118,9 @@ public class SessionUtil {
         } else {
             log.warn("Unable to set session varible due to null session");
         }
+    }
+
+    public void setAccessLevel(HttpServletRequest request, String accessLevel) {
+        setObject(request, SESSION_ACCESS_LEVEL, accessLevel);
     }
 }

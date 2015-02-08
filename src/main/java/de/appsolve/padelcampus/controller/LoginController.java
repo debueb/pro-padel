@@ -13,7 +13,9 @@ import static de.appsolve.padelcampus.constants.Constants.MAIL_NOREPLY_SENDER_NA
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.data.Credentials;
 import de.appsolve.padelcampus.data.Mail;
+import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.model.Contact;
+import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
@@ -21,7 +23,7 @@ import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -55,6 +57,9 @@ public class LoginController extends BaseController{
     
     @Autowired
     PlayerDAOI playerDAO;
+    
+    @Autowired
+    EventDAOI eventDAO;
     
     @Autowired
     Msg msg;
@@ -265,7 +270,7 @@ public class LoginController extends BaseController{
             throw new Exception(msg.get("UnknownEmailAddressOrPassword"));
         }
         
-        setLoginTokenCookie(request, response, player);
+        setLoginCookieAndAccessLevel(request, response, player);
         sessionUtil.setUser(request, player);
         return player;
     }
@@ -305,13 +310,15 @@ public class LoginController extends BaseController{
             playerDAO.saveOrUpdate(player);
             
             //set auto login cookie if user has requested so
-            setLoginTokenCookie(request, response, player);
+            setLoginCookieAndAccessLevel(request, response, player);
             
             //login user
             sessionUtil.setUser(request, player);
     }
     
-    private void setLoginTokenCookie(HttpServletRequest request, HttpServletResponse response, Player player) {
+    private void setLoginCookieAndAccessLevel(HttpServletRequest request, HttpServletResponse response, Player player) {
+        //set login cookie
+        
         String stayLoggedIn = request.getParameter("stay-logged-in");
         Cookie cookie = new Cookie(COOKIE_LOGIN_TOKEN, player.getUUID());
         if (!request.getServerName().equals("localhost")){
@@ -323,6 +330,16 @@ public class LoginController extends BaseController{
             cookie.setMaxAge(0); //deletes cookie if it exists
         }
         response.addCookie(cookie);
+        
+        Player user = sessionUtil.getUser(request);
+        if (user!=null){
+            String accessLevel = "loggedIn";
+            List<Event> eventsWithParticipant = eventDAO.findAllWithParticipant(user);
+            if (!eventsWithParticipant.isEmpty()){
+                accessLevel = "loggedInAndParticipant";
+            }
+            sessionUtil.setAccessLevel(request, accessLevel); 
+        }
     }
     
     private String getHash(String input) {

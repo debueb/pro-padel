@@ -81,7 +81,7 @@ public class PlayersController extends BaseController {
     
     @RequestMapping("/player/{id}")
     public ModelAndView addToContacts(@PathVariable("id") Long playerId, HttpServletRequest request){
-        return getPlayerView(playerDAO.findById(playerId), request);
+        return getPlayerView(playerDAO.findById(playerId));
     }
     
     @RequestMapping(value = "/player/{id}/vcard.vcf")
@@ -128,18 +128,8 @@ public class PlayersController extends BaseController {
         return new ModelAndView("players/players", "Players", players);
     }
 
-    private ModelAndView getPlayerView(Player player, HttpServletRequest request) {
+    private ModelAndView getPlayerView(Player player) {
         ModelAndView mav = new ModelAndView("players/player", "Player", player);
-        String accessLevel = "loggedOut";
-        Player user = sessionUtil.getUser(request);
-        if (user!=null){
-            accessLevel = "loggedIn";
-            List<Event> eventsWithParticipant = eventDAO.findAllWithParticipant(user);
-            if (!eventsWithParticipant.isEmpty()){
-                accessLevel = "loggedInAndParticipant";
-            }
-        }
-        mav.addObject("accessLevel", accessLevel);
         return mav;
     }
 
