@@ -9,17 +9,15 @@ package de.appsolve.padelcampus.db.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.appsolve.padelcampus.utils.CryptUtil;
 import de.appsolve.padelcampus.validation.constraints.Phone;
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -77,6 +75,11 @@ public class Player extends Participant{
     private DateTime passwordResetExpiryDate;
     
     private String UUID;
+    
+    @Transient
+    private MultipartFile pictureMultipartFile;
+    
+    private Long skillLevel;
     
     public String getFirstName() {
         return firstName;
@@ -156,6 +159,22 @@ public class Player extends Participant{
 
     public void setUUID(String UUID) {
         this.UUID = UUID;
+    }
+
+    public MultipartFile getPictureMultipartFile() {
+        return pictureMultipartFile;
+    }
+
+    public void setPictureMultipartFile(MultipartFile pictureMultipartFile) {
+        this.pictureMultipartFile = pictureMultipartFile;
+    }
+
+    public Long getSkillLevel() {
+        return skillLevel;
+    }
+
+    public void setSkillLevel(Long skillLevel) {
+        this.skillLevel = skillLevel;
     }
     
     @Override

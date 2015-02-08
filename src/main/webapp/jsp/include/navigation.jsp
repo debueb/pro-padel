@@ -26,6 +26,11 @@
         <jsp:param name="url" value="/bookings"/>
     </jsp:include>
     <jsp:include page="/jsp/include/list-menu-item.jsp">
+        <jsp:param name="image" value="${not empty param.image ? 'futbol-o' : ''}"/>
+        <jsp:param name="key" value="MatchMaker"/>
+        <jsp:param name="url" value="/matchmaker"/>
+    </jsp:include>
+    <jsp:include page="/jsp/include/list-menu-item.jsp">
         <jsp:param name="image" value="${not empty param.image ? 'envelope' : ''}"/>
         <jsp:param name="key" value="Contact"/>
         <jsp:param name="url" value="/contact"/>

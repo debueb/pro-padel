@@ -38,6 +38,11 @@
                 <jsp:param name="icon" value="calendar"/>
             </jsp:include>
             <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/matchmaker"/>
+                <jsp:param name="key" value="MatchMaker"/>
+                <jsp:param name="icon" value="futbol-o"/>
+            </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
                 <jsp:param name="href" value="/contact"/>
                 <jsp:param name="key" value="Contact"/>
                 <jsp:param name="icon" value="envelope"/>

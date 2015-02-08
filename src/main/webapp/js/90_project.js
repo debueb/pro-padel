@@ -434,6 +434,22 @@ app.main = {};
             }
         });
     };
+    
+    self.enableAdvancedProfile = function(){
+        $('#profile-picture').livequery(function(){
+            $(this).on('click tap', function(){
+                $('#profile-picture-input').click();
+            });
+        });
+        
+        $('div.product-chooser').not('.disabled').find('div.product-chooser-item').livequery(function(){
+            $(this).on('click tap', function(){
+                $(this).parent().parent().find('div.product-chooser-item').removeClass('selected');
+                $(this).addClass('selected');
+                $(this).find('input[type="radio"]').prop("checked", true);
+            });
+	});
+    };
     return app;
 }).apply(app.main);
 
@@ -453,4 +469,5 @@ $(document).ready(function () {
     app.main.enableUpdateBooking();
     app.main.enableRegexChecksOnInputs();
     app.main.enablePayMill();
+    app.main.enableAdvancedProfile();
 });

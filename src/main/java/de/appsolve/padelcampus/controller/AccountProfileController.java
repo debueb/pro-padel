@@ -53,6 +53,7 @@ public class AccountProfileController extends BaseController {
             persistedPlayer.setLastName(player.getLastName());
             persistedPlayer.setEmail(player.getEmail());
             persistedPlayer.setPhone(player.getPhone());
+            persistedPlayer.setSkillLevel(player.getSkillLevel());
             playerDAO.saveOrUpdate(persistedPlayer);
             sessionUtil.setUser(request, persistedPlayer);
         }

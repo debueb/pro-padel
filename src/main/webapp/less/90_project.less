@@ -796,6 +796,41 @@ h4{
 .ui-widget-content{
     background: @white;
 }
+div.product-chooser.disabled div.product-chooser-item{
+    zoom: 1;
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+    cursor: default;
+}
+
+div.product-chooser div.product-chooser-item{
+    padding: @spacing;
+    background: @white;
+    color: @gray;
+    border-radius: @border-radius-base;
+    cursor: pointer;
+    position: relative;
+    border: 3px solid @gray;
+    margin: 5px 0px;
+}
+
+div.product-chooser div.product-chooser-item.selected{
+    color: @primaryColor;
+    border: 3px solid @selectedBgColor;
+    background: @white;
+    filter: alpha(opacity=100);
+    opacity: 1;
+}
+div.product-chooser div.product-chooser-item .title{
+    font-weight: bold;
+}
+
+div.product-chooser div.product-chooser-item input{
+    position: absolute;
+    left: 0;
+    top: 0;
+    visibility:hidden;
+}
 @media (max-width: @screen-sm) {
     h1{
         font-size: 24px;
@@ -822,4 +857,85 @@ h4{
     .navbar-toggle{
         display: none;
     }
+}
+
+
+
+
+/*http://www.bluthemes.com/blog/3/clearing-bootstrap-3-columns*/
+/*  Tablet  */
+@media (min-width:@screen-sm){
+
+  /* Column clear fix */
+  .col-lg-1:nth-child(12n+1),
+  .col-lg-2:nth-child(6n+1),
+  .col-lg-3:nth-child(4n+1),
+  .col-lg-4:nth-child(3n+1),
+  .col-lg-6:nth-child(2n+1),
+  .col-md-1:nth-child(12n+1),
+  .col-md-2:nth-child(6n+1),
+  .col-md-3:nth-child(4n+1),
+  .col-md-4:nth-child(3n+1),
+  .col-md-6:nth-child(2n+1){
+    clear: none;
+  }
+  .col-sm-1:nth-child(12n+1),
+  .col-sm-2:nth-child(6n+1),
+  .col-sm-3:nth-child(4n+1),
+  .col-sm-4:nth-child(3n+1),
+  .col-sm-6:nth-child(2n+1){
+    clear: left;
+  }
+}
+
+
+/*  Medium Desktop  */
+@media (min-width:@screen-md){
+
+  /* Column clear fix */
+  .col-lg-1:nth-child(12n+1),
+  .col-lg-2:nth-child(6n+1),
+  .col-lg-3:nth-child(4n+1),
+  .col-lg-4:nth-child(3n+1),
+  .col-lg-6:nth-child(2n+1),
+  .col-sm-1:nth-child(12n+1),
+  .col-sm-2:nth-child(6n+1),
+  .col-sm-3:nth-child(4n+1),
+  .col-sm-4:nth-child(3n+1),
+  .col-sm-6:nth-child(2n+1){
+    clear: none;
+  }
+  .col-md-1:nth-child(12n+1),
+  .col-md-2:nth-child(6n+1),
+  .col-md-3:nth-child(4n+1),
+  .col-md-4:nth-child(3n+1),
+  .col-md-6:nth-child(2n+1){
+    clear: left;
+  }
+}
+
+
+/*  Large Desktop  */
+@media (min-width:@screen-lg){
+
+  /* Column clear fix */
+  .col-md-1:nth-child(12n+1),
+  .col-md-2:nth-child(6n+1),
+  .col-md-3:nth-child(4n+1),
+  .col-md-4:nth-child(3n+1),
+  .col-md-6:nth-child(2n+1),
+  .col-sm-1:nth-child(12n+1),
+  .col-sm-2:nth-child(6n+1),
+  .col-sm-3:nth-child(4n+1),
+  .col-sm-4:nth-child(3n+1),
+  .col-sm-6:nth-child(2n+1){
+    clear: none;
+  }
+  .col-lg-1:nth-child(12n+1),
+  .col-lg-2:nth-child(6n+1),
+  .col-lg-3:nth-child(4n+1),
+  .col-lg-4:nth-child(3n+1),
+  .col-lg-6:nth-child(2n+1){
+    clear: left;
+  }
 }
