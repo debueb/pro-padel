@@ -409,7 +409,7 @@
                 <compress.css>true</compress.css>
                 
                 <!-- make sure all requests are handled by https -->
-                <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+                <transport-guarantee>NONE</transport-guarantee>
             </properties>
         </profile>
     </profiles>
