@@ -15,7 +15,7 @@
                     <div class="list-group-item-icon"><div class="fa fa-lg fa-group"></div></div>
                 </div>
             </a>
-            <c:if test="${accessLevel == 'loggedInAndParticipant'}">
+            <c:if test="${sessionScope.accessLevel == 'loggedInAndParticipant'}">
                 <a class="list-group-item private-data" data-fake="${Player.obfuscatedPhone}" data-prefix="tel://">
                     <div class="list-item-text"><fmt:message key="Call"/>
                         <div class="list-group-item-icon"><div class="fa fa-lg fa-phone"></div></div>
@@ -34,7 +34,7 @@
             </c:if>
         </div>
         
-        <c:if test="${accessLevel == 'loggedOut'}">
+        <c:if test="${empty sessionScope.accessLevel}">
                 <div class="alert alert-info unit">
                     <fmt:message key="LogInToContact"><fmt:param value="${Player}"/></fmt:message>
                 </div>
@@ -43,7 +43,7 @@
                 <a class="btn btn-primary btn-block" href="/login/register?redirect=${playerURL}"><fmt:message key="Register"/></a>
         </c:if>
         
-        <c:if test="${accessLevel == 'loggedIn'}">
+        <c:if test="${sessionScope.accessLevel == 'loggedIn'}">
             <div class="alert alert-info unit">
                 <fmt:message key="NeedToParticipateToContact"><fmt:param value="${Player}"/></fmt:message>
             </div>
