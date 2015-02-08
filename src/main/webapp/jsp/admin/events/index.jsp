@@ -20,7 +20,15 @@
                         <td><a class="ajaxify" href="/admin/events/edit/${Event.id}">${Event.name}</a></td>
                         <td>
                             <c:forEach var="Participant" items="${Event.participants}" varStatus="status">
-                                <a class="ajaxify" href="/admin/events/edit/${Event.id}">${Participant.displayName}</a>${status.last ? "" : ", "}
+                                <c:choose>
+                                    <c:when test="${Participant.discriminatorValue == 'player'}">
+                                        <c:set var="url_participant" value="/admin/players/edit/${Participant.id}"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="url_participant" value="/admin/teams/edit/${Participant.id}"/>
+                                    </c:otherwise>
+                                </c:choose>
+                                 <a class="ajaxify" href="${url_participant}">${Participant.displayName}</a>${status.last ? "" : ", "}
                             </c:forEach>
                         </td>
                         <td class="delete"><a href="/admin/events/${Event.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>

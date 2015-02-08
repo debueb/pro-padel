@@ -8,9 +8,11 @@ package de.appsolve.padelcampus.db.model;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Transient;
 
 /**
  *
@@ -24,5 +26,10 @@ import javax.persistence.InheritanceType;
 )
 public abstract class Participant extends BaseEntity implements ParticipantI{
     
+    @Transient
+    public String getDiscriminatorValue(){
+    DiscriminatorValue val = this.getClass().getAnnotation( DiscriminatorValue.class );
+        return val == null ? null : val.value();
+    }
     
 }
