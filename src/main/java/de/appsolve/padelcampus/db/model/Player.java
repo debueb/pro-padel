@@ -12,6 +12,8 @@ import de.appsolve.padelcampus.validation.constraints.Phone;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
@@ -77,7 +79,10 @@ public class Player extends Participant{
     private String UUID;
     
     @Transient
-    private MultipartFile pictureMultipartFile;
+    private MultipartFile profileImageMultipartFile;
+    
+    @OneToOne(fetch = FetchType.EAGER)
+    private Image profileImage;
     
     private Long skillLevel;
     
@@ -161,12 +166,20 @@ public class Player extends Participant{
         this.UUID = UUID;
     }
 
-    public MultipartFile getPictureMultipartFile() {
-        return pictureMultipartFile;
+    public MultipartFile getProfileImageMultipartFile() {
+        return profileImageMultipartFile;
     }
 
-    public void setPictureMultipartFile(MultipartFile pictureMultipartFile) {
-        this.pictureMultipartFile = pictureMultipartFile;
+    public void setProfileImageMultipartFile(MultipartFile profileImageMultipartFile) {
+        this.profileImageMultipartFile = profileImageMultipartFile;
+    }
+
+    public Image getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(Image profileImage) {
+        this.profileImage = profileImage;
     }
 
     public Long getSkillLevel() {

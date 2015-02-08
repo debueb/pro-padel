@@ -59,4 +59,8 @@ public class Constants {
     
     public static final String MAIL_NOREPLY_SENDER_NAME     = "noreply";
     
+    public static final String DATA_DIR_PROFILE_PICTURES    = "profilePictures";
+    public static final Integer PROFILE_PICTURE_WIDTH       = 200;
+    public static final Integer PROFILE_PICTURE_HEIGHT      = 200;
+    
 }

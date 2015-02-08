@@ -9,7 +9,7 @@
             <h1><fmt:message key="Profile"/></h1>
         </div>
 
-        <spf:form class="form-signin" role="form" modelAttribute="Model">
+        <spf:form class="form-signin" role="form" modelAttribute="Model" enctype="multipart/form-data">
             <div class="alert alert-danger"><spf:errors path="*"/></div>
 
             <spf:input path="id" type="hidden"/>
@@ -21,12 +21,20 @@
             <!-- picture -->
             <div class="col-xs-12 text-center">
                 <figure id="profile-picture">
-                    <span class="fa-stack fa-5x">
-                        <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
-                        <i class="fa fa-user fa-stack-1x"></i>
-                    </span>
+                    <c:choose>
+                        <c:when test="${empty Model.profileImage}">
+                            <span class="fa-stack fa-5x">
+                                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                                <i class="fa fa-user fa-stack-1x"></i>
+                            </span>
+                        </c:when>
+                        <c:otherwise>
+                            <img src="/images/image/${Model.profileImage.sha256}"/>
+                        </c:otherwise>
+                    </c:choose>
+                    <div id="profile-picture-subtext"><fmt:message key="ClickImageToUploadProfilePicture"/></div>
                 </figure>
-                <spf:input type="file" capture="camera" accept="image/*" id="profile-picture-input" path="pictureMultipartFile" class="hidden"/>
+                <spf:input type="file" capture="camera" accept="image/*" id="profile-picture-input" path="profileImageMultipartFile" class="hidden"/>
             </div>
             <div class="clearfix"></div>
             <hr/>

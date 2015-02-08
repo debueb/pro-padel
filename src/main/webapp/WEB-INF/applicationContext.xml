@@ -34,12 +34,8 @@
     </bean>
     
     <!-- read ${VARIABLES} from settings.properties, fallback to host environment varaibles (needed for ${OPENSHIFT_...} variables-->
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:settings.properties"/>
-        <property name="searchSystemEnvironment" value="true" />
-        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
-    </bean>
-	
+    <context:property-placeholder location="classpath:settings.properties" />
+    
     <!-- INTERNATIONALIZATION -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <!-- 0 == on every request in development; -1 == never for "openshift" maven profile -->
@@ -108,6 +104,15 @@
     </bean>
     
     <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
+    
+    <bean id="multipartResolver"
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- max upload size in bytes -->
+        <property name="maxUploadSize" value="20971520" /> <!-- 20MB -->
+         
+        <!-- max size of file in memory (in bytes) -->
+        <property name="maxInMemorySize" value="1048576" /> <!-- 1MB -->
+    </bean>
    
     <task:annotation-driven />
 </beans>

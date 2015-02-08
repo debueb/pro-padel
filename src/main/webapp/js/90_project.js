@@ -440,6 +440,11 @@ app.main = {};
             $(this).on('click tap', function(){
                 $('#profile-picture-input').click();
             });
+            $('#profile-picture-input').on('change', function(){
+                var value = $(this).val();
+                var lastIndex = (value.lastIndexOf("\\") === -1) ? 0 : value.lastIndexOf("\\")+1;
+                $('#profile-picture-subtext').text(value.slice(lastIndex)); 
+            });
         });
         
         $('div.product-chooser').not('.disabled').find('div.product-chooser-item').livequery(function(){

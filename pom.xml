@@ -220,6 +220,16 @@
             <version>2.0.3</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.imgscalr</groupId>
+            <artifactId>imgscalr-lib</artifactId>
+            <version>4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.drewnoakes</groupId>
+            <artifactId>metadata-extractor</artifactId>
+            <version>2.7.2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -370,7 +380,7 @@
                 <OPENSHIFT_MYSQL_DB_USERNAME>padelcampus</OPENSHIFT_MYSQL_DB_USERNAME>
                 <OPENSHIFT_MYSQL_DB_PASSWORD>padelcampus</OPENSHIFT_MYSQL_DB_PASSWORD>
                 <OPENSHIFT_APP_NAME>padelcampus</OPENSHIFT_APP_NAME>
-                
+                <OPENSHIFT_DATA_DIR>/Users/dominik/Dropbox/Coding/padelcampus/data</OPENSHIFT_DATA_DIR>
             </properties>
         </profile>
         <profile>
