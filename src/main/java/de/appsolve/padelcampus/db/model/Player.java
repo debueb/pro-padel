@@ -7,11 +7,14 @@
 package de.appsolve.padelcampus.db.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.utils.CryptUtil;
 import de.appsolve.padelcampus.validation.constraints.Phone;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
@@ -84,7 +87,9 @@ public class Player extends Participant{
     @OneToOne(fetch = FetchType.EAGER)
     private Image profileImage;
     
-    private Long skillLevel;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private SkillLevel skillLevel;
     
     public String getFirstName() {
         return firstName;
@@ -182,11 +187,11 @@ public class Player extends Participant{
         this.profileImage = profileImage;
     }
 
-    public Long getSkillLevel() {
+    public SkillLevel getSkillLevel() {
         return skillLevel;
     }
 
-    public void setSkillLevel(Long skillLevel) {
+    public void setSkillLevel(SkillLevel skillLevel) {
         this.skillLevel = skillLevel;
     }
     

@@ -13,11 +13,18 @@
                 <jsp:param name="icon" value="wrench"/>
             </jsp:include>
             <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/account/profile"/>
+                <jsp:param name="href" value="/matchmaker/notificationsettings"/>
                 <jsp:param name="key" value="NotificationSettings"/>
                 <jsp:param name="icon" value="envelope-o"/>
             </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/matchmaker/new"/>
+                <jsp:param name="key" value="NewMatchOffer"/>
+                <jsp:param name="icon" value="plus"/>
+            </jsp:include>
         </div>
+        <hr>
+        <h4><fmt:message key="CurrentMatchOffers"/>
     </div>
 </div>
 <jsp:include page="/jsp/include/footer.jsp"/>

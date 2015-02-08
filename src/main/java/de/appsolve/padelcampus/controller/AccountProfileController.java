@@ -7,10 +7,10 @@ package de.appsolve.padelcampus.controller;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import static de.appsolve.padelcampus.constants.Constants.PROFILE_PICTURE_WIDTH;
+import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Image;
 import de.appsolve.padelcampus.db.model.Player;
@@ -132,6 +132,8 @@ public class AccountProfileController extends BaseController {
     }
 
     private ModelAndView getIndexView(Player user) {
-        return new ModelAndView("account/profile/index", "Model", user);
+        ModelAndView mav = new ModelAndView("account/profile/index", "Model", user);
+        mav.addObject("SkillLevels", SkillLevel.values());
+        return mav;
     }
 }
