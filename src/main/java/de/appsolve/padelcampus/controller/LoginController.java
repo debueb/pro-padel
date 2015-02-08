@@ -331,15 +331,12 @@ public class LoginController extends BaseController{
         }
         response.addCookie(cookie);
         
-        Player user = sessionUtil.getUser(request);
-        if (user!=null){
-            String accessLevel = "loggedIn";
-            List<Event> eventsWithParticipant = eventDAO.findAllWithParticipant(user);
-            if (!eventsWithParticipant.isEmpty()){
-                accessLevel = "loggedInAndParticipant";
-            }
-            sessionUtil.setAccessLevel(request, accessLevel); 
+        String accessLevel = "loggedIn";
+        List<Event> eventsWithParticipant = eventDAO.findAllWithParticipant(player);
+        if (!eventsWithParticipant.isEmpty()){
+            accessLevel = "loggedInAndParticipant";
         }
+        sessionUtil.setAccessLevel(request, accessLevel); 
     }
     
     private String getHash(String input) {
