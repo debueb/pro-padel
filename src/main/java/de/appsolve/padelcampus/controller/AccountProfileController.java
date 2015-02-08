@@ -89,7 +89,7 @@ public class AccountProfileController extends BaseController {
                     byte[] bytes = pictureMultipartFile.getBytes();
 
                     originalImage = ImageIO.read(new ByteArrayInputStream(bytes));
-                    resizedImage = Scalr.resize(originalImage, Scalr.Method.BALANCED, Scalr.Mode.AUTOMATIC, PROFILE_PICTURE_WIDTH, PROFILE_PICTURE_WIDTH, Scalr.OP_ANTIALIAS);
+                    resizedImage = Scalr.resize(originalImage, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.AUTOMATIC, PROFILE_PICTURE_WIDTH, PROFILE_PICTURE_WIDTH, Scalr.OP_ANTIALIAS);
                     
                     //fix iOS always sending landscape image with EXIF orientation metadata
                     Metadata metadata = ImageMetadataReader.readMetadata(new ByteArrayInputStream(bytes.clone()));

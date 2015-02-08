@@ -42,7 +42,7 @@ public class FileUtil {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             
             //convert buffered image to byte array
-            ImageIO.write(bufferedImage, "png", baos);
+            ImageIO.write(bufferedImage, "jpg", baos);
             baos.flush();
             byte[] byteArray = baos.toByteArray();
             
