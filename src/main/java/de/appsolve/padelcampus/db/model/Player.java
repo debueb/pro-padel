@@ -196,13 +196,8 @@ public class Player extends Participant{
     }
     
     @Override
-    public String getDisplayName(){
-        return firstName+" "+lastName;
-    }
-    
-    @Override
     public String toString(){
-        return getDisplayName();
+        return firstName+" "+lastName;
     }
     
     public String getObfuscatedPhone(){

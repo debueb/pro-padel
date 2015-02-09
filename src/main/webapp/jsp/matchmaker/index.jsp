@@ -17,14 +17,28 @@
                 <jsp:param name="key" value="NotificationSettings"/>
                 <jsp:param name="icon" value="envelope-o"/>
             </jsp:include>
+            <c:if test="${not empty PersonalOffers}">
+                <jsp:include page="/jsp/include/list-group-item.jsp">
+                    <jsp:param name="href" value="/matchmaker/offers"/>
+                    <jsp:param name="key" value="MyOffers"/>
+                    <jsp:param name="icon" value="list"/>
+                </jsp:include>
+            </c:if>
             <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/matchmaker/new"/>
+                <jsp:param name="href" value="/matchmaker/offers/edit"/>
                 <jsp:param name="key" value="NewMatchOffer"/>
                 <jsp:param name="icon" value="plus"/>
             </jsp:include>
         </div>
         <hr>
-        <h4><fmt:message key="CurrentMatchOffers"/>
+        <h4><fmt:message key="CurrentMatchOffers"/></h4>
+        <div class="list-group unit">
+            <c:forEach var="Model" items="${Models}">
+                <a href="/matchmaker/offers/edit/${Model.id}" class="list-group-item ajaxify">
+                    <div class="list-item-text">${Model}</div>
+                </a>
+            </c:forEach>
+        </div>
     </div>
 </div>
 <jsp:include page="/jsp/include/footer.jsp"/>

@@ -47,12 +47,7 @@ public class Offer extends BaseEntity{
     }
 
     @Override
-    public String getDisplayName() {
-        return name;
-    }
-    
-    @Override
-    public String toString(){
-        return getDisplayName();
+    public String toString() {
+        return getName();
     }
 }

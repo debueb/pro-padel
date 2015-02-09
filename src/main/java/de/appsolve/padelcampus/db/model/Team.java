@@ -54,7 +54,7 @@ public class Team extends Participant{
     }
 
     @Override
-    public String getDisplayName() {
+    public String toString() {
         return name;
     }
 }

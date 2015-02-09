@@ -201,7 +201,7 @@ public class CalendarConfig extends BaseEntity{
     }
     
     @Override
-    public String getDisplayName() {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(startDate.toString(DATE_MEDIUM)).append(" - ").append(endDate.toString(DATE_MEDIUM)).append(": ");
         for (CalendarWeekDay weekDay: getCalendarWeekDays()){

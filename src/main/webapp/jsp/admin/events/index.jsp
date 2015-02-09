@@ -28,7 +28,7 @@
                                         <c:set var="url_participant" value="/admin/teams/edit/${Participant.id}"/>
                                     </c:otherwise>
                                 </c:choose>
-                                 <a class="ajaxify" href="${url_participant}">${Participant.displayName}</a>${status.last ? "" : ", "}
+                                 <a class="ajaxify" href="${url_participant}">${Participant}</a>${status.last ? "" : ", "}
                             </c:forEach>
                         </td>
                         <td class="delete"><a href="/admin/events/${Event.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>

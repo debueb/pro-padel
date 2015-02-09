@@ -6,7 +6,11 @@
 
 package de.appsolve.padelcampus.controller;
 
+import de.appsolve.padelcampus.db.dao.MatchOfferDAOI;
 import de.appsolve.padelcampus.db.dao.NewsDAOI;
+import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.utils.SessionUtil;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +27,20 @@ public class MatchMakerController extends BaseController{
     @Autowired
     NewsDAOI newsDAO;
     
+    @Autowired
+    MatchOfferDAOI matchOfferDAO;
+    
+    @Autowired
+    SessionUtil sessionUtil;
+    
     @RequestMapping()
-    public ModelAndView getIndex(){
-        return new ModelAndView("matchmaker/index");
+    public ModelAndView getIndex(HttpServletRequest request){
+        ModelAndView mav = new ModelAndView("matchmaker/index");
+        mav.addObject("Models", matchOfferDAO.findCurrent());
+        Player user = sessionUtil.getUser(request);
+        if (user!=null){
+            mav.addObject("PersonalOffers", matchOfferDAO.findBy(user));
+        }
+        return mav;
     }
 }

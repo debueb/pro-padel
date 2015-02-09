@@ -60,6 +60,9 @@ public class AccountProfileController extends BaseController {
     @RequestMapping()
     public ModelAndView getIndex(HttpServletRequest request) {
         Player user = sessionUtil.getUser(request);
+        if (user == null){
+            return new ModelAndView("include/loginrequired", "title", msg.get("Profile"));
+        }
         return getIndexView(user);
     }
 
@@ -70,8 +73,11 @@ public class AccountProfileController extends BaseController {
             return profileView;
         }
         //make sure nobody changes another player's account
-        Player sessionUser = sessionUtil.getUser(request);
-        if (sessionUser.getId() != null && sessionUser.getId().equals(player.getId())) {
+        Player user = sessionUtil.getUser(request);
+        if (user == null){
+            return new ModelAndView("include/loginrequired");
+        }
+        if (user.getId() != null && user.getId().equals(player.getId())) {
             //make sure not to overwrite any existing data
             Player persistedPlayer = playerDAO.findById(player.getId());
             persistedPlayer.setFirstName(player.getFirstName());

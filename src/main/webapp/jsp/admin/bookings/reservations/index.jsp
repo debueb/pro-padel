@@ -26,7 +26,7 @@
                         <td>${Booking.duration}</td>
                         <td>${Booking.offer}</td>
                         <td>${Booking.comment}</td>
-                        <td><a href="${contextPath}/players/player/${Booking.player.id}" class="ajaxify">${Booking.player.displayName}</a></td>
+                        <td><a href="${contextPath}/players/player/${Booking.player.id}" class="ajaxify">${Booking.player}</a></td>
                         <td class="text-center"><a class="ajaxify fa fa-minus-circle" href="/admin/bookings/reservations/${Booking.id}/delete"></a></td>
                     </tr>
                 </c:forEach>

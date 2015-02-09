@@ -6,7 +6,6 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -111,7 +110,7 @@ public class Event extends BaseEntity{
     }
     
     @Override
-    public String getDisplayName() {
+    public String toString() {
         return name;
     }
 }

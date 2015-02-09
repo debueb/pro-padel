@@ -159,7 +159,7 @@ public class GamesController extends BaseController{
         List<Game> games = gameDAO.findByParticipantAndEvent(team, event);
         ModelAndView mav = new ModelAndView("games/games", "Games", games);
         mav.addObject("title", event.getName());
-        mav.addObject("subtitle", team.getDisplayName());
+        mav.addObject("subtitle", team.toString());
         addGameResultMap(mav, games);
         return mav;
     }
@@ -169,7 +169,7 @@ public class GamesController extends BaseController{
         Team team = teamDAO.findById(teamId);
         List<Game> games = gameDAO.findByParticipant(team);
         ModelAndView mav = new ModelAndView("games/games", "Games", games);
-        mav.addObject("title", "Spiele "+team.getDisplayName());
+        mav.addObject("title", "Spiele "+team.toString());
         addGameResultMap(mav, games);
         return mav;
     }

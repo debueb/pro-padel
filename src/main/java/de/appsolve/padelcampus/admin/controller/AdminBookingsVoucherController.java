@@ -117,6 +117,6 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
 
     @Override
     public String getModuleName() {
-        return "bookings/voucher";
+        return "admin/bookings/voucher";
     }
 }

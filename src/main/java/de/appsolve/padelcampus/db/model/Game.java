@@ -93,7 +93,7 @@ public class Game extends BaseEntity{
             int i = 0;
                 builder.append(CryptUtil.rot47("&subject="));
             for (Participant participant: getParticipants()){
-                builder.append(CryptUtil.rot47(URLEncoder.encode(participant.getDisplayName(), UTF8)));
+                builder.append(CryptUtil.rot47(URLEncoder.encode(participant.toString(), UTF8)));
                 if (i<getParticipants().size()-1){
                     builder.append(CryptUtil.rot47(" vs. "));
                 }

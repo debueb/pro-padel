@@ -114,7 +114,7 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
     
     @Override
     protected ModelAndView getEditView(CalendarConfig model){
-        ModelAndView editView = new ModelAndView("/admin/"+getModuleName()+"/edit", "Model", model);
+        ModelAndView editView = new ModelAndView("/"+getModuleName()+"/edit", "Model", model);
         editView.addObject("WeekDays", CalendarWeekDay.values());
         editView.addObject("HolidayKeys", HolidayUtil.getHolidayKeys());
         editView.addObject("Offers", offerDAO.findAll());
@@ -174,6 +174,6 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
 
     @Override
     public String getModuleName() {
-        return "bookings/settings";
+        return "admin/bookings/settings";
     }
 }

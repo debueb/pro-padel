@@ -5,7 +5,8 @@
  */
 package de.appsolve.padelcampus.admin.controller;
 
-import de.appsolve.padelcampus.controller.BaseController;
+import de.appsolve.padelcampus.controller.BaseEntityControllerI;
+import de.appsolve.padelcampus.controller.BaseEntityController;
 import de.appsolve.padelcampus.db.model.BaseEntity;
 import de.appsolve.padelcampus.utils.Msg;
 import java.lang.reflect.ParameterizedType;
@@ -28,7 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  * @param <T>
  */
-public abstract class AdminBaseController<T extends BaseEntity> extends BaseController implements AdminBaseControllerI{
+public abstract class AdminBaseController<T extends BaseEntity> extends BaseEntityController<T> implements BaseEntityControllerI{
     
     private static final Logger log = Logger.getLogger(AdminBaseController.class);
     
@@ -67,34 +68,10 @@ public abstract class AdminBaseController<T extends BaseEntity> extends BaseCont
         return redirectToIndex();
     }
     
-    @RequestMapping(value = "/{id}/delete")
-    public ModelAndView getDelete(@PathVariable("id") Long id){
-        T model = (T)getDAO().findById(id);
-        return getDeleteView(model);
-    }
-
-    @RequestMapping(value = "/{id}/delete", method = POST)
-    public ModelAndView postDelete(@PathVariable("id") Long id){
-        try {
-            getDAO().deleteById(id);
-        } catch (DataIntegrityViolationException e){
-            T model = (T)getDAO().findById(id);
-            log.warn("Attempt to delete "+model.getDisplayName()+" failed due to "+e);
-            ModelAndView deleteView = getDeleteView(model);
-            deleteView.addObject("error", msg.get("CannotDeleteDueToRefrence", new Object[]{model.getDisplayName()}));
-            return deleteView;
-        }
-        return redirectToIndex();
-    }
-    
     protected ModelAndView getEditView(T model){
-        return new ModelAndView("/admin/"+getModuleName()+"/edit", "Model", model);
+        return new ModelAndView("/"+getModuleName()+"/edit", "Model", model);
     }
 
-    protected ModelAndView redirectToIndex() {
-        return new ModelAndView("redirect:/admin/"+getModuleName());
-    }
-    
     @SuppressWarnings("unchecked")
     private T createNewInstance(){
         try {
@@ -104,9 +81,5 @@ public abstract class AdminBaseController<T extends BaseEntity> extends BaseCont
             log.error(e);
         }
         return null;
-    }
-
-    protected ModelAndView getDeleteView(T model) {
-        return new ModelAndView("/admin/include/delete", "Model", model);
     }
 }

@@ -293,11 +293,11 @@ public class BookingsController extends BaseController {
             mail.setFrom(MAIL_NOREPLY_SENDER_NAME + "@" + RequestUtil.getMailHostName(request));
             mail.setSubject(msg.get("BookingSuccessfulMailSubject"));
             mail.setBody(msg.get("BookingSuccessfulMailBody", new Object[]{
-                booking.getPlayer().getDisplayName(),
+                booking.getPlayer().toString(),
                 FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()),
                 FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
                 booking.getDuration() + " " + msg.get("Minutes"),
-                booking.getOffer().getDisplayName(),
+                booking.getOffer().toString(),
                 msg.get(booking.getPaymentMethod().toString()),
                 booking.getAmount(),
                 booking.getCurrency(),
@@ -306,7 +306,7 @@ public class BookingsController extends BaseController {
                 RequestUtil.getBaseURL(request)}));
             Contact contact = new Contact();
             contact.setEmailAddress(booking.getPlayer().getEmail());
-            contact.setEmailDisplayName(booking.getPlayer().getDisplayName());
+            contact.setEmailDisplayName(booking.getPlayer().toString());
             mail.setRecipients(Arrays.asList(new Contact[]{contact}));
             MailUtils.send(mail);
             booking.setConfirmationMailSent(true);
@@ -360,7 +360,7 @@ public class BookingsController extends BaseController {
             mail.setFrom(MAIL_NOREPLY_SENDER_NAME + "@" + RequestUtil.getMailHostName(request));
             mail.setSubject(msg.get("VoucherMailSubject"));
             mail.setBody(msg.get("VoucherMailBody", new Object[]{
-                booking.getPlayer().getDisplayName(),
+                booking.getPlayer().toString(),
                 RequestUtil.getBaseURL(request),
                 voucher.getDuration(),
                 FormatUtils.DATE_MEDIUM.print(voucher.getValidUntil()),
@@ -368,7 +368,7 @@ public class BookingsController extends BaseController {
                 RequestUtil.getBaseURL(request)}));
             Contact contact = new Contact();
             contact.setEmailAddress(booking.getPlayer().getEmail());
-            contact.setEmailDisplayName(booking.getPlayer().getDisplayName());
+            contact.setEmailDisplayName(booking.getPlayer().toString());
             mail.setRecipients(Arrays.asList(new Contact[]{contact}));
             try {
                 MailUtils.send(mail);

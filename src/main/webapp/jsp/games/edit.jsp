@@ -10,7 +10,7 @@
         <div class="alert alert-danger">${error}</div>
         <div class="row">
             <c:forEach var="Participant" items="${Game.participants}" varStatus="status">
-                <div class="col-xs-4 list-group-item-text ${status.first ? 'col-xs-offset-3' : ''}">${Participant.displayName}</div>
+                <div class="col-xs-4 list-group-item-text ${status.first ? 'col-xs-offset-3' : ''}">${Participant}</div>
             </c:forEach>
         </div>
         <form method="POST">

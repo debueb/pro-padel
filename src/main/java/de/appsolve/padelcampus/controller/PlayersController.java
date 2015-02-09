@@ -92,11 +92,11 @@ public class PlayersController extends BaseController {
         Player player = playerDAO.findById(playerId);
         StringBuilder sb = new StringBuilder();
         response.setHeader("Content-type", "text/x-vcard; charset=utf-8");
-        response.setHeader("Content-Disposition", "attachment; filename=\""+player.getDisplayName()+".vcf\";");
+        response.setHeader("Content-Disposition", "attachment; filename=\""+player.toString()+".vcf\";");
         sb.append("BEGIN:VCARD\n");
         sb.append("VERSION:3.0\n");
         sb.append("N:").append(player.getLastName()).append(";").append(player.getFirstName()).append(";;;\n");
-        sb.append("FN:").append(player.getDisplayName()).append("\n");
+        sb.append("FN:").append(player.toString()).append("\n");
         sb.append("EMAIL;type=INTERNET;type=WORK;type=pref:").append(player.getEmail()).append("\n");
         sb.append("TEL;type=CELL;type=VOICE;type=pref:").append(player.getPhone()).append("\n");
         sb.append("NOTE:Added by ").append(msg.get("ProjectName")).append("\n");

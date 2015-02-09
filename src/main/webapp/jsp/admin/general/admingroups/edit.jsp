@@ -20,8 +20,8 @@
             
             <fmt:message var="Members" key="Members"/>
             <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-center-element" title="${Members}" multiple="true">
-                <spf:options items="${AdminPlayers}" itemLabel="displayName" itemValue="id"/>
-                <spf:options items="${AllPlayers}" itemLabel="displayName" itemValue="id"/>
+                <spf:options items="${AdminPlayers}" itemValue="id"/>
+                <spf:options items="${AllPlayers}" itemValue="id"/>
             </spf:select>
             
             <fmt:message var="PrivilegesLabel" key="PrivilegesLabel"/>

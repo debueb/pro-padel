@@ -21,8 +21,8 @@
             
             <fmt:message key="Players" var="Players"/>
             <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${Players}" multiple="true">
-                <spf:options items="${TeamPlayers}" itemLabel="displayName" itemValue="id"/>
-                <spf:options items="${AllPlayers}" itemLabel="displayName" itemValue="id"/>
+                <spf:options items="${TeamPlayers}" itemValue="id"/>
+                <spf:options items="${AllPlayers}" itemValue="id"/>
             </spf:select>
             
             <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>

@@ -41,6 +41,6 @@ public class AdminNewsController extends AdminBaseController<News> {
 
     @Override
     public String getModuleName() {
-        return "news";
+        return "admin/news";
     }
 }

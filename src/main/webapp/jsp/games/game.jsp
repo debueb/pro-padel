@@ -15,7 +15,7 @@
             </a>
             <c:forEach var="Participant" items="${Game.participants}">
                 <a class="list-group-item ajaxify" href="/games/team/${Participant.id}">
-                    <div class="list-item-text"><fmt:message key="AllGamesWith"><fmt:param value="${Participant.displayName}"/></fmt:message></div>
+                    <div class="list-item-text"><fmt:message key="AllGamesWith"><fmt:param value="${Participant}"/></fmt:message></div>
                 </a>
             </c:forEach>
             <a class="list-group-item ajaxify" href="/games/event/${Game.event.id}/all">

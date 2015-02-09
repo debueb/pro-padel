@@ -77,6 +77,6 @@ public class AdminGeneralAdminGroupsController extends AdminBaseController<Admin
 
     @Override
     public String getModuleName() {
-        return "general/admingroups";
+        return "admin/general/admingroups";
     }
 }

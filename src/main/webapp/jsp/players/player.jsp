@@ -6,12 +6,12 @@
         <jsp:include page="/jsp/include/back.jsp"/>
 
         <div class="page-header">
-            <h1>${Player.displayName}</h1>
+            <h1>${Player}</h1>
         </div>
         
         <div class="list-group">
             <a href="/teams/player/${Player.id}" class="list-group-item ajaxify">
-                <div class="list-item-text"><fmt:message key="TeamsWith"><fmt:param>${Player.displayName}</fmt:param></fmt:message>
+                <div class="list-item-text"><fmt:message key="TeamsWith"><fmt:param>${Player}</fmt:param></fmt:message>
                     <div class="list-group-item-icon"><div class="fa fa-lg fa-group"></div></div>
                 </div>
             </a>

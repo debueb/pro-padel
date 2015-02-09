@@ -29,16 +29,6 @@ public class AdminPlayersController extends AdminBaseController<Player> {
     PlayerDAOI playerDAO;
     
     @Override
-    public String getModuleName() {
-        return "players";
-    }
-
-    @Override
-    public GenericDAOI getDAO() {
-        return playerDAO;
-    }
-    
-    @Override
     public ModelAndView postEditView(@ModelAttribute("Model") Player model, HttpServletRequest request, BindingResult result){
         validator.validate(model, result);
         if (result.hasErrors()){
@@ -57,5 +47,15 @@ public class AdminPlayersController extends AdminBaseController<Player> {
         player.setPhone(model.getPhone());
         playerDAO.createOrUpdate(player);
         return redirectToIndex();
+    }
+    
+    @Override
+    public GenericDAOI getDAO() {
+        return playerDAO;
+    }
+    
+    @Override
+    public String getModuleName() {
+        return "admin/players";
     }
 }

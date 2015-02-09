@@ -16,6 +16,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -34,6 +35,7 @@ public class NotificationSetting extends BaseEntity{
     private Boolean enabled;
     
     @ElementCollection
+    @NotEmpty(message = "{NotEmpty.skillLevels}")
     @Enumerated(EnumType.STRING)
     private Set<SkillLevel> skillLevels;
 
@@ -46,7 +48,7 @@ public class NotificationSetting extends BaseEntity{
     }
 
     public Boolean getEnabled() {
-        return enabled;
+        return enabled == null ? false : enabled;
     }
 
     public void setEnabled(Boolean enabled) {

@@ -12,7 +12,7 @@
         <div class="list-group">
             <c:forEach var="Player" items="${Players}">
                 <a href="/players/player/${Player.id}" class="list-group-item ajaxify">
-                    <div class="list-item-text">${Player.displayName}</div>
+                    <div class="list-item-text">${Player}</div>
                 </a>
             </c:forEach>
         </div>

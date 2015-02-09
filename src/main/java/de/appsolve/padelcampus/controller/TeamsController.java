@@ -73,7 +73,7 @@ public class TeamsController extends BaseController{
     public ModelAndView getTeamsForPlayer(@PathVariable("playerId") Long playerId){
         Player player = playerDAO.findById(playerId);
         List<Team> participants = teamDAO.findByPlayer(player);
-        return getTeamsView(msg.get("TeamsWith", new Object[]{player.getDisplayName()}), participants);
+        return getTeamsView(msg.get("TeamsWith", new Object[]{player.toString()}), participants);
     }
 
     private ModelAndView getTeamsView(String title, Collection<? extends Participant> teams) {

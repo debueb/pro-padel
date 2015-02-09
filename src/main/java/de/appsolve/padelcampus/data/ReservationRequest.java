@@ -141,7 +141,7 @@ public class ReservationRequest extends BaseEntity{
     }
     
     @Override
-    public String getDisplayName() {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         for (CalendarWeekDay weekDay: getCalendarWeekDays()){
             sb.append(weekDay.name()).append(" ");

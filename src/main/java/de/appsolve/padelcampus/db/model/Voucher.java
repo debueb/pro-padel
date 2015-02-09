@@ -182,7 +182,7 @@ public class Voucher extends BaseEntity{
     }
     
     @Override
-    public String getDisplayName(){
+    public String toString(){
         return getUUID()+" ("+getComment()+")";
     }
 }

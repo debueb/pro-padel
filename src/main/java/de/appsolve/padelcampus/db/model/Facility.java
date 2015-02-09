@@ -48,7 +48,7 @@ public class Facility extends BaseEntity{
     }
 
     @Override
-    public String getDisplayName() {
+    public String toString() {
         return name;
     }
 }

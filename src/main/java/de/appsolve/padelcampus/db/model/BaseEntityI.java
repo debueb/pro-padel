@@ -13,5 +13,4 @@ import java.io.Serializable;
  */
 public interface BaseEntityI extends Serializable, Comparable<BaseEntityI>{
     
-    public String getDisplayName();
 }

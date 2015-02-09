@@ -23,7 +23,7 @@
                         <c:set var="UrlTeamGames" value="/games/team/${ScoreEntry.participant.id}"/>
                         <tr>
                             <td class="text-center">${status.index+1}</td>
-                            <td><a href="${UrlTeam}" class="ajaxify">${ScoreEntry.participant.displayName}</a></td>
+                            <td><a href="${UrlTeam}" class="ajaxify">${ScoreEntry.participant}</a></td>
                             <td class="text-center"><a href="${UrlTeamGames}" class="ajaxify">${ScoreEntry.totalPoints}</a></td>
                             <td class="text-center"><a href="${UrlTeamGames}" class="ajaxify">${ScoreEntry.matchesWon}:${ScoreEntry.matchesPlayed-ScoreEntry.matchesWon}</a></td>
                             <td class="text-center"><a href="${UrlTeamGames}" class="ajaxify">${ScoreEntry.setsWon}:${ScoreEntry.setsPlayed-ScoreEntry.setsWon}</a></td>

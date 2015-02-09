@@ -53,12 +53,7 @@ public abstract class BaseEntity implements BaseEntityI{
     }
     
     @Override
-    public String getDisplayName() {
-        throw new UnsupportedOperationException();
-    }
-    
-    @Override
     public int compareTo(BaseEntityI o) {
-        return getDisplayName().compareToIgnoreCase(o.getDisplayName());
+        return toString().compareToIgnoreCase(o.toString());
     }
 }

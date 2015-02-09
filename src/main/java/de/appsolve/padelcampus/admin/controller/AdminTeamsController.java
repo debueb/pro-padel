@@ -64,6 +64,6 @@ public class AdminTeamsController extends AdminBaseController<Team> {
 
     @Override
     public String getModuleName() {
-        return "teams";
+        return "admin/teams";
     }
 }

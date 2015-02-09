@@ -31,6 +31,6 @@ public class AdminContactController extends AdminBaseController<Contact> {
 
     @Override
     public String getModuleName() {
-        return "contact";
+        return "admin/contact";
     }
 }

@@ -17,7 +17,7 @@
             </jsp:include>
             <c:set var="TeamCount" value="${fn:length(Event.teams)}"/>
             <c:forEach var="Team" items="${Event.teams}">
-                <fmt:message key="GamesWith" var="msg"><fmt:param>${Team.displayName}</fmt:param></fmt:message>
+                <fmt:message key="GamesWith" var="msg"><fmt:param>${Team}</fmt:param></fmt:message>
                 <jsp:include page="/jsp/include/list-badge-item.jsp">
                     <jsp:param name="msg" value="${msg}"/>
                     <jsp:param name="url" value="/games/event/${Event.id}/team/${Team.id}"/>

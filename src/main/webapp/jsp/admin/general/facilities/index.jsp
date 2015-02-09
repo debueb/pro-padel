@@ -20,7 +20,7 @@
                         <td><a class="ajaxify" href="/admin/general/facilities/edit/${Model.id}">${Model.name}</a></td>
                         <td>
                             <c:forEach var="Offer" items="${Model.offers}" varStatus="status">
-                                <a class="ajaxify" href="/admin/general/facilities/edit/${Model.id}">${Offer.displayName}</a>${status.last ? "" : ", "}
+                                <a class="ajaxify" href="/admin/general/facilities/edit/${Model.id}">${Offer}</a>${status.last ? "" : ", "}
                             </c:forEach>
                         </td>
                         <td class="delete"><a href="/admin/general/facilities/${Event.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>

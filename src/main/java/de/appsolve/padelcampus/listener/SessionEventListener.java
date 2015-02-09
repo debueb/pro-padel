@@ -74,7 +74,7 @@ public class SessionEventListener implements HttpSessionListener, ApplicationCon
         if (!booking.getPaymentConfirmed()){
             LocalDateTime blockingTime = booking.getBlockingTime();
             if (blockingTime!=null && blockingTime.isBefore(maxAge)){
-                log.info("Cancelling booking [user="+booking.getPlayer().getDisplayName()+", date="+booking.getBookingDate()+", time="+booking.getBookingTime()+"] due to session timeout");
+                log.info("Cancelling booking [user="+booking.getPlayer().toString()+", date="+booking.getBookingDate()+", time="+booking.getBookingTime()+"] due to session timeout");
                 booking.setBlockingTime(null);
                 booking.setCancelled(true);
                 booking.setCancelReason("Session Timeout");

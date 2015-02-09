@@ -34,6 +34,6 @@ public class AdminGeneralOffersController extends AdminBaseController<Offer> {
 
     @Override
     public String getModuleName() {
-        return "general/offers";
+        return "admin/general/offers";
     }
 }

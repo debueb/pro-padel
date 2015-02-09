@@ -61,6 +61,6 @@ public class AdminGeneralFacilitiesController extends AdminBaseController<Facili
 
     @Override
     public String getModuleName() {
-        return "general/facilities";
+        return "admin/general/facilities";
     }
 }

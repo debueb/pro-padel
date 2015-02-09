@@ -84,7 +84,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
                     if (!model.getParticipants().contains(participant)){
                         List<Game> existingGames = gameDAO.findByParticipantAndEvent(participant, model);
                         if (!existingGames.isEmpty()){
-                            result.reject("TeamHasAlreadyPlayedInEvent", new Object[]{participant.getDisplayName(), existingGames.size(), model.getDisplayName()}, null);
+                            result.reject("TeamHasAlreadyPlayedInEvent", new Object[]{participant.toString(), existingGames.size(), model.toString()}, null);
                         }
                     }
                 }
@@ -155,6 +155,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
 
     @Override
     public String getModuleName() {
-        return "events";
+        return "admin/events";
     }
 }

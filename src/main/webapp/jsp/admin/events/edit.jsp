@@ -42,15 +42,15 @@
             <spf:select path="participants" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${Participants}" multiple="true">
                 <fmt:message key="Participants" var="Label"/>
                 <optgroup label="${Label}">
-                    <spf:options items="${EventParticipants}" itemLabel="displayName" itemValue="id"/>
+                    <spf:options items="${EventParticipants}" itemValue="id"/>
                 </optgroup>
                 <fmt:message key="Teams" var="Label"/>
                 <optgroup label="${Label}">
-                    <spf:options items="${AllTeams}" itemLabel="displayName" itemValue="id"/>
+                    <spf:options items="${AllTeams}" itemValue="id"/>
                 </optgroup>
                 <fmt:message key="Players" var="Label"/>
                 <optgroup label="${Label}" disabled>
-                    <spf:options items="${AllPlayers}" itemLabel="displayName" itemValue="id"/>
+                    <spf:options items="${AllPlayers}" itemValue="id"/>
                 </optgroup>
             </spf:select>
                 

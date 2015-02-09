@@ -11,5 +11,5 @@ package de.appsolve.padelcampus.db.model;
  */
 public interface ParticipantI {
     
-    String getDisplayName();
+    String toString();
 }

@@ -71,7 +71,7 @@ public class News extends BaseEntity{
     }
     
     @Override
-    public String getDisplayName(){
+    public String toString(){
         return title;
     }
     

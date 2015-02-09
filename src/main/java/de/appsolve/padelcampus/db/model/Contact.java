@@ -48,7 +48,7 @@ public class Contact extends BaseEntity{
     }
     
     @Override
-    public String getDisplayName() {
+    public String toString() {
         return emailDisplayName + " ("+emailAddress+")";
     }
 }

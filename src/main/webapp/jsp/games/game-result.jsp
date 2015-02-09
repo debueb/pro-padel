@@ -3,7 +3,7 @@
 <div class="list-item-text">
     <div class="text">
         <c:forEach var="Participant" items="${Game.participants}" varStatus="status">
-            <div style="display:block;">${Participant.displayName}</div>
+            <div style="display:block;">${Participant}</div>
             <c:if test="${not status.last}">
                 <div class="list-group-item-vs">vs</div>
             </c:if>

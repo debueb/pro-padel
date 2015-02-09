@@ -178,10 +178,10 @@ public class LoginController extends BaseController{
         mail.setFrom("noreply@"+hostname);
         Contact contact = new Contact();
         contact.setEmailAddress(player.getEmail());
-        contact.setEmailDisplayName(player.getDisplayName());
+        contact.setEmailDisplayName(player.toString());
         mail.setRecipients(Arrays.asList(new Contact[]{contact}));
         mail.setSubject(msg.get("ForgotPasswordMailSubject"));
-        mail.setBody(StringEscapeUtils.unescapeJava(msg.get("ForgotPasswordMailBody", new Object[]{player.getDisplayName(), resetPasswordURL})));
+        mail.setBody(StringEscapeUtils.unescapeJava(msg.get("ForgotPasswordMailBody", new Object[]{player.toString(), resetPasswordURL})));
         try {
             MailUtils.send(mail);
         } catch (MandrillApiError | IOException e) {
@@ -299,10 +299,10 @@ public class LoginController extends BaseController{
             mail.setFrom(MAIL_NOREPLY_SENDER_NAME+"@"+RequestUtil.getMailHostName(request));
             Contact contact = new Contact();
             contact.setEmailAddress(player.getEmail());
-            contact.setEmailDisplayName(player.getDisplayName());
+            contact.setEmailDisplayName(player.toString());
             mail.setRecipients(Arrays.asList(new Contact[]{contact}));
             mail.setSubject(msg.get("RegistrationMailSubject"));
-            mail.setBody(StringEscapeUtils.unescapeJava(msg.get("RegistrationMailBody", new Object[]{player.getDisplayName(), confirmRegistrationURL, RequestUtil.getBaseURL(request)})));
+            mail.setBody(StringEscapeUtils.unescapeJava(msg.get("RegistrationMailBody", new Object[]{player.toString(), confirmRegistrationURL, RequestUtil.getBaseURL(request)})));
             MailUtils.send(mail);
             
             //make sure to save the password only after the email has been successfully sent

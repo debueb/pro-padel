@@ -218,6 +218,6 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
 
     @Override
     public String getModuleName() {
-        return "bookings/reservations";
+        return "admin/bookings/reservations";
     }
 }
