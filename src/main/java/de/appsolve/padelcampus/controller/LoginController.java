@@ -181,7 +181,7 @@ public class LoginController extends BaseController{
         contact.setEmailDisplayName(player.getDisplayName());
         mail.setRecipients(Arrays.asList(new Contact[]{contact}));
         mail.setSubject(msg.get("ForgotPasswordMailSubject"));
-        mail.setBody(StringEscapeUtils.unescapeJava(msg.get("ForgotPasswordMailBody", new Object[]{player.getDisplayName(), resetPasswordURL})));
+        mail.setBody(StringEscapeUtils.unescapeJava(msg.get("ForgotPasswordMailBody", new Object[]{player.getDisplayName(), resetPasswordURL, RequestUtil.getBaseURL(request)})));
         try {
             MailUtils.send(mail);
         } catch (MandrillApiError | IOException e) {
