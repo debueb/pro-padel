@@ -4,11 +4,12 @@
  * and open the template in the editor.
  */
 
-package de.appsolve.padelcampus.admin.controller;
+package de.appsolve.padelcampus.admin.controller.contact;
 
+import de.appsolve.padelcampus.admin.controller.AdminBaseController;
+import de.appsolve.padelcampus.db.dao.ContactDAOI;
 import de.appsolve.padelcampus.db.dao.GenericDAOI;
-import de.appsolve.padelcampus.db.dao.PlayerDAOI;
-import de.appsolve.padelcampus.db.model.Offer;
+import de.appsolve.padelcampus.db.model.Contact;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,22 +19,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author dominik
  */
 @Controller()
-@RequestMapping("/admin/general/offers")
-public class AdminGeneralOffersController extends AdminBaseController<Offer> {
+@RequestMapping("/admin/contact")
+public class AdminContactController extends AdminBaseController<Contact> {
     
     @Autowired
-    PlayerDAOI playerDAO;
+    ContactDAOI contactDAO;
     
-    @Autowired
-    GenericDAOI<Offer> offerDAO;
-   
     @Override
     public GenericDAOI getDAO() {
-        return offerDAO;
+        return contactDAO;
     }
 
     @Override
     public String getModuleName() {
-        return "general/offers";
+        return "contact";
     }
 }

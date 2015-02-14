@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package de.appsolve.padelcampus.admin.controller;
+package de.appsolve.padelcampus.admin.controller.bookings;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,11 +15,11 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  */
 @Controller()
-@RequestMapping("/admin/general")
-public class AdminGeneralController{
+@RequestMapping("/admin/bookings")
+public class AdminBookingsController{
     
     @RequestMapping()
     public ModelAndView getIndex(){
-        return new ModelAndView("admin/general/index");
+        return new ModelAndView("admin/bookings/index");
     }
 }

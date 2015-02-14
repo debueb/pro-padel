@@ -1,4 +1,4 @@
-package de.appsolve.padelcampus.admin.controller;
+package de.appsolve.padelcampus.admin.controller.reports;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

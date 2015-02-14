@@ -33,10 +33,10 @@ public abstract class AdminBaseController<T extends BaseEntity> extends BaseCont
     private static final Logger log = Logger.getLogger(AdminBaseController.class);
     
     @Autowired
-    Validator validator;
+    protected Validator validator;
     
     @Autowired
-    Msg msg;
+    protected Msg msg;
     
     @RequestMapping()
     public ModelAndView showIndex(){

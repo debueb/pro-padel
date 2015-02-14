@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package de.appsolve.padelcampus.admin.controller;
+package de.appsolve.padelcampus.admin.controller.bookings;
 
 import de.appsolve.padelcampus.db.dao.PayMillConfigDAOI;
 import de.appsolve.padelcampus.db.model.PayMillConfig;

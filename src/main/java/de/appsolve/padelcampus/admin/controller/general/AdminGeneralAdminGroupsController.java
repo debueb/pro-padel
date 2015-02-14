@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package de.appsolve.padelcampus.admin.controller;
+package de.appsolve.padelcampus.admin.controller.general;
 
+import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.constants.Privilege;
 import de.appsolve.padelcampus.db.dao.AdminGroupDAOI;
 import de.appsolve.padelcampus.db.dao.GenericDAOI;

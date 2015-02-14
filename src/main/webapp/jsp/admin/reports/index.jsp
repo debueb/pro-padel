@@ -20,13 +20,13 @@
                 <jsp:param name="key" value="BookingList"/>
                 <jsp:param name="icon" value="bars"/>
             </jsp:include>
-<%--
+
             <jsp:include page="/jsp/include/list-group-item.jsp">
                 <jsp:param name="href" value="/admin/reports/players"/>
                 <jsp:param name="key" value="TopPlayer"/>
                 <jsp:param name="icon" value="user"/>
             </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
+<%--            <jsp:include page="/jsp/include/list-group-item.jsp">
                 <jsp:param name="href" value="/admin/reports/paymentmethods"/>
                 <jsp:param name="key" value="TopPaymentMethod"/>
                 <jsp:param name="icon" value="credit-card"/>

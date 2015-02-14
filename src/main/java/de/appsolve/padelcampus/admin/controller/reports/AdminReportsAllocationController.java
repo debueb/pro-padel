@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package de.appsolve.padelcampus.admin.controller;
+package de.appsolve.padelcampus.admin.controller.reports;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import de.appsolve.padelcampus.controller.BaseController;

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package de.appsolve.padelcampus.admin.controller;
+package de.appsolve.padelcampus.admin.controller.general;
 
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.model.CssAttribute;

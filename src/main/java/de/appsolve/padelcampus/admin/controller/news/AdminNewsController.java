@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package de.appsolve.padelcampus.admin.controller;
+package de.appsolve.padelcampus.admin.controller.news;
 
+import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.db.dao.GenericDAOI;
 import de.appsolve.padelcampus.db.dao.NewsDAOI;
 import de.appsolve.padelcampus.db.model.News;
