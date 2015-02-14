@@ -45,6 +45,11 @@
                 <jsp:param name="key" value="Contact"/>
                 <jsp:param name="icon" value="envelope"/>
             </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/admin/reports"/>
+                <jsp:param name="key" value="Reports"/>
+                <jsp:param name="icon" value="pie-chart"/>
+            </jsp:include>
         </div>
     </div>
 </div>

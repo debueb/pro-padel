@@ -24,8 +24,8 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  */
 @Controller()
-@RequestMapping("/admin/bookings/reports/allocations")
-public class AdminBookingsReportsAllocationController extends BaseController{
+@RequestMapping("/admin/reports/allocations")
+public class AdminReportsAllocationController extends BaseController{
 
     @Autowired
     BookingDAOI bookingDAO;
@@ -48,7 +48,7 @@ public class AdminBookingsReportsAllocationController extends BaseController{
     }
    
     private ModelAndView getBookingsView(LocalDate date) throws JsonProcessingException {
-        ModelAndView mav = new ModelAndView("admin/bookings/allocations/index");
+        ModelAndView mav = new ModelAndView("admin/reports/allocations/index");
         bookingUtil.addWeekView(date, mav, false);
         return mav;
     }

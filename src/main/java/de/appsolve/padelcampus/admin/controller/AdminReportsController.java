@@ -33,8 +33,8 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  */
 @Controller()
-@RequestMapping("/admin/bookings/reports")
-public class AdminBookingsReportsController extends BaseController{
+@RequestMapping("/admin/reports")
+public class AdminReportsController extends BaseController{
     
     @Autowired
     BookingDAOI bookingDAO;
@@ -46,7 +46,7 @@ public class AdminBookingsReportsController extends BaseController{
     
     @RequestMapping()
     public ModelAndView getIndex(){
-        return new ModelAndView("admin/bookings/reports/index");
+        return new ModelAndView("admin/reports/index");
     }
     
     @RequestMapping("bookinglist")
@@ -80,7 +80,7 @@ public class AdminBookingsReportsController extends BaseController{
         for (Booking booking: bookings){
             total = total.add(booking.getAmount());
         }
-        ModelAndView listView = new ModelAndView("admin/bookings/reports/bookinglist");
+        ModelAndView listView = new ModelAndView("admin/reports/bookinglist");
         listView.addObject("Total", total);
         listView.addObject("Bookings", bookings);
         listView.addObject("DateRange", dateRange);

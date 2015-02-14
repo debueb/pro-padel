@@ -13,7 +13,7 @@
                 <div class="datepicker-text"></div>
             </div>
             <input type="hidden" class="datepicker-input" class="form-control" value="${Day}" />
-            <div class="datepicker" data-show-on-init="false" data-redirect-on-select="/admin/bookings/reports/allocations/{date}" data-day-config='${dayConfigs}' data-max-date='${maxDate}'></div>
+            <div class="datepicker" data-show-on-init="false" data-redirect-on-select="/admin/reports/allocations/{date}" data-day-config='${dayConfigs}' data-max-date='${maxDate}'></div>
         </div>
 
         <c:choose>
@@ -50,7 +50,7 @@
                                         <c:forEach var="TimeSlot" items="${TimeSlots}">
                                             <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
                                                 <c:set var="containsTimeSlot" value="true"/>
-                                                <c:set var="urlDetail" value="/admin/bookings/reports/bookinglist/${TimeSlot.date}"/>
+                                                <c:set var="urlDetail" value="/admin/reports/bookinglist/${TimeSlot.date}"/>
                                                 <td class="booking-bookable ${fn:length(TimeSlot.bookings) == 0 ? 'booking-bookable-last' : ''}">
                                                     <a class="block ajaxify" href="${urlDetail}">${fn:length(TimeSlot.bookings)}</a>
                                                 </td>

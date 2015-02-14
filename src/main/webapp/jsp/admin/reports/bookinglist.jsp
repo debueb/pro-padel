@@ -2,18 +2,18 @@
 <jsp:include page="/jsp/include/head.jsp"/>
 
 <div class="row">
-    <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1">
         <jsp:include page="/jsp/include/back.jsp"/>
         
         <div class="page-header">
             <h1><fmt:message key="BookingList"/></h1>
         </div>
       
-        <spf:form method="POST" modelAttribute="DateRange" action="/admin/bookings/reports/bookinglist">
+        <spf:form method="POST" modelAttribute="DateRange" action="/admin/reports/bookinglist">
             <%-- Start Datum --%>
             <div class="datepicker-container">
                 <div class="datepicker-text-container form-top-element">
-                    <div class="datepicker-label"><fmt:message key="Start"/></div>
+                    <div class="datepicker-label"><fmt:message key="GameDate"/> <fmt:message key="Start"/></div>
                     <span class="fa fa-calendar datepicker-icon"></span>
                     <div class="datepicker-text"></div>
                 </div>
@@ -24,7 +24,7 @@
             <%-- End Datum --%>
             <div class="datepicker-container">
                 <div class="datepicker-text-container form-bottom-element">
-                    <div class="datepicker-label"><fmt:message key="End"/></div>
+                    <div class="datepicker-label"><fmt:message key="GameDate"/> <fmt:message key="End"/></div>
                     <span class="fa fa-calendar datepicker-icon"></span>
                     <div class="datepicker-text"></div>
                 </div>
