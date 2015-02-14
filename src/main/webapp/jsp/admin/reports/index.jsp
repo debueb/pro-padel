@@ -23,25 +23,19 @@
 
             <jsp:include page="/jsp/include/list-group-item.jsp">
                 <jsp:param name="href" value="/admin/reports/players"/>
-                <jsp:param name="key" value="TopPlayer"/>
+                <jsp:param name="key" value="TopPlayers"/>
                 <jsp:param name="icon" value="user"/>
             </jsp:include>
-<%--            <jsp:include page="/jsp/include/list-group-item.jsp">
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/admin/reports/times"/>
+                <jsp:param name="key" value="TopTimes"/>
+                <jsp:param name="icon" value="calendar"/>
+            </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
                 <jsp:param name="href" value="/admin/reports/paymentmethods"/>
                 <jsp:param name="key" value="TopPaymentMethod"/>
                 <jsp:param name="icon" value="credit-card"/>
             </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/reports/weekdays"/>
-                <jsp:param name="key" value="TopWeekDay"/>
-                <jsp:param name="icon" value="calendar"/>
-            </jsp:include>
-             <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/reports/times"/>
-                <jsp:param name="key" value="TopTimes"/>
-                <jsp:param name="icon" value="calendar-o"/>
-            </jsp:include>
---%>
         </div>
     </div>
 </div>
