@@ -4,9 +4,10 @@
  * and open the template in the editor.
  */
 
-package de.appsolve.padelcampus.controller;
+package de.appsolve.padelcampus.controller.contact;
 
 import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
+import de.appsolve.padelcampus.controller.BaseController;
 import static de.appsolve.padelcampus.constants.Constants.CONTACT_FORM_RECIPIENT_MAIL;
 import static de.appsolve.padelcampus.constants.Constants.CONTACT_FORM_RECIPIENT_NAME;
 import de.appsolve.padelcampus.data.Mail;

@@ -6,7 +6,6 @@
 
 package de.appsolve.padelcampus.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,11 +15,13 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  */
 @Controller()
-@RequestMapping("/account")
-public class AccountController extends BaseController {
+@RequestMapping("/privacy")
+public class PrivacyController extends BaseController{
     
     @RequestMapping()
-    public ModelAndView getIndex(HttpServletRequest request){
-        return new ModelAndView("account/index");
+    public ModelAndView getIndex(){
+        return new ModelAndView("privacy/index");
     }
+    
+    
 }

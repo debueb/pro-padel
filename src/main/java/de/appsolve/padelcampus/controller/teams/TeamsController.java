@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package de.appsolve.padelcampus.controller;
+package de.appsolve.padelcampus.controller.teams;
 
+import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;

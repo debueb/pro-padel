@@ -4,10 +4,9 @@
  * and open the template in the editor.
  */
 
-package de.appsolve.padelcampus.controller;
+package de.appsolve.padelcampus.controller.links;
 
-import de.appsolve.padelcampus.db.dao.NewsDAOI;
-import org.springframework.beans.factory.annotation.Autowired;
+import de.appsolve.padelcampus.controller.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,14 +16,11 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  */
 @Controller()
-@RequestMapping("/news")
-public class NewsController extends BaseController{
-    
-    @Autowired
-    NewsDAOI newsDAO;
+@RequestMapping("/links")
+public class LinksController extends BaseController{
     
     @RequestMapping()
     public ModelAndView getIndex(){
-        return new ModelAndView("news/index", "AllNews", newsDAO.findAll());
+        return new ModelAndView("links/index");
     }
 }

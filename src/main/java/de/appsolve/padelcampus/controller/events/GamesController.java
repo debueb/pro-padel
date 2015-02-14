@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package de.appsolve.padelcampus.controller;
+package de.appsolve.padelcampus.controller.events;
 
+import de.appsolve.padelcampus.controller.BaseController;
 import static de.appsolve.padelcampus.constants.Constants.FIRST_SET;
 import static de.appsolve.padelcampus.constants.Constants.NUMBER_OF_SETS;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
