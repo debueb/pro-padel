@@ -598,6 +598,7 @@ public class BookingsController extends BaseController {
                 //as long as the endTime is before the end time configured in the calendar
                 while (endTime.compareTo(config.getEndTime()) <= 0) {
                     TimeSlot timeSlot = new TimeSlot();
+                    timeSlot.setDate(selectedDate);
                     timeSlot.setStartTime(selectedTime);
                     timeSlot.setEndTime(endTime);
                     timeSlot.setConfig(config);
