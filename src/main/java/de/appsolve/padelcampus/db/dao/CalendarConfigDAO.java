@@ -1,15 +1,10 @@
 package de.appsolve.padelcampus.db.dao;
 ;
-import de.appsolve.padelcampus.constants.CalendarWeekDay;
-import static de.appsolve.padelcampus.constants.Constants.NO_HOLIDAY_KEY;
 import java.util.List;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
+import de.appsolve.padelcampus.utils.CalendarConfigUtil;
 import de.appsolve.padelcampus.utils.Msg;
-import de.jollyday.HolidayCalendar;
-import de.jollyday.HolidayManager;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +19,9 @@ public class CalendarConfigDAO extends GenericDAO<CalendarConfig> implements Cal
     
     @Autowired
     Msg msg;
+    
+    @Autowired
+    CalendarConfigUtil calendarConfigUtil;
 
     @Override
     public List<CalendarConfig> findBetween(LocalDate startDate, LocalDate endDate) {
@@ -44,53 +42,10 @@ public class CalendarConfigDAO extends GenericDAO<CalendarConfig> implements Cal
     @Override
     public List<CalendarConfig> findFor(LocalDate date) throws CalendarConfigException{
         List<CalendarConfig> allConfigs = super.findAll();
-        List<CalendarConfig> configsMatchingDate = new ArrayList<>();
-        Iterator<CalendarConfig> iterator = allConfigs.iterator();
-        while (iterator.hasNext()){
-            CalendarConfig config = iterator.next();
-
-            //remove configurations that do not match the requested week day
-            boolean matchesWeekDay = false;
-            for (CalendarWeekDay weekDay: config.getCalendarWeekDays()){
-                if (weekDay.ordinal()+1 == date.getDayOfWeek()){
-                    matchesWeekDay = true;
-                    break;
-                }
-            }
-            if (!matchesWeekDay){
-                continue;
-            }
-            
-            //remove configurations that are defined holidays
-            String holidayKey = config.getHolidayKey();
-            boolean isHoliday = false;
-            if (!holidayKey.equals(NO_HOLIDAY_KEY)){
-                String[] holidayKeySplit = holidayKey.split("-");
-                String country = holidayKeySplit[0];
-                String region  = holidayKeySplit[1];
-                HolidayManager countryHolidays = HolidayManager.getInstance(HolidayCalendar.valueOf(country));
-                isHoliday = countryHolidays.isHoliday(date, region);
-            }
-            if (isHoliday){
-                continue;
-            }
-            
-            //remove configurations that start after the requested date
-            if (config.getStartDate().compareTo(date) > 0){
-                continue;
-            }
-            
-            //remove configurations that end before the requested date
-            if (config.getEndDate().compareTo(date) < 0){
-                continue;
-            }
-            
-            configsMatchingDate.add(config);
-        }
+        List<CalendarConfig> configsMatchingDate = calendarConfigUtil.getCalendarConfigsMatchingDate(allConfigs, date);
         if (configsMatchingDate.isEmpty()){
             throw new CalendarConfigException(msg.get("NoMatchingCalendarConfigurationFound"));
         }
-        Collections.sort(configsMatchingDate);
         return configsMatchingDate;
     }
 }

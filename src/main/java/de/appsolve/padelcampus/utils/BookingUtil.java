@@ -56,10 +56,14 @@ public class BookingUtil {
     CalendarConfigDAOI calendarConfigDAO;
     
     @Autowired
+    CalendarConfigUtil calendarConfigUtil;
+    
+    @Autowired
     ObjectMapper objectMapper;
     
-    public List<TimeSlot> getTimeSlotsForDate(LocalDate selectedDate, Boolean onlyFutureTimeSlots, Boolean preventOverlapping) throws CalendarConfigException{
-        List<CalendarConfig> calendarConfigs = calendarConfigDAO.findFor(selectedDate);
+    public List<TimeSlot> getTimeSlotsForDate(LocalDate selectedDate, List<CalendarConfig> allCalendarConfigs, List<Booking> existingBookings, Boolean onlyFutureTimeSlots, Boolean preventOverlapping) throws CalendarConfigException{
+        
+        List<CalendarConfig> calendarConfigs = calendarConfigUtil.getCalendarConfigsMatchingDate(allCalendarConfigs, selectedDate);
         Iterator<CalendarConfig> iterator = calendarConfigs.iterator();
         while(iterator.hasNext()){
             CalendarConfig calendarConfig = iterator.next();
@@ -96,9 +100,8 @@ public class BookingUtil {
             Collections.sort(timeSlots);
 
             //decrease court count for every blocking booking
-            List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(selectedDate);
             for (TimeSlot timeSlot : timeSlots) {
-                checkForBookedCourts(timeSlot, confirmedBookings, preventOverlapping);
+                checkForBookedCourts(timeSlot, existingBookings, preventOverlapping);
             }
         }
         return timeSlots;
@@ -146,30 +149,32 @@ public class BookingUtil {
         LocalTime endTime = timeSlot.getEndTime();
         
         for (Booking booking : confirmedBookings) {
-            LocalTime bookingStartTime = booking.getBookingTime();
-            LocalTime bookingEndTime = bookingStartTime.plusMinutes(booking.getDuration().intValue());
-
-            Boolean addBooking = false;
-            if (preventOverlapping){
-                if (startTime.isBefore(bookingEndTime)) {
-                    if (endTime.isAfter(bookingStartTime)) {
-                        addBooking = true;
+            
+            if (timeSlot.getDate().equals(booking.getBookingDate())){
+                LocalTime bookingStartTime = booking.getBookingTime();
+                LocalTime bookingEndTime = bookingStartTime.plusMinutes(booking.getDuration().intValue());
+                Boolean addBooking = false;
+                if (preventOverlapping){
+                    if (startTime.isBefore(bookingEndTime)) {
+                        if (endTime.isAfter(bookingStartTime)) {
+                            addBooking = true;
+                        }
+                    }
+                } else {
+                    //for displaying allocations
+                    if (startTime.compareTo(bookingStartTime)>=0){
+                        if (endTime.compareTo(bookingEndTime)<=0){
+                            addBooking = true;
+                        }
                     }
                 }
-            } else {
-                //for displaying allocations
-                if (startTime.compareTo(bookingStartTime)>=0){
-                    if (endTime.compareTo(bookingEndTime)<=0){
-                        addBooking = true;
-                    }
-                }
-            }
-            if (addBooking){
-                Offer offer = booking.getOffer();
-                for (Offer timeSlotOffer: timeSlot.getConfig().getOffers()){
-                    if (offer.equals(timeSlotOffer)){
-                        timeSlot.addBooking(booking);
-                        break;
+                if (addBooking){
+                    Offer offer = booking.getOffer();
+                    for (Offer timeSlotOffer: timeSlot.getConfig().getOffers()){
+                        if (offer.equals(timeSlotOffer)){
+                            timeSlot.addBooking(booking);
+                            break;
+                        }
                     }
                 }
             }
@@ -199,24 +204,11 @@ public class BookingUtil {
         LocalDate today = new LocalDate(DEFAULT_TIMEZONE);
         LocalDate firstDay = today.dayOfMonth().withMinimumValue();
         LocalDate lastDay = today.plusDays(Constants.CALENDAR_MAX_DATE).dayOfMonth().withMaximumValue();
-        List<CalendarConfig> calendarConfigs = calendarConfigDAO.findBetween(firstDay, lastDay);
-        Map<String, DatePickerDayConfig> dayConfigs = new HashMap<>();
-        for (LocalDate date = firstDay; date.isBefore(lastDay); date = date.plusDays(1)) {
-            DatePickerDayConfig dayConfig = new DatePickerDayConfig();
-            dayConfig.setSelectable(Boolean.FALSE);
-            for (CalendarConfig calendarConfig : calendarConfigs) {
-                for (CalendarWeekDay weekDay : calendarConfig.getCalendarWeekDays()) {
-                    if (weekDay.ordinal() + 1 == date.getDayOfWeek()) {
-                        if (!isHoliday(date, calendarConfig)) {
-                            if (calendarConfig.getStartDate().compareTo(date) <= 0 && calendarConfig.getEndDate().compareTo(date) >= 0) {
-                                dayConfig.setSelectable(Boolean.TRUE);
-                            }
-                        }
-                    }
-                }
-            }
-            dayConfigs.put(date.toString(), dayConfig);
-        }
+        List<CalendarConfig> calendarConfigs = calendarConfigDAO.findBetween(firstDay, lastDay);    
+        Map<String, DatePickerDayConfig> dayConfigs = getDayConfigMap(firstDay, lastDay, calendarConfigs);
+        
+        List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsBetween(firstDay, lastDay);
+            
        
         //calculate available time slots
         List<TimeSlot> timeSlots = new ArrayList<>();
@@ -227,7 +219,7 @@ public class BookingUtil {
             if (!date.isBefore(new LocalDate())){
                 try {
                     //generate list of bookable time slots
-                    timeSlots.addAll(getTimeSlotsForDate(date, true, preventOverlapping));
+                    timeSlots.addAll(getTimeSlotsForDate(date, calendarConfigs, confirmedBookings, true, preventOverlapping));
                 } catch (CalendarConfigException e){
                     //safe to ignore
                 }
@@ -265,5 +257,26 @@ public class BookingUtil {
             }
         }
         return bookingSlotsLeft;
+    }
+
+    public Map<String, DatePickerDayConfig> getDayConfigMap(LocalDate firstDay, LocalDate lastDay, List<CalendarConfig> calendarConfigs) {
+        Map<String, DatePickerDayConfig> dayConfigs = new HashMap<>();
+        for (LocalDate date = firstDay; date.isBefore(lastDay); date = date.plusDays(1)) {
+            DatePickerDayConfig dayConfig = new DatePickerDayConfig();
+            dayConfig.setSelectable(Boolean.FALSE);
+            for (CalendarConfig calendarConfig : calendarConfigs) {
+                for (CalendarWeekDay weekDay : calendarConfig.getCalendarWeekDays()) {
+                    if (weekDay.ordinal() + 1 == date.getDayOfWeek()) {
+                        if (!isHoliday(date, calendarConfig)) {
+                            if (calendarConfig.getStartDate().compareTo(date) <= 0 && calendarConfig.getEndDate().compareTo(date) >= 0) {
+                                dayConfig.setSelectable(Boolean.TRUE);
+                            }
+                        }
+                    }
+                }
+            }
+            dayConfigs.put(date.toString(), dayConfig);
+        }
+        return dayConfigs;
     }
 }
