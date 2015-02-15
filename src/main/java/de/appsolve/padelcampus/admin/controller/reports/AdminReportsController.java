@@ -68,7 +68,7 @@ public class AdminReportsController extends BaseController{
         return getBookingListView(dateRange);
     }
     
-    @RequestMapping(value="bookinglist", method=POST)
+    @RequestMapping(value={"bookinglist", "bookinglist/{date}"}, method=POST)
     public ModelAndView getBookingListForDateRange(@Valid @ModelAttribute("DateRange") DateRange dateRange){
         return getBookingListView(dateRange); 
     }

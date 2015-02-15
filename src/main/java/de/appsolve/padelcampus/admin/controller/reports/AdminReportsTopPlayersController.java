@@ -57,7 +57,7 @@ public class AdminReportsTopPlayersController extends BaseController{
         }
         
         Map sortedMap = MapValueComparator.sortByValue(map);
-        mav.addObject("Map", objectMapper.writeValueAsString(sortedMap));
+        mav.addObject("chartData", objectMapper.writeValueAsString(sortedMap));
         
         return mav;
     }

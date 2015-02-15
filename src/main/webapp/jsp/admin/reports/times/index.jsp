@@ -8,10 +8,15 @@
         <div class="page-header">
             <h1><fmt:message key="TopTimes"/></h1>
         </div>
-        <div id="times" style="width:100%; height:400px;"></div>
-      
-        </div>
+        
+        <jsp:include page="/jsp/admin/reports/include/daterange.jsp"/>
+        
+        <div id="times" class="unit"></div>
     </div>
 </div>
-<jsp:include page="/jsp/admin/include/highcharts.jsp"/>
+<script>
+    var app = app || {};
+    app.chartData = ${chartData};
+</script>
+<jsp:include page="/jsp/admin/reports/include/highcharts.jsp"/>
 <jsp:include page="/jsp/include/footer.jsp"/>

@@ -31,11 +31,13 @@
                 <jsp:param name="key" value="TopTimes"/>
                 <jsp:param name="icon" value="calendar"/>
             </jsp:include>
+            <%--
             <jsp:include page="/jsp/include/list-group-item.jsp">
                 <jsp:param name="href" value="/admin/reports/paymentmethods"/>
                 <jsp:param name="key" value="TopPaymentMethod"/>
                 <jsp:param name="icon" value="credit-card"/>
             </jsp:include>
+            --%>
         </div>
     </div>
 </div>

@@ -8,15 +8,12 @@
         <div class="page-header">
             <h1><fmt:message key="TopPlayers"/></h1>
         </div>
-        <div id="players" style="width:100%; height:400px;"></div>
-      
-        </div>
+        <div id="players" class="unit"></div>
     </div>
 </div>
-<jsp:include page="/jsp/admin/include/highcharts.jsp"/>
-<jsp:include page="/jsp/include/footer.jsp"/>
-<script defer>
-    $(document).ready(function(){
-        app.charts.showPlayers(${Map});
-    });
+<script>
+    var app = app || {};
+    app.chartData = ${chartData}
 </script>
+<jsp:include page="/jsp/admin/reports/include/highcharts.jsp"/>
+<jsp:include page="/jsp/include/footer.jsp"/>
