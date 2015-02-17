@@ -21,18 +21,9 @@
             <!-- picture -->
             <div class="col-xs-12 text-center">
                 <figure id="profile-picture">
-                    <c:choose>
-                        <c:when test="${empty Model.profileImage}">
-                            <span class="fa-stack fa-5x">
-                                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
-                                <i class="fa fa-user fa-stack-1x"></i>
-                            </span>
-                        </c:when>
-                        <c:otherwise>
-                            <img src="/images/image/${Model.profileImage.sha256}"/>
-                        </c:otherwise>
-                    </c:choose>
-                    <div id="profile-picture-subtext"><fmt:message key="ClickImageToUploadProfilePicture"/></div>
+                    <c:set var="Player" value="${Model}" scope="request"/>
+                    <jsp:include page="/jsp/players/include/profile-image.jsp"/>
+                    <div id="profile-picture-subtext" class="unit"><fmt:message key="ClickImageToUploadProfilePicture"/></div>
                 </figure>
                 <spf:input type="file" capture="camera" accept="image/*" id="profile-picture-input" path="profileImageMultipartFile" class="hidden"/>
             </div>

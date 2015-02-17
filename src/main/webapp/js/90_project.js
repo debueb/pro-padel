@@ -439,6 +439,7 @@ app.main = {};
         $('#profile-picture').livequery(function(){
             $(this).on('click tap', function(){
                 $('#profile-picture-input').click();
+                return false;
             });
             $('#profile-picture-input').on('change', function(){
                 var value = $(this).val();

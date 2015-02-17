@@ -884,6 +884,14 @@ div.product-chooser div.product-chooser-item input {
   top: 0;
   visibility: hidden;
 }
+.polaroid {
+  display: inline-block;
+  padding: 10px 10px 0px 10px;
+  -webkit-box-shadow: 3px 3px 3px #777777;
+  box-shadow: 3px 3px 3px #777777;
+  text-align: center;
+  background: #ffffff;
+}
 @media (max-width: 768px) {
   h1 {
     font-size: 24px;

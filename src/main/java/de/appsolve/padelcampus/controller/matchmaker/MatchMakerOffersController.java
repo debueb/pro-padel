@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.appsolve.padelcampus.controller;
+package de.appsolve.padelcampus.controller.matchmaker;
 
 import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_FROM_HOUR;
 import de.appsolve.padelcampus.constants.SkillLevel;
+import de.appsolve.padelcampus.controller.BaseEntityController;
 import de.appsolve.padelcampus.db.dao.GenericDAOI;
 import de.appsolve.padelcampus.db.dao.MatchOfferDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
@@ -98,26 +99,40 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         return getEditView(offer);
     }
     
-    @RequestMapping(value="edit", method=POST)
+    @RequestMapping(value = {"edit", "edit/{id}"}, method=POST)
     public ModelAndView postEdit(HttpServletRequest request, @ModelAttribute("Model") MatchOffer model, BindingResult result) {
-        
+        Player user = sessionUtil.getUser(request);
+        if (user == null){
+            return new ModelAndView("include/loginrequired", "title", msg.get("NewOffer"));
+        }
         //ToDo: make sure court is bookable
         if (result.hasErrors()){
             ModelAndView editView = getEditView(model);
             return editView;
         }
-        
+        model.setOwner(user);
         matchOfferDAO.saveOrUpdate(model);
         return new ModelAndView("redirect:/matchmaker");
     }
-
+    
+    @RequestMapping(value = "offer/{id}")
+    public ModelAndView getShow(HttpServletRequest request, @PathVariable("id") Long id) {
+        MatchOffer offer = matchOfferDAO.findById(id);
+        return getShowView(offer);
+    }
+    
     private ModelAndView getEditView(MatchOffer model) {
         ModelAndView mav = new ModelAndView("matchmaker/offers/edit", "Model", model);
         mav.addObject("SkillLevels", SkillLevel.values());
         mav.addObject("Players", playerDAO.findAll());
         return mav;
     }
-
+    
+    private ModelAndView getShowView(MatchOffer model) {
+        ModelAndView mav = new ModelAndView("matchmaker/offers/offer", "Model", model);
+        return mav;
+    }
+    
     @Override
     public GenericDAOI getDAO() {
         return matchOfferDAO;

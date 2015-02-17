@@ -25,7 +25,7 @@ public abstract class BaseEntityController<T extends BaseEntity> extends BaseCon
     private static final Logger log = Logger.getLogger(BaseEntityController.class);
     
     @Autowired
-    Msg msg;
+    protected Msg msg;
     
     @RequestMapping(value = "/{id}/delete")
     public ModelAndView getDelete(@PathVariable("id") Long id){

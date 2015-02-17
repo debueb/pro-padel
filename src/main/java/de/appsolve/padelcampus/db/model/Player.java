@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.utils.CryptUtil;
 import de.appsolve.padelcampus.validation.constraints.Phone;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -84,7 +85,7 @@ public class Player extends Participant{
     @Transient
     private MultipartFile profileImageMultipartFile;
     
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Image profileImage;
     
     @Column

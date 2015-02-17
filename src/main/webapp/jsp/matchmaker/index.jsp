@@ -32,13 +32,20 @@
         </div>
         <hr>
         <h4><fmt:message key="CurrentMatchOffers"/></h4>
-        <div class="list-group unit">
-            <c:forEach var="Model" items="${Models}">
-                <a href="/matchmaker/offers/edit/${Model.id}" class="list-group-item ajaxify">
-                    <div class="list-item-text">${Model}</div>
-                </a>
-            </c:forEach>
-        </div>
+        <c:choose>
+            <c:when test="${empty Models}">
+                <div class="alert alert-info"><fmt:message key="NoCurrentMatchOffers"/></div>
+            </c:when>
+            <c:otherwise>
+                <div class="list-group unit">
+                    <c:forEach var="Model" items="${Models}">
+                        <a href="/matchmaker/offers/offer/${Model.id}" class="list-group-item ajaxify">
+                            <div class="list-item-text">${Model}</div>
+                        </a>
+                    </c:forEach>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
 <jsp:include page="/jsp/include/footer.jsp"/>

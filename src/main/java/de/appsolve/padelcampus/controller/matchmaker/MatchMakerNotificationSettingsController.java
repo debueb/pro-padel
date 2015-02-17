@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.appsolve.padelcampus.controller;
+package de.appsolve.padelcampus.controller.matchmaker;
 
 import de.appsolve.padelcampus.constants.SkillLevel;
+import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.NotificationSettingDAOI;
 import de.appsolve.padelcampus.db.model.NotificationSetting;
 import de.appsolve.padelcampus.db.model.Player;
