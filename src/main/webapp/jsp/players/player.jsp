@@ -21,9 +21,14 @@
                         <div class="list-group-item-icon"><div class="fa fa-lg fa-phone"></div></div>
                     </div>
                 </a>
+                <a class="list-group-item private-data" data-fake="${Player.obfuscatedPhone}" data-prefix="sms:">
+                    <div class="list-item-text"><fmt:message key="SendSMS"/>
+                        <div class="list-group-item-icon"><div class="fa fa-lg fa-envelope"></div></div>
+                    </div>
+                </a>
                 <a class="list-group-item private-data" data-fake="${Player.obfuscatedEmail}" data-prefix="mailto:">
                     <div class="list-item-text"><fmt:message key="SendMail"/>
-                        <div class="list-group-item-icon"><div class="fa fa-lg fa-envelope"></div></div>
+                        <div class="list-group-item-icon"><div class="fa fa-lg fa-at"></div></div>
                     </div>
                 </a>
                 <a href="/players/player/${Player.id}/vcard.vcf" class="list-group-item" download>
