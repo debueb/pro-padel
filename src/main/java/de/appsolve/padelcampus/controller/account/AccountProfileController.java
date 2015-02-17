@@ -20,6 +20,7 @@ import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -93,6 +94,19 @@ public class AccountProfileController extends BaseController {
             try {
                 MultipartFile pictureMultipartFile = player.getProfileImageMultipartFile();
                 if (!pictureMultipartFile.isEmpty()) {
+                    
+                    //delete old picture if it exists
+                    Image profileImage = persistedPlayer.getProfileImage();
+                    if (profileImage!=null){
+                        File profileFile = new File(profileImage.getFilePath());
+                        if (profileFile.exists()){
+                            boolean deleteSuccess = profileFile.delete();
+                            if (!deleteSuccess){
+                                log.warn("Unale to delete file "+profileFile.getAbsolutePath());
+                            }
+                        }
+                    }
+                    
                     byte[] bytes = pictureMultipartFile.getBytes();
 
                     originalImage = ImageIO.read(new ByteArrayInputStream(bytes));
