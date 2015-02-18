@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import de.appsolve.padelcampus.data.EmailContact;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -17,7 +18,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author dominik
  */
 @Entity
-public class Contact extends BaseEntity{
+public class Contact extends BaseEntity implements EmailContact{
     
     @Transient
     private static final long serialVersionUID = 1L;
@@ -31,6 +32,7 @@ public class Contact extends BaseEntity{
     @NotEmpty(message = "{NotEmpty.name}")
     private String emailDisplayName;
 
+    @Override
     public String getEmailAddress() {
         return emailAddress;
     }
@@ -39,6 +41,7 @@ public class Contact extends BaseEntity{
         this.emailAddress = emailAddress;
     }
 
+    @Override
     public String getEmailDisplayName() {
         return emailDisplayName;
     }

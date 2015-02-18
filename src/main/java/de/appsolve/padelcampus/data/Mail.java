@@ -5,8 +5,11 @@
  */
 package de.appsolve.padelcampus.data;
 
+import static de.appsolve.padelcampus.constants.Constants.MAIL_NOREPLY_SENDER_NAME;
 import de.appsolve.padelcampus.db.model.Contact;
+import de.appsolve.padelcampus.utils.RequestUtil;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -16,9 +19,26 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 public class Mail {
     
+    /**
+     * default constructor
+     */
+    public Mail(){    
+    }
+    
+    /**
+     * convenience constructor. sender will automatically be set to no-reply@host.tld
+     * @param request
+     */
+    public Mail(HttpServletRequest request){
+        this.from = MAIL_NOREPLY_SENDER_NAME + "@" + RequestUtil.getMailHostName(request);
+    }
+    
     @NotEmpty(message = "{NotEmpty.email}")
     @Email(message = "{Email}")
     private String from;
+    
+    @Email(message = "{Email}")
+    private String replyTo;
     
     @NotEmpty(message = "{NotEmpty.subject}")
     private String subject;
@@ -26,7 +46,7 @@ public class Mail {
     @NotEmpty(message = "{NotEmpty.body}")
     private String body;
     
-    private List<Contact> recipients;
+    private List<EmailContact> recipients;
     
     public String getFrom() {
         return from;
@@ -34,6 +54,14 @@ public class Mail {
 
     public void setFrom(String from) {
         this.from = from;
+    }
+
+    public String getReplyTo() {
+        return replyTo;
+    }
+
+    public void setReplyTo(String replyTo) {
+        this.replyTo = replyTo;
     }
 
     public String getSubject() {
@@ -52,11 +80,11 @@ public class Mail {
         this.body = body;
     }
 
-    public List<Contact> getRecipients() {
+    public List<EmailContact> getRecipients() {
         return recipients;
     }
 
-    public void setRecipients(List<Contact> contacts) {
+    public void setRecipients(List<EmailContact> contacts) {
         this.recipients = contacts;
     }
 }

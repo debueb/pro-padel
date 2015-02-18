@@ -10,11 +10,14 @@ import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
 import com.microtripit.mandrillapp.lutung.view.MandrillMessage;
 import com.microtripit.mandrillapp.lutung.view.MandrillMessageStatus;
 import static de.appsolve.padelcampus.constants.Constants.MANDRILL_API_KEY;
+import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
-import de.appsolve.padelcampus.db.model.Contact;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.log4j.Logger;
+import org.springframework.util.StringUtils;
 
 /**
  *
@@ -33,10 +36,16 @@ public class MailUtils {
         message.setHtml(getHTML(mail.getBody()));
         message.setFromEmail(mail.getFrom());
         message.setFromName(mail.getFrom());
+        
+        if (!StringUtils.isEmpty(mail.getReplyTo())){
+            Map<String, String> headerMap = new HashMap<>();
+            headerMap.put("Reply-To", mail.getReplyTo());
+            message.setHeaders(headerMap);
+        }
 
         // add recipients
         ArrayList<MandrillMessage.Recipient> recipients = new ArrayList<>();
-        for (Contact contact: mail.getRecipients()){
+        for (EmailContact contact: mail.getRecipients()){
             MandrillMessage.Recipient recipient = new MandrillMessage.Recipient();
             recipient.setEmail(contact.getEmailAddress());
             recipient.setName(contact.getEmailDisplayName());

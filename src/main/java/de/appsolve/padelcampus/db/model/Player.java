@@ -8,6 +8,7 @@ package de.appsolve.padelcampus.db.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.appsolve.padelcampus.constants.SkillLevel;
+import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.utils.CryptUtil;
 import de.appsolve.padelcampus.validation.constraints.Phone;
 import javax.persistence.CascadeType;
@@ -31,7 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Entity
 @DiscriminatorValue("Player")
-public class Player extends Participant{
+public class Player extends Participant implements EmailContact{
     
     @Transient
     private static final long serialVersionUID = 1L;
@@ -207,5 +208,15 @@ public class Player extends Participant{
     
     public String getObfuscatedEmail(){
         return CryptUtil.rot47(email);
+    }
+
+    @Override
+    public String getEmailAddress() {
+        return getEmail();
+    }
+
+    @Override
+    public String getEmailDisplayName() {
+        return toString();
     }
 }

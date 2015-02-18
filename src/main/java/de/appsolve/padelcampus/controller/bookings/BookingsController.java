@@ -9,9 +9,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
 import static de.appsolve.padelcampus.constants.Constants.CANCELLATION_POLICY_DEADLINE;
 import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
-import static de.appsolve.padelcampus.constants.Constants.MAIL_NOREPLY_SENDER_NAME;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.controller.BaseController;
+import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.data.OfferDurationPrice;
 import de.appsolve.padelcampus.data.TimeSlot;
@@ -289,8 +289,7 @@ public class BookingsController extends BaseController {
             booking.setConfirmed(true);
             bookingDAO.saveOrUpdate(booking);
 
-            Mail mail = new Mail();
-            mail.setFrom(MAIL_NOREPLY_SENDER_NAME + "@" + RequestUtil.getMailHostName(request));
+            Mail mail = new Mail(request);
             mail.setSubject(msg.get("BookingSuccessfulMailSubject"));
             mail.setBody(msg.get("BookingSuccessfulMailBody", new Object[]{
                 booking.getPlayer().toString(),
@@ -307,7 +306,7 @@ public class BookingsController extends BaseController {
             Contact contact = new Contact();
             contact.setEmailAddress(booking.getPlayer().getEmail());
             contact.setEmailDisplayName(booking.getPlayer().toString());
-            mail.setRecipients(Arrays.asList(new Contact[]{contact}));
+            mail.setRecipients(Arrays.asList(new EmailContact[]{contact}));
             MailUtils.send(mail);
             booking.setConfirmationMailSent(true);
             bookingDAO.saveOrUpdate(booking);
@@ -356,8 +355,7 @@ public class BookingsController extends BaseController {
             Voucher voucher = VoucherUtil.createNewVoucher(oldVoucher);
             voucherDAO.saveOrUpdate(voucher);
 
-            Mail mail = new Mail();
-            mail.setFrom(MAIL_NOREPLY_SENDER_NAME + "@" + RequestUtil.getMailHostName(request));
+            Mail mail = new Mail(request);
             mail.setSubject(msg.get("VoucherMailSubject"));
             mail.setBody(msg.get("VoucherMailBody", new Object[]{
                 booking.getPlayer().toString(),
@@ -369,7 +367,7 @@ public class BookingsController extends BaseController {
             Contact contact = new Contact();
             contact.setEmailAddress(booking.getPlayer().getEmail());
             contact.setEmailDisplayName(booking.getPlayer().toString());
-            mail.setRecipients(Arrays.asList(new Contact[]{contact}));
+            mail.setRecipients(Arrays.asList(new EmailContact[]{contact}));
             try {
                 MailUtils.send(mail);
                 booking.setCancelled(true);

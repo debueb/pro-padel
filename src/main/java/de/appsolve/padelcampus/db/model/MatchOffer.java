@@ -21,7 +21,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
@@ -112,8 +111,13 @@ public class MatchOffer extends BaseEntity{
         this.skillLevels = skillLevels;
     }
     
+    @Transient
+    public Integer getRequiredPlayersCount(){
+        return 4;
+    }
+    
     @Override
     public String toString(){
-        return getStartDate().toString(DATE_HUMAN_READABLE) + " " + getStartTime().toString(TIME_HUMAN_READABLE) + " " + StringUtils.join(getPlayers(), ", ");
+        return getStartDate().toString(DATE_HUMAN_READABLE) + " " + getStartTime().toString(TIME_HUMAN_READABLE);
     }
 }

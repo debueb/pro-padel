@@ -9,9 +9,9 @@ package de.appsolve.padelcampus.controller;
 import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
 import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.COOKIE_LOGIN_TOKEN;
-import static de.appsolve.padelcampus.constants.Constants.MAIL_NOREPLY_SENDER_NAME;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.data.Credentials;
+import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.model.Contact;
@@ -179,7 +179,7 @@ public class LoginController extends BaseController{
         Contact contact = new Contact();
         contact.setEmailAddress(player.getEmail());
         contact.setEmailDisplayName(player.toString());
-        mail.setRecipients(Arrays.asList(new Contact[]{contact}));
+        mail.setRecipients(Arrays.asList(new EmailContact[]{contact}));
         mail.setSubject(msg.get("ForgotPasswordMailSubject"));
         mail.setBody(StringEscapeUtils.unescapeJava(msg.get("ForgotPasswordMailBody", new Object[]{player.toString(), resetPasswordURL, RequestUtil.getBaseURL(request)})));
         try {
@@ -295,12 +295,11 @@ public class LoginController extends BaseController{
             
             String confirmRegistrationURL = RequestUtil.getBaseURL(request)+"/login/confirm/"+player.getUUID();
             
-            Mail mail = new Mail();
-            mail.setFrom(MAIL_NOREPLY_SENDER_NAME+"@"+RequestUtil.getMailHostName(request));
+            Mail mail = new Mail(request);
             Contact contact = new Contact();
             contact.setEmailAddress(player.getEmail());
             contact.setEmailDisplayName(player.toString());
-            mail.setRecipients(Arrays.asList(new Contact[]{contact}));
+            mail.setRecipients(Arrays.asList(new EmailContact[]{contact}));
             mail.setSubject(msg.get("RegistrationMailSubject"));
             mail.setBody(StringEscapeUtils.unescapeJava(msg.get("RegistrationMailBody", new Object[]{player.toString(), confirmRegistrationURL, RequestUtil.getBaseURL(request)})));
             MailUtils.send(mail);

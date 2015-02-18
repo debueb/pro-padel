@@ -14,7 +14,16 @@ import javax.servlet.http.HttpServletRequest;
 public class RequestUtil {
     
     public static String getBaseURL(HttpServletRequest request){
-        return request.getScheme()+"://"+request.getServerName()+request.getContextPath();
+        String scheme = request.getScheme();
+        String serverName = request.getServerName() ;
+        String portStr = "";
+        int port = request.getServerPort();
+        if (scheme.equals("http") && port != 80){
+            portStr = ":"+port;
+        } else if (scheme.equals("https") && port != 443){
+            portStr = ":"+port;
+        }
+        return scheme+"://"+serverName + portStr + request.getContextPath();
     }
 
     public static String getMailHostName(HttpServletRequest request) {

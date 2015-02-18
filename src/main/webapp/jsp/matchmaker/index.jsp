@@ -40,7 +40,12 @@
                 <div class="list-group unit">
                     <c:forEach var="Model" items="${Models}">
                         <a href="/matchmaker/offers/offer/${Model.id}" class="list-group-item ajaxify">
-                            <div class="list-item-text">${Model}</div>
+                            <div class="list-item-text">
+                                ${Model} <fmt:message key="SkillLevel"/>:
+                                <c:forEach var="SkillLevel" items="${Model.skillLevels}" varStatus="status">
+                                    <fmt:message key="${SkillLevel}"/>${status.last ? '' : ' - '}
+                                </c:forEach>
+                            </div>
                         </a>
                     </c:forEach>
                 </div>
