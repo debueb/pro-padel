@@ -50,7 +50,7 @@ public class ContextStartupListener implements ApplicationListener<ContextRefres
         we attempt to speed up the access time for the first user by doing the first request
     */
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
         //we need to delay the first request a couple of seconds as the context actually will not have finished initialization by the time this event fires
         scheduledExecutorService.schedule(new Callable() {
@@ -80,6 +80,8 @@ public class ContextStartupListener implements ApplicationListener<ContextRefres
                     }
                 } catch (IOException ex) {
                     log.warn("Exception while processing answer: " + ex.getMessage());
+                } finally {
+                    scheduledExecutorService.shutdownNow();
                 }
                 return null;
             }
