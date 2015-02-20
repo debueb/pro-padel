@@ -1,1 +1,2 @@
+echo "Setting java file encoding to UTF-8"
 export JAVA_OPTIONS="-Dfile.encoding=UTF-8"
