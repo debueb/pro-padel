@@ -13,18 +13,19 @@ import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.GenericDAOI;
 import de.appsolve.padelcampus.db.dao.MatchOfferDAOI;
+import de.appsolve.padelcampus.db.dao.NotificationSettingDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.MatchOffer;
+import de.appsolve.padelcampus.db.model.NotificationSetting;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
+import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.MailUtils;
-import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -62,10 +64,13 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
 
     @Autowired
     MatchOfferDAOI matchOfferDAO;
+    
+    @Autowired
+    NotificationSettingDAOI notificationSettingDAO;
 
     @Autowired
-    Msg msg;
-
+    Validator validator;
+    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
@@ -99,11 +104,6 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         Set<Player> players = new HashSet<>();
         players.add(user);
         matchOffer.setPlayers(players);
-        if (user.getSkillLevel() != null) {
-            Set<SkillLevel> skillLevels = new HashSet<>();
-            skillLevels.add(user.getSkillLevel());
-            matchOffer.setSkillLevels(skillLevels);
-        }
         return getEditView(matchOffer);
     }
 
@@ -119,13 +119,50 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         if (user == null) {
             return new ModelAndView("include/loginrequired", "title", msg.get("EditOffer"));
         }
+        
         //ToDo: make sure court is bookable
+        ModelAndView editView = getEditView(model);
+        
+        validator.validate(model, result);
         if (result.hasErrors()) {
-            ModelAndView editView = getEditView(model);
             return editView;
         }
-        model.setOwner(user);
-        matchOfferDAO.saveOrUpdate(model);
+        
+        try {
+            model.setOwner(user);
+            matchOfferDAO.saveOrUpdate(model);
+        
+            //inform other users about new offers
+            if (model.getId()==null){
+                List<NotificationSetting> notificationSettings = notificationSettingDAO.findFor(model);
+                if (!notificationSettings.isEmpty()){
+                    Mail mail = new Mail(request);
+                    mail.setSubject(msg.get("NewMatchOfferMailSubject"));
+                    Object[] params = new Object[7];
+                    String baseURL = RequestUtil.getBaseURL(request);
+                    params[0] = model.getOwner();
+                    params[1] = model.getStartDate().toString(FormatUtils.DATE_HUMAN_READABLE);
+                    params[2] = model.getStartTime().toString(FormatUtils.TIME_HUMAN_READABLE);
+                    params[3] = model.getPlayers();
+                    params[4] = baseURL+"/matchmaker/offers/offer/"+model.getId();
+                    params[5] = baseURL+"/matchmaker/notificationsettings";
+                    params[6] = baseURL;
+                    mail.setBody(msg.get("NewMatchOfferMailBody", params));
+                    
+                    for (NotificationSetting setting: notificationSettings){
+                        Player player = setting.getPlayer();
+                        if (!player.equals(user)){
+                            mail.addRecipient(player);
+                        }
+                    }
+                    if (!mail.getRecipients().isEmpty()){
+                        MailUtils.send(mail);
+                    }
+                }
+            }
+        } catch (MandrillApiError | IOException e){
+            log.error("Error while sending mails about new match offer: "+ e.getMessage());
+        }
         return new ModelAndView("redirect:/matchmaker");
     }
 
@@ -176,7 +213,7 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
                 existingParticipantsEmail.setBody(body);
 
                 Mail newParticipantEmail = new Mail(request);
-                newParticipantEmail.setRecipients(Arrays.asList(new EmailContact[]{user}));
+                newParticipantEmail.addRecipient(user);
                 newParticipantEmail.setSubject(msg.get("MatchOfferParticipationConfirmationEmailSubject"));
                 newParticipantEmail.setBody(msg.get("MatchOfferParticipationConfirmationEmailBody", new Object[]{user.toString(), offer.toString(), offerURL, baseURL}));
 

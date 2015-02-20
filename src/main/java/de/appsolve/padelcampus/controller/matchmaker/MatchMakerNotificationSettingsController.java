@@ -55,20 +55,19 @@ public class MatchMakerNotificationSettingsController extends BaseController {
         if (setting == null){
             setting = new NotificationSetting();
         }
-        //if user has a skill level add presets
-        if (user.getSkillLevel()!=null){
-            Set<SkillLevel> skillLevels = new HashSet<>();
-            skillLevels.add(user.getSkillLevel());
-            setting.setSkillLevels(skillLevels);
-        }
         return getIndexView(setting);
     }
     
     @RequestMapping(method=POST)
     public ModelAndView postIndex(HttpServletRequest request, @ModelAttribute("Model") NotificationSetting model, BindingResult result) {
+        Player user = sessionUtil.getUser(request);
+        if (user==null){
+            return new ModelAndView("include/loginrequired", "title", msg.get("NotificationSettings"));
+        }
         if (result.hasErrors()){
             return getIndexView(model);
         }
+        model.setPlayer(user);
         notificationSettingDAO.saveOrUpdate(model);
         return new ModelAndView("redirect:/matchmaker");
     }

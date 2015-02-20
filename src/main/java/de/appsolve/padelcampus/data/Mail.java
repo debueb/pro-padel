@@ -6,8 +6,9 @@
 package de.appsolve.padelcampus.data;
 
 import static de.appsolve.padelcampus.constants.Constants.MAIL_NOREPLY_SENDER_NAME;
-import de.appsolve.padelcampus.db.model.Contact;
+import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.RequestUtil;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.hibernate.validator.constraints.Email;
@@ -81,10 +82,16 @@ public class Mail {
     }
 
     public List<EmailContact> getRecipients() {
-        return recipients;
+        return recipients == null ? new ArrayList<EmailContact>() : recipients;
     }
 
     public void setRecipients(List<EmailContact> contacts) {
         this.recipients = contacts;
+    }
+
+    public void addRecipient(EmailContact contact) {
+        List<EmailContact> contacts = getRecipients();
+        contacts.add(contact);
+        setRecipients(contacts);
     }
 }

@@ -306,7 +306,7 @@ public class BookingsController extends BaseController {
             Contact contact = new Contact();
             contact.setEmailAddress(booking.getPlayer().getEmail());
             contact.setEmailDisplayName(booking.getPlayer().toString());
-            mail.setRecipients(Arrays.asList(new EmailContact[]{contact}));
+            mail.addRecipient(contact);
             MailUtils.send(mail);
             booking.setConfirmationMailSent(true);
             bookingDAO.saveOrUpdate(booking);
@@ -367,7 +367,7 @@ public class BookingsController extends BaseController {
             Contact contact = new Contact();
             contact.setEmailAddress(booking.getPlayer().getEmail());
             contact.setEmailDisplayName(booking.getPlayer().toString());
-            mail.setRecipients(Arrays.asList(new EmailContact[]{contact}));
+            mail.addRecipient(contact);
             try {
                 MailUtils.send(mail);
                 booking.setCancelled(true);

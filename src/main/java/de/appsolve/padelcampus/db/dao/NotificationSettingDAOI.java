@@ -6,8 +6,10 @@
 
 package de.appsolve.padelcampus.db.dao;
 
+import de.appsolve.padelcampus.db.model.MatchOffer;
 import de.appsolve.padelcampus.db.model.NotificationSetting;
 import de.appsolve.padelcampus.db.model.Player;
+import java.util.List;
 
 /**
  *
@@ -16,4 +18,5 @@ import de.appsolve.padelcampus.db.model.Player;
 public interface NotificationSettingDAOI extends GenericDAOI<NotificationSetting>{
     
     NotificationSetting findBy(Player player);
+    List<NotificationSetting> findFor(MatchOffer offer);
 }

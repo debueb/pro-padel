@@ -9,6 +9,7 @@ import static de.appsolve.padelcampus.constants.Constants.SESSION_ACCESS_LEVEL;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_BOOKING;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_LOGIN_REDIRECT_PATH;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_PRIVILEGES;
+import static de.appsolve.padelcampus.constants.Constants.SESSION_PROFILE_REDIRECT_PATH;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_USER;
 import de.appsolve.padelcampus.constants.Privilege;
 import de.appsolve.padelcampus.db.dao.AdminGroupDAOI;
@@ -94,14 +95,15 @@ public class SessionUtil {
     }
     
     public String getLoginRedirectPath(HttpServletRequest request){
-        HttpSession session = request.getSession();
-        if (session != null) {
-            Object attribute = session.getAttribute(SESSION_LOGIN_REDIRECT_PATH);
-            if (attribute!=null){
-                return (String) attribute;
-            }
-        }
-        return null;
+        return getObject(request, SESSION_LOGIN_REDIRECT_PATH);
+    }
+    
+    public void setProfileRedirectPath(HttpServletRequest request, String path){
+        setObject(request, SESSION_PROFILE_REDIRECT_PATH, path);
+    }
+    
+    public String getProfileRedirectPath(HttpServletRequest request){
+        return getObject(request, SESSION_PROFILE_REDIRECT_PATH);
     }
     
     public void invalidate(HttpServletRequest request) {
@@ -109,6 +111,11 @@ public class SessionUtil {
         if (session!=null){
             session.invalidate();
         }
+    }
+
+    
+    public void setAccessLevel(HttpServletRequest request, String accessLevel) {
+        setObject(request, SESSION_ACCESS_LEVEL, accessLevel);
     }
 
     private void setObject(HttpServletRequest request, String attributeName, Object value) {
@@ -120,7 +127,14 @@ public class SessionUtil {
         }
     }
 
-    public void setAccessLevel(HttpServletRequest request, String accessLevel) {
-        setObject(request, SESSION_ACCESS_LEVEL, accessLevel);
+    private String getObject(HttpServletRequest request, String path) {
+        HttpSession session = request.getSession();
+        if (session != null) {
+            Object attribute = session.getAttribute(path);
+            if (attribute!=null){
+                return (String) attribute;
+            }
+        }
+        return null;
     }
 }

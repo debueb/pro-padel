@@ -37,7 +37,6 @@ public class MatchOffer extends BaseEntity{
     private static final long serialVersionUID = 1L;
     
     @ManyToOne(fetch = FetchType.EAGER)
-    @NotNull
     private Player owner;
     
     @ManyToMany(fetch=FetchType.EAGER)

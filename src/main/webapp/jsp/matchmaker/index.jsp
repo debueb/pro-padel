@@ -8,7 +8,7 @@
         </div>
         <div class="list-group unit">
             <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/account/profile"/>
+                <jsp:param name="href" value="/matchmaker/profile"/>
                 <jsp:param name="key" value="MyProfile"/>
                 <jsp:param name="icon" value="wrench"/>
             </jsp:include>
@@ -39,14 +39,9 @@
             <c:otherwise>
                 <div class="list-group unit">
                     <c:forEach var="Model" items="${Models}">
-                        <a href="/matchmaker/offers/offer/${Model.id}" class="list-group-item ajaxify">
-                            <div class="list-item-text">
-                                ${Model} <fmt:message key="SkillLevel"/>:
-                                <c:forEach var="SkillLevel" items="${Model.skillLevels}" varStatus="status">
-                                    <fmt:message key="${SkillLevel}"/>${status.last ? '' : ' - '}
-                                </c:forEach>
-                            </div>
-                        </a>
+                        <c:set var="Model" value="${Model}" scope="request"/>
+                        <c:set var="OfferURL" value="/matchmaker/offers/offer/${Model.id}" scope="request"/>
+                        <jsp:include page="/jsp/matchmaker/offers/include/offer-list-item.jsp"/>
                     </c:forEach>
                 </div>
             </c:otherwise>

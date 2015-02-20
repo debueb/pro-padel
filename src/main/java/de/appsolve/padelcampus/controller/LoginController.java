@@ -179,7 +179,7 @@ public class LoginController extends BaseController{
         Contact contact = new Contact();
         contact.setEmailAddress(player.getEmail());
         contact.setEmailDisplayName(player.toString());
-        mail.setRecipients(Arrays.asList(new EmailContact[]{contact}));
+        mail.addRecipient(contact);
         mail.setSubject(msg.get("ForgotPasswordMailSubject"));
         mail.setBody(StringEscapeUtils.unescapeJava(msg.get("ForgotPasswordMailBody", new Object[]{player.toString(), resetPasswordURL, RequestUtil.getBaseURL(request)})));
         try {
@@ -299,7 +299,7 @@ public class LoginController extends BaseController{
             Contact contact = new Contact();
             contact.setEmailAddress(player.getEmail());
             contact.setEmailDisplayName(player.toString());
-            mail.setRecipients(Arrays.asList(new EmailContact[]{contact}));
+            mail.addRecipient(contact);
             mail.setSubject(msg.get("RegistrationMailSubject"));
             mail.setBody(StringEscapeUtils.unescapeJava(msg.get("RegistrationMailBody", new Object[]{player.toString(), confirmRegistrationURL, RequestUtil.getBaseURL(request)})));
             MailUtils.send(mail);

@@ -39,6 +39,7 @@ public class Constants {
     public static final String SESSION_USER                 = "user";
     public static final String SESSION_PRIVILEGES           = "privileges";
     public static final String SESSION_LOGIN_REDIRECT_PATH  = "loginRedirectPath";
+    public static final String SESSION_PROFILE_REDIRECT_PATH= "profileRedirectPath";
     public static final String SESSION_BOOKING              = "booking";
     public static final String SESSION_ACCESS_LEVEL         = "accessLevel";
     

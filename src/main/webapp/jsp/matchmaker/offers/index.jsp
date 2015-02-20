@@ -9,11 +9,12 @@
         
         <div class="list-group unit">
             <c:forEach var="Model" items="${Models}">
-                <a href="/matchmaker/offers/edit/${Model.id}" class="list-group-item ajaxify">
-                    <div class="list-item-text">${Model}</div>
-                </a>
+                <c:set var="Model" value="${Model}" scope="request"/>
+                <c:set var="OfferURL" value="/matchmaker/offers/edit/${Model.id}" scope="request"/>
+                <jsp:include page="/jsp/matchmaker/offers/include/offer-list-item.jsp"/>
             </c:forEach>
         </div>
+        <a class="btn btn-primary btn-block unit" href="/matchmaker/offers/edit"><fmt:message key="NewMatchOffer"/></a>
     </div>
 </div>
 <jsp:include page="/jsp/include/footer.jsp"/>

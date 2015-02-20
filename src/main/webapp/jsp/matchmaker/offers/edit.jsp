@@ -6,7 +6,7 @@
         <jsp:include page="/jsp/include/back.jsp"/>
 
         <div class="page-header">
-            <h1><fmt:message key="${empty Model.id ? 'NewOffer' : 'EditOffer'}"/></h1>
+            <h1><fmt:message key="${empty Model.id ? 'NewMatchOffer' : 'EditMatchOffer'}"/></h1>
         </div>
 
         <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
@@ -70,6 +70,7 @@
             </span>
 
             <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
+            <a class="btn btn-primary btn-block unit" href="/matchmaker"><fmt:message key="Cancel"/></a>
             <c:if test="${not empty Model.id}">
                 <a class="btn btn-primary btn-block unit" href="/matchmaker/offers/${Model.id}/delete"><fmt:message key="Delete"/></a>
             </c:if>

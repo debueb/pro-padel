@@ -44,4 +44,10 @@ public class MatchMakerController extends BaseController{
         }
         return mav;
     }
+    
+    @RequestMapping("profile")
+    public ModelAndView getProfile(HttpServletRequest request){
+        sessionUtil.setProfileRedirectPath(request, "/matchmaker");
+        return new ModelAndView("redirect:/account/profile");
+    }
 }

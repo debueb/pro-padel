@@ -28,10 +28,10 @@
                 <spf:input type="file" capture="camera" accept="image/*" id="profile-picture-input" path="profileImageMultipartFile" class="hidden"/>
             </div>
             <div class="clearfix"></div>
-            <hr/>
+            <!--<hr/>-->
           
             <!-- level -->
-            <div class="row form-group product-chooser unit">
+<!--            <div class="row form-group product-chooser unit">
                 <c:forEach var="SkillLevel" items="${SkillLevels}">
                     <div class="col-xs-12 col-sm-6 col-md-4">
                         <div class="product-chooser-item ${Model.skillLevel == SkillLevel ? 'selected' : ''}">
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                 </c:forEach>
-            </div>
+            </div>-->
 
             <button class="btn btn-primary btn-block unit" type="submit"><fmt:message key="Save"/></button>
         </spf:form>

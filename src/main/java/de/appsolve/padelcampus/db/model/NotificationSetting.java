@@ -34,7 +34,7 @@ public class NotificationSetting extends BaseEntity{
     @Column
     private Boolean enabled;
     
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @NotEmpty(message = "{NotEmpty.skillLevels}")
     @Enumerated(EnumType.STRING)
     private Set<SkillLevel> skillLevels;

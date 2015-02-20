@@ -149,7 +149,13 @@ public class AccountProfileController extends BaseController {
             playerDAO.saveOrUpdate(persistedPlayer);
             sessionUtil.setUser(request, persistedPlayer);
         }
-        return new ModelAndView("redirect:/");
+        String redirectPath = sessionUtil.getProfileRedirectPath(request);
+        if (redirectPath==null){
+            redirectPath = "/";
+        } else {
+            sessionUtil.setProfileRedirectPath(request, null);
+        }
+        return new ModelAndView("redirect:"+redirectPath);
     }
 
     private ModelAndView getIndexView(Player user) {
