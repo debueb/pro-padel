@@ -225,6 +225,7 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
 
                 //confirm participation to user
                 view.addObject("msg", msg.get("MatchMakerAcceptConfirmation"));
+                
             }
 
             if (!StringUtils.isEmpty(cancelParticipation) && cancelParticipation.equals("on")) {
@@ -241,14 +242,14 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
                 //confirm cancellation to user
                 view.addObject("msg", msg.get("MatchMakerCancelConfirmation"));
             }
+            
+            //persist changes
+            matchOfferDAO.saveOrUpdate(offer);
         } catch (MandrillApiError | IOException e) {
             log.error(e);
             view.addObject("error", msg.get("FailedToSendEmail"));
             return view;
         }
-
-        //persist changes
-        matchOfferDAO.saveOrUpdate(offer);
         return view;
     }
 

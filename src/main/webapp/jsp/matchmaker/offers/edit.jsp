@@ -8,7 +8,11 @@
         <div class="page-header">
             <h1><fmt:message key="${empty Model.id ? 'NewMatchOffer' : 'EditMatchOffer'}"/></h1>
         </div>
-
+        
+        <c:if test="${empty Model.id}">
+            <div class="alert alert-info"><fmt:message key="NewMatchOfferDesc"/></div>
+        </c:if>
+        
         <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
             <spf:input type="hidden" path="id"/>
             <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>

@@ -6,6 +6,7 @@
 package de.appsolve.padelcampus.utils;
 
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.validator.routines.InetAddressValidator;
 
 /**
  *
@@ -27,7 +28,11 @@ public class RequestUtil {
     }
 
     public static String getMailHostName(HttpServletRequest request) {
-        return request.getServerName().equals("localhost") ? "padelcampus-appsolve.rhcloud.com" : request.getServerName();
+        String serverName = request.getServerName();
+        if (InetAddressValidator.getInstance().isValid(serverName) || serverName.equals("localhost")){
+            return "padel.koeln";
+        }
+        return serverName;
     }
     
 }
