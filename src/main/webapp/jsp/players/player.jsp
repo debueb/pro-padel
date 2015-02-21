@@ -16,7 +16,7 @@
                 </div>
             </a>
             <c:if test="${sessionScope.accessLevel == 'loggedInAndParticipant'}">
-                <a class="list-group-item private-data" data-fake="${Player.obfuscatedPhone}" data-prefix="tel://">
+                <a class="list-group-item private-data" data-fake="${Player.obfuscatedPhone}" data-prefix="tel:">
                     <div class="list-item-text"><fmt:message key="Call"/>
                         <div class="list-group-item-icon"><div class="fa fa-lg fa-phone"></div></div>
                     </div>
