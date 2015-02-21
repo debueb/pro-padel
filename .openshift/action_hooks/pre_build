@@ -1,0 +1,2 @@
+echo "Setting maven file encoding to UTF-8 for JS file concatenation"
+export MAVEN_OPTS="-Dfile.encoding=UTF-8"
