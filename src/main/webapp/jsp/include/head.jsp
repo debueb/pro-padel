@@ -64,27 +64,25 @@
             <c:if test="${empty param.embed}">
                 <div class="mobile-web-app-capable-status-bar"></div>
                 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
-                            <c:choose>
-                                <c:when test="${pageContext.request.requestURI == '/jsp/index.jsp'}">
-                                    <a class="navbar-brand ajaxify" href="/"><img src="images/logo.png" width="63" height="40"/>${pageContext.request.serverName}</a>
-                                </c:when>
-                                <c:otherwise>
-                                    <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a><a class="navbar-icon home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>
-                                </c:otherwise>
-                            </c:choose>
-                            <a class="navbar-icon navbar-toggle">
-                                <div class="menu-line menu-line-1"></div>
-                                <div class="menu-line menu-line-2"></div>
-                                <div class="menu-line menu-line-3"></div>
-                                
-                                <!--<span class="fa fa-lg fa-bars"></span>-->
-                            </a>        
-                        </div>
-                        <div class="collapse navbar-collapse">
-                            <jsp:include page="/jsp/include/navigation.jsp"/>
-                        </div>
+                    <div class="navbar-header">
+                        <c:choose>
+                            <c:when test="${pageContext.request.requestURI == '/jsp/index.jsp'}">
+                                <a class="navbar-brand ajaxify" href="/"><img src="images/logo.png" width="63" height="40"/>${pageContext.request.serverName}</a>
+                            </c:when>
+                            <c:otherwise>
+                                <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a><a class="navbar-icon home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>
+                            </c:otherwise>
+                        </c:choose>
+                        <a class="navbar-icon navbar-toggle">
+                            <div class="menu-line menu-line-1"></div>
+                            <div class="menu-line menu-line-2"></div>
+                            <div class="menu-line menu-line-3"></div>
+
+                            <!--<span class="fa fa-lg fa-bars"></span>-->
+                        </a>        
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <jsp:include page="/jsp/include/navigation.jsp"/>
                     </div>
                 </div>
              </c:if>
