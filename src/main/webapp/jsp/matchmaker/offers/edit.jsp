@@ -67,11 +67,47 @@
             <%-- Teilnehmer --%>
              <span class="relative block">
                 <fmt:message key="Participants" var="Participants"/>
-                <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${Participants}" multiple="true">
+                <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-center-element" title="${Participants}" multiple="true">
                     <spf:options items="${Players}" itemValue="id"/>
                 </spf:select>
                 <span class="explanation-select"><fmt:message key="Participants"/></span>
             </span>
+            
+            <%-- Min. Teilnehmer --%>
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-plus-minus form-control form-center-element form-left-element" data-type="minus" data-field="minPlayersCount">
+                        <span class="fa fa-minus"></span>
+                    </button>
+                </span>
+                <span class="relative">
+                    <spf:input type="text" path="minPlayersCount" class="form-control text-center input-plus-minus form-center-element" min="4" max="8"/>
+                    <span class="explanation"><fmt:message key="MinPlayersCount"/></span>
+                </span>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-plus-minus form-control form-center-element form-right-element " data-type="plus" data-field="minPlayersCount">
+                        <span class="fa fa-plus"></span>
+                    </button>
+                </span>
+            </div>
+                
+            <%-- Max. Teilnehmer --%>
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-plus-minus form-control form-bottom-left-element" data-type="minus" data-field="maxPlayersCount">
+                        <span class="fa fa-minus"></span>
+                    </button>
+                </span>
+                <span class="relative">
+                    <spf:input type="text" path="maxPlayersCount" class="form-control text-center input-plus-minus form-center-element" min="4" max="8"/>
+                    <span class="explanation"><fmt:message key="MaxPlayersCount"/></span>
+                </span>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-plus-minus form-control form-bottom-right-element" data-type="plus" data-field="maxPlayersCount">
+                        <span class="fa fa-plus"></span>
+                    </button>
+                </span>
+            </div>
 
             <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
             <a class="btn btn-primary btn-block unit" href="/matchmaker"><fmt:message key="Cancel"/></a>

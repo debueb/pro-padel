@@ -8,6 +8,7 @@ import java.util.Map;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,7 @@ public class MatchOfferDAO extends GenericDAO<MatchOffer> implements MatchOfferD
         Session session = entityManager.unwrap(Session.class);
         Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
         criteria.add(Restrictions.ge("startDate", new LocalDate()));
+        criteria.addOrder(Order.asc("startDate"));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<MatchOffer>) criteria.list();
     }

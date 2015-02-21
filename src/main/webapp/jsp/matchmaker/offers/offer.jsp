@@ -16,15 +16,15 @@
 
         <c:set var="url" value="/matchmaker/offers/offer/${Model.id}"/>
         <c:choose>
-            <c:when test="${empty sessionScope.accessLevel}">
-                <a class="btn btn-primary btn-block" href="/login?redirect=${url}"><fmt:message key="LoginToParticipate"/></a>
-                <a class="btn btn-primary btn-block" href="/register?redirect=${url}"><fmt:message key="RegisterToParticipate"/></a>
-            </c:when>
             <c:when test="${Model.owner == sessionScope.user}">
                 <a class="btn btn-primary btn-block" href="/matchmaker/offers/edit/${Model.id}"><fmt:message key="EditMatchOffer"/></a>
             </c:when>
+            <c:when test="${empty sessionScope.user and empty sessionScope.accessLevel}">
+                <a class="btn btn-primary btn-block" href="/login?redirect=${url}"><fmt:message key="LoginToParticipate"/></a>
+                <a class="btn btn-primary btn-block" href="/register?redirect=${url}"><fmt:message key="RegisterToParticipate"/></a>
+            </c:when>
             <c:otherwise>
-                <form method="POST" style="margin-bottom: 10px;">
+                <form method="POST" style="margin-bottom: 5px;">
                 <c:choose>
                     <c:when test="${fn:contains(Model.players, sessionScope.user)}">
                         <input type="checkbox" name="cancel-participation" id="cancel-participation"/>
@@ -42,6 +42,9 @@
                 </form>
             </c:otherwise>
         </c:choose>
+        <c:url var="fullUrl" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}${url}"/>
+        <a class="btn btn-primary btn-block" href="whatsapp://send?text=${fullUrl}"><fmt:message key="ShareOfferViaWhatsApp"/></a>
+        <a class="btn btn-primary btn-block" href="mailto:?subject=${NewMatchOfferMailSubject}&body=${NewMatchOfferMailBody}"><fmt:message key="ShareOfferViaMail"/></a>
         <a class="btn btn-primary btn-block" href="/matchmaker"><fmt:message key="OtherMatchOffers"/></a>
     </div>
 </div>

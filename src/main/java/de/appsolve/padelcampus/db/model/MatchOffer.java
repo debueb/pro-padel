@@ -20,7 +20,6 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
@@ -52,6 +51,12 @@ public class MatchOffer extends BaseEntity{
     
     @Column
     private Integer startTimeMinute;
+    
+    @Column
+    private Integer minPlayersCount;
+    
+    @Column
+    private Integer maxPlayersCount;
 
     public Player getOwner() {
         return owner;
@@ -110,9 +115,20 @@ public class MatchOffer extends BaseEntity{
         this.skillLevels = skillLevels;
     }
     
-    @Transient
-    public Integer getRequiredPlayersCount(){
-        return 4;
+    public Integer getMinPlayersCount(){
+        return minPlayersCount;
+    }
+
+    public void setMinPlayersCount(Integer minPlayersCount){
+        this.minPlayersCount = minPlayersCount;
+    }
+    
+    public Integer getMaxPlayersCount() {
+        return maxPlayersCount;
+    }
+
+    public void setMaxPlayersCount(Integer maxPlayersCount) {
+        this.maxPlayersCount = maxPlayersCount;
     }
     
     @Override

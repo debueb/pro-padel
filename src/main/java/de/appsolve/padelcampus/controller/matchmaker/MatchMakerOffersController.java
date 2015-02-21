@@ -101,6 +101,8 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         MatchOffer matchOffer = new MatchOffer();
         matchOffer.setStartDate(new LocalDate().plusDays(1));
         matchOffer.setStartTimeHour(BOOKING_DEFAULT_VALID_FROM_HOUR);
+        matchOffer.setMinPlayersCount(4);
+        matchOffer.setMaxPlayersCount(4);
         Set<Player> players = new HashSet<>();
         players.add(user);
         matchOffer.setPlayers(players);
@@ -138,16 +140,7 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
                 if (!notificationSettings.isEmpty()){
                     Mail mail = new Mail(request);
                     mail.setSubject(msg.get("NewMatchOfferMailSubject"));
-                    Object[] params = new Object[7];
-                    String baseURL = RequestUtil.getBaseURL(request);
-                    params[0] = model.getOwner();
-                    params[1] = model.getStartDate().toString(FormatUtils.DATE_HUMAN_READABLE);
-                    params[2] = model.getStartTime().toString(FormatUtils.TIME_HUMAN_READABLE);
-                    params[3] = model.getPlayers();
-                    params[4] = baseURL+"/matchmaker/offers/offer/"+model.getId();
-                    params[5] = baseURL+"/matchmaker/notificationsettings";
-                    params[6] = baseURL;
-                    mail.setBody(msg.get("NewMatchOfferMailBody", params));
+                    mail.setBody(getNewMatchOfferMailBody(request, model));
                     
                     for (NotificationSetting setting: notificationSettings){
                         Player player = setting.getPlayer();
@@ -163,13 +156,13 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         } catch (MandrillApiError | IOException e){
             log.error("Error while sending mails about new match offer: "+ e.getMessage());
         }
-        return new ModelAndView("redirect:/matchmaker");
+        return new ModelAndView("redirect:/matchmaker/offers/offer/"+model.getId());
     }
 
     @RequestMapping(value = "offer/{id}")
     public ModelAndView getShow(HttpServletRequest request, @PathVariable("id") Long id) {
         MatchOffer offer = matchOfferDAO.findById(id);
-        return getShowView(offer);
+        return getShowView(request, offer);
     }
 
     @RequestMapping(value = "offer/{id}", method = POST)
@@ -180,7 +173,7 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         }
 
         MatchOffer offer = matchOfferDAO.findById(id);
-        ModelAndView view = getShowView(offer);
+        ModelAndView view = getShowView(request, offer);
         String acceptParticipation = request.getParameter("accept-participation");
         String cancelParticipation = request.getParameter("cancel-participation");
 
@@ -190,7 +183,7 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         }
 
         String baseURL = RequestUtil.getBaseURL(request);
-        String offerURL = baseURL + "/matchmaker/offers/offer/" + offer.getId();
+        String offerURL = getOfferURL(request, offer);
 
         Mail existingParticipantsEmail = new Mail();
         existingParticipantsEmail.setFrom(user.getEmail());
@@ -202,7 +195,7 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
                 //inform other players about new participant
                 existingParticipantsEmail.setSubject(msg.get("MatchOfferNewParticipantEmailSubject"));
 
-                Integer remainingRequiredPlayersCount = offer.getRequiredPlayersCount() - offer.getPlayers().size() - 1;
+                Integer remainingRequiredPlayersCount = offer.getMinPlayersCount() - offer.getPlayers().size() - 1;
                 String body;
                 if (remainingRequiredPlayersCount > 0) {
                     body = msg.get("MatchOfferNewParticipantEmailBody", new Object[]{user.toString(), offer.toString(), remainingRequiredPlayersCount, offerURL, baseURL});
@@ -231,7 +224,7 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
             if (!StringUtils.isEmpty(cancelParticipation) && cancelParticipation.equals("on")) {
                 //inform all players about cancellation
                 existingParticipantsEmail.setSubject(msg.get("MatchOfferParticipantCancelledEmailSubject"));
-                Integer remainingRequiredPlayersCount = offer.getRequiredPlayersCount() - offer.getPlayers().size() + 1;
+                Integer remainingRequiredPlayersCount = offer.getMinPlayersCount() - offer.getPlayers().size() + 1;
                 existingParticipantsEmail.setBody(msg.get("MatchOfferParticipantCancelledEmailBody", new Object[]{user.toString(), offer.toString(), remainingRequiredPlayersCount, offerURL, baseURL}));
                 
                 MailUtils.send(existingParticipantsEmail);
@@ -260,8 +253,11 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         return mav;
     }
 
-    private ModelAndView getShowView(MatchOffer model) {
+    private ModelAndView getShowView(HttpServletRequest request, MatchOffer model) {
         ModelAndView mav = new ModelAndView("matchmaker/offers/offer", "Model", model);
+        mav.addObject("OfferURL", getOfferURL(request, model));
+        mav.addObject("NewMatchOfferMailSubject", msg.get("NewMatchOfferMailSubject"));
+        mav.addObject("NewMatchOfferMailBody", getNewMatchOfferMailBody(request, model).replace("\n", "%0A"));
         return mav;
     }
 
@@ -273,5 +269,22 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
     @Override
     public String getModuleName() {
         return "matchmaker";
+    }
+
+    private String getNewMatchOfferMailBody(HttpServletRequest request, MatchOffer model) {
+        Object[] params = new Object[7];
+        String baseURL = RequestUtil.getBaseURL(request);
+        params[0] = model.getOwner();
+        params[1] = model.getStartDate().toString(FormatUtils.DATE_HUMAN_READABLE);
+        params[2] = model.getStartTime().toString(FormatUtils.TIME_HUMAN_READABLE);
+        params[3] = model.getPlayers();
+        params[4] = baseURL+"/matchmaker/offers/offer/"+model.getId();
+        params[5] = baseURL+"/matchmaker/notificationsettings";
+        params[6] = baseURL;
+        return msg.get("NewMatchOfferMailBody", params);
+    }
+
+    private String getOfferURL(HttpServletRequest request, MatchOffer offer) {
+        return RequestUtil.getBaseURL(request) + "/matchmaker/offers/offer/" + offer.getId();
     }
 }
