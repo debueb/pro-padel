@@ -2,7 +2,7 @@
 <a href="${param.href}" class="list-group-item ajaxify" id="${param.key}">
     <div class="list-item-text"><fmt:message key="${param.key}"/>
     <c:if test="${not empty param.icon}">
-        <div class="list-group-item-icon"><div class="fa fa-${param.icon} fa-lg"></div></div>
+        <div class="list-group-item-icon"><div class="fa fa-${param.icon} fa-lg fa-fw"></div></div>
     </c:if>
     </div>
 </a>
