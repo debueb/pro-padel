@@ -15,7 +15,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -41,7 +40,7 @@ public abstract class AdminBaseController<T extends BaseEntity> extends BaseEnti
     
     @RequestMapping()
     public ModelAndView showIndex(){
-        ModelAndView mav = new ModelAndView("admin/"+getModuleName()+"/index");
+        ModelAndView mav = new ModelAndView(getModuleName()+"/index");
         List all = getDAO().findAll();
         Collections.sort(all);
         mav.addObject("Models", all);
