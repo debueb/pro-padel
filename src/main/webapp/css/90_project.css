@@ -733,7 +733,7 @@ ui-state-hover,
   -moz-transition: opacity 0.25s ease-in-out;
   -webkit-transition: opacity 0.25s ease-in-out;
 }
-#spinner {
+#ballWrapper {
   position: fixed;
   top: 50%;
   left: 50%;
