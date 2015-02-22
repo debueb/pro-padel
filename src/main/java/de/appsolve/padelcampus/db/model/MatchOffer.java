@@ -7,6 +7,7 @@
 package de.appsolve.padelcampus.db.model;
 
 import de.appsolve.padelcampus.constants.SkillLevel;
+import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
 import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import java.util.Collections;
@@ -51,6 +52,9 @@ public class MatchOffer extends BaseEntity{
     
     @Column
     private Integer startTimeMinute;
+    
+    @Column
+    private Long duration;
     
     @Column
     private Integer minPlayersCount;
@@ -107,6 +111,20 @@ public class MatchOffer extends BaseEntity{
         return TIME_HUMAN_READABLE.parseLocalTime(getStartTimeHour()+":"+getStartTimeMinute());
     }
 
+    public Long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
+    }
+    
+    public LocalTime getEndTime(){
+        if (duration!=null){
+            return getStartTime().plusMinutes(getDuration().intValue());
+        }
+        return null;
+    }
     public Set<SkillLevel> getSkillLevels() {
         return skillLevels == null ? Collections.EMPTY_SET : skillLevels;
     }
@@ -133,6 +151,6 @@ public class MatchOffer extends BaseEntity{
     
     @Override
     public String toString(){
-        return getStartDate().toString(DATE_HUMAN_READABLE) + " " + getStartTime().toString(TIME_HUMAN_READABLE);
+        return getStartDate().toString(FormatUtils.DATE_WITH_DAY) + " " + getStartTime().toString(TIME_HUMAN_READABLE) + " - "+getEndTime().toString(TIME_HUMAN_READABLE);
     }
 }

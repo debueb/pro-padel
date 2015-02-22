@@ -28,7 +28,7 @@
                 <div class="datepicker" data-show-on-init="false" data-allow-past="false"></div>
             </div>
 
-            <%-- Von --%>
+            <%-- Start --%>
             <span class="relative input-hour">
                 <spf:select path="startTimeHour" class="select-simple form-left-element form-center-element">
                     <c:forEach var="hour" begin="0" end="23">
@@ -50,6 +50,17 @@
                 </span>
 
                 <div class="clearfix"></div>
+            </div>
+                
+            <%-- Dauer --%>
+            <div class="relative"> 
+                <spf:select path="duration" class="select-simple form-center-element form-control">
+                    <spf:option value="60">60 <fmt:message key="Minutes"/></spf:option>
+                    <spf:option value="90">90 <fmt:message key="Minutes"/></spf:option>
+                    <spf:option value="120">120 <fmt:message key="Minutes"/></spf:option>
+                    <spf:option value="150">150 <fmt:message key="Minutes"/></spf:option>
+                </spf:select>
+                <span class="explanation-select"><fmt:message key="Duration"/></span>
             </div>
                 
             <%-- Spielstärken --%>
