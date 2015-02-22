@@ -31,20 +31,6 @@
                         </div>
                         <div class="clearfix"></div>
                     </div>
-                <div><fmt:message key="MySkillLevel"/></div>
-                    <div>
-                        <div class="row form-group product-chooser unit">
-                            <c:forEach var="SkillLevel" items="${SkillLevels}">
-                                <div class="col-xs-12 col-sm-6 col-md-4">
-                                    <div class="product-chooser-item ${Model.skillLevel == SkillLevel ? 'selected' : ''}">
-                                        <div class="title"><fmt:message key="${SkillLevel}"/></div>
-                                        <span class="description"><fmt:message key="${SkillLevel}-desc"/></span>
-                                        <spf:radiobutton checked="${Model.skillLevel == SkillLevel ? 'checked' : ''}" path="skillLevel" value="${SkillLevel}"/>
-                                    </div>
-                                </div>
-                            </c:forEach>
-                        </div>
-                    </div>
                 <div><fmt:message key="NotificationSettings"/></div>
                     <div>
                         <spf:checkbox path="enableMatchNotifications" id="active"/><label for="active"><fmt:message key="NotifyMeAboutNewMatchOffers"/></label>
@@ -59,6 +45,18 @@
                         </spf:select>
                             <span class="explanation-select"><fmt:message key="SkillLevel"/></span>
                         </span>
+                    </div>
+                <div><fmt:message key="MySkillLevel"/></div>
+                    <div class="row form-group product-chooser">
+                        <c:forEach var="SkillLevel" items="${SkillLevels}">
+                            <div class="col-xs-12 col-sm-6 col-md-4">
+                                <div class="product-chooser-item ${Model.skillLevel == SkillLevel ? 'selected' : ''}">
+                                    <div class="title"><fmt:message key="${SkillLevel}"/></div>
+                                    <span class="description"><fmt:message key="${SkillLevel}-desc"/></span>
+                                    <spf:radiobutton checked="${Model.skillLevel == SkillLevel ? 'checked' : ''}" path="skillLevel" value="${SkillLevel}"/>
+                                </div>
+                            </div>
+                        </c:forEach>
                     </div>
             </div>
             
