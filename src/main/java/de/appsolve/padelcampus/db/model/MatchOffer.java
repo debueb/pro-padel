@@ -11,12 +11,15 @@ import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import java.util.Collections;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
@@ -38,9 +41,13 @@ public class MatchOffer extends BaseEntity{
     @ManyToOne(fetch = FetchType.EAGER)
     private Player owner;
     
-    @ManyToMany(fetch=FetchType.EAGER)
-    @NotEmpty(message = "{NotEmpty.players}")
+    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinTable(name = "MatchOffer_players", joinColumns = @JoinColumn(name = "matchoffer_id"), inverseJoinColumns = @JoinColumn(name = "player_id"))
     private Set<Player> players;
+    
+    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinTable(name = "MatchOffer_waitingList", joinColumns = @JoinColumn(name = "matchoffer_id"), inverseJoinColumns = @JoinColumn(name = "waitingList_id"))
+    private Set<Player> waitingList;
     
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
@@ -80,6 +87,14 @@ public class MatchOffer extends BaseEntity{
 
     public void setPlayers(Set<Player> players) {
         this.players = players;
+    }
+
+    public Set<Player> getWaitingList() {
+        return waitingList == null ? Collections.EMPTY_SET : waitingList;
+    }
+
+    public void setWaitingList(Set<Player> waitingList) {
+        this.waitingList = waitingList;
     }
 
     public LocalDate getStartDate() {

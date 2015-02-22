@@ -188,34 +188,59 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         Mail existingParticipantsEmail = new Mail();
         existingParticipantsEmail.setFrom(user.getEmail());
         existingParticipantsEmail.setRecipients(new ArrayList<EmailContact>(offer.getPlayers()));
-
+        
+        Mail newParticipantEmail = new Mail(request);
+        newParticipantEmail.addRecipient(user);
+        
         try {
 
             if (!StringUtils.isEmpty(acceptParticipation) && acceptParticipation.equals("on")) {
                 //inform other players about new participant
                 existingParticipantsEmail.setSubject(msg.get("MatchOfferNewParticipantEmailSubject"));
 
-                Integer remainingRequiredPlayersCount = offer.getMinPlayersCount() - offer.getPlayers().size() - 1;
-                String body;
-                if (remainingRequiredPlayersCount > 0) {
-                    body = msg.get("MatchOfferNewParticipantEmailBody", new Object[]{user.toString(), offer.toString(), remainingRequiredPlayersCount, offerURL, baseURL});
+                //if the match is full
+                if (offer.getPlayers().size() >= offer.getMaxPlayersCount()){
+                    //inform other players about new waiting list entry
+                    existingParticipantsEmail.setBody(msg.get("MatchOfferNewWaitingListEntry", new Object[]{user.toString(), offer.toString(), offerURL, baseURL}));
+                    MailUtils.send(existingParticipantsEmail);
+                    
+                    //add user to waiting list
+                    Set<Player> waitingList = offer.getWaitingList();
+                    waitingList.add(user);
+                    offer.setWaitingList(waitingList);
+                    
+                    //inform new participant about waiting list
+                    view.addObject("error", msg.get("MatchOfferWaitingList"));
+                    return view;
                 } else {
-                    String bookingURL = baseURL + "/bookings";
-                    body = msg.get("MatchOfferNewMatchEmailBody", new Object[]{user.toString(), offer.toString(), offerURL, bookingURL, baseURL});
+                    //inform other players about new participant
+                    Integer remainingMinPlayersCount = offer.getMinPlayersCount() - offer.getPlayers().size() - 1;
+                    String body;
+                    if (remainingMinPlayersCount > 0) {
+                        body = msg.get("MatchOfferNewParticipantEmailBody", new Object[]{user.toString(), offer.toString(), remainingMinPlayersCount, offerURL, baseURL});
+                    } else {
+                        body = msg.get("MatchOfferNewMatchEmailBody", new Object[]{user.toString(), offer.toString(), offerURL, baseURL + "/bookings", baseURL});
+                    }
+                    existingParticipantsEmail.setBody(body);
+                
+                    //inform new participant
+                    newParticipantEmail.setSubject(msg.get("MatchOfferParticipationConfirmationEmailSubject"));
+                    newParticipantEmail.setBody(msg.get("MatchOfferParticipationConfirmationEmailBody", new Object[]{user.toString(), offer.toString(), offerURL, baseURL}));
+                   
+                    //add player to offer
+                    Set<Player> players = offer.getPlayers();
+                    players.add(user);
+                    offer.setPlayers(players);
+                    
+                    //if applicable remove player from waiting list
+                    if (offer.getWaitingList().contains(user)){
+                        offer.getWaitingList().remove(user);
+                    }
+                    
+                    MailUtils.send(existingParticipantsEmail);
+                    MailUtils.send(newParticipantEmail);
                 }
-                existingParticipantsEmail.setBody(body);
-
-                Mail newParticipantEmail = new Mail(request);
-                newParticipantEmail.addRecipient(user);
-                newParticipantEmail.setSubject(msg.get("MatchOfferParticipationConfirmationEmailSubject"));
-                newParticipantEmail.setBody(msg.get("MatchOfferParticipationConfirmationEmailBody", new Object[]{user.toString(), offer.toString(), offerURL, baseURL}));
-
-                MailUtils.send(existingParticipantsEmail);
-                MailUtils.send(newParticipantEmail);
-
-                //add player to offer
-                offer.getPlayers().add(user);
-
+                
                 //confirm participation to user
                 view.addObject("msg", msg.get("MatchMakerAcceptConfirmation"));
                 
@@ -234,6 +259,15 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
                 
                 //confirm cancellation to user
                 view.addObject("msg", msg.get("MatchMakerCancelConfirmation"));
+                
+                //inform waiting users
+                for (Player waitingPlayer: offer.getWaitingList()){
+                    Mail waitingPlayerEmail = new Mail(request);
+                    waitingPlayerEmail.addRecipient(waitingPlayer);
+                    waitingPlayerEmail.setSubject(msg.get("MatchOfferWaitingListPlayerCancelledMailSubject"));
+                    waitingPlayerEmail.setBody(msg.get("MatchOfferWaitingListPlayerCancelledMailBody", new Object[]{waitingPlayer, offer, offerURL, baseURL}));
+                    MailUtils.send(waitingPlayerEmail);
+                }
             }
             
             //persist changes
