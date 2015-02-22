@@ -14,10 +14,10 @@
         
         <jsp:include page="/jsp/matchmaker/offers/include/offer-details.jsp"/>
 
-        <c:set var="url" value="/matchmaker/offers/offer/${Model.id}"/>
+        <c:set var="url" value="/matchmaker/offers/${Model.id}"/>
         <c:choose>
             <c:when test="${Model.owner == sessionScope.user}">
-                <a class="btn btn-primary btn-block" href="/matchmaker/offers/edit/${Model.id}"><fmt:message key="EditMatchOffer"/></a>
+                <a class="btn btn-primary btn-block" href="/matchmaker/offers/${Model.id}/edit"><fmt:message key="EditMatchOffer"/></a>
             </c:when>
             <c:when test="${empty sessionScope.user and empty sessionScope.accessLevel}">
                 <a class="btn btn-primary btn-block" href="/login?redirect=${url}"><fmt:message key="LoginToParticipate"/></a>

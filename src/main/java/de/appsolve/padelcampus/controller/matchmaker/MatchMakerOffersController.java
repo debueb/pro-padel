@@ -92,7 +92,7 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         return mav;
     }
 
-    @RequestMapping(value = "edit")
+    @RequestMapping(value = "add")
     public ModelAndView getEdit(HttpServletRequest request) {
         Player user = sessionUtil.getUser(request);
         if (user == null) {
@@ -109,13 +109,13 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         return getEditView(matchOffer);
     }
 
-    @RequestMapping(value = "edit/{id}")
+    @RequestMapping(value = "{id}/edit")
     public ModelAndView getEdit(HttpServletRequest request, @PathVariable("id") Long id) {
         MatchOffer offer = matchOfferDAO.findById(id);
         return getEditView(offer);
     }
 
-    @RequestMapping(value = {"edit", "edit/{id}"}, method = POST)
+    @RequestMapping(value = {"add", "{id}/edit"}, method = POST)
     public ModelAndView postEdit(HttpServletRequest request, @ModelAttribute("Model") MatchOffer model, BindingResult result) {
         Player user = sessionUtil.getUser(request);
         if (user == null) {
@@ -156,16 +156,16 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         } catch (MandrillApiError | IOException e){
             log.error("Error while sending mails about new match offer: "+ e.getMessage());
         }
-        return new ModelAndView("redirect:/matchmaker/offers/offer/"+model.getId());
+        return new ModelAndView("redirect:/matchmaker/offers/"+model.getId());
     }
 
-    @RequestMapping(value = "offer/{id}")
+    @RequestMapping(value = "{id}")
     public ModelAndView getShow(HttpServletRequest request, @PathVariable("id") Long id) {
         MatchOffer offer = matchOfferDAO.findById(id);
         return getShowView(request, offer);
     }
 
-    @RequestMapping(value = "offer/{id}", method = POST)
+    @RequestMapping(value = "{id}", method = POST)
     public ModelAndView postOffer(HttpServletRequest request, @PathVariable("id") Long id) {
         Player user = sessionUtil.getUser(request);
         if (user == null) {
@@ -278,13 +278,13 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         params[1] = model.getStartDate().toString(FormatUtils.DATE_HUMAN_READABLE);
         params[2] = model.getStartTime().toString(FormatUtils.TIME_HUMAN_READABLE);
         params[3] = model.getPlayers();
-        params[4] = baseURL+"/matchmaker/offers/offer/"+model.getId();
+        params[4] = baseURL+"/matchmaker/offers/"+model.getId();
         params[5] = baseURL+"/matchmaker/notificationsettings";
         params[6] = baseURL;
         return msg.get("NewMatchOfferMailBody", params);
     }
 
     private String getOfferURL(HttpServletRequest request, MatchOffer offer) {
-        return RequestUtil.getBaseURL(request) + "/matchmaker/offers/offer/" + offer.getId();
+        return RequestUtil.getBaseURL(request) + "/matchmaker/offers/" + offer.getId();
     }
 }

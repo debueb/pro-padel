@@ -25,7 +25,7 @@
                 </jsp:include>
             </c:if>
             <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/matchmaker/offers/edit"/>
+                <jsp:param name="href" value="/matchmaker/offers/add"/>
                 <jsp:param name="key" value="NewMatchOffer"/>
                 <jsp:param name="icon" value="plus"/>
             </jsp:include>
@@ -40,7 +40,7 @@
                 <div class="list-group unit">
                     <c:forEach var="Model" items="${Models}">
                         <c:set var="Model" value="${Model}" scope="request"/>
-                        <c:set var="OfferURL" value="/matchmaker/offers/offer/${Model.id}" scope="request"/>
+                        <c:set var="OfferURL" value="/matchmaker/offers/${Model.id}" scope="request"/>
                         <jsp:include page="/jsp/matchmaker/offers/include/offer-list-item.jsp"/>
                     </c:forEach>
                 </div>

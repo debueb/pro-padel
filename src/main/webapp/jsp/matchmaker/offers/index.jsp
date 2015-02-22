@@ -10,11 +10,11 @@
         <div class="list-group unit">
             <c:forEach var="Model" items="${Models}">
                 <c:set var="Model" value="${Model}" scope="request"/>
-                <c:set var="OfferURL" value="/matchmaker/offers/edit/${Model.id}" scope="request"/>
+                <c:set var="OfferURL" value="/matchmaker/offers/${Model.id}/edit" scope="request"/>
                 <jsp:include page="/jsp/matchmaker/offers/include/offer-list-item.jsp"/>
             </c:forEach>
         </div>
-        <a class="btn btn-primary btn-block unit" href="/matchmaker/offers/edit"><fmt:message key="NewMatchOffer"/></a>
+        <a class="btn btn-primary btn-block unit" href="/matchmaker/offers/add"><fmt:message key="NewMatchOffer"/></a>
     </div>
 </div>
 <jsp:include page="/jsp/include/footer.jsp"/>
