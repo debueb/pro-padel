@@ -8,7 +8,6 @@ package de.appsolve.padelcampus.db.model;
 
 import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.utils.FormatUtils;
-import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
 import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import java.util.Collections;
 import java.util.Set;
