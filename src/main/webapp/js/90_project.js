@@ -19,12 +19,12 @@ app.main = {};
 
     self.showSpinner = function () {
         self.showShadow();
-        $('#spinner').css('display', 'block');
+        $('#ballWrapper').css('display', 'block');
     };
 
     self.hideSpinner = function () {
         self.hideShadow();
-        $('#spinner').css('display', 'none');
+        $('#ballWrapper').css('display', 'none');
     };
 
     self.enableBackButton = function () {

@@ -53,7 +53,7 @@
                     <link rel="stylesheet" href="/css/30_font-awesome.min.css">
                     <link rel="stylesheet" href="/css/40_jquery-ui.min.css">
                     <link rel="stylesheet" href="/css/90_project.css">
-                    <link rel="stylesheet" href="/css/95_spinner.css">
+                    <link rel="stylesheet" href="/css/96_tennisball.css">
                     <link rel="stylesheet" href="/css/99_addtohomescreen.css">
                </c:otherwise>
             </c:choose>
