@@ -11,9 +11,12 @@ import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.utils.CryptUtil;
 import de.appsolve.padelcampus.validation.constraints.Phone;
+import java.util.Collections;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -92,6 +95,13 @@ public class Player extends Participant implements EmailContact{
     @Column
     @Enumerated(EnumType.STRING)
     private SkillLevel skillLevel;
+    
+    @Column
+    private Boolean enableMatchNotifications;
+    
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<SkillLevel> notificationSkillLevels;
     
     public String getFirstName() {
         return firstName;
@@ -195,6 +205,22 @@ public class Player extends Participant implements EmailContact{
 
     public void setSkillLevel(SkillLevel skillLevel) {
         this.skillLevel = skillLevel;
+    }
+
+    public Boolean getEnableMatchNotifications() {
+        return enableMatchNotifications == null ? Boolean.FALSE : enableMatchNotifications;
+    }
+
+    public void setEnableMatchNotifications(Boolean enableMatchNotifications) {
+        this.enableMatchNotifications = enableMatchNotifications;
+    }
+
+    public Set<SkillLevel> getNotificationSkillLevels() {
+        return notificationSkillLevels == null ? Collections.EMPTY_SET : notificationSkillLevels;
+    }
+
+    public void setNotificationSkillLevels(Set<SkillLevel> notificationSkillLevels) {
+        this.notificationSkillLevels = notificationSkillLevels;
     }
     
     @Override

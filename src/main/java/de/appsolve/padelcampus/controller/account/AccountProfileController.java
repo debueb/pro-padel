@@ -63,7 +63,7 @@ public class AccountProfileController extends BaseController {
     public ModelAndView getIndex(HttpServletRequest request) {
         Player user = sessionUtil.getUser(request);
         if (user == null){
-            return new ModelAndView("include/loginrequired", "title", msg.get("Profile"));
+            return getLoginRequiredView(request, msg.get("Profile"));
         }
         return getIndexView(user);
     }
@@ -87,6 +87,8 @@ public class AccountProfileController extends BaseController {
             persistedPlayer.setEmail(player.getEmail());
             persistedPlayer.setPhone(player.getPhone());
             persistedPlayer.setSkillLevel(player.getSkillLevel());
+            persistedPlayer.setEnableMatchNotifications(player.getEnableMatchNotifications());
+            persistedPlayer.setNotificationSkillLevels(player.getNotificationSkillLevels());
 
             //resize Image
             BufferedImage originalImage = null;

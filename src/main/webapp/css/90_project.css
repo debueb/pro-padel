@@ -670,8 +670,11 @@ ui-state-hover,
 .ui-state-active {
   font-weight: normal;
 }
+.accordion .ui-state-default {
+  background: #e9f5fb;
+}
 .accordion .ui-state-active {
-  background: #dfeffc url("images/ui-bg_glass_85_dfeffc_1x400.png") 50% 50% repeat-x;
+  background: #94cfea;
 }
 /* accordion end */
 .alert:empty {
@@ -907,6 +910,12 @@ div.product-chooser div.product-chooser-item input {
   box-shadow: 3px 3px 3px #777777;
   text-align: center;
   background: #ffffff;
+}
+#account-profile .ui-widget-content {
+  background: #f2f2f2;
+}
+.ui-state-focus {
+  outline: none;
 }
 @media (max-width: 768px) {
   h1 {

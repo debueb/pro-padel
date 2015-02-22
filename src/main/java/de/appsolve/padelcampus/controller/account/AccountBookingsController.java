@@ -6,11 +6,13 @@
 
 package de.appsolve.padelcampus.controller.account;
 
+import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +38,12 @@ public class AccountBookingsController extends BaseController {
     @Autowired
     SessionUtil sessionUtil;
     
+    @Autowired
+    Msg msg;
+    
     @RequestMapping()
     public ModelAndView getIndex(HttpServletRequest request){
-        Player user = sessionUtil.getUser(request);
-        return getIndexView(user);
+        return getIndexView(request);
     }
     
     @RequestMapping("booking/{UUID}")
@@ -48,7 +52,11 @@ public class AccountBookingsController extends BaseController {
         return getDetailView(booking);
     }
     
-    private ModelAndView getIndexView(Player user) {
+    private ModelAndView getIndexView(HttpServletRequest request) {
+        Player user = sessionUtil.getUser(request);
+        if (user==null){
+            return getLoginRequiredView(request, msg.get("MyBookings"));
+        }
         ModelAndView view = new ModelAndView("account/bookings/index", "Model", user);
         view.addObject("Bookings", bookingDAO.findByPlayer(user));
         return view;

@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.db.dao;
 
+import de.appsolve.padelcampus.db.model.MatchOffer;
 import de.appsolve.padelcampus.db.model.Player;
 import java.util.List;
 
@@ -24,4 +25,6 @@ public interface PlayerDAOI extends GenericDAOI<Player>{
     public Player findByUUID(String UUID);
 
     public Player findByPasswordResetUUID(String UUID);
+    
+    public List<Player> findPlayersInterestedIn(MatchOffer offer);
 }

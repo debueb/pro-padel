@@ -12,11 +12,6 @@
                 <jsp:param name="key" value="MyProfile"/>
                 <jsp:param name="icon" value="wrench"/>
             </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/matchmaker/notificationsettings"/>
-                <jsp:param name="key" value="NotificationSettings"/>
-                <jsp:param name="icon" value="envelope-o"/>
-            </jsp:include>
             <c:if test="${not empty PersonalOffers}">
                 <jsp:include page="/jsp/include/list-group-item.jsp">
                     <jsp:param name="href" value="/matchmaker/offers"/>

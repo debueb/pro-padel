@@ -1,7 +1,10 @@
 package de.appsolve.padelcampus.db.dao;
 
+import de.appsolve.padelcampus.db.model.MatchOffer;
 import de.appsolve.padelcampus.db.model.Player;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -63,5 +66,24 @@ public class PlayerDAO extends SortedGenericDAO<Player> implements PlayerDAOI{
         criteria.add(Restrictions.isNotNull("passwordHash"));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<Player>) criteria.list();
+    }
+
+    @Override
+    public List<Player> findPlayersInterestedIn(MatchOffer offer) {
+        Session session = entityManager.unwrap(Session.class);
+        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        criteria.add(Restrictions.isNotNull("enableMatchNotifications"));
+        criteria.add(Restrictions.eq("enableMatchNotifications", true));
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        List<Player> interestedPlayers = (List<Player>) criteria.list();
+        Iterator<Player> iterator = interestedPlayers.iterator();
+        //remove all players that are not interested in the skill levels associated with the match offer
+        while (iterator.hasNext()){
+            Player player = iterator.next();
+            if (Collections.disjoint(player.getNotificationSkillLevels(), offer.getSkillLevels())){
+                iterator.remove();
+            }
+        }
+        return interestedPlayers;
     }
 }

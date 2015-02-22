@@ -619,8 +619,11 @@ span.error{
 .ui-state-default, ui-state-hover, .ui-state-active{
     font-weight: normal;
 }
+.accordion .ui-state-default{
+    background: lighten(@bgColor, 20%);
+}
 .accordion .ui-state-active{
-    background: #dfeffc url("images/ui-bg_glass_85_dfeffc_1x400.png") 50% 50% repeat-x;
+    background: @bgColor;
 }
 /* accordion end */
 
@@ -855,6 +858,10 @@ div.product-chooser div.product-chooser-item input{
     text-align: center;
     background: @white;
 }
+#account-profile .ui-widget-content{
+    background: #f2f2f2;
+}
+.ui-state-focus { outline: none; }
 @media (max-width: @screen-sm) {
     h1{
         font-size: 24px;

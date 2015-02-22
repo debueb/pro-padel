@@ -21,7 +21,7 @@
             </c:when>
             <c:when test="${empty sessionScope.user and empty sessionScope.accessLevel}">
                 <a class="btn btn-primary btn-block" href="/login?redirect=${url}"><fmt:message key="LoginToParticipate"/></a>
-                <a class="btn btn-primary btn-block" href="/register?redirect=${url}"><fmt:message key="RegisterToParticipate"/></a>
+                <a class="btn btn-primary btn-block" href="/login/register?redirect=${url}"><fmt:message key="RegisterToParticipate"/></a>
             </c:when>
             <c:otherwise>
                 <form method="POST" style="margin-bottom: 5px;">

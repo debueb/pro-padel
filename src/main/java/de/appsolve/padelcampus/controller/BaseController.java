@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,5 +24,16 @@ public abstract class BaseController {
     public ModelAndView handleException(Exception ex){
         log.error(ex.getMessage(), ex);
         return new ModelAndView("error/500", "Exception", ex);
+    }
+    
+    protected ModelAndView getLoginRequiredView(HttpServletRequest request, String title) {
+        return getLoginRequiredView(title, request.getRequestURI());
+    }
+    
+    private ModelAndView getLoginRequiredView(String title, String redirectUrl) {
+        ModelAndView loginRequiredView = new ModelAndView("include/loginrequired");
+        loginRequiredView.addObject("title", title);
+        loginRequiredView.addObject("redirectURL", redirectUrl);
+        return loginRequiredView;
     }
 }

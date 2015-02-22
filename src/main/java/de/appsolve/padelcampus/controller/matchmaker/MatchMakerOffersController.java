@@ -13,10 +13,8 @@ import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.GenericDAOI;
 import de.appsolve.padelcampus.db.dao.MatchOfferDAOI;
-import de.appsolve.padelcampus.db.dao.NotificationSettingDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.MatchOffer;
-import de.appsolve.padelcampus.db.model.NotificationSetting;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.utils.FormatUtils;
@@ -66,9 +64,6 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
     MatchOfferDAOI matchOfferDAO;
     
     @Autowired
-    NotificationSettingDAOI notificationSettingDAO;
-
-    @Autowired
     Validator validator;
     
     @InitBinder
@@ -96,7 +91,7 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
     public ModelAndView getEdit(HttpServletRequest request) {
         Player user = sessionUtil.getUser(request);
         if (user == null) {
-            return new ModelAndView("include/loginrequired", "title", msg.get("EditOffer"));
+            return getLoginRequiredView(request, msg.get("NewMatchOffer"));
         }
         MatchOffer matchOffer = new MatchOffer();
         matchOffer.setStartDate(new LocalDate().plusDays(1));
@@ -119,7 +114,7 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
     public ModelAndView postEdit(HttpServletRequest request, @ModelAttribute("Model") MatchOffer model, BindingResult result) {
         Player user = sessionUtil.getUser(request);
         if (user == null) {
-            return new ModelAndView("include/loginrequired", "title", msg.get("EditOffer"));
+            return getLoginRequiredView(request, msg.get("EditOffer"));
         }
         
         //ToDo: make sure court is bookable
@@ -136,14 +131,13 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         
             //inform other users about new offers
             if (model.getId()==null){
-                List<NotificationSetting> notificationSettings = notificationSettingDAO.findFor(model);
-                if (!notificationSettings.isEmpty()){
+                List<Player> interestedPlayers = playerDAO.findPlayersInterestedIn(model);
+                if (!interestedPlayers.isEmpty()){
                     Mail mail = new Mail(request);
                     mail.setSubject(msg.get("NewMatchOfferMailSubject"));
                     mail.setBody(getNewMatchOfferMailBody(request, model));
                     
-                    for (NotificationSetting setting: notificationSettings){
-                        Player player = setting.getPlayer();
+                    for (Player player: interestedPlayers){
                         if (!player.equals(user)){
                             mail.addRecipient(player);
                         }
@@ -169,7 +163,7 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
     public ModelAndView postOffer(HttpServletRequest request, @PathVariable("id") Long id) {
         Player user = sessionUtil.getUser(request);
         if (user == null) {
-            return new ModelAndView("include/loginrequired", "title", msg.get("EditOffer"));
+            return getLoginRequiredView(request,  msg.get("EditOffer"));
         }
 
         MatchOffer offer = matchOfferDAO.findById(id);
@@ -208,6 +202,7 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
                     Set<Player> waitingList = offer.getWaitingList();
                     waitingList.add(user);
                     offer.setWaitingList(waitingList);
+                    matchOfferDAO.saveOrUpdate(offer);
                     
                     //inform new participant about waiting list
                     view.addObject("error", msg.get("MatchOfferWaitingList"));
@@ -313,7 +308,7 @@ public class MatchMakerOffersController extends BaseEntityController<MatchOffer>
         params[2] = model.getStartTime().toString(FormatUtils.TIME_HUMAN_READABLE);
         params[3] = model.getPlayers();
         params[4] = baseURL+"/matchmaker/offers/"+model.getId();
-        params[5] = baseURL+"/matchmaker/notificationsettings";
+        params[5] = baseURL+"/account/profile";
         params[6] = baseURL;
         return msg.get("NewMatchOfferMailBody", params);
     }

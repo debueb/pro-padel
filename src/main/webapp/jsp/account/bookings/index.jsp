@@ -6,7 +6,7 @@
         <jsp:include page="/jsp/include/back.jsp"/>
         
         <div class="page-header">
-            <h1><fmt:message key="Bookings"/></h1>
+            <h1><fmt:message key="MyBookings"/></h1>
         </div>
 
         <c:choose>
