@@ -270,7 +270,7 @@ public class LoginController extends BaseController{
             throw new Exception(msg.get("UnknownEmailAddressOrPassword"));
         }
         
-        setLoginCookieAndAccessLevel(request, response, player);
+        setLoginCookie(request, response, player);
         sessionUtil.setUser(request, player);
         return player;
     }
@@ -310,13 +310,13 @@ public class LoginController extends BaseController{
             playerDAO.saveOrUpdate(player);
             
             //set auto login cookie if user has requested so
-            setLoginCookieAndAccessLevel(request, response, player);
+            setLoginCookie(request, response, player);
             
             //login user
             sessionUtil.setUser(request, player);
     }
     
-    private void setLoginCookieAndAccessLevel(HttpServletRequest request, HttpServletResponse response, Player player) {
+    private void setLoginCookie(HttpServletRequest request, HttpServletResponse response, Player player) {
         //set login cookie
         
         String stayLoggedIn = request.getParameter("stay-logged-in");
@@ -330,13 +330,6 @@ public class LoginController extends BaseController{
             cookie.setMaxAge(0); //deletes cookie if it exists
         }
         response.addCookie(cookie);
-        
-        String accessLevel = "loggedIn";
-        List<Event> eventsWithParticipant = eventDAO.findAllWithParticipant(player);
-        if (!eventsWithParticipant.isEmpty()){
-            accessLevel = "loggedInAndParticipant";
-        }
-        sessionUtil.setAccessLevel(request, accessLevel); 
     }
     
     private String getHash(String input) {
