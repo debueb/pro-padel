@@ -12,12 +12,12 @@
         <div class="alert alert-danger">${error}</div>
         <div class="alert alert-success">${msg}</div>
         
-        <jsp:include page="/jsp/matchmaker/offers/include/offer-details.jsp"/>
+        <jsp:include page="/jsp/matchoffers/include/offer-details.jsp"/>
 
-        <c:set var="url" value="/matchmaker/offers/${Model.id}"/>
+        <c:set var="url" value="/matchoffers/${Model.id}"/>
         <c:choose>
             <c:when test="${Model.owner == sessionScope.user}">
-                <a class="btn btn-primary btn-block" href="/matchmaker/offers/${Model.id}/edit"><fmt:message key="EditMatchOffer"/></a>
+                <a class="btn btn-primary btn-block" href="/matchoffers/${Model.id}/edit"><fmt:message key="EditMatchOffer"/></a>
             </c:when>
             <c:when test="${empty sessionScope.user and empty sessionScope.accessLevel}">
                 <a class="btn btn-primary btn-block" href="/login?redirect=${url}"><fmt:message key="LoginToParticipate"/></a>
@@ -28,13 +28,13 @@
                 <c:choose>
                     <c:when test="${fn:contains(Model.players, sessionScope.user)}">
                         <input type="checkbox" name="cancel-participation" id="cancel-participation"/>
-                        <label class="checkbox" for="cancel-participation"><small><fmt:message key="MatchMakerCancel"/></small></label>
+                        <label class="checkbox" for="cancel-participation"><small><fmt:message key="MatchOffersCancel"/></small></label>
 
                         <button class="btn btn-primary btn-block"><fmt:message key="IWantToCancelParticipation"/></button>
                     </c:when>
                     <c:otherwise>
                         <input type="checkbox" name="accept-participation" id="accept-participation"/>
-                        <label class="checkbox" for="accept-participation"><small><fmt:message key="MatchMakerAccept"/></small></label>
+                        <label class="checkbox" for="accept-participation"><small><fmt:message key="MatchOffersAccept"/></small></label>
 
                         <button class="btn btn-primary btn-block"><fmt:message key="IWantToParticipate"/></button>
                     </c:otherwise>
@@ -45,7 +45,7 @@
         <c:url var="fullUrl" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}${url}"/>
         <a class="btn btn-primary btn-block" href="whatsapp://send?text=${fullUrl}"><fmt:message key="ShareOfferViaWhatsApp"/></a>
         <a class="btn btn-primary btn-block" href="mailto:?subject=${NewMatchOfferMailSubject}&body=${NewMatchOfferMailBody}"><fmt:message key="ShareOfferViaMail"/></a>
-        <a class="btn btn-primary btn-block" href="/matchmaker"><fmt:message key="OtherMatchOffers"/></a>
+        <a class="btn btn-primary btn-block" href="/matchoffers"><fmt:message key="OtherMatchOffers"/></a>
     </div>
 </div>
 

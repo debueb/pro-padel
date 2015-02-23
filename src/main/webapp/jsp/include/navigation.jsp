@@ -27,8 +27,8 @@
     </jsp:include>
     <jsp:include page="/jsp/include/list-menu-item.jsp">
         <jsp:param name="image" value="${not empty param.image ? 'futbol-o' : ''}"/>
-        <jsp:param name="key" value="MatchMaker"/>
-        <jsp:param name="url" value="/matchmaker"/>
+        <jsp:param name="key" value="MatchOffers"/>
+        <jsp:param name="url" value="/matchoffers"/>
     </jsp:include>
     <jsp:include page="/jsp/include/list-menu-item.jsp">
         <jsp:param name="image" value="${not empty param.image ? 'envelope' : ''}"/>
