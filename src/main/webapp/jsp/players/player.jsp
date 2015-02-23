@@ -9,7 +9,11 @@
             <h1>${Player}</h1>
         </div>
         
-        <div class="list-group">
+        <div class="text-center">
+            <jsp:include page="/jsp/players/include/profile-image.jsp"/>
+        </div>
+        
+        <div class="list-group unit">
             <a href="/teams/player/${Player.id}" class="list-group-item ajaxify">
                 <div class="list-item-text"><fmt:message key="TeamsWith"><fmt:param>${Player}</fmt:param></fmt:message>
                     <div class="list-group-item-icon"><div class="fa fa-lg fa-group"></div></div>

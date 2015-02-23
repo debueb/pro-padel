@@ -10,7 +10,7 @@
         <c:forEach var="Player" items="${Model.players}" varStatus="status">
             <c:set var="Player" value="${Player}" scope="request"/>
             <div class="${status.first ? '' : 'unit'}">
-                <jsp:include page="/jsp/players/include/profile-image.jsp"/>
+                <jsp:include page="/jsp/players/include/profile-image.jsp"><jsp:param name="includeName" value="true"/></jsp:include>
             </div>
         </c:forEach>
     </div>
