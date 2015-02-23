@@ -13,8 +13,10 @@ import static de.appsolve.padelcampus.constants.Constants.SESSION_PROFILE_REDIRE
 import static de.appsolve.padelcampus.constants.Constants.SESSION_USER;
 import de.appsolve.padelcampus.constants.Privilege;
 import de.appsolve.padelcampus.db.dao.AdminGroupDAOI;
+import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.model.AdminGroup;
 import de.appsolve.padelcampus.db.model.Booking;
+import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Player;
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +39,9 @@ public class SessionUtil {
     @Autowired
     AdminGroupDAOI adminGroupDAO;
     
+    @Autowired
+    EventDAOI eventDAO;
+    
     public void setUser(HttpServletRequest request, Player player) {
         HttpSession session = request.getSession();
         if (session != null) {
@@ -48,6 +53,14 @@ public class SessionUtil {
                     privileges.addAll(adminGroup.getPrivileges());
                 }
                 session.setAttribute(SESSION_PRIVILEGES, privileges);
+                
+                //set access level
+                String accessLevel = "loggedIn";
+                List<Event> eventsWithParticipant = eventDAO.findAllWithParticipant(player);
+                if (!eventsWithParticipant.isEmpty()){
+                    accessLevel = "loggedInAndParticipant";
+                }
+                session.setAttribute(SESSION_ACCESS_LEVEL, accessLevel);
             }
         }
     }
@@ -112,12 +125,7 @@ public class SessionUtil {
             session.invalidate();
         }
     }
-
-    
-    public void setAccessLevel(HttpServletRequest request, String accessLevel) {
-        setObject(request, SESSION_ACCESS_LEVEL, accessLevel);
-    }
-
+   
     private void setObject(HttpServletRequest request, String attributeName, Object value) {
         HttpSession session = request.getSession();
         if (session != null) {
