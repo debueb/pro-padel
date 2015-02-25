@@ -250,7 +250,9 @@ app.main = {};
             $(this).selectpicker({
                 iconBase: 'fa',
                 tickIcon: 'fa-check',
-                dropupAuto: false
+                dropupAuto: false,
+                selectedTextFormat: 'count > 2',
+                countSelectedText: '{0} selected'
             });
         });
     };

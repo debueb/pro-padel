@@ -20,7 +20,7 @@
             <spf:input path="name" type="text" class="form-control form-top-element" placeholder="${TeamName}" />
             
             <fmt:message key="Players" var="Players"/>
-            <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${Players}" multiple="true">
+            <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${Players}" multiple="true" data-live-search="true">
                 <spf:options items="${TeamPlayers}" itemValue="id"/>
                 <spf:options items="${AllPlayers}" itemValue="id"/>
             </spf:select>

@@ -39,7 +39,7 @@
             </div>
             
             <fmt:message key="Participants" var="Participants"/>
-            <spf:select path="participants" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${Participants}" multiple="true">
+            <spf:select path="participants" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${Participants}" multiple="true" data-live-search="true">
                 <fmt:message key="Participants" var="Label"/>
                 <optgroup label="${Label}">
                     <spf:options items="${EventParticipants}" itemValue="id"/>

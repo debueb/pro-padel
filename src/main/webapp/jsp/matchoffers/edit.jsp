@@ -78,7 +78,7 @@
             <%-- Teilnehmer --%>
              <span class="relative block">
                 <fmt:message key="Participants" var="Participants"/>
-                <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-center-element" title="${Participants}" multiple="true">
+                <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-center-element" title="${Participants}" multiple="true" data-live-search="true">
                     <spf:options items="${Players}" itemValue="id"/>
                 </spf:select>
                 <span class="explanation-select"><fmt:message key="Participants"/></span>
