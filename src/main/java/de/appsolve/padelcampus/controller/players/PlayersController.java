@@ -63,7 +63,7 @@ public class PlayersController extends BaseController {
     
     @RequestMapping("/all")
     public ModelAndView getAll(){
-        List<Event> allEvents = eventDAO.findAllFetchWithParticipants();
+        List<Event> allEvents = eventDAO.findAllFetchWithParticipantsAndPlayers();
         Set<Player> players = new TreeSet<>();
         for(Event event: allEvents){
             Set<Participant> participants = event.getParticipants();
@@ -109,13 +109,13 @@ public class PlayersController extends BaseController {
     
     @RequestMapping("/team/{teamId}")
     public ModelAndView getByTeam(@PathVariable("teamId") Long teamId){
-        Team team = teamDAO.findById(teamId);
+        Team team = teamDAO.findByIdFetchWithPlayers(teamId);
         return getPlayersView(setToList(team.getPlayers()));
     }
     
     @RequestMapping("/event/{id}")
     public ModelAndView getByEvent(@PathVariable("id") Long eventId){
-        Event event = eventDAO.findById(eventId);
+        Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(eventId);
         Set<ParticipantI> participants = new LinkedHashSet<>();
         Set<Team> teams = event.getTeams();
         for (Team team: teams){

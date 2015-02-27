@@ -67,4 +67,14 @@ public class AdminTeamsController extends AdminBaseController<Team> {
     public String getModuleName() {
         return "admin/teams";
     }
+    
+    @Override
+    protected List<Team> findAll() {
+        return teamDAO.findAllFetchWithPlayers();
+    }
+
+    @Override
+    protected Team findById(Long modelId) {
+        return teamDAO.findByIdFetchWithPlayers(modelId);
+    }
 }

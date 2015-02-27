@@ -18,9 +18,13 @@ public interface EventDAOI extends GenericDAOI<Event>{
     
     Event findByIdFetchWithParticipants(Long id);
     
+    Event findByIdFetchWithParticipantsAndPlayers(Long id);
+    
     Event findByIdFetchWithParticipantsAndGames(Long id);
     
     List<Event> findAllFetchWithParticipants();
+    
+    List<Event> findAllFetchWithParticipantsAndPlayers();
     
     List<Event> findAllWithParticipant(Participant participant);
 

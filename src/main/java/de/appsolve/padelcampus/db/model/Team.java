@@ -32,7 +32,7 @@ public class Team extends Participant{
     @NotEmpty(message = "{NotEmpty.teamName}")
     private String name;
     
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch=FetchType.LAZY)
     @NotEmpty(message = "{NotEmpty.teamPlayers}")
     @OrderBy("firstName, lastName")
     private Set<Player> players;

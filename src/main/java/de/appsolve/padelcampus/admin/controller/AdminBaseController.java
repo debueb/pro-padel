@@ -35,13 +35,10 @@ public abstract class AdminBaseController<T extends BaseEntity> extends BaseEnti
     @Autowired
     protected Validator validator;
     
-    @Autowired
-    protected Msg msg;
-    
     @RequestMapping()
     public ModelAndView showIndex(){
         ModelAndView mav = new ModelAndView(getModuleName()+"/index");
-        List all = getDAO().findAll();
+        List<T> all = findAll();
         Collections.sort(all);
         mav.addObject("Models", all);
         return mav;
@@ -54,7 +51,7 @@ public abstract class AdminBaseController<T extends BaseEntity> extends BaseEnti
     
     @RequestMapping(value="edit/{modelId}", method=GET)
     public ModelAndView showEditView(@PathVariable("modelId") Long modelId){
-        return getEditView((T)getDAO().findById(modelId));
+        return getEditView(findById(modelId));
     }
     
     @RequestMapping(value={"add", "edit/{modelId}"}, method=POST)
@@ -70,7 +67,15 @@ public abstract class AdminBaseController<T extends BaseEntity> extends BaseEnti
     protected ModelAndView getEditView(T model){
         return new ModelAndView("/"+getModuleName()+"/edit", "Model", model);
     }
+    
+    protected List<T> findAll() {
+        return getDAO().findAll();
+    }
 
+    protected T findById(Long modelId) {
+        return (T) getDAO().findById(modelId);
+    }
+    
     @SuppressWarnings("unchecked")
     private T createNewInstance(){
         try {
@@ -81,4 +86,5 @@ public abstract class AdminBaseController<T extends BaseEntity> extends BaseEnti
         }
         return null;
     }
+
 }

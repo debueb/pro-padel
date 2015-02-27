@@ -63,7 +63,7 @@ public class TeamsController extends BaseController{
     
      @RequestMapping("/team/{teamId}")
     public ModelAndView getTeam(@PathVariable("teamId") Long teamId){
-        return getTeamView(teamDAO.findById(teamId));
+        return getTeamView(teamDAO.findByIdFetchWithPlayers(teamId));
     }
     
     @RequestMapping("/event/{id}")

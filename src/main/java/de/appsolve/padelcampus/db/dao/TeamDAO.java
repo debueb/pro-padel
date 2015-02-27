@@ -26,4 +26,14 @@ public class TeamDAO extends SortedGenericDAO<Team> implements TeamDAOI{
         }
         return teams;
     }
+
+    @Override
+    public Team findByIdFetchWithPlayers(Long id) {
+        return super.findByIdFetchEagerly(id, "players");
+    }
+
+    @Override
+    public List<Team> findAllFetchWithPlayers() {
+        return super.findAllFetchEagerly("players");
+    }
 }

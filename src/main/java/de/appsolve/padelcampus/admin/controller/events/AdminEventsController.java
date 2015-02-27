@@ -158,4 +158,14 @@ public class AdminEventsController extends AdminBaseController<Event>{
     public String getModuleName() {
         return "admin/events";
     }
+    
+    @Override
+    public List<Event> findAll(){
+        return eventDAO.findAllFetchWithParticipants();
+    }
+    
+    @Override
+    public Event findById(Long id){
+        return eventDAO.findByIdFetchWithParticipants(id);
+    }
 }
