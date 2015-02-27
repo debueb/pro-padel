@@ -17,6 +17,7 @@ import java.util.List;
  */
 public interface GameDAOI extends GenericDAOI<Game>{
     
+    Game findByIdFetchWithTeams(Long id);
     List<Game> findByEvent(Event event);
     List<Game> findByParticipant(Participant participant);
     List<Game> findByParticipantAndEvent(Participant participant, Event event);

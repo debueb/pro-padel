@@ -45,4 +45,9 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
         }
         return games;
     }
+
+    @Override
+    public Game findByIdFetchWithTeams(Long id) {
+        return super.findByIdFetchEagerly(id, "participants.players");
+    }
 }

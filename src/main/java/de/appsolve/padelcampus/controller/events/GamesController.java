@@ -64,7 +64,7 @@ public class GamesController extends BaseController{
     
     @RequestMapping("/game/{gameId}")
     public ModelAndView getGame(@PathVariable("gameId") Long gameId){
-        Game game = gameDAO.findById(gameId);
+        Game game = gameDAO.findByIdFetchWithTeams(gameId);
         ModelAndView indexView = new ModelAndView("games/game", "Game", game);
         addGameResultMap(indexView, game);
         return indexView;
