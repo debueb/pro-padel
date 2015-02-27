@@ -86,7 +86,7 @@ public class ContextStartupListener implements ApplicationListener<ContextRefres
                 return null;
             }
         },
-        5,
+        60,
         TimeUnit.SECONDS);
     }
 
