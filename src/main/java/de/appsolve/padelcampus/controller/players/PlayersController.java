@@ -63,7 +63,7 @@ public class PlayersController extends BaseController {
     
     @RequestMapping("/all")
     public ModelAndView getAll(){
-        List<Event> allEvents = eventDAO.findAll();
+        List<Event> allEvents = eventDAO.findAllFetchWithParticipants();
         Set<Player> players = new TreeSet<>();
         for(Event event: allEvents){
             Set<Participant> participants = event.getParticipants();

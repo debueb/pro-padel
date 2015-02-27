@@ -19,8 +19,10 @@ import de.appsolve.padelcampus.utils.Msg;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,6 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller()
 @RequestMapping("/teams")
+@Transactional   
 public class TeamsController extends BaseController{
     
     @Autowired
@@ -65,7 +68,7 @@ public class TeamsController extends BaseController{
     
     @RequestMapping("/event/{id}")
     public ModelAndView getAllTeamsForEvent(@PathVariable("id") Long eventId){
-        Event event = eventDAO.findById(eventId);
+        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
         Set<Team> participants = event.getTeams();
         return getTeamsView(msg.get("TeamsIn", new Object[]{event.getName()}), participants);
     }

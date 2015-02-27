@@ -36,7 +36,7 @@ public class Event extends BaseEntity{
     @Column
     private Boolean active;
     
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch=FetchType.LAZY)
     @NotEmpty(message = "{NotEmpty.participants}")
     private Set<Participant> participants;
     
@@ -48,7 +48,7 @@ public class Event extends BaseEntity{
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate endDate;
     
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="event")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="event")
     private Set<Game> games;
 
     public String getName() {

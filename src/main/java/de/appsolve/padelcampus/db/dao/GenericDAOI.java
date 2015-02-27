@@ -7,9 +7,13 @@ public interface GenericDAOI<T> {
 
    T findById(Long id);
 
+   T findByIdFetchEagerly(final long id, String... associations);
+   
    List<T> findAll();
    
-   public T findFirst();
+   List<T> findAllFetchEagerly(String... associations);
+   
+   T findFirst();
 
    T saveOrUpdate(T entity);
 
@@ -21,5 +25,5 @@ public interface GenericDAOI<T> {
    
    List<T> findByAttributes(Map<String, Object> attributeMap);
    
-   public T findByAttribute(String key, Object value);
+   T findByAttribute(String key, Object value);
 }

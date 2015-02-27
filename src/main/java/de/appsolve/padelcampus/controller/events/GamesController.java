@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -139,14 +138,14 @@ public class GamesController extends BaseController{
     
     @RequestMapping("/event/{eventId}")
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
-        Event event = eventDAO.findById(eventId);
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
         ModelAndView mav = new ModelAndView("games/event", "Event", event);
         return mav;
     }
  
     @RequestMapping("/event/{eventId}/all")
     public ModelAndView getAllGamesForEvent(@PathVariable("eventId") Long eventId){
-        Event event = eventDAO.findById(eventId);
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
         ModelAndView mav = new ModelAndView("games/games", "Games", event.getGames());
         mav.addObject("title", "Spiele "+event.getName());
         addGameResultMap(mav, event.getGames());

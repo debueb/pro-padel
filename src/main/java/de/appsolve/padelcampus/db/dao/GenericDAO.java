@@ -1,6 +1,5 @@
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.model.PayPalConfig;
 import de.appsolve.padelcampus.utils.GenericsUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,8 +9,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,5 +122,26 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
             return null;
         }
         return objects.get(0);
+    }
+    
+    @Override
+    public T findByIdFetchEagerly(final long id, String... associations) {
+        Session session = entityManager.unwrap(Session.class);
+        final Criteria crit = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        for (String association: associations){
+            crit.setFetchMode(association, FetchMode.JOIN);
+        }
+        crit.add(Property.forName("id").eq(id));
+        return (T) crit.uniqueResult();
+    }
+    
+    @Override
+    public List<T> findAllFetchEagerly(String... associations){
+        Session session = entityManager.unwrap(Session.class);
+        final Criteria crit = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        for (String association: associations){
+            crit.setFetchMode(association, FetchMode.JOIN);
+        }
+        return crit.list();
     }
 }

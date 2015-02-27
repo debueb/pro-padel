@@ -20,7 +20,7 @@ public class EventDAO extends SortedGenericDAO<Event> implements EventDAOI{
 
     @Override
     public List<Event> findAllWithParticipant(Participant participant) {
-        List<Event> allEvents = findAll();
+        List<Event> allEvents = findAllFetchWithParticipants();
         List<Event> matchingEvents = new ArrayList<>();
         Iterator<Event> iterator = allEvents.iterator();
         while (iterator.hasNext()){
@@ -47,5 +47,20 @@ public class EventDAO extends SortedGenericDAO<Event> implements EventDAOI{
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("active", true);
         return findByAttributes(attributes);
+    }
+
+    @Override
+    public Event findByIdFetchWithParticipants(Long id) {
+        return super.findByIdFetchEagerly(id, "participants");
+    }
+    
+    @Override
+    public Event findByIdFetchWithParticipantsAndGames(Long id) {
+        return super.findByIdFetchEagerly(id, "participants", "games");
+    }
+    
+    @Override
+    public List<Event> findAllFetchWithParticipants() {
+        return super.findAllFetchEagerly("participants");
     }
 }

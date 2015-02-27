@@ -16,6 +16,12 @@ import java.util.List;
  */
 public interface EventDAOI extends GenericDAOI<Event>{
     
+    Event findByIdFetchWithParticipants(Long id);
+    
+    Event findByIdFetchWithParticipantsAndGames(Long id);
+    
+    List<Event> findAllFetchWithParticipants();
+    
     List<Event> findAllWithParticipant(Participant participant);
 
     public List<Event> findAllActive();
