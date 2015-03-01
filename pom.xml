@@ -16,6 +16,17 @@
         <org.hibernate.version>4.3.6.Final</org.hibernate.version>
     </properties>
     
+    <repositories>
+        <repository>
+            <id>yuicompressor-maven-plugin-mvn-repo</id>
+            <url>https://raw.github.com/debueb/yuicompressor-maven-plugin/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+    
     <dependencies>
         <!-- JSON (de)serializer -->
         <dependency>
@@ -284,7 +295,7 @@
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>yuicompressor-maven-plugin</artifactId>
-                <version>1.5.1</version>
+                <version>1.5.2-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <phase>compile</phase>
