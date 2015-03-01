@@ -16,6 +16,7 @@
             <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
             <script>window.jQuery || document.write('<script src="/js/noconcat/10_jquery-1.11.1.min.js">\x3C/script>');</script>
             <script src="/js/all.min.js"></script>
+            <script src="/js/noconcat/31_datepicker-de.js"></script>
         </c:when>
         <c:otherwise>
             <%-- we use jquery 1.x instead of 2.x to support older Android browsers. Specifically, jQuery.on() does not work on Android 2.1 --%>
