@@ -6,7 +6,6 @@
 
 package de.appsolve.padelcampus.controller.account;
 
-import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
