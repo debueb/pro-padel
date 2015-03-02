@@ -38,11 +38,7 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
         Session session = entityManager.unwrap(Session.class);
         Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-        List<T> results = (List<T>) criteria.list();
-        if (results == null) {
-            return new ArrayList<>();
-        }
-        return results;
+        return (List<T>) criteria.list();
     }
 
     @Override

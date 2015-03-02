@@ -7,6 +7,10 @@ import de.appsolve.padelcampus.db.model.Participant;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
 /**
@@ -49,5 +53,14 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
     @Override
     public Game findByIdFetchWithTeams(Long id) {
         return super.findByIdFetchEagerly(id, "participants.players");
+    }
+
+    @Override
+    public List<Game> findByParticipantAndEventWithScoreOnly(Participant participant, Event event) {
+        Session session = entityManager.unwrap(Session.class);
+        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        criteria.add(Restrictions.isNotNull("scoreReporter"));
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        return filterByParticipant((List<Game>) criteria.list(), participant);
     }
 }

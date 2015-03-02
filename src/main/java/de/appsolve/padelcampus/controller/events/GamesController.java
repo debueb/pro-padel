@@ -131,7 +131,12 @@ public class GamesController extends BaseController{
 
         //save game
         game.setGameSets(new LinkedHashSet<>(gameSets));
-        game.setScoreReporter(user);
+        if (gameSets.isEmpty()){
+            //we use score reporter as an indicator that the game has been played
+            game.setScoreReporter(null);
+        } else {
+            game.setScoreReporter(user);
+        }
         gameDAO.saveOrUpdate(game);
         return new ModelAndView("redirect:/games/game/"+gameId);
     }
