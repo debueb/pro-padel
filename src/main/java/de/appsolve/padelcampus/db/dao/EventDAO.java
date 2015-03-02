@@ -60,6 +60,11 @@ public class EventDAO extends SortedGenericDAO<Event> implements EventDAOI{
     }
     
     @Override
+    public Event findByIdFetchWithParticipantsAndPlayersAndGames(Long id) {
+        return super.findByIdFetchEagerly(id, "participants", "participants.players", "games");
+    }
+    
+    @Override
     public Event findByIdFetchWithParticipantsAndGames(Long id) {
         return super.findByIdFetchEagerly(id, "participants", "games");
     }

@@ -12,12 +12,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 /**
@@ -34,6 +36,7 @@ public class Game extends BaseEntity{
     private Event event;
     
     @ManyToMany(fetch=FetchType.EAGER)
+    @OrderBy(value = "name")
     private Set<Participant> participants;
     
     @OneToMany(fetch=FetchType.EAGER)
@@ -41,6 +44,9 @@ public class Game extends BaseEntity{
     
     @OneToOne(fetch=FetchType.EAGER)
     private Player scoreReporter;
+    
+    @Column
+    private String voucherUUID;
 
     public Event getEvent() {
         return event;
@@ -73,6 +79,14 @@ public class Game extends BaseEntity{
     public void setScoreReporter(Player scoreReporter) {
         this.scoreReporter = scoreReporter;
     }
+
+    public String getVoucherUUID() {
+        return voucherUUID;
+    }
+
+    public void setVoucherUUID(String voucherUUID) {
+        this.voucherUUID = voucherUUID;
+    }
     
     public String getObfuscatedMailTo() throws UnsupportedEncodingException{
         StringBuilder builder = new StringBuilder(CryptUtil.rot47("?cc="));
@@ -102,5 +116,18 @@ public class Game extends BaseEntity{
             return builder.toString();
         }
         return "";
+    }
+    
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        for (Participant participant: getParticipants()){
+            sb.append(participant.toString());
+            sb.append(" vs. ");
+        }
+        if (sb.length()>0){
+            return sb.substring(0, sb.length()-" vs. ".length());
+        }
+        return sb.toString();
     }
 }

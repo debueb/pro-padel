@@ -18,6 +18,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -38,7 +39,6 @@ public class Voucher extends BaseEntity{
     private String UUID;
     
     @Column(length=4000)
-    @NotEmpty(message = "{NotEmpty.comment}")
     private String comment;
     
     @Column
@@ -71,6 +71,9 @@ public class Voucher extends BaseEntity{
     @ManyToMany(fetch=FetchType.EAGER)
     @NotEmpty(message = "{NotEmpty.offers}")
     private Set<Offer> offers;
+    
+    @OneToOne
+    private Game game;
 
     public String getUUID() {
         return UUID;
@@ -179,6 +182,14 @@ public class Voucher extends BaseEntity{
 
     public void setOffers(Set<Offer> offers) {
         this.offers = offers;
+    }
+    
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
     
     @Override

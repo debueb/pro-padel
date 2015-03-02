@@ -13,6 +13,7 @@
                     <tr>
                         <th><fmt:message key="Comment"/></th>
                         <th><fmt:message key="Voucher"/></th>
+                        <th><fmt:message key="Match"/></th>
                         <th><fmt:message key="ValidUntil"/></th>
                         <th><fmt:message key="Duration"/></th>
                         <th><fmt:message key="Offers"/></th>
@@ -25,6 +26,7 @@
                         <tr>
                             <td>${Model.comment}</td>
                             <td style="text-align: left;">${Model.UUID}</td>
+                            <td style="text-align: left;"><c:if test="${not empty Model.game}"><a class="ajaxify" href="/games/game/${Model.game.id}">${Model.game}</a></c:if></td>
                             <td><joda:format value="${Model.validUntil}" pattern="yyyy-MM-dd" /></td>
                             <td>${Model.duration}</td>
                             <td>${Model.offers}</td>
@@ -35,7 +37,8 @@
                 </tbody>
             </table>
         </div>
-        <a href="/admin/bookings/voucher/add" class="btn btn-primary unit ajaxify"><fmt:message key="AddVoucher"/></a>
+        <a href="/admin/bookings/voucher/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="AddVoucher"/></a>
+        <a href="/admin/bookings/voucher/send" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="SendVoucher"/></a>
     </div>
 </div>
 
