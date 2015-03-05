@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
@@ -58,6 +59,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller()
 @RequestMapping("/admin/bookings/reservations")
 public class AdminBookingsReservationsController extends AdminBaseController<ReservationRequest>{
+    
+    private static final Logger log = Logger.getLogger(AdminBookingsReservationsController.class);
     
     @Autowired
     BookingDAOI bookingDAO;
@@ -161,6 +164,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                                     
                                     List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(date);
                                     TimeSlot timeSlot = new TimeSlot();
+                                    timeSlot.setDate(date);
                                     timeSlot.setStartTime(reservationRequest.getStartTime());
                                     timeSlot.setEndTime(reservationRequest.getEndTime());
                                     timeSlot.setConfig(calendarConfig);
@@ -199,7 +203,8 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
             
             return new ModelAndView("redirect:/admin/bookings/reservations");
         } catch (Exception e){
-            bindingResult.addError(new ObjectError("comment", e.getMessage()));
+            log.error(e);
+            bindingResult.addError(new ObjectError("comment", e.toString()));
             return addView;
         }
     }
