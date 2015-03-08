@@ -336,12 +336,6 @@ table.table-scores tbody tr td {
   width: 100%;
   display: inline-block;
 }
-.row-score {
-  height: 43px;
-  line-height: 43px;
-  font-size: 16px;
-  margin-bottom: 10px;
-}
 .form-control {
   position: relative;
   height: auto;
@@ -350,6 +344,10 @@ table.table-scores tbody tr td {
   box-sizing: border-box;
   padding: 10px;
   font-size: 16px;
+}
+.table-editgame tbody td,
+.table-editgame thead th {
+  padding: 5px;
 }
 .radio input[type="radio"],
 .radio-inline input[type="radio"],
