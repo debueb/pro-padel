@@ -120,6 +120,14 @@
                 </spf:select>
                 <span class="explanation-select"><fmt:message key="MinInterval"/></span>
             </div>
+            
+            <%-- Zahlungsmethoden --%>
+            <div class="relative">
+                <spf:select path="paymentMethods" class="select-multiple form-control" data-style="form-center-element">
+                    <spf:options items="${PaymentMethods}"/>
+                </spf:select>
+                <span class="explanation-select"><fmt:message key="PaymentMethods"/></span>
+            </div>
 
             <%-- Price --%>
             <div class="relative"> 

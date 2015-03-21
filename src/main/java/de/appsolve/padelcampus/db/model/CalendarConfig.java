@@ -8,6 +8,7 @@ package de.appsolve.padelcampus.db.model;
 
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Currency;
+import de.appsolve.padelcampus.constants.PaymentMethod;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_MEDIUM;
 import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import java.math.BigDecimal;
@@ -43,6 +44,12 @@ public class CalendarConfig extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @NotEmpty(message = "{NotEmpty.calendarWeekDays}")
     private Set<CalendarWeekDay> calendarWeekDays;
+    
+    @Column
+    @ElementCollection(fetch=FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @NotEmpty(message = "{NotEmpty.paymentMethods}")
+    private Set<PaymentMethod> paymentMethods;
     
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
@@ -94,6 +101,17 @@ public class CalendarConfig extends BaseEntity{
 
     public void setCalendarWeekDays(Set<CalendarWeekDay> calendarWeekDays) {
         this.calendarWeekDays = calendarWeekDays;
+    }
+
+    public Set<PaymentMethod> getPaymentMethods() {
+        if (paymentMethods!=null && !paymentMethods.isEmpty()){
+            return EnumSet.copyOf(paymentMethods);
+        }
+        return Collections.EMPTY_SET;
+    }
+
+    public void setPaymentMethods(Set<PaymentMethod> paymentMethods) {
+        this.paymentMethods = paymentMethods;
     }
 
     public LocalDate getStartDate() {
