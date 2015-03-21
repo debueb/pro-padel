@@ -5,9 +5,11 @@
  */
 package de.appsolve.padelcampus.data;
 
+import de.appsolve.padelcampus.constants.Currency;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.joda.time.LocalDate;
@@ -25,7 +27,7 @@ public class TimeSlot implements Comparable<TimeSlot>{
     
     private LocalTime endTime;
     
-    private CalendarConfig config;
+    private ArrayList<CalendarConfig> configs;
     
     private List<Booking> bookings;
 
@@ -53,12 +55,12 @@ public class TimeSlot implements Comparable<TimeSlot>{
         this.endTime = endTime;
     }
 
-    public CalendarConfig getConfig() {
-        return config;
+    public ArrayList<CalendarConfig> getConfigs() {
+        return configs;
     }
 
-    public void setConfig(CalendarConfig config) {
-        this.config = config;
+    public void setConfigs(ArrayList<CalendarConfig> configs) {
+        this.configs = configs;
     }
 
     public List<Booking> getBookings() {
@@ -77,7 +79,7 @@ public class TimeSlot implements Comparable<TimeSlot>{
     
     public Long getFreeCourtCount(){
         Long freeCourtCount = 0L;
-        for (Offer offer: getConfig().getOffers()){
+        for (Offer offer: getOffers()){
             freeCourtCount += offer.getMaxConcurrentBookings();
             for (Booking booking: getBookings()){
                 if (booking.getOffer().equals(offer)){
@@ -87,6 +89,35 @@ public class TimeSlot implements Comparable<TimeSlot>{
             }
         }
         return freeCourtCount;
+    }
+    
+    
+    //convenience methods
+    public List<Offer> getOffers(){
+        List<Offer> offers = new ArrayList<>();
+        for (CalendarConfig config: getConfigs()){
+            offers.addAll(config.getOffers());
+        }
+        return offers;
+    }
+    
+    private CalendarConfig getPrimaryConfig(){
+        BigDecimal max = BigDecimal.ZERO;
+        CalendarConfig primaryConfig = getConfigs().get(0);
+        for (CalendarConfig config: getConfigs()){
+            if (config.getBasePrice().compareTo(max) == 1){
+                primaryConfig = config;
+            }
+        }
+        return primaryConfig;
+    }
+    
+    public Currency getCurrency(){
+        return getPrimaryConfig().getCurrency();
+    }
+    
+    public BigDecimal getBasePrice(){
+        return getPrimaryConfig().getBasePrice();
     }
     
     @Override

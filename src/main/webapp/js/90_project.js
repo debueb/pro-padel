@@ -333,13 +333,13 @@ app.main = {};
     };
 
     self.enableUpdateBooking = function () {
-        var updateDuration = function(){
+        var updateAll = function(){
             var target = $(this).find('option:selected').attr('data-target');
                 $('.booking-duration-container').hide();
                 $('.booking-duration-container').find('select').prop('disabled', 'disabled');
                 $(target).show();
                 $(target).find('select').prop('disabled', false);
-                updatePrice.apply($(target).find('select'));
+                updatePrice.apply($(target).find('select[name="duration"]'));
         };
         
         var updatePrice = function(){
@@ -350,10 +350,10 @@ app.main = {};
         
         $('select[id="booking-court"]').livequery(function(){
             //first run
-            updateDuration.apply(this);
+            updateAll.apply(this);
         
             $(this).on('change', function () {
-                updateDuration.apply(this);
+                updateAll.apply(this);
             });
         });
         

@@ -6,6 +6,7 @@
 package de.appsolve.padelcampus.data;
 
 import de.appsolve.padelcampus.constants.Currency;
+import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
 import java.math.BigDecimal;
 import java.util.Map;
@@ -20,8 +21,8 @@ public class OfferDurationPrice implements Comparable<OfferDurationPrice> {
     
     private Map<Integer, BigDecimal> durationPriceMap;
     
-    private Currency currency;
-
+    private CalendarConfig config;
+    
     public Offer getOffer() {
         return offer;
     }
@@ -38,12 +39,12 @@ public class OfferDurationPrice implements Comparable<OfferDurationPrice> {
         this.durationPriceMap = durationPriceMap;
     }
 
-    public Currency getCurrency() {
-        return currency;
+    public CalendarConfig getConfig() {
+        return config;
     }
 
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
+    public void setConfig(CalendarConfig config) {
+        this.config = config;
     }
 
     @Override

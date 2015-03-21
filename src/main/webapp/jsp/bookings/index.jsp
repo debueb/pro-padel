@@ -54,7 +54,7 @@
                                                     <c:when test="${TimeSlot.freeCourtCount > 0}">
                                                         <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
                                                         <td class="booking-bookable ${TimeSlot.freeCourtCount == 1 ? 'booking-bookable-last' : ''}">
-                                                            <a class="block ajaxify" href="${urlDetail}">${TimeSlot.config.currency.symbol}${TimeSlot.config.basePrice}</a>
+                                                            <a class="block ajaxify" href="${urlDetail}">${TimeSlot.currency.symbol}${TimeSlot.basePrice}</a>
                                                         </td>
                                                     </c:when>
                                                     <c:otherwise>

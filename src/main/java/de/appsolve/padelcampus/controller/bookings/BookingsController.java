@@ -99,12 +99,6 @@ public class BookingsController extends BaseController {
     CalendarConfigDAOI calendarConfigDAO;
 
     @Autowired
-    PayPalConfigDAOI payPalConfigDAO;
-
-    @Autowired
-    PayMillConfigDAOI payMillConfigDAO;
-    
-    @Autowired
     OfferDAOI offerDAO;
     
     @Autowired
@@ -424,7 +418,7 @@ public class BookingsController extends BaseController {
                 if (offerDurationPrice.getOffer().equals(booking.getOffer())){
                     BigDecimal price = offerDurationPrice.getDurationPriceMap().get(booking.getDuration().intValue());
                     booking.setAmount(price);
-                    booking.setCurrency(offerDurationPrice.getCurrency());
+                    booking.setCurrency(offerDurationPrice.getConfig().getCurrency());
                     break;
                 }
             }
@@ -432,32 +426,8 @@ public class BookingsController extends BaseController {
         
         sessionUtil.setBooking(request, booking);
 
-        //determine valid payment methods
-        List<PaymentMethod> paymentMethods = new ArrayList<>();
-        
-        //check if PayPal config exists and is active
-        PayPalConfig paypalConfig = payPalConfigDAO.findFirst();
-        if (paypalConfig != null && paypalConfig.getActive()) {
-            paymentMethods.add(PaymentMethod.PayPal);
-        }
-
-        //check if PayMill config exists
-        PayMillConfig payMillConfig = payMillConfigDAO.findFirst();
-        if (payMillConfig != null) {
-            if (payMillConfig.getEnableDirectDebit()) {
-                paymentMethods.add(PaymentMethod.DirectDebit);
-            }
-            if (payMillConfig.getEnableCreditCard()) {
-                paymentMethods.add(PaymentMethod.CreditCard);
-            }
-        }
-        
-        //always support vouchers
-        paymentMethods.add(PaymentMethod.Voucher);
-
         if (mav!=null){
             mav.addObject("Booking", booking);
-            mav.addObject("PaymentMethods", paymentMethods);
             mav.addObject("OfferDurationPrices", offerDurationPrices);
         }
     }
@@ -599,7 +569,7 @@ public class BookingsController extends BaseController {
                     timeSlot.setDate(selectedDate);
                     timeSlot.setStartTime(selectedTime);
                     timeSlot.setEndTime(endTime);
-                    timeSlot.setConfig(config);
+                    timeSlot.setConfigs(new ArrayList<>(Arrays.asList(config)));
                     Long bookingSlotsLeft = bookingUtil.getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
 
                     //we only allow contiguous bookings for any given offer
@@ -626,7 +596,7 @@ public class BookingsController extends BaseController {
                     OfferDurationPrice odp = new OfferDurationPrice();
                     odp.setOffer(offer);
                     odp.setDurationPriceMap(durationPriceMap);
-                    odp.setCurrency(config.getCurrency());
+                    odp.setConfig(config);
                     offerDurationPrices.add(odp);
                 }
                 

@@ -23,6 +23,7 @@ import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -79,12 +80,25 @@ public class BookingUtil {
             //sort all calendar configurations for selected date by start time
             Collections.sort(calendarConfigs);
 
-            LocalTime time = calendarConfigs.get(0).getStartTime();
+            Integer minIntervalLastConfig = null;
+            LocalTime time = null;
             LocalTime now = new LocalTime(DEFAULT_TIMEZONE);
-
+            
+            //LocalTime time = calendarConfigs.get(0).getStartTime(); 
+            
             //generate list of bookable time slots
             for (CalendarConfig config : calendarConfigs) {
-
+                if (time==null){
+                    //on first iteration
+                    time = config.getStartTime();
+                } else {
+                    if (time.plusMinutes(minIntervalLastConfig).equals(config.getStartTime())){
+                        //contiguous bookings possible
+                        //time = time;
+                    } else {
+                        time = config.getStartTime();
+                    }
+                }
                 while (time.plusMinutes(config.getMinDuration()).compareTo(config.getEndTime()) <= 0) {
                     if (onlyFutureTimeSlots) {
                         if (selectedDate.isAfter(today) || time.isAfter(now)){
@@ -95,6 +109,7 @@ public class BookingUtil {
                     }
                     time = time.plusMinutes(config.getMinInterval());
                 }
+                minIntervalLastConfig = config.getMinInterval();
             }
             //sort time slots by time
             Collections.sort(timeSlots);
@@ -112,12 +127,27 @@ public class BookingUtil {
         timeSlot.setDate(date);
         timeSlot.setStartTime(time);
         timeSlot.setEndTime(time.plusMinutes(config.getMinDuration()));
-        timeSlot.setConfig(config);
         
-        //only add timeSlot if timeSlots does not already contain an entry that overlaps
-        if (!overlaps(timeSlot, timeSlots)){
-            timeSlots.add(timeSlot);
+        TimeSlot existingTimeSlot = getExistingTimeSlot(timeSlot, timeSlots);
+        if (existingTimeSlot!=null){
+            existingTimeSlot.getConfigs().add(config);
+        } else {
+            timeSlot.setConfigs(new ArrayList<>(Arrays.asList(config)));
+        
+            //only add timeSlot if timeSlots does not already contain an entry that overlaps
+            if (!overlaps(timeSlot, timeSlots)){
+                timeSlots.add(timeSlot);
+            }
         }
+    }
+    
+    private TimeSlot getExistingTimeSlot(TimeSlot timeSlot, List<TimeSlot> timeSlots){
+        for (TimeSlot slot: timeSlots){
+            if (timeSlot.getStartTime().equals(slot.getStartTime()) && timeSlot.getEndTime().equals(slot.getEndTime())){
+                return slot;
+            }
+        }
+        return null;
     }
     
     private boolean overlaps(TimeSlot timeSlot, List<TimeSlot> timeSlots) {
@@ -170,7 +200,7 @@ public class BookingUtil {
                 }
                 if (addBooking){
                     Offer offer = booking.getOffer();
-                    for (Offer timeSlotOffer: timeSlot.getConfig().getOffers()){
+                    for (Offer timeSlotOffer: timeSlot.getOffers()){
                         if (offer.equals(timeSlotOffer)){
                             timeSlot.addBooking(booking);
                             break;

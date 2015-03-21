@@ -37,33 +37,36 @@
                     </div>
                    
                     <c:forEach items="${OfferDurationPrices}" var="OfferDurationPrice">
-                        <div class="row unit booking-duration-container" id="booking-duration-container-${OfferDurationPrice.offer.id}">
-                            <div class="col-xs-4 booking-cell"><fmt:message key="GameDuration"/>:</div>
-                            <div class="col-xs-8">
-                                <spf:select path="duration" class="form-control select-simple booking-duration">
-                                    <c:forEach var="DurationPrice" items="${OfferDurationPrice.durationPriceMap}">
-                                        <fmt:formatNumber var="price" value="${DurationPrice['value']}" minFractionDigits="2" maxFractionDigits="2"/>
-                                        <spf:option value="${DurationPrice['key']}" data-price="${price} ${OfferDurationPrice.currency.symbol}">${DurationPrice['key']} <fmt:message key="Minutes"/></spf:option>
-                                    </c:forEach>
-                                </spf:select>
+                        <div id="booking-duration-container-${OfferDurationPrice.offer.id}" class="booking-duration-container">
+                            <div class="row unit">
+                                <div class="col-xs-4 booking-cell"><fmt:message key="GameDuration"/>:</div>
+                                <div class="col-xs-8">
+                                    <spf:select path="duration" class="form-control select-simple booking-duration">
+                                        <c:forEach var="DurationPrice" items="${OfferDurationPrice.durationPriceMap}">
+                                            <fmt:formatNumber var="price" value="${DurationPrice['value']}" minFractionDigits="2" maxFractionDigits="2"/>
+                                            <spf:option value="${DurationPrice['key']}" data-price="${price} ${OfferDurationPrice.config.currency.symbol}">${DurationPrice['key']} <fmt:message key="Minutes"/></spf:option>
+                                        </c:forEach>
+                                    </spf:select>
+                                </div>
+                            </div>
+
+                            <div class="row unit">
+                                <div class="col-xs-4 booking-cell"><fmt:message key="PaymentMethod"/>:</div>
+                                <div class="col-xs-8">
+                                    <spf:select path="paymentMethod" class="form-control select-simple">
+                                        <c:forEach var="PaymentMethod" items="${OfferDurationPrice.config.paymentMethods}">
+                                            <div>
+                                                <span class="input-group-addon">
+                                                    <spf:option value="${PaymentMethod}"><fmt:message key="${PaymentMethod}"/></spf:option>
+                                                    </span>
+                                                </div>
+                                        </c:forEach>
+                                    </spf:select>
+                                </div>
                             </div>
                         </div>
                     </c:forEach>
 
-                    <div class="row unit">
-                        <div class="col-xs-4 booking-cell"><fmt:message key="PaymentMethod"/>:</div>
-                        <div class="col-xs-8">
-                            <spf:select path="paymentMethod" class="form-control select-simple">
-                                <c:forEach var="PaymentMethod" items="${PaymentMethods}">
-                                    <div>
-                                        <span class="input-group-addon">
-                                            <spf:option value="${PaymentMethod}"><fmt:message key="${PaymentMethod}"/></spf:option>
-                                            </span>
-                                        </div>
-                                </c:forEach>
-                            </spf:select>
-                        </div>
-                    </div>
                     
                     <div class="row">
                         <div class="col-xs-4 booking-cell"><fmt:message key="Price"/>:</div>

@@ -28,6 +28,7 @@ import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATT
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -167,7 +168,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                                     timeSlot.setDate(date);
                                     timeSlot.setStartTime(reservationRequest.getStartTime());
                                     timeSlot.setEndTime(reservationRequest.getEndTime());
-                                    timeSlot.setConfig(calendarConfig);
+                                    timeSlot.setConfigs(new ArrayList<>(Arrays.asList(calendarConfig)));
                                     Long bookingSlotsLeft = bookingUtil.getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
                                  
                                     if (bookingSlotsLeft<1){
