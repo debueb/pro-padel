@@ -562,7 +562,7 @@ public class BookingsController extends BaseController {
             
             //make sure the first configuration starts before the requested booking time
             if (selectedTime.compareTo(firstConfig.getStartTime()) < 0){
-                break;
+                continue;
             }
             
             LocalTime endTime = null;
