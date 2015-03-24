@@ -50,11 +50,16 @@
                                         <c:forEach var="TimeSlot" items="${TimeSlots}">
                                             <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
                                                 <c:set var="containsTimeSlot" value="true"/>
+                                                <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
                                                 <c:choose>
-                                                    <c:when test="${TimeSlot.freeCourtCount > 0}">
-                                                        <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
-                                                        <td class="booking-bookable ${TimeSlot.freeCourtCount == 1 ? 'booking-bookable-last' : ''}">
-                                                            <a class="block ajaxify" href="${urlDetail}">${TimeSlot.currency.symbol}${TimeSlot.basePrice}</a>
+                                                    <c:when test="${TimeSlot.freeCourtCount == 1}">
+                                                        <td class="booking-bookable booking-bookable-last">
+                                                            <a class="block multiline ajaxify" href="${urlDetail}">${TimeSlot.offerWithFreeCourt}<br/>${TimeSlot.currency.symbol}${TimeSlot.basePrice}</a>
+                                                        </td>
+                                                    </c:when>
+                                                    <c:when test="${TimeSlot.freeCourtCount > 1}">
+                                                        <td class="booking-bookable">
+                                                            <a class="block multiline ajaxify" href="${urlDetail}">${TimeSlot.currency.symbol}${TimeSlot.basePrice}</a>
                                                         </td>
                                                     </c:when>
                                                     <c:otherwise>

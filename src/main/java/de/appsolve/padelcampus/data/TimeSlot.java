@@ -80,17 +80,30 @@ public class TimeSlot implements Comparable<TimeSlot>{
     public Long getFreeCourtCount(){
         Long freeCourtCount = 0L;
         for (Offer offer: getOffers()){
-            freeCourtCount += offer.getMaxConcurrentBookings();
-            for (Booking booking: getBookings()){
-                if (booking.getOffer().equals(offer)){
-                    freeCourtCount -= 1;
-                    break;
-                }
-            }
+            freeCourtCount += getFreeCourtCount(offer);
         }
         return freeCourtCount;
     }
     
+    public Offer getOfferWithFreeCourt(){
+        for (Offer offer: getOffers()){
+            if (getFreeCourtCount(offer)>0){
+                return offer;
+            }
+        }
+        return null;
+    }
+    
+    private Long getFreeCourtCount(Offer offer){
+        Long freeCourtCount = offer.getMaxConcurrentBookings();
+        for (Booking booking: getBookings()){
+            if (booking.getOffer().equals(offer)){
+                freeCourtCount -= 1;
+                break;
+            }
+        }
+        return freeCourtCount;
+    } 
     
     //convenience methods
     public List<Offer> getOffers(){

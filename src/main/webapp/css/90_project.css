@@ -973,6 +973,9 @@ div.product-chooser div.product-chooser-item input {
     clear: left;
   }
 }
+.table-responsive .multiline {
+  white-space: normal;
+}
 /*  Medium Desktop  */
 @media (min-width: 992px) {
   /* Column clear fix */
