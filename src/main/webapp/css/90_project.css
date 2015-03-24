@@ -94,8 +94,8 @@ body {
   height: 45px;
 }
 .footer {
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   text-align: center;
 }
 textarea,
@@ -680,7 +680,7 @@ ui-state-hover,
   display: none;
 }
 .unit {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 .list-group {
   margin-bottom: 0;
@@ -879,7 +879,7 @@ div.product-chooser.disabled div.product-chooser-item {
   cursor: default;
 }
 div.product-chooser div.product-chooser-item {
-  padding: 15px;
+  padding: 10px;
   background: #ffffff;
   color: #afafaf;
   border-radius: 4px;
