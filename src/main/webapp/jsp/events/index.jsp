@@ -13,7 +13,7 @@
                 </c:when>
                 <c:otherwise>
                     <c:forEach var="Event" items="${Models}">
-                        <a href="/events/${Event.id}" class="list-group-item ajaxify">
+                        <a href="/scores/event/${Event.id}" class="list-group-item ajaxify">
                             <div class="list-item-text">${Event.name}</div>
                             <p class="list-group-item-text"><joda:format value="${Event.startDate}" pattern="dd. MMM. yyyy"/> - <joda:format value="${Event.endDate}" pattern="dd. MMM. yyyy"/></p>
                         </a>
