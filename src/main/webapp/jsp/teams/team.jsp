@@ -8,14 +8,20 @@
             <h1>${Team.name}</h1>
         </div>
 
+        <h4><fmt:message key="Players"/></h4>
         <div class="list-group">
-            <fmt:message key="Players" var="msg"/>
-            <jsp:include page="/jsp/include/list-badge-item.jsp">
-                <jsp:param name="msg" value="${msg}"/>
-                <jsp:param name="url" value="/players/team/${Team.id}"/>
-                <jsp:param name="badge" value="${fn:length(Team.players)}"/>
-            </jsp:include>
-            <fmt:message key="Games" var="msg"/>
+            <c:forEach var="Player" items="${Team.players}">
+                <jsp:include page="/jsp/include/list-badge-item.jsp">
+                    <jsp:param name="msg" value="${Player}"/>
+                    <jsp:param name="url" value="/players/player/${Player.id}"/>
+                </jsp:include>
+            </c:forEach>
+        </div>
+            
+        <hr>
+        <h4><fmt:message key="Games"/></h4>
+        <div class="list-group">
+            <fmt:message key="AllGames" var="msg"/>
             <jsp:include page="/jsp/include/list-badge-item.jsp">
                 <jsp:param name="msg" value="${msg}"/>
                 <jsp:param name="url" value="/games/team/${Team.id}"/>
