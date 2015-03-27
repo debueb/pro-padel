@@ -100,6 +100,7 @@
             <div class="clearfix"></div>
             
             <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
+            <a href="/admin/bookings" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="Cancel"/></a>
         </spf:form>
     </div>
 </div>
