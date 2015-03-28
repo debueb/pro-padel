@@ -30,7 +30,14 @@
                         <div class="col-xs-8">
                             <spf:select path="offer" class="form-control select-simple" id="booking-court">
                                 <c:forEach items="${OfferDurationPrices}" var="OfferDurationPrice">
-                                    <spf:option value="${OfferDurationPrice.offer.id}" data-target="#booking-duration-container-${OfferDurationPrice.offer.id}">${OfferDurationPrice.offer}</spf:option>
+                                    <c:choose>
+                                        <c:when test="${not empty SelectedOffer and SelectedOffer.id == OfferDurationPrice.offer.id}">
+                                            <spf:option selected="true" value="${OfferDurationPrice.offer.id}" data-target="#booking-duration-container-${OfferDurationPrice.offer.id}">${OfferDurationPrice.offer}</spf:option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <spf:option value="${OfferDurationPrice.offer.id}" data-target="#booking-duration-container-${OfferDurationPrice.offer.id}">${OfferDurationPrice.offer}</spf:option>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </c:forEach>
                             </spf:select>
                         </div>

@@ -70,12 +70,14 @@
                                                     <c:when test="${TimeSlot.freeCourtCount > 0}">
                                                         <td class="booking-bookable">
                                                             <div class="booking-offer-container">
-                                                                <c:forEach var="Offer" items="${TimeSlot.offers}">
-                                                                    <div class="booking-offer-row">
-                                                                        <a class="ajaxify booking-offer" href="${urlDetail}" style="background-color: ${Offer.hexColor}; height: ${100/fn:length(TimeSlot.offers)}%;">
-                                                                            ${TimeSlot.currency.symbol}${TimeSlot.basePrice}
-                                                                        </a>
-                                                                    </div>
+                                                                <c:forEach var="Config" items="${TimeSlot.configs}">
+                                                                    <c:forEach var="Offer" items="${Config.offers}">
+                                                                        <div class="booking-offer-row">
+                                                                            <a class="ajaxify booking-offer" href="${urlDetail}?offer=${Offer.id}" style="background-color: ${Offer.hexColor}; height: ${100/fn:length(TimeSlot.offers)}%;">
+                                                                                ${Config.currency.symbol}${Config.basePrice}
+                                                                            </a>
+                                                                        </div>
+                                                                    </c:forEach>
                                                             </c:forEach>
                                                             </div>
                                                         </td>

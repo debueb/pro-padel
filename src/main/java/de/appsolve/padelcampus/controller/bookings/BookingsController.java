@@ -65,6 +65,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -121,10 +122,14 @@ public class BookingsController extends BaseController {
     }
 
     @RequestMapping("{day}/{time}")
-    public ModelAndView showBookingView(@PathVariable("day") String day, @PathVariable("time") String time, HttpServletRequest request) throws ParseException, Exception {
+    public ModelAndView showBookingView(@PathVariable("day") String day, @PathVariable("time") String time, @RequestParam(required=false, value="offer") Long offerId, HttpServletRequest request) throws ParseException, Exception {
         ModelAndView bookingView = getBookingView();
         try {
-            validateAndAddObjectsToView(bookingView, request, new Booking(), day, time);
+            Offer offer = null;
+            if (offerId!=null){
+                offer = offerDAO.findById(offerId);
+            }
+            validateAndAddObjectsToView(bookingView, request, new Booking(), day, time, offer);
         } catch (Exception e){
             bookingView.addObject("error", e.getMessage());
         }
@@ -138,7 +143,7 @@ public class BookingsController extends BaseController {
         Offer offer = offerDAO.findById(Long.parseLong(offerId));
         booking.setOffer(offer);
         try {
-            validateAndAddObjectsToView(bookingView, request, booking, day, time);
+            validateAndAddObjectsToView(bookingView, request, booking, day, time, offer);
         } catch (Exception e){
             bookingView.addObject("error", e.getMessage());
             return bookingView;
@@ -232,7 +237,7 @@ public class BookingsController extends BaseController {
             }
 
             //rerun checks (date time valid, overbooked...)
-            validateAndAddObjectsToView(null, request, booking, day, time);
+            validateAndAddObjectsToView(null, request, booking, day, time, booking.getOffer());
 
             if (booking.getConfirmed()) {
                 throw new Exception(msg.get("BookingAlreadyConfirmed"));
@@ -384,7 +389,7 @@ public class BookingsController extends BaseController {
         return new ModelAndView("bookings/booking");
     }
     
-    private void validateAndAddObjectsToView(ModelAndView mav, HttpServletRequest request, Booking booking, String day, String time) throws Exception{
+    private void validateAndAddObjectsToView(ModelAndView mav, HttpServletRequest request, Booking booking, String day, String time, Offer offer) throws Exception{
         LocalDate selectedDate = FormatUtils.DATE_HUMAN_READABLE.parseLocalDate(day);
         LocalTime selectedTime = FormatUtils.TIME_HUMAN_READABLE.parseLocalTime(time);
 
@@ -423,6 +428,7 @@ public class BookingsController extends BaseController {
         if (mav!=null){
             mav.addObject("Booking", booking);
             mav.addObject("OfferDurationPrices", offerDurationPrices);
+            mav.addObject("SelectedOffer", offer);
         }
     }
 
