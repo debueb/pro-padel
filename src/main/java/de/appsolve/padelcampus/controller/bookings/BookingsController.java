@@ -344,7 +344,7 @@ public class BookingsController extends BaseController {
         try {
             validateBookingCancellation(booking);
             Voucher oldVoucher = booking.getVoucher();
-            oldVoucher.setComment("Replacement voucher for Booking [id=" + booking.getId() + ", date=" + booking.getBookingDate() + ", name=" + booking.getPlayer() + "]");
+            oldVoucher.setComment("Replacement voucher for Booking ["+booking.toString()+"]");
             Voucher voucher = VoucherUtil.createNewVoucher(oldVoucher);
             voucherDAO.saveOrUpdate(voucher);
 
@@ -371,6 +371,7 @@ public class BookingsController extends BaseController {
                 throw (ex);
             }
         } catch (Exception e) {
+            log.error("Error during booking cancellation", e);
             ModelAndView cancellationView = getCancellationView(booking);
             cancellationView.addObject("error", e.getMessage());
             return cancellationView;
