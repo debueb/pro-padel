@@ -22,6 +22,7 @@ import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
@@ -45,7 +46,6 @@ import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -77,9 +77,6 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     
     @Autowired
     SessionUtil sessionUtil;
-    
-    @Autowired
-    Validator validator;
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -136,54 +133,58 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                 Set<CalendarWeekDay> calendarWeekDays = reservationRequest.getCalendarWeekDays();
                 for (CalendarWeekDay calendarWeekDay: calendarWeekDays) {
                     if (calendarWeekDay.ordinal()+1 == date.getDayOfWeek()){
-                        List<CalendarConfig> calendarConfigsForDate = calendarConfigDAO.findFor(date);
-                        Iterator<CalendarConfig> iterator = calendarConfigsForDate.iterator();
-                        while(iterator.hasNext()){
-                            CalendarConfig calendarConfig = iterator.next();
-                            if (!bookingUtil.isHoliday(date, calendarConfig)) {
-                                for (Offer offer: reservationRequest.getOffers()){
-                                    
-                                    Booking booking = new Booking();
-                                    booking.setAmount(BigDecimal.ZERO);
-                                    booking.setBlockingTime(new LocalDateTime());
-                                    booking.setBookingDate(date);
-                                    booking.setBookingTime(reservationRequest.getStartTime());
-                                    booking.setBookingType(BookingType.reservation);
-                                    booking.setComment(reservationRequest.getComment());
-                                    booking.setConfirmed(true);
-                                    booking.setCurrency(Currency.EUR);
-                                    int minutes = Minutes.minutesBetween(reservationRequest.getStartTime(), reservationRequest.getEndTime()).getMinutes(); 
-                                    if (minutes < calendarConfig.getMinDuration()){
-                                        throw new Exception(msg.get("MinDurationIs", new Object[]{calendarConfig.getMinDuration()}));
+                        try {
+                            List<CalendarConfig> calendarConfigsForDate = calendarConfigDAO.findFor(date);
+                            Iterator<CalendarConfig> iterator = calendarConfigsForDate.iterator();
+                            while(iterator.hasNext()){
+                                CalendarConfig calendarConfig = iterator.next();
+                                if (!bookingUtil.isHoliday(date, calendarConfig)) {
+                                    for (Offer offer: reservationRequest.getOffers()){
+
+                                        Booking booking = new Booking();
+                                        booking.setAmount(BigDecimal.ZERO);
+                                        booking.setBlockingTime(new LocalDateTime());
+                                        booking.setBookingDate(date);
+                                        booking.setBookingTime(reservationRequest.getStartTime());
+                                        booking.setBookingType(BookingType.reservation);
+                                        booking.setComment(reservationRequest.getComment());
+                                        booking.setConfirmed(true);
+                                        booking.setCurrency(Currency.EUR);
+                                        int minutes = Minutes.minutesBetween(reservationRequest.getStartTime(), reservationRequest.getEndTime()).getMinutes(); 
+                                        if (minutes < calendarConfig.getMinDuration()){
+                                            throw new Exception(msg.get("MinDurationIs", new Object[]{calendarConfig.getMinDuration()}));
+                                        }
+                                        booking.setDuration(Long.valueOf(minutes));
+                                        booking.setPaymentConfirmed(true);
+                                        booking.setPaymentMethod(PaymentMethod.Reservation);
+                                        booking.setPlayer(player);
+                                        booking.setUUID(BookingUtil.generateUUID());
+                                        booking.setOffer(offer);
+
+                                        List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(date);
+                                        TimeSlot timeSlot = new TimeSlot();
+                                        timeSlot.setDate(date);
+                                        timeSlot.setStartTime(reservationRequest.getStartTime());
+                                        timeSlot.setEndTime(reservationRequest.getEndTime());
+                                        timeSlot.setConfigs(new ArrayList<>(Arrays.asList(calendarConfig)));
+                                        Long bookingSlotsLeft = bookingUtil.getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
+
+                                        if (bookingSlotsLeft<1){
+                                            failedBookings.add(booking);
+                                            continue;
+                                        }
+
+                                        //we save the booking directly to prevent overbookings
+                                        bookingDAO.saveOrUpdate(booking);
+                                        bookings.add(booking);
                                     }
-                                    booking.setDuration(Long.valueOf(minutes));
-                                    booking.setPaymentConfirmed(true);
-                                    booking.setPaymentMethod(PaymentMethod.Reservation);
-                                    booking.setPlayer(player);
-                                    booking.setUUID(BookingUtil.generateUUID());
-                                    booking.setOffer(offer);
-                                    
-                                    List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(date);
-                                    TimeSlot timeSlot = new TimeSlot();
-                                    timeSlot.setDate(date);
-                                    timeSlot.setStartTime(reservationRequest.getStartTime());
-                                    timeSlot.setEndTime(reservationRequest.getEndTime());
-                                    timeSlot.setConfigs(new ArrayList<>(Arrays.asList(calendarConfig)));
-                                    Long bookingSlotsLeft = bookingUtil.getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
-                                 
-                                    if (bookingSlotsLeft<1){
-                                        failedBookings.add(booking);
-                                        continue;
-                                    }
-                                    
-                                    //we save the booking directly to prevent overbookings
-                                    bookingDAO.saveOrUpdate(booking);
-                                    bookings.add(booking);
                                 }
+                                break;
                             }
                             break;
+                        } catch (CalendarConfigException e){
+                            log.warn("Caught calendar config exception during add reservation request. This may be normal (for holidays)", e);
                         }
-                        break;
                     }
                 }
                 date = date.plusDays(1);
