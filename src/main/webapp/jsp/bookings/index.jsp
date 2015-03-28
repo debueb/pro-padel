@@ -21,7 +21,22 @@
                 <div class="alert alert-danger unit"><fmt:message key="NoBookableTimeSlotsAvailable"/></div>
             </c:when>
             <c:otherwise>
-                <div class="table-responsive unit">
+                <div>
+                    <table class="unit-2 table table-bordered table-booking table-fixed">
+                        <thead>
+                        <th colspan="${fn:length(Offers)+2}"><fmt:message key="Leyenda"/></th>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="Offer" items="${Offers}">
+                            <td class="booking-leyenda" style="background-color: ${Offer.hexColor}">${Offer}</td>
+                        </c:forEach>
+                        <td class="booking-leyenda booking-booked"><fmt:message key="bookedOut"/></td>
+                        <td class="booking-leyenda booking-disabled"><fmt:message key="bookingDisabled"/></td>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="unit-2 table-responsive unit">
                     <table class="table table-bordered table-booking table-fixed">
                         <thead>
                             <tr>
@@ -44,7 +59,7 @@
                                     <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
                                     <joda:format value="${TimeRange.endTime}" pattern="HH:mm" var="endTime"/>
                                     <td class="booking-time">${startTime}<span>-</span>${endTime}</td>
-                                
+
                                     <c:forEach var="WeekDay" items="${WeekDays}">
                                         <c:set var="containsTimeSlot" value="false"/>
                                         <c:forEach var="TimeSlot" items="${TimeSlots}">
@@ -52,14 +67,17 @@
                                                 <c:set var="containsTimeSlot" value="true"/>
                                                 <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
                                                 <c:choose>
-                                                    <c:when test="${TimeSlot.freeCourtCount == 1}">
-                                                        <td class="booking-bookable booking-bookable-last">
-                                                            <a class="block multiline ajaxify" href="${urlDetail}">${TimeSlot.offerWithFreeCourt}<br/>${TimeSlot.currency.symbol}${TimeSlot.basePrice}</a>
-                                                        </td>
-                                                    </c:when>
-                                                    <c:when test="${TimeSlot.freeCourtCount > 1}">
+                                                    <c:when test="${TimeSlot.freeCourtCount > 0}">
                                                         <td class="booking-bookable">
-                                                            <a class="block multiline ajaxify" href="${urlDetail}">${TimeSlot.currency.symbol}${TimeSlot.basePrice}</a>
+                                                            <div class="booking-offer-container">
+                                                                <c:forEach var="Offer" items="${TimeSlot.offers}">
+                                                                    <div class="booking-offer-row">
+                                                                        <a class="ajaxify booking-offer" href="${urlDetail}" style="background-color: ${Offer.hexColor}; height: ${100/fn:length(TimeSlot.offers)}%;">
+                                                                            ${TimeSlot.currency.symbol}${TimeSlot.basePrice}
+                                                                        </a>
+                                                                    </div>
+                                                            </c:forEach>
+                                                            </div>
                                                         </td>
                                                     </c:when>
                                                     <c:otherwise>
@@ -74,19 +92,17 @@
                                     </c:forEach>
                                 </tr>
                             </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="unit">
-                    <table class="table table-bordered table-booking table-fixed">
-                        <thead>
-                        <th colspan="4"><fmt:message key="Leyenda"/></th>
-                        </thead>
-                        <tbody>
-                            <td class="booking-disabled"><fmt:message key="bookingDisabled"/></td>
-                            <td class="booking-booked"><fmt:message key="bookedOut"/></td>
-                            <td class="booking-bookable-last"><fmt:message key="bookableLast"/></td>
-                            <td class="booking-bookable"><fmt:message key="bookable"/></td>
+                                <tr>
+                                    <td></td>
+                                    <c:forEach var="WeekDay" items="${WeekDays}">
+                                        <td class="text-center ${Day == WeekDay ? 'booking-selected-date' : ''}">
+                                            <a href="/bookings/${WeekDay}" class="ajaxify">
+                                                <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>
+                                                <br /><joda:format value="${WeekDay}" pattern="dd.MM."/>
+                                            </a>
+                                        </td>
+                                    </c:forEach>
+                                </tr>
                         </tbody>
                     </table>
                 </div>

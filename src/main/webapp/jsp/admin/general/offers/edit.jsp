@@ -16,9 +16,17 @@
             <fmt:message var="Name" key="Name"/>
             <spf:input path="name" type="text" class="form-control form-top-element" placeholder="${Name}"/>
          
+            <div class="input-group color-picker">
+                <span class="relative">
+                    <spf:input type="text" path="hexColor" class="form-control form-center-element" />
+                    <span class="explanation"><fmt:message key="Color"/></span>
+                </span>
+                <span class="input-group-addon form-center-element"><i></i></span>
+            </div>
+            
             <div class="input-group">
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-default btn-plus-minus form-center-element form-control form-bottom-left-element" data-type="minus" data-field="maxConcurrentBookings">
+                    <button type="button" class="btn btn-default btn-plus-minus form-center-element form-control form-left-element" data-type="minus" data-field="maxConcurrentBookings">
                         <span class="fa fa-minus"></span>
                     </button>
                 </span>
@@ -27,7 +35,24 @@
                     <span class="explanation"><fmt:message key="MaxConcurrentBookings"/></span>
                 </span>
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-default btn-plus-minus form-center-element form-control form-bottom-right-element" data-type="plus" data-field="maxConcurrentBookings">
+                    <button type="button" class="btn btn-default btn-plus-minus form-center-element form-control form-right-element" data-type="plus" data-field="maxConcurrentBookings">
+                        <span class="fa fa-plus"></span>
+                    </button>
+                </span>
+            </div>
+                
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-plus-minus form-center-element form-control form-bottom-left-element" data-type="minus" data-field="position">
+                        <span class="fa fa-minus"></span>
+                    </button>
+                </span>
+                <span class="relative">
+                    <spf:input type="text" path="position" class="form-control text-center input-plus-minus form-center-element" min="1" max="10"/>
+                    <span class="explanation"><fmt:message key="Position"/></span>
+                </span>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-plus-minus form-center-element form-control form-bottom-right-element" data-type="plus" data-field="position">
                         <span class="fa fa-plus"></span>
                     </button>
                 </span>
@@ -38,4 +63,11 @@
     </div>
 </div>
 
+<%-- include js and css in body when requested via ajax, otherwise after footer (where jquery is added) --%>
+<c:if test="${not empty header['x-requested-with']}">
+    <jsp:include page="/jsp/admin/general/include/colorpicker.jsp"/>
+</c:if>
 <jsp:include page="/jsp/include/footer.jsp"/>
+<c:if test="${empty header['x-requested-with']}">
+    <jsp:include page="/jsp/admin/general/include/colorpicker.jsp"/>
+</c:if>

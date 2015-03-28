@@ -682,6 +682,9 @@ ui-state-hover,
 .unit {
   margin-top: 10px;
 }
+.unit-2 {
+  margin-top: 20px;
+}
 .list-group {
   margin-bottom: 0;
 }
@@ -713,11 +716,15 @@ ui-state-hover,
   border-bottom: 1px solid #afafaf;
   border-right: 1px solid #afafaf;
 }
-.table > tbody > tr > td.booking-bookable {
-  background: #69FF35;
+table.table-booking > thead > tr > th,
+.table.table-booking > tbody > tr > td {
+  padding: 0;
 }
-.table > tbody > tr > td.booking-bookable-last {
-  background: #FCF341;
+table.table-booking > tbody > tr > td.booking-leyenda {
+  padding: 7px 3px;
+}
+.table > tbody > tr > td.booking-bookable {
+  height: 1px;
 }
 .table > tbody > tr > td.booking-booked {
   background: #FF6E4D;
@@ -727,6 +734,27 @@ ui-state-hover,
 }
 .table > thead:first-child > tr:first-child > th.booking-selected-date {
   background: #69bce2;
+}
+.booking-offer a {
+  /*padding: 5px 0;*/
+
+}
+.booking-offer-container {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+.booking-offer-row {
+  display: table-row;
+}
+.booking-offer {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 7px 0;
+}
+.booking-offer-row:not(:last-child) {
+  border-bottom: 1px solid #afafaf;
+  box-sizing: content-box;
 }
 #content,
 #spinner {
@@ -938,10 +966,6 @@ div.product-chooser div.product-chooser-item input {
   }
   .table-booking {
     font-size: 11px;
-  }
-  .table.table-booking > tbody > tr > td,
-  .table.table-booking > thead > tr:first-child > th {
-    padding: 1px;
   }
 }
 @media (min-width: 992px) {

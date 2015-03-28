@@ -29,7 +29,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.UUID;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
@@ -241,6 +243,7 @@ public class BookingUtil {
             
        
         //calculate available time slots
+        Set<Offer> offers = new TreeSet<>();
         List<TimeSlot> timeSlots = new ArrayList<>();
         List<LocalDate> weekDays = new ArrayList<>();
         for (int i=1; i<=CalendarWeekDay.values().length; i++){
@@ -268,6 +271,7 @@ public class BookingUtil {
             }
             rangeSlots.add(slot);
             rangeMap.put(range, rangeSlots);
+            offers.addAll(slot.getOffers());
         }
         
         mav.addObject("dayConfigs", objectMapper.writeValueAsString(dayConfigs));
@@ -275,6 +279,7 @@ public class BookingUtil {
         mav.addObject("Day", selectedDate);
         mav.addObject("WeekDays", weekDays);
         mav.addObject("RangeMap", rangeMap);
+        mav.addObject("Offers", offers);
     }
 
     public Long getBookingSlotsLeft(TimeSlot timeSlot, Offer offer, List<Booking> confirmedBookings) {

@@ -630,6 +630,9 @@ span.error{
 .unit{
     margin-top: @spacing;
 }
+.unit-2{
+    margin-top: 2*@spacing;
+}
 .list-group{
     margin-bottom: 0;
 }
@@ -660,11 +663,14 @@ span.error{
     border-bottom: 1px solid @gray;
     border-right: 1px solid @gray
 }
-.table > tbody > tr > td.booking-bookable{
-    background: #69FF35;
+table.table-booking > thead > tr > th, .table.table-booking > tbody > tr > td{
+    padding: 0;
 }
-.table > tbody > tr > td.booking-bookable-last{
-    background: #FCF341;
+table.table-booking > tbody > tr > td.booking-leyenda{
+    padding: 7px 3px;
+}
+.table > tbody > tr > td.booking-bookable{
+    height: 1px; //hack so that div inside td can caluclate 50% height
 }
 .table > tbody > tr > td.booking-booked{
     background: #FF6E4D;
@@ -674,6 +680,26 @@ span.error{
 }
 .table > thead:first-child > tr:first-child > th.booking-selected-date{
     background: @selectedBgColor;
+}
+.booking-offer a{
+    /*padding: 5px 0;*/
+}
+.booking-offer-container{
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+.booking-offer-row{
+    display: table-row;
+}
+.booking-offer{
+    display: table-cell;
+    vertical-align: middle;
+    padding: 7px 0;
+}
+.booking-offer-row:not(:last-child){
+    border-bottom: 1px solid @gray;
+    box-sizing: content-box;
 }
 #content, #spinner{
     transition: opacity .25s ease-in-out;
@@ -880,9 +906,6 @@ div.product-chooser div.product-chooser-item input{
     }
     .table-booking{
         font-size: 11px;
-    }
-    .table.table-booking > tbody > tr > td, .table.table-booking > thead > tr:first-child > th{
-       padding: 1px; 
     }
 }
 @media (min-width: @grid-float-breakpoint){
