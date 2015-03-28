@@ -10,7 +10,6 @@ import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import java.util.List;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 
 /**
  *
