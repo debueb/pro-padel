@@ -7,6 +7,8 @@ package de.appsolve.padelcampus.controller.bookings;
  */
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
+import de.appsolve.padelcampus.constants.CalendarWeekDay;
+import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.CANCELLATION_POLICY_DEADLINE;
 import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
 import de.appsolve.padelcampus.controller.BaseController;
@@ -41,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -343,9 +346,31 @@ public class BookingsController extends BaseController {
         Booking booking = bookingDAO.findByUUID(UUID);
         try {
             validateBookingCancellation(booking);
+            Long maxDuration;
+            LocalDate validUntilDate;
+            LocalTime validFromTime;
+            LocalTime validUntilTime;
+            Set<Offer> offers;
+            Set<CalendarWeekDay> weekDays;
             Voucher oldVoucher = booking.getVoucher();
-            oldVoucher.setComment("Replacement voucher for Booking ["+booking.toString()+"]");
-            Voucher voucher = VoucherUtil.createNewVoucher(oldVoucher);
+            if (oldVoucher!=null){
+                maxDuration     = oldVoucher.getDuration();
+                offers          = oldVoucher.getOffers();
+                validUntilDate  = oldVoucher.getValidUntil();
+                validFromTime   = oldVoucher.getValidFromTime();
+                validUntilTime  = oldVoucher.getValidUntilTime();
+                weekDays        = oldVoucher.getCalendarWeekDays();
+            } else {
+                maxDuration     = booking.getDuration();
+                offers          = new HashSet<>(Arrays.asList(booking.getOffer()));
+                validUntilDate  = booking.getBookingDate().plusYears(1);
+                validFromTime   = new LocalTime().withHourOfDay(Constants.BOOKING_DEFAULT_VALID_FROM_HOUR).withMinuteOfHour(Constants.BOOKING_DEFAULT_VALID_FROM_MINUTE);
+                validUntilTime  = new LocalTime().withHourOfDay(Constants.BOOKING_DEFAULT_VALID_UNTIL_HOUR).withMinuteOfHour(Constants.BOOKING_DEFAULT_VALID_UNTIL_MINUTE);
+                weekDays        = CalendarWeekDay.valuesAsSet();
+            }
+            
+            String comment              = "Replacement voucher for Booking ["+booking.toString()+"]";
+            Voucher voucher = VoucherUtil.createNewVoucher(comment, maxDuration, validUntilDate, validFromTime, validUntilTime, weekDays, offers);
             voucherDAO.saveOrUpdate(voucher);
 
             Mail mail = new Mail(request);
