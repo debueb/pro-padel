@@ -47,6 +47,13 @@ public class ScoresController extends BaseController{
     
     private List<GameSet> eventGameSets = new ArrayList<>();
     
+    @RequestMapping
+    public ModelAndView getIndex(){
+        ModelAndView mav = new ModelAndView("scores/index");
+        mav.addObject("Events", eventDAO.findAll());
+        return mav;
+    }
+    
     @RequestMapping("/event/{eventId}")
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);

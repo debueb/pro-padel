@@ -11,16 +11,6 @@
         <jsp:param name="url" value="/events"/>
     </jsp:include>
     <jsp:include page="/jsp/include/list-menu-item.jsp">
-        <jsp:param name="image" value="${not empty param.image ? 'user' : ''}"/>
-        <jsp:param name="key" value="Players"/>
-        <jsp:param name="url" value="/players"/>
-    </jsp:include>
-    <jsp:include page="/jsp/include/list-menu-item.jsp">
-        <jsp:param name="image" value="${not empty param.image ? 'users' : ''}"/>
-        <jsp:param name="key" value="Teams"/>
-        <jsp:param name="url" value="/teams"/>
-    </jsp:include>
-    <jsp:include page="/jsp/include/list-menu-item.jsp">
         <jsp:param name="image" value="${not empty param.image ? 'calendar' : ''}"/>
         <jsp:param name="key" value="BookCourt"/>
         <jsp:param name="url" value="/bookings"/>

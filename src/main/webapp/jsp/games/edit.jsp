@@ -5,7 +5,7 @@
     <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
         <jsp:include page="/jsp/include/back.jsp"/>
         <div class="page-header">
-            <h1><fmt:message key="GameResult"/></h1>
+            <h1><fmt:message key="GameResultIn"><fmt:param value="${Game.event.name}"/></fmt:message></h1>
         </div>
         <div class="alert alert-danger">${error}</div>
         <form method="POST">

@@ -12,7 +12,7 @@
         </c:forEach>
         
         <div class="list-group">
-             <jsp:include page="/jsp/include/list-group-item.jsp">
+            <jsp:include page="/jsp/include/list-group-item.jsp">
                 <jsp:param name="href" value="/news"/>
                 <jsp:param name="key" value="News"/>
                 <jsp:param name="icon" value="rss"/>
@@ -21,16 +21,6 @@
                 <jsp:param name="href" value="/events"/>
                 <jsp:param name="key" value="Events"/>
                 <jsp:param name="icon" value="sitemap"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/players"/>
-                <jsp:param name="key" value="Players"/>
-                <jsp:param name="icon" value="user"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/teams"/>
-                <jsp:param name="key" value="Teams"/>
-                <jsp:param name="icon" value="users"/>
             </jsp:include>
             <jsp:include page="/jsp/include/list-group-item.jsp">
                 <jsp:param name="href" value="/bookings"/>

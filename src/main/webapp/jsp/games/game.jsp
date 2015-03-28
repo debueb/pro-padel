@@ -5,7 +5,7 @@
     <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
         <jsp:include page="/jsp/include/back.jsp"/>
         <div class="page-header">
-            <h1><fmt:message key="GameResult"/></h1>
+            <h1><fmt:message key="GameResultIn"><fmt:param value="${Game.event.name}"/></fmt:message></h1>
         </div>
         <c:set var="showScoreReporter" value="true" scope="request"/>
         <jsp:include page="/jsp/games/game-result.jsp"/>
@@ -14,8 +14,8 @@
                 <div class="list-item-text"><fmt:message key="EditResult"/></div>
             </a>
             <c:forEach var="Participant" items="${Game.participants}">
-                <a class="list-group-item ajaxify" href="/games/team/${Participant.id}">
-                    <div class="list-item-text"><fmt:message key="AllGamesWith"><fmt:param value="${Participant}"/></fmt:message></div>
+                <a class="list-group-item ajaxify" href="/games/team/${Participant.id}/event/${Game.event.id}">
+                    <div class="list-item-text"><fmt:message key="AllGamesWithTeamInEvent"><fmt:param value="${Participant}"/><fmt:param value="${Game.event.name}"/></fmt:message></div>
                 </a>
             </c:forEach>
             <a class="list-group-item ajaxify" href="/games/event/${Game.event.id}/all">

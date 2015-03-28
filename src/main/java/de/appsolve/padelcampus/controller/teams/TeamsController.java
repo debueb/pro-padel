@@ -12,12 +12,17 @@ import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Event;
+import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.utils.Msg;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -87,7 +92,17 @@ public class TeamsController extends BaseController{
 
     private ModelAndView getTeamView(Team team) {
         ModelAndView mav = new ModelAndView("teams/team", "Team", team);
-        mav.addObject("Games", gameDAO.findByParticipant(team));
+        List<Game> games = gameDAO.findByParticipant(team);
+        Map<Event, ArrayList<Game>> eventGameMap = new HashMap<>();
+        for (Game game: games){
+            Event event = game.getEvent();
+            if (eventGameMap.containsKey(event)){
+                eventGameMap.get(event).add(game);
+            } else {
+                eventGameMap.put(event, new ArrayList<>(Arrays.asList(new Game[]{game})));
+            }
+        }
+        mav.addObject("EventGameMap", eventGameMap);
         return mav;
     }
 

@@ -77,7 +77,7 @@ public class PlayersController extends BaseController {
                 }
             }
         }
-        return getPlayersView(setToList(players));
+        return getPlayersView(setToList(players), msg.get("AllPlayers"));
     }
     
     @RequestMapping("/player/{id}")
@@ -107,12 +107,6 @@ public class PlayersController extends BaseController {
         response.getOutputStream().flush();
     }
     
-    @RequestMapping("/team/{teamId}")
-    public ModelAndView getByTeam(@PathVariable("teamId") Long teamId){
-        Team team = teamDAO.findByIdFetchWithPlayers(teamId);
-        return getPlayersView(setToList(team.getPlayers()));
-    }
-    
     @RequestMapping("/event/{id}")
     public ModelAndView getByEvent(@PathVariable("id") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(eventId);
@@ -122,11 +116,13 @@ public class PlayersController extends BaseController {
             Set<Player> players = team.getPlayers();
             participants.addAll(players);
         }
-        return getPlayersView(setToList(participants));
+        return getPlayersView(setToList(participants), msg.get("PlayersIn", new Object[]{event.getName()}));
     }
 
-    private ModelAndView getPlayersView(List<? extends ParticipantI> players) {
-        return new ModelAndView("players/players", "Players", players);
+    private ModelAndView getPlayersView(List<? extends ParticipantI> players, String title){
+        ModelAndView mav = new ModelAndView("players/players", "Players", players);
+        mav.addObject("title", title);
+        return mav;
     }
 
     private ModelAndView getPlayerView(Player player) {

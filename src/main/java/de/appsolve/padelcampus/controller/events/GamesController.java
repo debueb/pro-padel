@@ -19,6 +19,7 @@ import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,6 +62,16 @@ public class GamesController extends BaseController{
     
     @Autowired
     SessionUtil sessionUtil;
+    
+    @Autowired
+    Msg msg;
+    
+    @RequestMapping
+    public ModelAndView getIndex(){
+        ModelAndView mav = new ModelAndView("games/index");
+        mav.addObject("Events", eventDAO.findAll());
+        return mav;
+    }
     
     @RequestMapping("/game/{gameId}")
     public ModelAndView getGame(@PathVariable("gameId") Long gameId){
@@ -170,15 +181,28 @@ public class GamesController extends BaseController{
     }
     
     @RequestMapping("/team/{teamId}")
-    public ModelAndView getTeamEvents(@PathVariable("teamId") Long teamId){
+    public ModelAndView getTeamGames(@PathVariable("teamId") Long teamId){
         Team team = teamDAO.findById(teamId);
         List<Game> games = gameDAO.findByParticipant(team);
         ModelAndView mav = new ModelAndView("games/games", "Games", games);
-        mav.addObject("title", "Spiele "+team.toString());
+        String title = msg.get("AllGamesWith", new Object[]{team.getName()});
+        mav.addObject("title", title);
         addGameResultMap(mav, games);
         return mav;
     }
 
+    @RequestMapping("/team/{teamId}/event/{eventId}")
+    public ModelAndView getTeamGamesByEvent(@PathVariable("teamId") Long teamId, @PathVariable("eventId") Long eventId){
+        Team team = teamDAO.findById(teamId);
+        Event event = eventDAO.findById(eventId);
+        List<Game> games = gameDAO.findByParticipantAndEvent(team, event);
+        ModelAndView mav = new ModelAndView("games/games", "Games", games);
+        String title = msg.get("AllGamesWithTeamInEvent", new Object[]{team.getName(), event.getName()});
+        mav.addObject("title", title);
+        mav.addObject("Event", event);
+        addGameResultMap(mav, games);
+        return mav;
+    }
     private ModelAndView getEditView(Long gameId) {
         Game game = gameDAO.findById(gameId);
         ModelAndView mav = new ModelAndView("games/edit", "Game", game);

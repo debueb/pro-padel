@@ -7,19 +7,26 @@
         </div>
 
         <div class="list-group">
-            <c:choose>
-                <c:when test="${empty Models}">
-                    <fmt:message key="NoActiveEvents"/>
-                </c:when>
-                <c:otherwise>
-                    <c:forEach var="Event" items="${Models}">
-                        <a href="/scores/event/${Event.id}" class="list-group-item ajaxify">
-                            <div class="list-item-text">${Event.name}</div>
-                            <p class="list-group-item-text"><joda:format value="${Event.startDate}" pattern="dd. MMM. yyyy"/> - <joda:format value="${Event.endDate}" pattern="dd. MMM. yyyy"/></p>
-                        </a>
-                    </c:forEach>
-                </c:otherwise>
-            </c:choose>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/scores"/>
+                <jsp:param name="key" value="Scores"/>
+                <jsp:param name="icon" value="list-ol"/>
+            </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/games"/>
+                <jsp:param name="key" value="Games"/>
+                <jsp:param name="icon" value="dot-circle-o"/>
+            </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/players"/>
+                <jsp:param name="key" value="Players"/>
+                <jsp:param name="icon" value="user"/>
+            </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/teams"/>
+                <jsp:param name="key" value="Teams"/>
+                <jsp:param name="icon" value="users"/>
+            </jsp:include>
         </div>
     </div>
 </div>

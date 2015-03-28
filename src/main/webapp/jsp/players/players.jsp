@@ -6,7 +6,7 @@
         <jsp:include page="/jsp/include/back.jsp"/>
         
         <div class="page-header">
-            <h1><fmt:message key="Players"/></h1>
+            <h1>${title}</h1>
         </div>
 
         <div class="list-group">
