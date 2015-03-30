@@ -99,9 +99,9 @@
                                 <h4><fmt:message key="GeneratedVouchers"/>:</h4>
                                 <textarea class="unit form-control" rows="${fn:length(Vouchers)}" varStatus="status"><c:forEach var="Voucher" items="${Vouchers}">${Voucher.UUID}${not status.last ? '&#13;&#10;' : ''}</c:forEach></textarea>
                                 <a href="/admin/bookings/voucher/add" class="btn btn-primary unit"><fmt:message key="GenerateMore"/></a>
-                                <a href="/admin/bookings/voucher" class="btn btn-primary unit ajaxify" style="margin-left: 10px;"><fmt:message key="ToOverview"/></a>
                             </c:otherwise>
                         </c:choose>
+                        <a href="/admin/bookings/voucher" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="ToOverview"/></a>
                     </div>
         
                 </div>
