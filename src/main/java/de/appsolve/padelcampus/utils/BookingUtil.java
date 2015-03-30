@@ -238,16 +238,10 @@ public class BookingUtil {
         LocalDate lastDay = today.plusDays(Constants.CALENDAR_MAX_DATE).dayOfMonth().withMaximumValue();
         List<CalendarConfig> calendarConfigs = calendarConfigDAO.findBetween(firstDay, lastDay);
         Collections.sort(calendarConfigs);
-        for (CalendarConfig c: calendarConfigs){
-            log.info(c);
-        }
         Map<String, DatePickerDayConfig> dayConfigs = getDayConfigMap(firstDay, lastDay, calendarConfigs);
         
         List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsBetween(firstDay, lastDay);
-        for (Booking booking: confirmedBookings){
-            log.info(booking);
-        }
-       
+        
         //calculate available time slots
         Set<Offer> offers = new TreeSet<>();
         List<TimeSlot> timeSlots = new ArrayList<>();
@@ -278,9 +272,6 @@ public class BookingUtil {
             rangeSlots.add(slot);
             rangeMap.put(range, rangeSlots);
             offers.addAll(slot.getOffers());
-        }
-        for (TimeSlot slot: timeSlots){
-            log.info(slot);
         }
         
         mav.addObject("dayConfigs", objectMapper.writeValueAsString(dayConfigs));
