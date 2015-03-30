@@ -122,6 +122,6 @@ public class TimeSlot implements Comparable<TimeSlot>{
     
     @Override 
     public String toString(){
-        return getStartTime()+" - "+getEndTime();
+        return date.toString("EEE")+" "+getStartTime()+" - "+getEndTime()+": "+getOffers();
     }
 }
