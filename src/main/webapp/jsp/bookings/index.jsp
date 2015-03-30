@@ -54,18 +54,19 @@
                                                 <c:set var="containsTimeSlot" value="true"/>
                                                 <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
                                                 <c:choose>
-                                                    <c:when test="${TimeSlot.freeCourtCount > 0}">
+                                                    <c:when test="${fn:length(TimeSlot.configOfferMap) > 0}">
                                                         <td class="booking-bookable">
                                                             <div class="booking-offer-container">
-                                                                <c:forEach var="Config" items="${TimeSlot.configs}">
-                                                                    <c:forEach var="Offer" items="${Config.offers}">
+                                                                <c:forEach var="ConfigOfferEntry" items="${TimeSlot.configOfferMap}">
+                                                                    <c:set var="Config" value="${ConfigOfferEntry.key}"/>
+                                                                    <c:forEach var="Offer" items="${ConfigOfferEntry.value}">
                                                                         <div class="booking-offer-row">
-                                                                            <a class="ajaxify booking-offer" href="${urlDetail}?offer=${Offer.id}" style="background-color: ${Offer.hexColor}; height: ${100/fn:length(TimeSlot.offers)}%;">
+                                                                            <a class="ajaxify booking-offer" href="${urlDetail}?offer=${Offer.id}" style="background-color: ${Offer.hexColor}; height: ${100/fn:length(ConfigOfferEntry.value)}%;">
                                                                                 ${Config.currency.symbol}${Config.basePrice}
                                                                             </a>
                                                                         </div>
                                                                     </c:forEach>
-                                                            </c:forEach>
+                                                                </c:forEach>
                                                             </div>
                                                         </td>
                                                     </c:when>

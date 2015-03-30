@@ -5,13 +5,13 @@
  */
 package de.appsolve.padelcampus.data;
 
-import de.appsolve.padelcampus.constants.Currency;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
-import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
@@ -77,21 +77,22 @@ public class TimeSlot implements Comparable<TimeSlot>{
         setBookings(_bookings);
     }
     
-    public Long getFreeCourtCount(){
-        Long freeCourtCount = 0L;
-        for (Offer offer: getOffers()){
-            freeCourtCount += getFreeCourtCount(offer);
-        }
-        return freeCourtCount;
-    }
-    
-    public Offer getOfferWithFreeCourt(){
-        for (Offer offer: getOffers()){
-            if (getFreeCourtCount(offer)>0){
-                return offer;
+    //jstl methods
+    public Map<CalendarConfig, List<Offer>> getConfigOfferMap(){
+        Map<CalendarConfig, List<Offer>> map = new HashMap<>();
+        for (CalendarConfig config: getConfigs()){
+            for (Offer offer: config.getOffers()){
+                if (getFreeCourtCount(offer)>0){
+                    List<Offer> offers = map.get(config);
+                    if (offers==null){
+                        offers = new ArrayList<>();
+                    }
+                    offers.add(offer);
+                    map.put(config, offers);
+                }
             }
         }
-        return null;
+        return map;
     }
     
     private Long getFreeCourtCount(Offer offer){
@@ -112,25 +113,6 @@ public class TimeSlot implements Comparable<TimeSlot>{
             offers.addAll(config.getOffers());
         }
         return offers;
-    }
-    
-    private CalendarConfig getPrimaryConfig(){
-        BigDecimal max = BigDecimal.ZERO;
-        CalendarConfig primaryConfig = getConfigs().get(0);
-        for (CalendarConfig config: getConfigs()){
-            if (config.getBasePrice().compareTo(max) == 1){
-                primaryConfig = config;
-            }
-        }
-        return primaryConfig;
-    }
-    
-    public Currency getCurrency(){
-        return getPrimaryConfig().getCurrency();
-    }
-    
-    public BigDecimal getBasePrice(){
-        return getPrimaryConfig().getBasePrice();
     }
     
     @Override
