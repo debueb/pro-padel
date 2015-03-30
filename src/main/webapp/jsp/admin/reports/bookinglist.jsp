@@ -14,10 +14,10 @@
         <div style="margin-top: 40px;">
             <table class="table table-striped table-bordered table-centered datatable">
                 <thead>
-                    <th><fmt:message key="BookingDate"/></th>
                     <th><fmt:message key="GameDate"/></th>
                     <th><fmt:message key="Day"/></th>
                     <th><fmt:message key="Time"/></th>
+                    <th><fmt:message key="BookingDate"/></th>
                     <th><fmt:message key="Offer"/></th>
                     <th><fmt:message key="Player"/></th>
                     <th><fmt:message key="PaymentMethod"/></th>
@@ -26,10 +26,10 @@
                 <tbody>
                 <c:forEach items="${Bookings}" var="Booking">
                     <tr>
-                        <td><joda:format value="${Booking.blockingTime}" pattern="yyyy-MM-dd"/></td>
                         <td><joda:format value="${Booking.bookingDate}" pattern="yyyy-MM-dd"/></td>
                         <td><joda:format value="${Booking.bookingDate}" pattern="EE"/></td>
                         <td><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></td>
+                        <td><joda:format value="${Booking.blockingTime}" pattern="yyyy-MM-dd"/></td>
                         <td>${Booking.offer}</td>
                         <td>${Booking.player}</td>
                         <td>${Booking.paymentMethod}</td>

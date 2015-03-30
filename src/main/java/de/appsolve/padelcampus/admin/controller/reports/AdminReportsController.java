@@ -51,8 +51,8 @@ public class AdminReportsController extends BaseController{
     
     @RequestMapping("bookinglist")
     public ModelAndView getBookingList(){
-        LocalDate endDate = new LocalDate();
-        LocalDate startDate = endDate.minusMonths(3);
+        LocalDate startDate = new LocalDate();
+        LocalDate endDate = startDate.plusMonths(4);
         DateRange dateRange = new DateRange();
         dateRange.setStartDate(startDate);
         dateRange.setEndDate(endDate);
