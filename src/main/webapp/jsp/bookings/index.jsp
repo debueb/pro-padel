@@ -21,20 +21,7 @@
                 <div class="alert alert-danger unit"><fmt:message key="NoBookableTimeSlotsAvailable"/></div>
             </c:when>
             <c:otherwise>
-                <div>
-                    <table class="unit-2 table table-bordered table-booking table-fixed">
-                        <thead>
-                        <th colspan="${fn:length(Offers)+2}"><fmt:message key="Leyenda"/></th>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="Offer" items="${Offers}">
-                            <td class="booking-leyenda" style="background-color: ${Offer.hexColor}">${Offer}</td>
-                        </c:forEach>
-                        <td class="booking-leyenda booking-booked"><fmt:message key="bookedOut"/></td>
-                        <td class="booking-leyenda booking-disabled"><fmt:message key="bookingDisabled"/></td>
-                        </tbody>
-                    </table>
-                </div>
+                <jsp:include page="/jsp/bookings/include/leyenda.jsp"/>
 
                 <div class="unit-2 table-responsive unit">
                     <table class="table table-bordered table-booking table-fixed">
@@ -108,6 +95,8 @@
                         </tbody>
                     </table>
                 </div>
+                                
+                <jsp:include page="/jsp/bookings/include/leyenda.jsp"/>
             </c:otherwise>
         </c:choose>
     </div>
