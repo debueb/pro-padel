@@ -237,6 +237,7 @@ public class BookingUtil {
         LocalDate firstDay = today.dayOfMonth().withMinimumValue();
         LocalDate lastDay = today.plusDays(Constants.CALENDAR_MAX_DATE).dayOfMonth().withMaximumValue();
         List<CalendarConfig> calendarConfigs = calendarConfigDAO.findBetween(firstDay, lastDay);
+        Collections.sort(calendarConfigs);
         for (CalendarConfig c: calendarConfigs){
             log.info(c);
         }

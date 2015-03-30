@@ -226,6 +226,9 @@ public class CalendarConfig extends BaseEntity{
             sb.append(weekDay.name()).append(" ");
         }
         sb.append(getStartTime().toString(TIME_HUMAN_READABLE)).append(" - ").append(getEndTime().toString(TIME_HUMAN_READABLE));
+        for (Offer offer: getOffers()){
+            sb.append(offer).append(", ");
+        }
         return sb.toString();
     }
 

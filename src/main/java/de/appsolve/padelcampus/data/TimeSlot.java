@@ -9,10 +9,11 @@ import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
@@ -81,10 +82,9 @@ public class TimeSlot implements Comparable<TimeSlot>{
     //jstl methods
     public Map<CalendarConfig, List<Offer>> getConfigOfferMap(){
         Map<CalendarConfig, List<Offer>> map = new HashMap<>();
-        List<CalendarConfig> configs = getConfigs();
-        Collections.sort(configs);
-        for (CalendarConfig config: configs){
-            for (Offer offer: config.getOffers()){
+        for (CalendarConfig config: getConfigs()){
+            Set<Offer> orderedOffers = new TreeSet<>(config.getOffers());
+            for (Offer offer: orderedOffers){
                 if (getFreeCourtCount(offer)>0){
                     List<Offer> offers = map.get(config);
                     if (offers==null){
