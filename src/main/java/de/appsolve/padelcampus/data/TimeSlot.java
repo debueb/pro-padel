@@ -9,6 +9,7 @@ import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,9 @@ public class TimeSlot implements Comparable<TimeSlot>{
     //jstl methods
     public Map<CalendarConfig, List<Offer>> getConfigOfferMap(){
         Map<CalendarConfig, List<Offer>> map = new HashMap<>();
-        for (CalendarConfig config: getConfigs()){
+        List<CalendarConfig> configs = getConfigs();
+        Collections.sort(configs);
+        for (CalendarConfig config: configs){
             for (Offer offer: config.getOffers()){
                 if (getFreeCourtCount(offer)>0){
                     List<Offer> offers = map.get(config);
