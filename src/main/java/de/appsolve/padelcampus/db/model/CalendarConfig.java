@@ -233,7 +233,11 @@ public class CalendarConfig extends BaseEntity{
     public int compareTo(BaseEntityI o) {
         if (o instanceof CalendarConfig){
             CalendarConfig co = (CalendarConfig) o;
-            return getStartTime().compareTo(co.getStartTime());
+            int result = getStartTime().compareTo(co.getStartTime());
+            if (result==0){
+                result = super.compareTo(o);
+            }
+            return result;
         }
         return super.compareTo(o);
     }
