@@ -708,7 +708,8 @@ ui-state-hover,
   text-align: center;
   vertical-align: middle;
 }
-.table.table-booking > tbody > tr > td {
+.table.table-booking > tbody > tr > td,
+.table.table-leyenda > tbody > tr > td {
   word-wrap: break-word;
 }
 .table.table-booking > tbody > tr > td:not(:last-child),
@@ -729,7 +730,7 @@ table.table-booking > thead > tr > th,
 .table.table-booking > tbody > tr > td {
   padding: 0;
 }
-table.table-booking > tbody > tr > td.booking-leyenda {
+table.table-leyenda > tbody > tr > td {
   padding: 7px 3px;
 }
 .table > tbody > tr > td.booking-bookable {

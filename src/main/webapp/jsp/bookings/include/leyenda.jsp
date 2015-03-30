@@ -6,7 +6,7 @@
         </thead>
         <tbody>
             <c:forEach var="Offer" items="${Offers}">
-            <td class="booking-leyenda" style="background-color: ${Offer.hexColor}">${Offer}</td>
+            <td style="background-color: ${Offer.hexColor}">${Offer}</td>
         </c:forEach>
         <td class="booking-leyenda booking-booked"><fmt:message key="bookedOut"/></td>
         <td class="booking-leyenda booking-disabled"><fmt:message key="bookingDisabled"/></td>
