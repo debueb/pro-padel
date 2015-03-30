@@ -71,7 +71,7 @@
                                                         </td>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <td class="booking-booked"></td>
+                                                        <td class="booking-disabled"></td>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </c:if>
