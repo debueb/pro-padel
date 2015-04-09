@@ -108,6 +108,15 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
         if (gamesWonDiff!=0){
             return gamesWonDiff;
         }
+        
+        int gamesLost = gamesPlayed-gamesWon;
+        int oGamesLost = o.gamesPlayed-o.gamesWon;
+        
+        int gamesLostDiff = gamesLost - oGamesLost;
+        if (gamesLostDiff!=0){
+            return gamesLostDiff;
+        }
+        
         if (participant!=null && o.getParticipant()!=null){
             return participant.toString().compareToIgnoreCase(o.getParticipant().toString());
         }
