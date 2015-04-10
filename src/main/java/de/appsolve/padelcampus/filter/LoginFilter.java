@@ -96,12 +96,6 @@ public class LoginFilter implements Filter {
             } else {
                 httpRequest.setAttribute("clientIdentifier", identifier);
             }
-            
-            //Footer Links
-            Collection<FooterLink> footerLinks = sessionUtil.getFooterLinks(httpRequest);
-            if (footerLinks==null){
-                sessionUtil.setFooterLinks(httpRequest, footerLinkDAO.findAll());
-            }
         } 
         chain.doFilter(request, response);
     }

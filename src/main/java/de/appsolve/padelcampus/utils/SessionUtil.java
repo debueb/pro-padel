@@ -7,7 +7,7 @@ package de.appsolve.padelcampus.utils;
 
 import static de.appsolve.padelcampus.constants.Constants.SESSION_ACCESS_LEVEL;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_BOOKING;
-import static de.appsolve.padelcampus.constants.Constants.SESSION_FOOTER_LINKS;
+import static de.appsolve.padelcampus.constants.Constants.APPLICATION_FOOTER_LINKS;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_LOGIN_REDIRECT_PATH;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_PRIVILEGES;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_PROFILE_REDIRECT_PATH;
@@ -120,14 +120,6 @@ public class SessionUtil {
     
     public String getProfileRedirectPath(HttpServletRequest request){
         return (String) getObject(request, SESSION_PROFILE_REDIRECT_PATH);
-    }
-    
-    public void setFooterLinks(HttpServletRequest request, Collection<FooterLink> footerLinks){
-        setObject(request, SESSION_FOOTER_LINKS, footerLinks);
-    }
-    
-    public Collection<FooterLink> getFooterLinks(HttpServletRequest request){
-        return (Collection<FooterLink>) getObject(request, SESSION_FOOTER_LINKS);
     }
     
     public void invalidate(HttpServletRequest request) {

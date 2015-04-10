@@ -6,6 +6,8 @@
 
 package de.appsolve.padelcampus.listener;
 
+import de.appsolve.padelcampus.constants.Constants;
+import de.appsolve.padelcampus.db.dao.FooterLinkDAOI;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.sql.DataSource;
@@ -26,6 +28,9 @@ public class ContextInitializationListener implements ServletContextListener{
     @Autowired
     DataSource dataSource;
     
+    @Autowired
+    FooterLinkDAOI footerLinkDAO;
+    
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         //since this is initialized by the servlet container (and not by spring), we need to inject the dependencies manually
@@ -43,7 +48,8 @@ public class ContextInitializationListener implements ServletContextListener{
             log.info("migrate task: " + i.getVersion() + " : " + i.getDescription() + " from file: " + i.getScript());
         }
         flyway.migrate();
-
+        
+        sce.getServletContext().setAttribute(Constants.APPLICATION_FOOTER_LINKS, footerLinkDAO.findAll());
     }
 
     @Override

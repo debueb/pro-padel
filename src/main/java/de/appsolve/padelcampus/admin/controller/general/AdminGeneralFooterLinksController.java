@@ -7,12 +7,13 @@
 package de.appsolve.padelcampus.admin.controller.general;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
+import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.dao.FooterLinkDAOI;
 import de.appsolve.padelcampus.db.dao.GenericDAOI;
 import de.appsolve.padelcampus.db.model.FooterLink;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
-import de.appsolve.padelcampus.utils.SessionUtil;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,7 +38,7 @@ public class AdminGeneralFooterLinksController extends AdminBaseController<Foote
     FooterLinkDAOI footerLinkDAO;
     
     @Autowired
-    SessionUtil sessionUtil;
+    ServletContext context;
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -56,7 +58,18 @@ public class AdminGeneralFooterLinksController extends AdminBaseController<Foote
     @Override
     public ModelAndView postEditView(@ModelAttribute("Model") FooterLink model, HttpServletRequest request, BindingResult result){
         ModelAndView mav = super.postEditView(model, request, result);
-        sessionUtil.setFooterLinks(request, footerLinkDAO.findAll());
+        reloadFooterLinks();
         return mav;
+    }
+    
+    @Override
+    public ModelAndView postDelete(@PathVariable("id") Long id){
+        ModelAndView mav = super.postDelete(id);
+        reloadFooterLinks();
+        return mav;
+    }
+
+    private void reloadFooterLinks() {
+        context.setAttribute(Constants.APPLICATION_FOOTER_LINKS, footerLinkDAO.findAll());
     }
 }
