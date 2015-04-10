@@ -11,8 +11,8 @@
             <table class="table table-striped table-bordered unit">
                 <thead>
                     <th><fmt:message key="Date"/></th>
+                    <th><fmt:message key="Day"/></th>
                     <th><fmt:message key="Time"/></th>
-                    <th><fmt:message key="Duration"/></th>
                     <th><fmt:message key="Offer"/></th>
                     <th><fmt:message key="Comment"/></th>
                     <th><fmt:message key="ReservedBy"/></th>
@@ -22,8 +22,8 @@
                 <c:forEach items="${Reservations}" var="Booking">
                     <tr>
                         <td>${Booking.bookingDate}</td>
-                        <td><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/></td>
-                        <td>${Booking.duration}</td>
+                        <td><joda:format value="${Booking.bookingDate}" pattern="EE"/></td>
+                        <td><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></td>
                         <td>${Booking.offer}</td>
                         <td>${Booking.comment}</td>
                         <td><a href="${contextPath}/players/player/${Booking.player.id}" class="ajaxify">${Booking.player}</a></td>
