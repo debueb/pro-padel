@@ -13,6 +13,11 @@
             <a href="/games/game/${Game.id}/edit" class="list-group-item ajaxify" >
                 <div class="list-item-text"><fmt:message key="EditResult"/></div>
             </a>
+            <c:forEach var="Team" items="${Game.participants}">
+                <a class="list-group-item ajaxify" href="/teams/team/${Team.id}">
+                    <div class="list-item-text"><fmt:message key="AllInfosAbout"><fmt:param value="${Team}"/></fmt:message></div>
+                </a>
+            </c:forEach>
             <c:forEach var="Participant" items="${Game.participants}">
                 <a class="list-group-item ajaxify" href="/games/team/${Participant.id}/event/${Game.event.id}">
                     <div class="list-item-text"><fmt:message key="AllGamesWithTeamInEvent"><fmt:param value="${Participant}"/><fmt:param value="${Game.event.name}"/></fmt:message></div>
@@ -24,6 +29,7 @@
             <a class="list-group-item ajaxify" href="/scores/event/${Game.event.id}">
                 <div class="list-item-text"><fmt:message key="ScoresOfEvent"><fmt:param value="${Game.event.name}"/></fmt:message></div>
             </a>
+    
             <c:if test="${sessionScope.accessLevel == 'loggedInAndParticipant'}">
                 <a class="list-group-item private-data" data-fake="${Game.obfuscatedMailTo}" data-prefix="mailto:">
                     <div class="list-item-text"><fmt:message key="MailAllPlayers"/></div>
