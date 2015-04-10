@@ -6,6 +6,9 @@
 
 package de.appsolve.padelcampus.data;
 
+import de.appsolve.padelcampus.utils.FormatUtils;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import org.joda.time.LocalTime;
 
@@ -18,6 +21,8 @@ public class TimeRange implements Comparable<TimeRange> {
     private LocalTime startTime;
     
     private LocalTime endTime;
+    
+    private List<TimeSlot> timeSlots;
 
     public LocalTime getStartTime() {
         return startTime;
@@ -33,6 +38,23 @@ public class TimeRange implements Comparable<TimeRange> {
 
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
+    }
+
+    public List<TimeSlot> getTimeSlots() {
+        return timeSlots == null ? new ArrayList<TimeSlot>() : timeSlots;
+    }
+
+    public void setTimeSlots(List<TimeSlot> timeSlots) {
+        this.timeSlots = timeSlots;
+    }
+    
+    public Boolean getOffersAvailable(){
+        for (TimeSlot timeSlot: getTimeSlots()){
+            if (!timeSlot.getAvailableOffers().isEmpty()){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

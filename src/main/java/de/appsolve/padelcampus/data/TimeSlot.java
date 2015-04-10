@@ -10,9 +10,9 @@ import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
@@ -20,16 +20,16 @@ import org.joda.time.LocalTime;
  *
  * @author dominik
  */
-public class TimeSlot implements Comparable<TimeSlot>{
-    
+public class TimeSlot implements Comparable<TimeSlot> {
+
     private LocalDate date;
-    
+
     private LocalTime startTime;
-    
+
     private LocalTime endTime;
-    
-    private ArrayList<CalendarConfig> configs;
-    
+
+    private CalendarConfig config;
+
     private List<Booking> bookings;
 
     public LocalDate getDate() {
@@ -39,7 +39,7 @@ public class TimeSlot implements Comparable<TimeSlot>{
     public void setDate(LocalDate date) {
         this.date = date;
     }
-    
+
     public LocalTime getStartTime() {
         return startTime;
     }
@@ -56,76 +56,60 @@ public class TimeSlot implements Comparable<TimeSlot>{
         this.endTime = endTime;
     }
 
-    public ArrayList<CalendarConfig> getConfigs() {
-        return configs;
+    public CalendarConfig getConfig() {
+        return config;
     }
 
-    public void setConfigs(ArrayList<CalendarConfig> configs) {
-        this.configs = configs;
+    public void setConfig(CalendarConfig config) {
+        this.config = config;
     }
 
     public List<Booking> getBookings() {
         return bookings == null ? new ArrayList<Booking>() : bookings;
     }
-
+    
     public void setBookings(List<Booking> bookings) {
         this.bookings = bookings;
     }
-    
-    public void addBooking(Booking booking){
+
+    public void addBooking(Booking booking) {
         List<Booking> _bookings = getBookings();
         _bookings.add(booking);
         setBookings(_bookings);
     }
-    
-    //jstl methods
-    public Map<CalendarConfig, List<Offer>> getConfigOfferMap(){
-        Map<CalendarConfig, List<Offer>> map = new HashMap<>();
-        for (CalendarConfig config: getConfigs()){
-            List<Offer> sortedOffers = new ArrayList<>(config.getOffers());
-            Collections.sort(sortedOffers);
-            for (Offer offer: sortedOffers){
-                if (getFreeCourtCount(offer)>0){
-                    List<Offer> offers = map.get(config);
-                    if (offers==null){
-                        offers = new ArrayList<>();
-                    }
-                    offers.add(offer);
-                    Collections.sort(offers);
-                    map.put(config, offers);
-                }
+
+    //jstl
+    public List<Offer> getAvailableOffers() {
+        List<Offer> sortedOffers = new ArrayList<>(config.getOffers());
+        Collections.sort(sortedOffers);
+        Iterator<Offer> iterator = sortedOffers.iterator();
+        while (iterator.hasNext()){
+            Offer offer = iterator.next();
+            if (getFreeCourtCount(offer) <= 0) {
+                iterator.remove();
             }
         }
-        return map;
+        return sortedOffers;
     }
     
-    private Long getFreeCourtCount(Offer offer){
+    private Long getFreeCourtCount(Offer offer) {
         Long freeCourtCount = offer.getMaxConcurrentBookings();
-        for (Booking booking: getBookings()){
-            if (booking.getOffer().equals(offer)){
+        for (Booking booking : getBookings()) {
+            if (booking.getOffer().equals(offer)) {
                 freeCourtCount -= 1;
                 break;
             }
         }
         return freeCourtCount;
-    } 
-    
-    //convenience methods
-    public List<Offer> getOffers(){
-        List<Offer> offers = new ArrayList<>();
-        for (CalendarConfig config: getConfigs()){
-            offers.addAll(config.getOffers());
-        }
-        return offers;
     }
     
     @Override
     public int compareTo(TimeSlot o) {
         return getStartTime().compareTo(o.getStartTime());
     }
-    
-    @Override 
-    public String toString(){
-        return date.toString("EEE")+" "+getStartTime()+" - "+getEndTime()+": "+getOffers();
+
+    @Override
+    public String toString() {
+        return date.toString("EEE") + " " + getStartTime() + " - " + getEndTime();
     }
 }

@@ -166,7 +166,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                                         timeSlot.setDate(date);
                                         timeSlot.setStartTime(reservationRequest.getStartTime());
                                         timeSlot.setEndTime(reservationRequest.getEndTime());
-                                        timeSlot.setConfigs(new ArrayList<>(Arrays.asList(calendarConfig)));
+                                        timeSlot.setConfig(calendarConfig);
                                         Long bookingSlotsLeft = bookingUtil.getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
 
                                         if (bookingSlotsLeft<1){

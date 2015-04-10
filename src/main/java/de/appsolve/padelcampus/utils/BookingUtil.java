@@ -129,37 +129,22 @@ public class BookingUtil {
         timeSlot.setDate(date);
         timeSlot.setStartTime(time);
         timeSlot.setEndTime(time.plusMinutes(config.getMinDuration()));
-        
-        TimeSlot existingTimeSlot = getExistingTimeSlot(timeSlot, timeSlots);
-        if (existingTimeSlot!=null){
-            existingTimeSlot.getConfigs().add(config);
-        } else {
-            timeSlot.setConfigs(new ArrayList<>(Arrays.asList(config)));
-        
-            //only add timeSlot if timeSlots does not already contain an entry that overlaps
-            if (!overlaps(timeSlot, timeSlots)){
-                timeSlots.add(timeSlot);
-            }
+        timeSlot.setConfig(config);
+
+        //only add timeSlot if timeSlots does not already contain an entry that overlaps
+        if (!overlaps(timeSlot, timeSlots)){
+            timeSlots.add(timeSlot);
         }
-    }
-    
-    private TimeSlot getExistingTimeSlot(TimeSlot timeSlot, List<TimeSlot> timeSlots){
-        for (TimeSlot slot: timeSlots){
-            if (timeSlot.getStartTime().equals(slot.getStartTime()) && timeSlot.getEndTime().equals(slot.getEndTime())){
-                return slot;
-            }
-        }
-        return null;
     }
     
     private boolean overlaps(TimeSlot timeSlot, List<TimeSlot> timeSlots) {
         for (TimeSlot slot: timeSlots){
             if (timeSlot.getStartTime().equals(slot.getStartTime())){
-                return true;
+                return configMatches(timeSlot, slot);
             } else if (timeSlot.getStartTime().isBefore(slot.getStartTime())){
                 //make sure timeSlot ends before slot starts
                 if (timeSlot.getEndTime().isAfter(slot.getStartTime())){
-                    return true;
+                    return configMatches(timeSlot, slot);
                 }
             } else {
                 //disabled, as we do want overlapping time slots from different calendar configurations
@@ -174,6 +159,10 @@ public class BookingUtil {
             }
         }
         return false;
+    }
+    
+    private boolean configMatches(TimeSlot timeSlot, TimeSlot slot){
+        return timeSlot.getConfig().equals(slot.getConfig());
     }
 
     public void checkForBookedCourts(TimeSlot timeSlot, List<Booking> confirmedBookings, Boolean preventOverlapping) {
@@ -202,7 +191,7 @@ public class BookingUtil {
                 }
                 if (addBooking){
                     Offer offer = booking.getOffer();
-                    for (Offer timeSlotOffer: timeSlot.getOffers()){
+                    for (Offer timeSlotOffer: timeSlot.getConfig().getOffers()){
                         if (offer.equals(timeSlotOffer)){
                             timeSlot.addBooking(booking);
                             break;
@@ -259,26 +248,31 @@ public class BookingUtil {
             }
         }
         
-        Map<TimeRange, List<TimeSlot>> rangeMap = new TreeMap<>();
+        List<TimeRange> rangeList = new ArrayList<>();
+        //Map<TimeRange, List<TimeSlot>> rangeList = new TreeMap<>();
         for (TimeSlot slot: timeSlots){
             TimeRange range = new TimeRange();
             range.setStartTime(slot.getStartTime());
             range.setEndTime(slot.getEndTime());
             
-            List<TimeSlot> rangeSlots = rangeMap.get(range);
-            if (rangeSlots == null){
-                rangeSlots = new ArrayList<>();
+            if (rangeList.contains(range)){
+                range = rangeList.get(rangeList.indexOf(range));
+            } else {
+                rangeList.add(range);
             }
-            rangeSlots.add(slot);
-            rangeMap.put(range, rangeSlots);
-            offers.addAll(slot.getOffers());
+            
+            List<TimeSlot> slotis = range.getTimeSlots();
+            slotis.add(slot);
+            range.setTimeSlots(slotis);
+            offers.addAll(slot.getConfig().getOffers());
         }
+        Collections.sort(rangeList);
         
         mav.addObject("dayConfigs", objectMapper.writeValueAsString(dayConfigs));
         mav.addObject("maxDate", lastDay.toString());
         mav.addObject("Day", selectedDate);
         mav.addObject("WeekDays", weekDays);
-        mav.addObject("RangeMap", rangeMap);
+        mav.addObject("RangeMap", rangeList);
         mav.addObject("Offers", offers);
     }
 

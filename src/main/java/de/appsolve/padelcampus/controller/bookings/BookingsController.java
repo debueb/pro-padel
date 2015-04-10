@@ -595,7 +595,7 @@ public class BookingsController extends BaseController {
                     timeSlot.setDate(selectedDate);
                     timeSlot.setStartTime(selectedTime);
                     timeSlot.setEndTime(endTime);
-                    timeSlot.setConfigs(new ArrayList<>(Arrays.asList(config)));
+                    timeSlot.setConfig(config);
                     Long bookingSlotsLeft = bookingUtil.getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
 
                     //we only allow contiguous bookings for any given offer

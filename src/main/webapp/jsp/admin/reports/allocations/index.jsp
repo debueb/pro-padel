@@ -37,10 +37,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="Entry" items="${RangeMap}">
+                            <!--
+                            <c:forEach var="TimeRange" items="${RangeMap}">
                                 <tr>
-                                    <c:set var="TimeRange" value="${Entry.key}"/>
-                                    <c:set var="TimeSlots" value="${Entry.value}"/>
                                     <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
                                     <joda:format value="${TimeRange.endTime}" pattern="HH:mm" var="endTime"/>
                                     <td class="booking-time">${startTime}<span>-</span>${endTime}</td>
@@ -59,6 +58,46 @@
                                         <c:if test="${containsTimeSlot == false}">
                                             <td class="booking-disabled"></td>
                                         </c:if>
+                                    </c:forEach>
+                                </tr>
+                            </c:forEach>
+                            -->
+                            <c:forEach var="TimeRange" items="${RangeMap}">
+                                <tr>
+                                    <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
+                                    <joda:format value="${TimeRange.endTime}" pattern="HH:mm" var="endTime"/>
+                                    <td class="booking-time">${startTime}<span>-</span>${endTime}</td>
+
+                                    <c:forEach var="WeekDay" items="${WeekDays}">
+                                        <c:set var="offerCount" value="0"/>
+                                        
+                                        <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
+                                            <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
+                                               <c:set var="offerCount" value="${offerCount + fn:length(TimeSlot.config.offers)}"/>
+                                            </c:if> 
+                                        </c:forEach>
+                                        
+                                        <c:choose>
+                                            <c:when test="${offerCount>0}">
+                                                <td class="booking-bookable">
+                                                    <div class="booking-offer-container">
+                                                        <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
+                                                            <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
+                                                                <c:set var="urlDetail" value="/admin/reports/bookinglist/${TimeSlot.date}"/>
+                                                                <div class="booking-offer-row">
+                                                                    <a class="ajaxify booking-offer" style="${fn:length(TimeSlot.bookings)>0 ? 'background-color: #69ff35;' : ''}" href="${urlDetail}">
+                                                                        ${fn:length(TimeSlot.bookings)}
+                                                                    </a>
+                                                                </div>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </div>
+                                                </td>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <td class="booking-disabled"></td>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:forEach>
                                 </tr>
                             </c:forEach>
