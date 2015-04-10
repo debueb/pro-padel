@@ -32,6 +32,11 @@
                 <jsp:param name="key" value="Design"/>
                 <jsp:param name="icon" value="sun-o"/>
             </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/admin/general/footerlinks"/>
+                <jsp:param name="key" value="FooterLinks"/>
+                <jsp:param name="icon" value="link"/>
+            </jsp:include>
         </div>
     </div>
 </div>

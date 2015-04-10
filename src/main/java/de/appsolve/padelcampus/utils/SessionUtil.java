@@ -7,6 +7,7 @@ package de.appsolve.padelcampus.utils;
 
 import static de.appsolve.padelcampus.constants.Constants.SESSION_ACCESS_LEVEL;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_BOOKING;
+import static de.appsolve.padelcampus.constants.Constants.SESSION_FOOTER_LINKS;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_LOGIN_REDIRECT_PATH;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_PRIVILEGES;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_PROFILE_REDIRECT_PATH;
@@ -17,7 +18,9 @@ import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.model.AdminGroup;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Event;
+import de.appsolve.padelcampus.db.model.FooterLink;
 import de.appsolve.padelcampus.db.model.Player;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -108,7 +111,7 @@ public class SessionUtil {
     }
     
     public String getLoginRedirectPath(HttpServletRequest request){
-        return getObject(request, SESSION_LOGIN_REDIRECT_PATH);
+        return (String) getObject(request, SESSION_LOGIN_REDIRECT_PATH);
     }
     
     public void setProfileRedirectPath(HttpServletRequest request, String path){
@@ -116,7 +119,15 @@ public class SessionUtil {
     }
     
     public String getProfileRedirectPath(HttpServletRequest request){
-        return getObject(request, SESSION_PROFILE_REDIRECT_PATH);
+        return (String) getObject(request, SESSION_PROFILE_REDIRECT_PATH);
+    }
+    
+    public void setFooterLinks(HttpServletRequest request, Collection<FooterLink> footerLinks){
+        setObject(request, SESSION_FOOTER_LINKS, footerLinks);
+    }
+    
+    public Collection<FooterLink> getFooterLinks(HttpServletRequest request){
+        return (Collection<FooterLink>) getObject(request, SESSION_FOOTER_LINKS);
     }
     
     public void invalidate(HttpServletRequest request) {
@@ -135,12 +146,12 @@ public class SessionUtil {
         }
     }
 
-    private String getObject(HttpServletRequest request, String path) {
+    private Object getObject(HttpServletRequest request, String path) {
         HttpSession session = request.getSession();
         if (session != null) {
             Object attribute = session.getAttribute(path);
             if (attribute!=null){
-                return (String) attribute;
+                return attribute;
             }
         }
         return null;

@@ -15,3 +15,7 @@
 .modal-backdrop {
   display: none;
 }
+.note-editable[contentEditable=true]:empty:not(:focus):before{
+    content:'Content';
+    color: #afafaf;
+}

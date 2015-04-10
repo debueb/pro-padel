@@ -10,28 +10,15 @@
             <h1>${empty Model.id ? AddEntry : EditEntry}</h1>
         </div>
         
-        
         <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model" id="news-form">
             <spf:input type="hidden" path="id"/>
             <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
             
-            <div class="datepicker-container">
-                <div class="datepicker-text-container form-top-element">
-                    <div class="datepicker-label"><fmt:message key="Date"/></div>
-                    <span class="fa fa-calendar datepicker-icon"></span>
-                    <div class="datepicker-text"></div>
-                </div>
-                <spf:input type="hidden" path="newsDate" class="datepicker-input form-control" value="${Model.newsDate}" />
-                <div class="datepicker" data-show-on-init="false"></div>
-            </div>
             <fmt:message var="Title" key="Title"/>
-            <spf:input path="title" type="text" class="form-control form-center-element" placeholder="${Title}"/>
+            <spf:input path="title" type="text" class="form-control form-top-element" placeholder="${Title}"/>
             <spf:input path="message" type="hidden" id="message"/>
             <div class="form-bottom-element">
-                <div id="summernote">${Model.message}</div>
-            </div>
-            <div class="unit">
-                <spf:checkbox path="showOnHomepage" id="showOnHomepage"/><label for="showOnHomepage"><fmt:message key="ShowOnHomepage"/></label>
+                <div id="summernote" data-ph="Content">${Model.message}</div>
             </div>
             <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
       </spf:form>

@@ -5,7 +5,9 @@
 </div>
 <c:if test="${empty param.embed}">
 <div class="footer small">
-    <a href="/imprint" class="ajaxify"><fmt:message key="Imprint"/></a> | <a href="/privacy" class="ajaxify"><fmt:message key="Privacy"/></a> | <a href="/tac" class="ajaxify"><fmt:message key="TAC"/></a>
+    <c:forEach var="footerLink" items="${footerLinks}" varStatus="status">
+        <a href="/footer/${footerLink.id}" class="ajaxify">${footerLink.title}</a> ${not status.last ? ' | ' : ''}
+    </c:forEach>
 </div>
 </c:if>
 <a id="dummy-link" class="ajaxify" href="#"></a>
