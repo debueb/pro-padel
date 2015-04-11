@@ -268,7 +268,7 @@ input[type="checkbox"]:checked ~ label:before {
   border-bottom: 0;
   height: 50px;
   line-height: 50px;
-  padding: 5px 15px;
+  padding: 5px 10px;
 }
 #shadow {
   display: none;
