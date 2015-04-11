@@ -41,6 +41,4 @@
         <a href="/admin/bookings/voucher/send" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="SendVoucher"/></a>
     </div>
 </div>
-
-<jsp:include page="/jsp/include/datatables.jsp"/>
 <jsp:include page="/jsp/include/footer.jsp"/>

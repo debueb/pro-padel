@@ -8,7 +8,7 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered datatable">
                 <thead>
                     <th><fmt:message key="FirstName"/></th>
                     <th><fmt:message key="LastName"/></th>

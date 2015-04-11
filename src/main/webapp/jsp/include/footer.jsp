@@ -11,7 +11,6 @@
 </div>
 </c:if>
 <a id="dummy-link" class="ajaxify" href="#"></a>
-<%--<c:if test="${empty header['x-requested-with']}">--%>
     <c:set var="compressJS" value="${compress.js}"/>
     <c:choose>
         <c:when test="${(compressJS and empty param.debug) or param.debug == 'minify'}">
@@ -44,6 +43,8 @@
                     document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
         </c:otherwise>
     </c:choose>
-<%--</c:if>--%>
+    <c:if test="${fn:contains(pageContext.request.requestURI, '/admin/')}">
+        <jsp:include page="/jsp/include/datatables.jsp"/>
+    </c:if>
 </body>
 </html>

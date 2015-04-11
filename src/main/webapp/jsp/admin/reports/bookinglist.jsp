@@ -46,5 +46,4 @@
         </div>
     </div>
 </div>
-<jsp:include page="/jsp/include/datatables.jsp"/>
 <jsp:include page="/jsp/include/footer.jsp"/>
