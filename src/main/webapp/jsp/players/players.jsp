@@ -12,7 +12,18 @@
         <div class="list-group">
             <c:forEach var="Player" items="${Players}">
                 <a href="/players/player/${Player.id}" class="list-group-item ajaxify">
-                    <div class="list-item-text">${Player}</div>
+                    <div class="list-item-text">${Player}
+                        <div class="list-group-item-icon">
+                            <c:choose>
+                                <c:when test="${empty Player.profileImage}">
+                                    <i class="fa fa-user"></i>
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="/images/image/${Player.profileImage.sha256}"/>
+                                </c:otherwise>
+                        </c:choose>
+                        </div>
+                    </div>
                 </a>
             </c:forEach>
         </div>
