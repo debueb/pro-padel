@@ -1,5 +1,14 @@
 <%@include file="/jsp/include/include.jsp"%>
-</div>
+<%-- only admin users should need to download admin functionality
+     we check the URL and wether the request was done via AJAX
+     if so, we add the <script> dependencies before the closing
+     wrapper div, as only <script> tags within this container
+     are evaluated by the ajaxify script
+--%>
+<c:if test="${fn:contains(pageContext.request.requestURI, '/admin/') and header['X-Requested-With'] == 'XMLHttpRequest'}">
+    <jsp:include page="/jsp/include/datatables.jsp"/>
+</c:if>
+</div><!-- wrapper -->
 </div>
 <div class="push"></div>
 </div>
@@ -43,6 +52,10 @@
                     document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
         </c:otherwise>
     </c:choose>
+    <%-- in case the /admin page is not loaded via AJAX 
+         (e.g. page is loaded from bookmark or page reload)
+         we simply append the admin <script> tags
+    --%>
     <c:if test="${fn:contains(pageContext.request.requestURI, '/admin/')}">
         <jsp:include page="/jsp/include/datatables.jsp"/>
     </c:if>
