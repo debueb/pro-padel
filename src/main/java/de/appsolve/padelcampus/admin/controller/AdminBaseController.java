@@ -8,7 +8,6 @@ package de.appsolve.padelcampus.admin.controller;
 import de.appsolve.padelcampus.controller.BaseEntityControllerI;
 import de.appsolve.padelcampus.controller.BaseEntityController;
 import de.appsolve.padelcampus.db.model.BaseEntity;
-import de.appsolve.padelcampus.utils.Msg;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collections;
 import java.util.List;
