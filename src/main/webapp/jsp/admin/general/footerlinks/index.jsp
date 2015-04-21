@@ -10,16 +10,18 @@
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>
+                    <th></th>
                     <th><fmt:message key="Title"/></th>
                     <th class="delete"><fmt:message key="Delete"/></th>
                 </thead>
-                <tbody>
+                <tbody id="table-sortable">
                     <c:forEach var="Model" items="${Models}">
                         <c:set var="editUrl" value="/admin/general/footerlinks/edit/${Model.id}"/>
-                        <tr>
+                        <tr data-id="${Model.id}">
+                            <td class="sortable-handle"><i class="fa fa-arrows-v"></i></td>
                             <td><a class="ajaxify" href="${editUrl}">${Model.title}</a></td>
                             <td class="delete"><a href="/admin/general/footerlinks/${Model.id}/delete" class="fa fa-minus-circle ajaxify"></a></td>
-                    </tr>
+                        </tr>
                     </c:forEach>
                 </tbody>
             </table>

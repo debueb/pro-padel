@@ -13,6 +13,7 @@ import de.appsolve.padelcampus.db.dao.GenericDAOI;
 import de.appsolve.padelcampus.db.model.FooterLink;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
+import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import org.joda.time.LocalDate;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,7 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller()
 @RequestMapping("/admin/general/footerlinks")
-public class AdminGeneralFooterLinksController extends AdminBaseController<FooterLink> {
+public class AdminGeneralFooterLinksController extends AdminSortableController<FooterLink> {
     
     @Autowired
     FooterLinkDAOI footerLinkDAO;
@@ -67,6 +69,12 @@ public class AdminGeneralFooterLinksController extends AdminBaseController<Foote
         ModelAndView mav = super.postDelete(id);
         reloadFooterLinks();
         return mav;
+    }
+    
+    @Override
+    public void updateSortOrder(@ModelAttribute("Model") FooterLink model, @RequestBody List<Long> orderedIds){
+        super.updateSortOrder(model, orderedIds);
+        reloadFooterLinks();
     }
 
     private void reloadFooterLinks() {

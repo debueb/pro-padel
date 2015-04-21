@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author dominik
  */
 @Entity
-public class FooterLink extends BaseEntity{
+public class FooterLink extends SortableEntity{
     
     @Transient
     private static final long serialVersionUID = 1L;

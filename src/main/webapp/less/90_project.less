@@ -909,6 +909,18 @@ div.product-chooser div.product-chooser-item input{
 #account-profile .ui-widget-content{
     background: #f2f2f2;
 }
+
+.table-striped > tbody > tr.sortable-ghost:nth-child(odd) > td,
+.table-striped > tbody > tr.sortable-ghost:nth-child(even) > td{
+    background-color: #0088cc !important;
+}
+.sortable-handle{
+    width: 1px;
+    max-width: 1px;
+    cursor: move;
+    cursor: -webkit-grabbing;
+}
+
 .ui-state-focus { outline: none; }
 @media (max-width: @screen-sm) {
     h1{

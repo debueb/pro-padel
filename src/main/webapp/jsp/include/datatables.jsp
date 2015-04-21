@@ -5,3 +5,5 @@
 <script defer type="text/javascript" src="/js/noconcat/dataTables.bootstrap.js"></script>
 <script defer type="text/javascript" src="/js/noconcat/dataTables.rowGrouping.js"></script>
 <script defer type="text/javascript" src="/js/noconcat/dataTables.project.js"></script>
+<script defer type="text/javascript" src="/js/noconcat/sortable.min.js"></script>
+<script defer type="text/javascript" src="/js/noconcat/sortable.project.js"></script>
