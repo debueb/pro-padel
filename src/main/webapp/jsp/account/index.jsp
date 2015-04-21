@@ -20,6 +20,11 @@
                 <jsp:param name="key" value="MyBookings"/>
                 <jsp:param name="icon" value="book"/>
             </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/account/changepassword"/>
+                <jsp:param name="key" value="ChangePassword"/>
+                <jsp:param name="icon" value="lock"/>
+            </jsp:include>
         </div>
     </div>
 </div>
