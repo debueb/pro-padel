@@ -19,7 +19,6 @@
             <spf:input path="newPassRepeat" type="password" class="form-control form-bottom-element" placeholder="${NewPasswordRepeat}"></spf:input>
             
             <button class="btn btn-primary btn-block unit-2" type="submit" ><fmt:message key="Save"/></button>
-            <button class="btn btn-primary btn-block btn-back"><fmt:message key="Cancel"/></a>
       </spf:form>
     </div>
 </div>
