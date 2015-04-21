@@ -9,6 +9,7 @@ package de.appsolve.padelcampus.db.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -23,10 +24,12 @@ public class FooterLink extends SortableEntity{
     
     @NotEmpty(message = "{NotEmpty.title}")
     @Column
+    @Type(type="text")
     private String title;
     
     @NotEmpty(message = "{NotEmpty.message}")
     @Column(length=21584)
+    @Type(type="text")
     private String message;
     
 
