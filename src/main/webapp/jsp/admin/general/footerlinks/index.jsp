@@ -14,7 +14,7 @@
                     <th><fmt:message key="Title"/></th>
                     <th class="delete"><fmt:message key="Delete"/></th>
                 </thead>
-                <tbody id="table-sortable">
+                <tbody class="table-sortable">
                     <c:forEach var="Model" items="${Models}">
                         <c:set var="editUrl" value="/admin/general/footerlinks/edit/${Model.id}"/>
                         <tr data-id="${Model.id}">
