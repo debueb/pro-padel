@@ -35,7 +35,7 @@ public class PageEntry extends SortableEntity{
     private String title;
     
     @NotEmpty(message = "{NotEmpty.message}")
-    @Column(length=21584)
+    @Column(columnDefinition = "text")
     private String message;
     
     @Column
