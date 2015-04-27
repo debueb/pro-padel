@@ -22,7 +22,7 @@
                     <span class="fa fa-calendar datepicker-icon"></span>
                     <div class="datepicker-text"></div>
                 </div>
-                <spf:input type="hidden" path="lastModified" class="datepicker-input form-control" value="${Model.newsDate}" />
+                <spf:input type="hidden" path="lastModified" class="datepicker-input form-control" value="${Model.lastModified}" />
                 <div class="datepicker" data-show-on-init="false"></div>
             </div>
             <fmt:message var="Title" key="Title"/>
