@@ -6,9 +6,8 @@
 
 package de.appsolve.padelcampus.controller;
 
-import de.appsolve.padelcampus.db.dao.NewsDAOI;
-import de.appsolve.padelcampus.db.model.News;
-import java.util.Iterator;
+import de.appsolve.padelcampus.db.dao.PageEntryDAOI;
+import de.appsolve.padelcampus.db.model.PageEntry;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,18 +23,11 @@ import org.springframework.web.servlet.ModelAndView;
 public class RootController extends BaseController{
     
     @Autowired
-    NewsDAOI newsDAO;
+    PageEntryDAOI pageEntryDAO;
     
     @RequestMapping()
     public ModelAndView getIndex(){
-        List<News> allNews = newsDAO.findAll();
-        Iterator<News> iterator = allNews.iterator();
-        while (iterator.hasNext()){
-            News news = iterator.next();
-            if (!news.getShowOnHomepage()){
-                iterator.remove();
-            }
-        }
+        List<PageEntry> allNews = pageEntryDAO.findForHomePage();
         return new ModelAndView("index", "AllNews", allNews);
     }
 }

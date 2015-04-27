@@ -33,9 +33,9 @@
                 <jsp:param name="icon" value="sun-o"/>
             </jsp:include>
             <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/general/footerlinks"/>
-                <jsp:param name="key" value="FooterLinks"/>
-                <jsp:param name="icon" value="link"/>
+                <jsp:param name="href" value="/admin/general/modules"/>
+                <jsp:param name="key" value="Modules"/>
+                <jsp:param name="icon" value="cubes"/>
             </jsp:include>
         </div>
     </div>

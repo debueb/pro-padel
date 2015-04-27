@@ -133,7 +133,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
             }
         }
         
-        return redirectToIndex();
+        return redirectToIndex(request);
     }
     
     @Override

@@ -6,11 +6,15 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.model.News;
+import de.appsolve.padelcampus.db.model.Module;
+import java.util.List;
 
 /**
  *
  * @author dominik
  */
-public interface NewsDAOI extends GenericDAOI<News>{
+public interface ModuleDAOI extends GenericDAOI<Module>{
+    
+    List<Module> findFooterModules();
+    List<Module> findMenuModules();
 }

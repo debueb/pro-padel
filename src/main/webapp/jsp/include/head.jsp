@@ -89,7 +89,7 @@
             <jsp:include page="/jsp/include/spinner.jsp"/>
             <div id="shadow"></div>
             <div id="site-menu">
-                <jsp:include page="/jsp/include/navigation.jsp"><jsp:param name="image" value="true"/></jsp:include>
+                <jsp:include page="/jsp/include/navigation.jsp"/>
             </div>
             <div id="site-shadow"></div>
             <div id="site-canvas">

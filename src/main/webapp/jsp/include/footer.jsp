@@ -14,8 +14,8 @@
 </div>
 <c:if test="${empty param.embed}">
 <div class="footer small">
-    <c:forEach var="footerLink" items="${footerLinks}" varStatus="status">
-        <a href="/footer/${footerLink.id}" class="ajaxify">${footerLink.title}</a> ${not status.last ? ' | ' : ''}
+    <c:forEach var="Module" items="${footerLinks}" varStatus="status">
+        <a href="${Module.url}" class="ajaxify">${Module.title}</a> ${not status.last ? ' | ' : ''}
     </c:forEach>
 </div>
 </c:if>

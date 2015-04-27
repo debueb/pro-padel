@@ -16,11 +16,6 @@
                 <jsp:param name="icon" value="gears"/>
             </jsp:include>
             <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/news"/>
-                <jsp:param name="key" value="News"/>
-                <jsp:param name="icon" value="rss"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
                 <jsp:param name="href" value="/admin/events"/>
                 <jsp:param name="key" value="Events"/>
                 <jsp:param name="icon" value="sitemap"/>

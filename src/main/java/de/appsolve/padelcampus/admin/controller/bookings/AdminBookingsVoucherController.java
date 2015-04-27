@@ -204,7 +204,7 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
                 }
             }
         }
-        return redirectToIndex();
+        return redirectToIndex(request);
     }
     
     @Override
@@ -217,7 +217,8 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
         return "admin/bookings/voucher";
     }
 
-    private Voucher createNewInstance() {
+    @Override
+    protected Voucher createNewInstance() {
         Voucher voucher = new Voucher();
         //TODO: use minDuration
         voucher.setDuration(60L);

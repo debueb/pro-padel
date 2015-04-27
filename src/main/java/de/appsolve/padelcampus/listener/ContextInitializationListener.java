@@ -7,7 +7,7 @@
 package de.appsolve.padelcampus.listener;
 
 import de.appsolve.padelcampus.constants.Constants;
-import de.appsolve.padelcampus.db.dao.FooterLinkDAOI;
+import de.appsolve.padelcampus.utils.ModuleUtil;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.sql.DataSource;
@@ -29,7 +29,7 @@ public class ContextInitializationListener implements ServletContextListener{
     DataSource dataSource;
     
     @Autowired
-    FooterLinkDAOI footerLinkDAO;
+    ModuleUtil moduleUtil;
     
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -49,12 +49,11 @@ public class ContextInitializationListener implements ServletContextListener{
         }
         flyway.migrate();
         
-        sce.getServletContext().setAttribute(Constants.APPLICATION_FOOTER_LINKS, footerLinkDAO.findAll());
+        moduleUtil.reloadModules(sce.getServletContext());
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         //empty
     }
-    
 }

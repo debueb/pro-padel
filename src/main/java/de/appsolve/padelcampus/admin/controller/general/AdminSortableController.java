@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 public abstract class AdminSortableController<T extends SortableEntity> extends AdminBaseController<T> {
     
-    @RequestMapping(value="updatesortorder", method=POST)
+    @RequestMapping(value="/updatesortorder", method=POST)
     @ResponseStatus(OK)
     public void updateSortOrder(@ModelAttribute("Model") T model, @RequestBody List<Long> orderedIds){
         GenericDAOI dao = getDAO();

@@ -7,6 +7,7 @@ package de.appsolve.padelcampus.controller;
 
 import de.appsolve.padelcampus.db.model.BaseEntity;
 import de.appsolve.padelcampus.utils.Msg;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -34,7 +35,7 @@ public abstract class BaseEntityController<T extends BaseEntity> extends BaseCon
     }
     
     @RequestMapping(value = "/{id}/delete", method = POST)
-    public ModelAndView postDelete(@PathVariable("id") Long id){
+    public ModelAndView postDelete(HttpServletRequest request, @PathVariable("id") Long id){
         try {
             getDAO().deleteById(id);
         } catch (DataIntegrityViolationException e){
@@ -44,10 +45,10 @@ public abstract class BaseEntityController<T extends BaseEntity> extends BaseCon
             deleteView.addObject("error", msg.get("CannotDeleteDueToRefrence", new Object[]{model.toString()}));
             return deleteView;
         }
-        return redirectToIndex();
+        return redirectToIndex(request);
     }
     
-    protected ModelAndView redirectToIndex() {
+    protected ModelAndView redirectToIndex(HttpServletRequest request) {
         return new ModelAndView("redirect:/"+getModuleName());
     }
     

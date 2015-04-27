@@ -6,32 +6,51 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.LocalDate;
 
 /**
  *
  * @author dominik
  */
 @Entity
-public class FooterLink extends SortableEntity{
+public class PageEntry extends SortableEntity{
     
     @Transient
     private static final long serialVersionUID = 1L;
     
+    @Column
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    private LocalDate lastModified;
+    
     @NotEmpty(message = "{NotEmpty.title}")
     @Column
-    @Type(type="text")
     private String title;
     
     @NotEmpty(message = "{NotEmpty.message}")
     @Column(length=21584)
-    @Type(type="text")
     private String message;
     
+    @Column
+    private Boolean showOnHomepage;
+    
+    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Module.class, fetch = FetchType.EAGER)
+    private Module module;
+
+    public LocalDate getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(LocalDate newsDte) {
+        this.lastModified = newsDte;
+    }
 
     public String getTitle() {
         return title;
@@ -47,6 +66,22 @@ public class FooterLink extends SortableEntity{
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Boolean getShowOnHomepage() {
+        return showOnHomepage == null ? Boolean.FALSE : showOnHomepage;
+    }
+
+    public void setShowOnHomepage(Boolean showOnHomepage) {
+        this.showOnHomepage = showOnHomepage;
+    }
+
+    public Module getModule() {
+        return module;
+    }
+
+    public void setModule(Module module) {
+        this.module = module;
     }
     
     @Override

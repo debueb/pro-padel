@@ -5,10 +5,9 @@
  */
 package de.appsolve.padelcampus.utils;
 
-import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.Directory;
-import com.drew.metadata.Metadata;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import static de.appsolve.padelcampus.constants.Constants.DATA_DIR_PROFILE_PICTURES;
 import de.appsolve.padelcampus.db.dao.ImageDAOI;
 import de.appsolve.padelcampus.db.model.Image;
@@ -17,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import javax.imageio.ImageIO;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -66,6 +66,11 @@ public class FileUtil {
     public byte[] getByteArray(String filePath) throws IOException{
         File file = new File(filePath);
         return IOUtils.toByteArray(new FileInputStream(file));
+    }
+    
+    public static String getFileContents(String fileName) throws IOException {
+        URL url = Resources.getResource(fileName);
+        return Resources.toString(url, Charsets.UTF_8);
     }
     
 }

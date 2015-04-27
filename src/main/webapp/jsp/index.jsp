@@ -12,35 +12,17 @@
         </c:forEach>
         
         <div class="list-group">
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/news"/>
-                <jsp:param name="key" value="News"/>
-                <jsp:param name="icon" value="rss"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/events"/>
-                <jsp:param name="key" value="Events"/>
-                <jsp:param name="icon" value="sitemap"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/bookings"/>
-                <jsp:param name="key" value="BookCourt"/>
-                <jsp:param name="icon" value="calendar"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/matchoffers"/>
-                <jsp:param name="key" value="MatchOffers"/>
-                <jsp:param name="icon" value="futbol-o"/>
-            </jsp:include>
+            <c:forEach var="Module" items="${menuLinks}" varStatus="status">      
+                <jsp:include page="/jsp/include/list-group-item.jsp">
+                    <jsp:param name="icon" value="${Module.iconName}"/>
+                    <jsp:param name="title" value="${Module.title}"/>
+                    <jsp:param name="href" value="${Module.url}"/>
+                </jsp:include>
+            </c:forEach>
             <jsp:include page="/jsp/include/list-group-item.jsp">
                 <jsp:param name="href" value="/contact"/>
                 <jsp:param name="key" value="Contact"/>
                 <jsp:param name="icon" value="envelope"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/links"/>
-                <jsp:param name="key" value="Links"/>
-                <jsp:param name="icon" value="link"/>
             </jsp:include>
 
             <c:if test="${client == 'iOS'}">

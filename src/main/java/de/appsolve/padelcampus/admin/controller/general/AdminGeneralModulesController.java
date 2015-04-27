@@ -6,16 +6,19 @@
 
 package de.appsolve.padelcampus.admin.controller.general;
 
-import de.appsolve.padelcampus.admin.controller.AdminBaseController;
-import de.appsolve.padelcampus.constants.Constants;
-import de.appsolve.padelcampus.db.dao.FooterLinkDAOI;
+import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.db.dao.GenericDAOI;
-import de.appsolve.padelcampus.db.model.FooterLink;
+import de.appsolve.padelcampus.db.dao.ModuleDAOI;
+import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
+import de.appsolve.padelcampus.utils.FileUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
+import de.appsolve.padelcampus.utils.ModuleUtil;
+import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,14 +36,19 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  */
 @Controller()
-@RequestMapping("/admin/general/footerlinks")
-public class AdminGeneralFooterLinksController extends AdminSortableController<FooterLink> {
+@RequestMapping("/admin/general/modules")
+public class AdminGeneralModulesController extends AdminSortableController<Module> {
+    
+    private static final Logger log = Logger.getLogger(AdminGeneralModulesController.class);
     
     @Autowired
-    FooterLinkDAOI footerLinkDAO;
+    ModuleDAOI moduleDAO;
     
     @Autowired
     ServletContext context;
+    
+    @Autowired
+    ModuleUtil moduleUtil;
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -49,35 +57,49 @@ public class AdminGeneralFooterLinksController extends AdminSortableController<F
     
     @Override
     public GenericDAOI getDAO() {
-        return footerLinkDAO;
+        return moduleDAO;
     }
 
     @Override
     public String getModuleName() {
-        return "admin/general/footerlinks";
+        return "admin/general/modules";
     }
     
     @Override
-    public ModelAndView postEditView(@ModelAttribute("Model") FooterLink model, HttpServletRequest request, BindingResult result){
+    protected ModelAndView getEditView(Module model){
+        ModelAndView mav = super.getEditView(model);
+        mav.addObject("ModuleTypes", ModuleType.values());
+        try {
+            String fileContents = FileUtil.getFileContents("font-awesome-icon-names.txt");
+            String[] iconNames = fileContents.split("\n");
+            mav.addObject("FontAwesomeIconNames", iconNames);
+        } catch (IOException ex) {
+            log.warn("Unable to get list of font-aweseome icon names");
+        }
+        return mav;
+    }
+    
+    @Override
+    public ModelAndView postEditView(@ModelAttribute("Model") Module model, HttpServletRequest request, BindingResult result){
         ModelAndView mav = super.postEditView(model, request, result);
-        reloadFooterLinks();
+        reloadModules();
         return mav;
     }
     
     @Override
-    public ModelAndView postDelete(@PathVariable("id") Long id){
-        ModelAndView mav = super.postDelete(id);
-        reloadFooterLinks();
+    public ModelAndView postDelete(HttpServletRequest request, @PathVariable("id") Long id){
+        ModelAndView mav = super.postDelete(request, id);
+        reloadModules();
         return mav;
     }
     
     @Override
-    public void updateSortOrder(@ModelAttribute("Model") FooterLink model, @RequestBody List<Long> orderedIds){
+    public void updateSortOrder(@ModelAttribute("Model") Module model, @RequestBody List<Long> orderedIds){
         super.updateSortOrder(model, orderedIds);
-        reloadFooterLinks();
+        reloadModules();
     }
 
-    private void reloadFooterLinks() {
-        context.setAttribute(Constants.APPLICATION_FOOTER_LINKS, footerLinkDAO.findAll());
+    private void reloadModules() {
+        moduleUtil.reloadModules(context);
     }
 }

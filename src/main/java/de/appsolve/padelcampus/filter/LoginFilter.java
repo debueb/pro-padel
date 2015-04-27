@@ -6,13 +6,10 @@
 package de.appsolve.padelcampus.filter;
 
 import static de.appsolve.padelcampus.constants.Constants.COOKIE_LOGIN_TOKEN;
-import de.appsolve.padelcampus.db.dao.FooterLinkDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
-import de.appsolve.padelcampus.db.model.FooterLink;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
-import java.util.Collection;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -33,9 +30,6 @@ public class LoginFilter implements Filter {
 
     @Autowired
     SessionUtil sessionUtil;
-    
-    @Autowired
-    FooterLinkDAOI footerLinkDAO;
 
     /**
      * @param config

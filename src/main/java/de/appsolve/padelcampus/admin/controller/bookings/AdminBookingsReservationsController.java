@@ -29,7 +29,6 @@ import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATT
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -92,7 +91,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     
     @RequestMapping()
     @Override
-    public ModelAndView showIndex(){
+    public ModelAndView showIndex(HttpServletRequest request){
         ModelAndView mav = new ModelAndView("admin/bookings/reservations/index");
         List<Booking> reservations = bookingDAO.findReservations();
         mav.addObject("Reservations", reservations);

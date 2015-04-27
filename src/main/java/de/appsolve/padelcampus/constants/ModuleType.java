@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-package de.appsolve.padelcampus.db.dao;
-
-import de.appsolve.padelcampus.db.model.FooterLink;
+package de.appsolve.padelcampus.constants;
 
 /**
  *
  * @author dominik
  */
-public interface FooterLinkDAOI extends GenericDAOI<FooterLink>{
+public enum ModuleType {
+    
+    Events,
+    Bookings,
+    MatchOffers,
+    Page
 }

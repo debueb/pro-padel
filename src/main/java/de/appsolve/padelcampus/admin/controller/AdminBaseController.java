@@ -29,18 +29,16 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public abstract class AdminBaseController<T extends BaseEntity> extends BaseEntityController<T> implements BaseEntityControllerI{
     
-    private static final Logger log = Logger.getLogger(AdminBaseController.class);
+    protected static final Logger log = Logger.getLogger(AdminBaseController.class);
     
     @Autowired
     protected Validator validator;
     
     @RequestMapping()
-    public ModelAndView showIndex(){
-        ModelAndView mav = new ModelAndView(getModuleName()+"/index");
+    public ModelAndView showIndex(HttpServletRequest request){
         List<T> all = findAll();
         Collections.sort(all);
-        mav.addObject("Models", all);
-        return mav;
+        return getIndexView(all);
     }
     
     @RequestMapping(value={"add"}, method=GET)
@@ -60,7 +58,13 @@ public abstract class AdminBaseController<T extends BaseEntity> extends BaseEnti
             return getEditView(model);
         }
         getDAO().saveOrUpdate(model);
-        return redirectToIndex();
+        return redirectToIndex(request);
+    }
+    
+    protected ModelAndView getIndexView(List<T> models){
+        ModelAndView mav = new ModelAndView(getModuleName()+"/index");
+        mav.addObject("Models", models);
+        return mav;
     }
     
     protected ModelAndView getEditView(T model){
@@ -76,7 +80,7 @@ public abstract class AdminBaseController<T extends BaseEntity> extends BaseEnti
     }
     
     @SuppressWarnings("unchecked")
-    private T createNewInstance(){
+    protected T createNewInstance(){
         try {
             Class<T> clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
             return clazz.newInstance();
@@ -85,5 +89,4 @@ public abstract class AdminBaseController<T extends BaseEntity> extends BaseEnti
         }
         return null;
     }
-
 }

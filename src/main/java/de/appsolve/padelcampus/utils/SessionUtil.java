@@ -7,7 +7,6 @@ package de.appsolve.padelcampus.utils;
 
 import static de.appsolve.padelcampus.constants.Constants.SESSION_ACCESS_LEVEL;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_BOOKING;
-import static de.appsolve.padelcampus.constants.Constants.APPLICATION_FOOTER_LINKS;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_LOGIN_REDIRECT_PATH;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_PRIVILEGES;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_PROFILE_REDIRECT_PATH;
@@ -18,9 +17,7 @@ import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.model.AdminGroup;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Event;
-import de.appsolve.padelcampus.db.model.FooterLink;
 import de.appsolve.padelcampus.db.model.Player;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

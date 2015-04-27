@@ -613,7 +613,8 @@ span.error {
 }
 /* datepicker end */
 /* form elements */
-.form-top-element {
+.form-top-element,
+.form-top-element .btn {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom: 0;
@@ -894,6 +895,7 @@ pre {
 }
 .panel-body {
   padding: 10px;
+  overflow-x: auto;
 }
 .panel-body img {
   max-width: 100% !important;
@@ -1002,7 +1004,8 @@ div.product-chooser div.product-chooser-item input {
   }
 }
 @media (min-width: 992px) {
-  .navbar-toggle {
+  .navbar-toggle,
+  .list-menu-item-icon {
     display: none;
   }
 }
