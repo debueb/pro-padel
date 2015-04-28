@@ -14,9 +14,9 @@ import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.PaymentExecution;
 import com.paypal.api.payments.RedirectUrls;
 import com.paypal.api.payments.Transaction;
-import com.paypal.core.rest.APIContext;
-import com.paypal.core.rest.OAuthTokenCredential;
-import com.paypal.core.rest.PayPalRESTException;
+import com.paypal.base.rest.APIContext;
+import com.paypal.base.rest.OAuthTokenCredential;
+import com.paypal.base.rest.PayPalRESTException;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.PayPalConfigDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
@@ -90,7 +90,7 @@ public class BookingsPayPalController extends BookingsPaymentController{
         redirectUrls.setCancelUrl(RequestUtil.getBaseURL(request) + "/bookings/booking/"+booking.getUUID()+"/paypal/cancel");
         redirectUrls.setReturnUrl(RequestUtil.getBaseURL(request) + "/bookings/booking/"+booking.getUUID()+"/paypal/return");
         payment.setRedirectUrls(redirectUrls);
-
+        
         Payment createdPayment = payment.create(apiContext);
         log.info("Created PayPal payment with id = "+ createdPayment.getId() + " and status = "+ createdPayment.getState());
         
