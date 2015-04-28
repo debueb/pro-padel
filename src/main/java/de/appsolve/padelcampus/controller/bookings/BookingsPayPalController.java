@@ -122,15 +122,18 @@ public class BookingsPayPalController extends BookingsPaymentController{
             if (!state.equals("approved")){
                 throw new Exception("PayPal returned unexpected payment status: "+state);
             }
+            log.info("Approved PayPal payment with id = "+ payment.getId());
+            booking.setPaymentConfirmed(true);
+            bookingDAO.saveOrUpdate(booking);
+            log.info("Booking payment confirmed: "+booking.getPaymentConfirmed());
+            log.info("Booking payment confirmed: "+bookingDAO.findByUUID(UUID).getPaymentConfirmed());
+            return BookingsController.getRedirectToSuccessView(booking);
         } catch (Exception e){
             log.error("Error while executing paypal payment", e);
             ModelAndView bookingConfirmView = BookingsController.getBookingConfirmView(booking);
             bookingConfirmView.addObject("error", e.getMessage());
             return bookingConfirmView;
         }
-        booking.setPaymentConfirmed(true);
-        bookingDAO.saveOrUpdate(booking);
-        return BookingsController.getRedirectToSuccessView(booking);
     }
     
     @RequestMapping("booking/{UUID}/paypal/cancel")
