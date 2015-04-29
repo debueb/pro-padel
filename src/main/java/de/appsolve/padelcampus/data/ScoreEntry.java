@@ -18,15 +18,12 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
     private int totalPoints;
     
     private int matchesPlayed;
-    
     private int matchesWon;
     
     private int setsPlayed;
-    
     private int setsWon;
     
     private int gamesPlayed;
-    
     private int gamesWon;
 
     public int getTotalPoints() {
@@ -94,32 +91,41 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
 
     @Override
     public int compareTo(ScoreEntry o) {
-        int matchDiff = o.totalPoints-totalPoints;
-        if (matchDiff!=0){
-            return matchDiff;
+        //points
+        int diff = o.totalPoints-totalPoints;
+        if (diff!=0){
+            return diff;
         }
         
-        int setsWonDiff = o.setsWon-setsWon;
-        if (setsWonDiff!=0){
-            return setsWonDiff;
+        //matches
+        diff = getDiff(matchesPlayed, matchesWon, o.matchesPlayed, o.matchesWon);
+        if (diff!=0){
+            return diff;
         }
         
-        int gamesWonDiff = o.gamesWon-gamesWon;
-        if (gamesWonDiff!=0){
-            return gamesWonDiff;
+        //sets
+        diff = getDiff(setsPlayed, setsWon, o.setsPlayed, o.setsWon);
+        if (diff!=0){
+            return diff;
         }
         
-        int gamesLost = gamesPlayed-gamesWon;
-        int oGamesLost = o.gamesPlayed-o.gamesWon;
-        
-        int gamesLostDiff = gamesLost - oGamesLost;
-        if (gamesLostDiff!=0){
-            return gamesLostDiff;
+        //games
+        diff = getDiff(gamesPlayed, gamesWon, o.gamesPlayed, o.gamesWon);
+        if (diff!=0){
+            return diff;
         }
         
         if (participant!=null && o.getParticipant()!=null){
             return participant.toString().compareToIgnoreCase(o.getParticipant().toString());
         }
         return -1;
+    }
+
+    private int getDiff(int played, int won, int oPlayed, int oWon) {
+        int lost = played-won;
+        int diff = won - lost;
+        int oLost = oPlayed-oWon;
+        int oDiff = oWon - oLost;
+        return oDiff - diff;
     }
 }
