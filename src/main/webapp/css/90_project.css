@@ -49,7 +49,7 @@
   display: none;
   height: 20px;
   width: 100%;
-  background-color: #76441a;
+  background-color: #f07325;
   z-index: 5;
   opacity: .9;
 }
@@ -80,7 +80,7 @@ body {
   background-image: url('/images/bg-tiles.png'), radial-gradient(circle, #e7e7e7, #94cfea);
   /* W3C */
 
-  color: #613815;
+  color: #ec6410;
 }
 .wrapper {
   min-height: 100%;
@@ -167,12 +167,12 @@ input[type="number"] {
   position: fixed;
   right: -200px;
   padding: 0px 15px;
-  background-color: #b56827;
-  background-image: -webkit-linear-gradient(top, #b56827 0%, #76441a 100%);
-  background-image: -o-linear-gradient(top, #b56827 0%, #76441a 100%);
-  background-image: linear-gradient(to bottom, #b56827 0%, #76441a 100%);
+  background-color: #f5a16d;
+  background-image: -webkit-linear-gradient(top, #f5a16d 0%, #f07325 100%);
+  background-image: -o-linear-gradient(top, #f5a16d 0%, #f07325 100%);
+  background-image: linear-gradient(to bottom, #f5a16d 0%, #f07325 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffb56827', endColorstr='#ff76441a', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5a16d', endColorstr='#fff07325', GradientType=0);
 }
 #site-menu .nav {
   position: absolute;
@@ -234,12 +234,12 @@ input[type="checkbox"]:checked ~ label:before {
 .navbar-default,
 .panel-info > .panel-heading,
 .ui-widget-header {
-  background-color: #b56827;
-  background-image: -webkit-linear-gradient(top, #76441a 0%, #b56827 100%);
-  background-image: -o-linear-gradient(top, #76441a 0%, #b56827 100%);
-  background-image: linear-gradient(to bottom, #76441a 0%, #b56827 100%);
+  background-color: #f5a16d;
+  background-image: -webkit-linear-gradient(top, #f07325 0%, #f5a16d 100%);
+  background-image: -o-linear-gradient(top, #f07325 0%, #f5a16d 100%);
+  background-image: linear-gradient(to bottom, #f07325 0%, #f5a16d 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff76441a', endColorstr='#ffb56827', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff07325', endColorstr='#fff5a16d', GradientType=0);
   opacity: .9;
 }
 .ui-state-default,
@@ -290,13 +290,13 @@ hr {
   border-bottom: 1px solid #fff;
 }
 a.list-group-item .list-group-item-heading {
-  color: #613815;
+  color: #ec6410;
 }
 .list-group-item {
   background-color: #ffffff;
 }
 .list-group-item-text {
-  color: #613815;
+  color: #ec6410;
   font-size: 18px;
 }
 .list-group-item-vs {
@@ -342,7 +342,7 @@ table.table-scores tbody tr td {
   max-height: 100%;
 }
 .badge {
-  color: #613815;
+  color: #ec6410;
   background-color: #ccc;
 }
 .stretch {
@@ -485,7 +485,7 @@ table tbody td.delete {
   font-size: 18px;
   font-weight: 500;
   text-shadown: -1px -1px 0 rgba(255, 255, 255, 0.3);
-  color: #613815;
+  color: #ec6410;
   display: table;
   width: 100%;
 }
@@ -506,7 +506,7 @@ span.error {
   color: #d9534f;
 }
 .form-control {
-  color: #613815;
+  color: #ec6410;
 }
 /* datepicker */
 .datepicker-text-container {
@@ -546,7 +546,7 @@ span.error {
 }
 .ui-widget-content {
   border: 1px solid #ccc;
-  color: #613815;
+  color: #ec6410;
 }
 .ui-datepicker {
   width: 100%;
@@ -942,7 +942,7 @@ div.product-chooser div.product-chooser-item {
   margin: 5px 0px;
 }
 div.product-chooser div.product-chooser-item.selected {
-  color: #613815;
+  color: #ec6410;
   border: 3px solid #69bce2;
   background: #ffffff;
   filter: alpha(opacity=100);
