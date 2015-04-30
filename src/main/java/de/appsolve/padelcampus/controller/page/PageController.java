@@ -33,8 +33,8 @@ public class PageController extends BaseController{
     @RequestMapping()
     public ModelAndView getIndex(@PathVariable("moduleId") Long moduleId){
         Module module = moduleDAO.findById(moduleId);
-        ModelAndView mav = new ModelAndView("news/index");
-        mav.addObject("AllNews", pageEntryDAO.findByModule(module));
+        ModelAndView mav = new ModelAndView("page/index");
+        mav.addObject("PageEntries", pageEntryDAO.findByModule(module));
         mav.addObject("Module", module);
         return mav;
     }

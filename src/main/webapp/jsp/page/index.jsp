@@ -5,10 +5,10 @@
         <div class="page-header">
             <h1>${Module.title}</h1>
         </div>
-        <c:forEach var="News" items="${AllNews}" varStatus="status">
+        <c:forEach var="Entry" items="${PageEntries}" varStatus="status">
             <div class="panel panel-info">
-                <div class="panel-heading"><h4>${News.title}</h4></div>
-                <div class="panel-body">${News.message}</div>
+                <div class="panel-heading"><h4>${Entry.title}</h4></div>
+                <div class="panel-body">${Entry.message}</div>
             </div>
             <c:if test="${not status.last}"><hr/></c:if>
         </c:forEach>
