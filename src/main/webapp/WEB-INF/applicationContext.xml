@@ -105,14 +105,10 @@
     
     <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
     
-    <bean id="multipartResolver"
-        class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <!-- max upload size in bytes -->
-        <property name="maxUploadSize" value="20971520" /> <!-- 20MB -->
-         
-        <!-- max size of file in memory (in bytes) -->
-        <property name="maxInMemorySize" value="1048576" /> <!-- 1MB -->
-    </bean>
+      <!-- enables resolving of "multipart/form-data" content types -->
+   <bean id="multipartResolver" class="de.appsolve.padelcampus.resolver.PutAwareCommonsMultipartResolver">
+       <property name="maxUploadSize" value="20971520"/><!-- 20MB -->
+   </bean>
    
     <task:annotation-driven />
 </beans>
