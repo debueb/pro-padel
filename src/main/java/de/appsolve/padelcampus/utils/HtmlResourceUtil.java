@@ -133,8 +133,8 @@ public class HtmlResourceUtil {
 
     private String reloadAllMinCss(ServletContext context) throws IOException {
         Path cssFile = getAllMinCssFile(DATA_DIR);
-        if (cssFile == null){
-            getAllMinCssFile(context.getRealPath("/"));
+        if (!Files.exists(cssFile)){
+            cssFile = getAllMinCssFile(context.getRealPath("/"));
         }
         byte[] encoded = Files.readAllBytes(cssFile);
         String css = new String(encoded, Constants.UTF8);
