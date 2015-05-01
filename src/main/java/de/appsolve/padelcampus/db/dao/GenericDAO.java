@@ -115,7 +115,6 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
         }
         if (objects.size() != 1) {
             log.warn("Query for [type=" + getGenericSuperClassName(GenericDAO.class) + ", key=" + key + ", value=" + value + "] returned " + objects.size() + " results, expected 1.");
-            return null;
         }
         return objects.get(0);
     }

@@ -23,20 +23,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class PlayerDAO extends SortedGenericDAO<Player> implements PlayerDAOI{
 
-    private static final Logger log = Logger.getLogger(PlayerDAO.class);
-    
     @Override
     public Player findByEmail(String email) {
-        Map<String, Object> attributeMap = new HashMap<>();
-        attributeMap.put("email", email);
-        List<Player> players = findByAttributes(attributeMap);
-        if (players.isEmpty()){
-            return null;
-        }
-        if (players.size() > 1){
-            log.warn("Found unexpected number of players for email ["+email+"]: "+players.size());
-        }
-        return players.get(0);
+        return findByAttribute("email", email);
     }
 
     @Override
