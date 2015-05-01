@@ -18,11 +18,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.ServletContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.lesscss.LessCompiler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -33,6 +37,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class HtmlResourceUtil {
+    
+    private static final Logger log = Logger.getLogger(HtmlResourceUtil.class);
     
     private static final String ALL_MIN_CSS_APPLICATION_CONTEXT = "all.min.css";
 
@@ -54,16 +60,16 @@ public class HtmlResourceUtil {
         if (!cssAttributes.isEmpty()) {
             
             
-            //PROBLEM: on openshift, the war file is not extracted. Thus, files cannot be overwritten and must be read with context.getResource...
+            //PROBLEM: on openshift, the war file is not extracted. Thus, sortedFiles cannot be overwritten and must be read with context.getResource...
             
-            //copy css files to data directory
+            //copy css sortedFiles to data directory
             copyResources(context, FOLDER_CSS, new File(DATA_DIR));
             //FileUtils.copyDirectory(new File(rootPath + FOLDER_CSS), new File(DATA_DIR + FOLDER_CSS));
             
             //remove all.min.css from data directory as we do not want to concatenate it with itself
             new File(DATA_DIR + ALL_MIN_CSS).delete();
             
-            //copy less files
+            //copy less sortedFiles
             copyResources(context, FOLDER_LESS, new File(DATA_DIR));
             //FileUtils.copyDirectory(new File(rootPath + FOLDER_LESS), new File(DATA_DIR + FOLDER_LESS));
             //replace variables in variables.less
@@ -83,12 +89,12 @@ public class HtmlResourceUtil {
             }
             Files.write(variablesLessOutput, content.getBytes(Constants.UTF8), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
 
-            //compile less and overwrite css files in data directory
+            //compile less and overwrite css sortedFiles in data directory
             LessCompiler lessCompiler = new LessCompiler();
             lessCompiler.compile(new File(DATA_DIR + File.separator + PROJECT_LESS), new File(DATA_DIR + File.separator + PROJECT_CSS));
             lessCompiler.compile(new File(DATA_DIR + File.separator + BOOTSTRAP_LESS), new File(DATA_DIR + File.separator + BOOTSTRAP_CSS));
 
-            //concatenate all files into all.min.css
+            //concatenate all sortedFiles into all.min.css
             concatenateCss(Paths.get(DATA_DIR + FOLDER_CSS));
             
             //reload content for css controller
@@ -102,7 +108,21 @@ public class HtmlResourceUtil {
         if (Files.exists(outFile)){
             Files.delete(outFile);
         }
+        List<Path> sortedFiles = new ArrayList<>();
         for (Path cssFile : cssFiles) {
+            sortedFiles.add(cssFile);
+            log.info(cssFile.getFileName());
+        }
+        
+        Collections.sort(sortedFiles, new Comparator<Path>() {
+            @Override
+            public int compare(Path o1, Path o2) {
+                return o1.getFileName().compareTo(o2.getFileName());
+            }
+        });
+        
+        for (Path cssFile : sortedFiles) {
+            log.info(cssFile.getFileName());
             Files.write(outFile, Files.readAllBytes(cssFile), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         }
     }
