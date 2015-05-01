@@ -5,22 +5,21 @@
  */
 package de.appsolve.padelcampus.utils;
 
-import com.yahoo.platform.yui.compressor.CssCompressor;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.model.CssAttribute;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.ServletContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -54,23 +53,23 @@ public class HtmlResourceUtil {
     public void updateCss(ServletContext context, List<CssAttribute> cssAttributes) throws Exception {
         if (!cssAttributes.isEmpty()) {
             
-            String rootPath = context.getRealPath("/");
-        
-            //PROBLEM: on openshift, the war file is not extracted. Thus, files cannot be overwritten
+            
+            //PROBLEM: on openshift, the war file is not extracted. Thus, files cannot be overwritten and must be read with context.getResource...
             
             //copy css files to data directory
-            FileUtils.copyDirectory(new File(rootPath + FOLDER_CSS), new File(DATA_DIR + FOLDER_CSS));
+            copyResources(context, FOLDER_CSS, new File(DATA_DIR));
+            //FileUtils.copyDirectory(new File(rootPath + FOLDER_CSS), new File(DATA_DIR + FOLDER_CSS));
             
             //remove all.min.css from data directory as we do not want to concatenate it with itself
             new File(DATA_DIR + ALL_MIN_CSS).delete();
             
             //copy less files
-            FileUtils.copyDirectory(new File(rootPath + FOLDER_LESS), new File(DATA_DIR + FOLDER_LESS));
-            
+            copyResources(context, FOLDER_LESS, new File(DATA_DIR));
+            //FileUtils.copyDirectory(new File(rootPath + FOLDER_LESS), new File(DATA_DIR + FOLDER_LESS));
             //replace variables in variables.less
-            Path variablesLessInput = Paths.get(rootPath + VARIABLES_LESS);
+            InputStream lessIs = context.getResourceAsStream(VARIABLES_LESS);
             Path variablesLessOutput = Paths.get(DATA_DIR + VARIABLES_LESS);
-            String content = IOUtils.toString(Files.newInputStream(variablesLessInput), Constants.UTF8);
+            String content = IOUtils.toString(lessIs, Constants.UTF8);
             for (CssAttribute attribute : cssAttributes) {
                 content = content.replaceAll(attribute.getCssDefaultValue(), attribute.getCssValue());
             }
@@ -145,5 +144,17 @@ public class HtmlResourceUtil {
         String css = new String(cssData, Constants.UTF8);
         context.setAttribute(ALL_MIN_CSS_APPLICATION_CONTEXT, css);
         return css;
+    }
+
+    private void copyResources(ServletContext context, String sourceFolder, File destinationFolder) throws MalformedURLException, IOException {
+        Set<String> resourcePaths = context.getResourcePaths(sourceFolder);
+        for (String resourcePath: resourcePaths){
+            if (resourcePath.endsWith("/")){ //must be a directory
+                copyResources(context, resourcePath, destinationFolder);
+            } else {
+                URL resource = context.getResource(resourcePath);
+                FileUtils.copyURLToFile(resource, new File(destinationFolder, resourcePath));
+            }
+        }
     }
 }
