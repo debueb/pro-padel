@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.admin.controller;
 
+import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.utils.HtmlResourceUtil;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("css")
-public class CssController {
+public class CssController extends BaseController{
     
     @Autowired
     HtmlResourceUtil htmlResourceUtil;
