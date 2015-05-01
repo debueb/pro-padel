@@ -33,11 +33,10 @@ public class PlayerDAO extends SortedGenericDAO<Player> implements PlayerDAOI{
         if (players.isEmpty()){
             return null;
         }
-        if (players.size() == 1){
-            return players.get(0);
+        if (players.size() > 1){
+            log.warn("Found unexpected number of players for email ["+email+"]: "+players.size());
         }
-        log.warn("Found unexpected number of players for email ["+email+"]: "+players.size());
-        return null;
+        return players.get(0);
     }
 
     @Override
