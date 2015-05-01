@@ -111,7 +111,6 @@ public class HtmlResourceUtil {
         List<Path> sortedFiles = new ArrayList<>();
         for (Path cssFile : cssFiles) {
             sortedFiles.add(cssFile);
-            log.info(cssFile.getFileName());
         }
         
         Collections.sort(sortedFiles, new Comparator<Path>() {
@@ -122,7 +121,6 @@ public class HtmlResourceUtil {
         });
         
         for (Path cssFile : sortedFiles) {
-            log.info(cssFile.getFileName());
             Files.write(outFile, Files.readAllBytes(cssFile), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         }
     }
