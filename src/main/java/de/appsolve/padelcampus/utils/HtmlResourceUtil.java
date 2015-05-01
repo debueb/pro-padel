@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.file.DirectoryStream;
@@ -133,11 +134,15 @@ public class HtmlResourceUtil {
 
     private String reloadAllMinCss(ServletContext context) throws IOException {
         Path cssFile = getAllMinCssFile(DATA_DIR);
-        if (!Files.exists(cssFile)){
-            cssFile = getAllMinCssFile(context.getRealPath("/"));
+        byte[] cssData;
+        if (Files.exists(cssFile)){
+            cssData = Files.readAllBytes(cssFile);
+        } else {
+            //read from classpath
+            InputStream is = context.getResourceAsStream(ALL_MIN_CSS);
+            cssData = IOUtils.toByteArray(is);
         }
-        byte[] encoded = Files.readAllBytes(cssFile);
-        String css = new String(encoded, Constants.UTF8);
+        String css = new String(cssData, Constants.UTF8);
         context.setAttribute(ALL_MIN_CSS_APPLICATION_CONTEXT, css);
         return css;
     }
