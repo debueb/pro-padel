@@ -44,8 +44,8 @@
 
             <c:set var="compressCSS" value="${compress.css}"/>
             <c:choose>
-               <c:when test="${(compressCSS and empty param.debug) or param.debug == 'minify'}">
-                  <link rel="stylesheet" href="/css/all.min.css">
+               <c:when test="${compressCSS or not empty param.debug}">
+                  <link rel="stylesheet" href="/css/all.min.stylesheet">
                </c:when>
                <c:otherwise>
                     <link rel="stylesheet" href="/css/10_bootstrap.css">

@@ -17,11 +17,11 @@
             <spf:input path="name" type="text" class="form-control form-top-element" placeholder="${Name}"/>
          
             <div class="input-group color-picker">
+                <span class="input-group-addon form-center-element"><i></i></span>
                 <span class="relative">
                     <spf:input type="text" path="hexColor" class="form-control form-center-element" />
                     <span class="explanation"><fmt:message key="Color"/></span>
                 </span>
-                <span class="input-group-addon form-center-element"><i></i></span>
             </div>
             
             <div class="input-group">
@@ -63,11 +63,4 @@
     </div>
 </div>
 
-<%-- include js and css in body when requested via ajax, otherwise after footer (where jquery is added) --%>
-<c:if test="${not empty header['x-requested-with']}">
-    <jsp:include page="/jsp/admin/general/include/colorpicker.jsp"/>
-</c:if>
-<jsp:include page="/jsp/include/footer.jsp"/>
-<c:if test="${empty header['x-requested-with']}">
-    <jsp:include page="/jsp/admin/general/include/colorpicker.jsp"/>
-</c:if>
+<jsp:include page="/jsp/admin/include/colorpicker.jsp"/>
