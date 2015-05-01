@@ -208,6 +208,10 @@ input[type="number"] {
 #site-menu a:hover {
   background: #94cfea;
 }
+a:active,
+a:hover {
+  color: #ec6410;
+}
 /* end off canvas side menu */
 .form-control,
 .form-control:focus {
