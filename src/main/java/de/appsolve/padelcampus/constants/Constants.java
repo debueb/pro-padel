@@ -67,4 +67,8 @@ public class Constants {
     public static final Integer PROFILE_PICTURE_WIDTH       = 200;
     public static final Integer PROFILE_PICTURE_HEIGHT      = 200;
     
+    public static final String DATA_DIR_SUMMERNOTE_IMAGES    = "summernoteImages";
+    public static final Integer SUMMERNOTE_IMAGE_WIDTH       = 800;
+    public static final Integer SUMMERNOTE_IMAGE_HEIGHT      = 800;
+    
 }

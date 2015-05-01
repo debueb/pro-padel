@@ -6,10 +6,14 @@
 
 package de.appsolve.padelcampus.controller;
 
+import com.drew.imaging.ImageProcessingException;
+import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.dao.ImageDAOI;
 import de.appsolve.padelcampus.db.model.Image;
 import de.appsolve.padelcampus.utils.FileUtil;
+import de.appsolve.padelcampus.utils.ImageUtil;
 import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +21,10 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -31,6 +38,9 @@ public class ImagesController extends BaseController{
     
     @Autowired
     FileUtil fileUtil;
+    
+    @Autowired
+    ImageUtil imageUtil;
 
     @Autowired
     ImageDAOI imageDAO;
@@ -44,5 +54,12 @@ public class ImagesController extends BaseController{
         }
         //TODO: return default image
         return null;
+    }
+    
+    @ResponseBody
+    @RequestMapping(value="upload", method = POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    public String postImage(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException, ImageProcessingException {
+        Image image = imageUtil.saveImage(file.getBytes(), Constants.SUMMERNOTE_IMAGE_WIDTH, Constants.SUMMERNOTE_IMAGE_HEIGHT, Constants.DATA_DIR_SUMMERNOTE_IMAGES);
+        return "/images/image/"+image.getSha256();
     }
 }

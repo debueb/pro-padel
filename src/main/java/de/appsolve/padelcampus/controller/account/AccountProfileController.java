@@ -5,27 +5,23 @@
  */
 package de.appsolve.padelcampus.controller.account;
 
-import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.exif.ExifIFD0Directory;
+import static de.appsolve.padelcampus.constants.Constants.DATA_DIR_PROFILE_PICTURES;
+import static de.appsolve.padelcampus.constants.Constants.PROFILE_PICTURE_HEIGHT;
 import static de.appsolve.padelcampus.constants.Constants.PROFILE_PICTURE_WIDTH;
 import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Image;
 import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.utils.FileUtil;
+import de.appsolve.padelcampus.utils.ImageUtil;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
-import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -57,7 +53,7 @@ public class AccountProfileController extends BaseController {
     Msg msg;
 
     @Autowired
-    FileUtil fileUtil;
+    ImageUtil imageUtil;
 
     @RequestMapping()
     public ModelAndView getIndex(HttpServletRequest request) {
@@ -111,28 +107,7 @@ public class AccountProfileController extends BaseController {
                     
                     byte[] bytes = pictureMultipartFile.getBytes();
 
-                    originalImage = ImageIO.read(new ByteArrayInputStream(bytes));
-                    resizedImage = Scalr.resize(originalImage, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.AUTOMATIC, PROFILE_PICTURE_WIDTH, PROFILE_PICTURE_WIDTH, Scalr.OP_ANTIALIAS);
-                    
-                    //fix iOS always sending landscape image with EXIF orientation metadata
-                    Metadata metadata = ImageMetadataReader.readMetadata(new ByteArrayInputStream(bytes.clone()));
-                    if (metadata.containsDirectory(ExifIFD0Directory.class)){
-                        ExifIFD0Directory directory = metadata.getDirectory(ExifIFD0Directory.class);
-                        if (directory!=null && directory.containsTag(ExifIFD0Directory.TAG_ORIENTATION)){
-                            Integer value = directory.getInteger(ExifIFD0Directory.TAG_ORIENTATION);
-                            if (value!=null){
-                                switch (value){
-                                    case 6: //this is the value the iPhone sends for photos captures in portait mode
-                                        resizedImage = Scalr.rotate(resizedImage, Scalr.Rotation.CW_90);
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                    
-                    Image image = fileUtil.save(resizedImage);
+                    Image image = imageUtil.saveImage(bytes, PROFILE_PICTURE_WIDTH, PROFILE_PICTURE_HEIGHT, DATA_DIR_PROFILE_PICTURES);
                     persistedPlayer.setProfileImage(image);
                 }
             } catch (IOException | ImageProcessingException e) {

@@ -10,7 +10,6 @@
             <h1>${empty Model.id ? AddEntry : EditEntry}</h1>
         </div>
         
-        
         <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model" id="news-form">
             <spf:input type="hidden" path="id"/>
             <spf:input type="hidden" path="position"/>
@@ -38,6 +37,7 @@
       </spf:form>
     </div>
 </div>
+        
 <%-- include summernote in body when requested via ajax, otherwise after footer (where jquery is added) --%>
 <c:if test="${not empty header['x-requested-with']}">
     <jsp:include page="/jsp/admin/include/summernote.jsp"/>

@@ -279,8 +279,7 @@ input[type="checkbox"]:checked ~ label:before {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-color: black;
-  opacity: .5;
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 99;
 }
 .page-header {
@@ -909,6 +908,37 @@ pre {
 }
 .note-popover .popover-content {
   background: white;
+}
+progress,
+progress[value] {
+  /* Reset the default appearance */
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Get rid of default border in Firefox. */
+
+  border: none;
+  /* Dimensions */
+
+  width: 50%;
+  height: 40px;
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  margin-top: -20px;
+  display: none;
+}
+progress::-webkit-progress-bar,
+progress[value]::-webkit-progress-bar {
+  background-color: #ec6410;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+progress[value]::-webkit-progress-value {
+  background-color: #3fa9d9;
+  border-radius: 4px;
+  background-size: 35px 40px, 100% 100%, 100% 100%;
 }
 .reservation-row {
   height: 35px;

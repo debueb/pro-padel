@@ -8,7 +8,6 @@ package de.appsolve.padelcampus.utils;
 import com.drew.imaging.ImageProcessingException;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import static de.appsolve.padelcampus.constants.Constants.DATA_DIR_PROFILE_PICTURES;
 import de.appsolve.padelcampus.db.dao.ImageDAOI;
 import de.appsolve.padelcampus.db.model.Image;
 import java.awt.image.BufferedImage;
@@ -38,7 +37,7 @@ public class FileUtil {
     @Autowired
     ImageDAOI imageDAO;
   
-    public Image save(BufferedImage bufferedImage) throws IOException, ImageProcessingException{
+    public Image save(BufferedImage bufferedImage, String folderName) throws IOException, ImageProcessingException{
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             
             //convert buffered image to byte array
@@ -48,7 +47,13 @@ public class FileUtil {
             
             //generate file path based on checksum of byte array
             String checksum = DigestUtils.sha256Hex(byteArray);
-            String filePath = DATA_DIR + File.separator + DATA_DIR_PROFILE_PICTURES + File.separator + checksum;
+            
+            Image existingImage = imageDAO.findBySha256(checksum);
+            if (existingImage != null){
+                return existingImage;
+            }
+            
+            String filePath = DATA_DIR + File.separator + folderName + File.separator + checksum;
 
             //save file to generated file name
             File file = new File(filePath);
