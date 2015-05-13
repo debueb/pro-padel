@@ -34,10 +34,10 @@
                 <label class="checkbox" for="showInFooter1"><fmt:message key="ShowInFooter"/></label>
             </div>
             <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
-            <button class="btn btn-primary btn-block btn-back unit"><fmt:message key="Cancel"/></button>
+            <a class="btn btn-primary btn-block btn-back unit ajaxify"><fmt:message key="Cancel"/></a>
             
             <c:if test="${Model.moduleType == 'Page'}">
-                <a class="btn btn-primary btn-block" href="/admin/general/modules/page/${Model.id}"><fmt:message key="ManageEntries"/></a>
+                <a class="btn btn-primary btn-block ajaxify" href="/admin/general/modules/page/${Model.id}"><fmt:message key="ManageEntries"/></a>
             </c:if>
       </spf:form>
     </div>
