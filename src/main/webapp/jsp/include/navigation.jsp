@@ -23,6 +23,12 @@
     </c:if>
     <c:choose>
         <c:when test="${not empty user}">
+            <fmt:message key="Account" var="title"/>
+            <jsp:include page="/jsp/include/list-menu-item.jsp">
+                <jsp:param name="image" value="child"/>
+                <jsp:param name="title" value="${title}"/>
+                <jsp:param name="url" value="/account"/>
+            </jsp:include>
             <fmt:message key="Logout" var="title"/>
             <jsp:include page="/jsp/include/list-menu-item.jsp">
                 <jsp:param name="image" value="sign-out"/>
