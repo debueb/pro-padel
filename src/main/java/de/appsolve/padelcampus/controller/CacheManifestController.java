@@ -42,26 +42,39 @@ public class CacheManifestController {
         appendFolder(sb, hash, "js");
         appendFolder(sb, hash, "images");
         appendFolder(sb, hash, "fonts");
+        
+        sb.append("\nNETWORK:\n");
+        sb.append("cache.manifest");
+        
+        sb.append("\nFALLBACK:\n");
+        appendFolder(sb, hash, "jsp/offline", "/ /offline");
         sb.append("# MD5: ").append(DigestUtils.md5Hex(hash.toString()));
-        //appendFolder(sb, "fonts");
         
         return sb.toString();
     }
 
     private void appendFolder(StringBuilder sb, StringBuilder hash, String path) throws IOException {
+        appendFolder(sb, hash, path, null);
+    }
+    private void appendFolder(StringBuilder sb, StringBuilder hash, String path, String pathMapping) throws IOException {
         Resource resourceFolder = applicationContext.getResource(path);
         File folder = resourceFolder.getFile();
-        appendContentsOfFolder(sb, hash, folder, path);
+        appendContentsOfFolder(sb, hash, folder, path, pathMapping);
     }
 
-    private void appendContentsOfFolder(StringBuilder sb, StringBuilder hash, File folder, String path) throws FileNotFoundException, IOException {
+    private void appendContentsOfFolder(StringBuilder sb, StringBuilder hash, File folder, String path, String pathMapping) throws FileNotFoundException, IOException {
         for (File file: folder.listFiles()){
             if (file.isDirectory()){
-                appendContentsOfFolder(sb, hash, file, path+"/"+file.getName());
+                appendContentsOfFolder(sb, hash, file, path+"/"+file.getName(), pathMapping);
             } else {
                 hash.append(DigestUtils.md5Hex(new FileInputStream(file)));
-                sb.append(path).append("/").append(file.getName()).append("\n");
+                if (pathMapping == null){
+                    sb.append(path).append("/").append(file.getName()).append("\n");
+                } else {
+                    sb.append(pathMapping).append("\n");
+                }
             }
         }
     }
+
 }
