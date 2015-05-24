@@ -289,8 +289,6 @@ input[type="checkbox"]:checked ~ label:before {
 }
 .panel-heading {
   border-bottom: 0;
-  height: 50px;
-  line-height: 50px;
   padding: 5px 10px;
 }
 #shadow {
@@ -1038,20 +1036,11 @@ div.product-chooser div.product-chooser-item input {
   outline: none;
 }
 @media (max-width: 768px) {
-  h1 {
-    font-size: 24px;
-  }
   .booking-time > span {
     display: block;
   }
 }
 @media (max-width: 480px) {
-  h1 {
-    font-size: 18px;
-  }
-  h4 {
-    font-size: 16px;
-  }
   .table-booking {
     font-size: 11px;
   }
