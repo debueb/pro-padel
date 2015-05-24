@@ -5,10 +5,10 @@
     <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
         <jsp:include page="/jsp/include/back.jsp"/>
         
-        <div class="page-header">
-            <h1><fmt:message key="Account"/></h1>
+        <div class="page-header"></div>
+        <div class="panel panel-info unit">
+            <div class="panel-heading"><h4><fmt:message key="Account"/></h4></div>
         </div>
-
         <div class="list-group">
             <jsp:include page="/jsp/include/list-group-item.jsp">
                 <jsp:param name="href" value="/account/profile"/>

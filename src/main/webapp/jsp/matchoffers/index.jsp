@@ -26,7 +26,10 @@
             </jsp:include>
         </div>
         <hr>
-        <h4><fmt:message key="CurrentMatchOffers"/></h4>
+        <div class="panel panel-info unit">
+            <div class="panel-heading"><h4><fmt:message key="CurrentMatchOffers"/></h4></div>
+        </div>
+        
         <c:choose>
             <c:when test="${empty Models}">
                 <div class="alert alert-info"><fmt:message key="NoCurrentMatchOffers"/></div>

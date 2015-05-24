@@ -43,6 +43,8 @@
         <url-pattern>*.eot</url-pattern>
         <url-pattern>*.woff</url-pattern>
         <url-pattern>*.ttf</url-pattern>
+        <url-pattern>*.woff2</url-pattern>
+        <url-pattern>*.otf</url-pattern>
     </servlet-mapping>
     
     <filter>
