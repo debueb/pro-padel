@@ -9,7 +9,7 @@
         <div class="panel panel-info unit">
             <div class="panel-heading"><h4><fmt:message key="BookCourt"/></h4></div>
             <div class="panel-body">
-                 <spf:form method="POST" class="form-signin" role="form" modelAttribute="Booking">
+                <spf:form method="POST" class="form-signin" role="form" modelAttribute="Booking">
                     <div class="alert alert-danger">${error}</div>
                     <h4><fmt:message key="BookingData"/></h4>
 

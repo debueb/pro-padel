@@ -3,19 +3,24 @@
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
         <jsp:include page="/jsp/include/back.jsp"/>
-        <div class="page-header">
-            <h1><fmt:message key="ResultsIn"><fmt:param>${Event.name}</fmt:param></fmt:message></h1>
-        </div>
+        <div class="page-header"></div>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-scores">
-                <thead>
-                    <th class="text-center">#</th>
-                    <th>Team</th>
-                    <th class="text-center"><fmt:message key="Points"/></th>
-                    <th class="text-center"><fmt:message key="Matches"/></th>
-                    <th class="text-center"><fmt:message key="Sets"/></th>
-                    <th class="text-center"><fmt:message key="Games"/></th>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4><fmt:message key="ResultsIn"><fmt:param>${Event.name}</fmt:param></fmt:message></h4>
+                    </div>
+                </div>
+
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-scores">
+                        <thead>
+                        <th class="text-center">#</th>
+                        <th>Team</th>
+                        <th class="text-center"><fmt:message key="Points"/></th>
+                <th class="text-center"><fmt:message key="Matches"/></th>
+                <th class="text-center"><fmt:message key="Sets"/></th>
+                <th class="text-center"><fmt:message key="Games"/></th>
                 </thead>
                 <tbody>
                     <c:forEach var="ScoreEntry" items="${ScoreEntries}" varStatus="status">

@@ -5,17 +5,21 @@
     <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
         <jsp:include page="/jsp/include/back.jsp"/>
 
-        <div class="page-header">
-            <h1><fmt:message key="MatchOffer"/></h1>
-        </div>
-        
-        <div class="alert alert-danger"><fmt:message key="MatchOfferExpired"/></div>
-        
-        <jsp:include page="/jsp/matchoffers/include/offer-details.jsp"/>
+        <div class="page-header"></div>
 
-        <a class="btn btn-primary btn-block" href="/matchoffers/new"><fmt:message key="NewMatchOffer"/></a>
-        <a class="btn btn-primary btn-block" href="/matchoffers"><fmt:message key="OtherMatchOffers"/></a>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4><fmt:message key="MatchOffer"/></h4>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-danger"><fmt:message key="MatchOfferExpired"/></div>
+
+                <jsp:include page="/jsp/matchoffers/include/offer-details.jsp"/>
+
+                <a class="btn btn-primary btn-block" href="/matchoffers/add"><fmt:message key="NewMatchOffer"/></a>
+                <a class="btn btn-primary btn-block" href="/matchoffers"><fmt:message key="OtherMatchOffers"/></a>
+            </div>
+        </div>
     </div>
 </div>
-
 <jsp:include page="/jsp/include/footer.jsp"/>

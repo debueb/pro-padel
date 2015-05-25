@@ -370,7 +370,6 @@ table.table-scores tbody tr td {
   display: inline-block;
 }
 .form-control {
-  position: relative;
   height: auto;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

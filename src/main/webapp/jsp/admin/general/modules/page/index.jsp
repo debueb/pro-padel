@@ -3,17 +3,22 @@
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
         <jsp:include page="/jsp/include/back.jsp"/>
-        <div class="page-header">
-            <h1><fmt:message key="Entries"/></h1>
+        <div class="page-header"></div>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4><fmt:message key="Entries"/></h4>
+            </div>
         </div>
+
 
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>
-                    <th></th>
-                    <th><fmt:message key="Date"/></th>
-                    <th><fmt:message key="Title"/></th>
-                    <th class="delete"><fmt:message key="Delete"/></th>
+                <th></th>
+                <th><fmt:message key="Date"/></th>
+                <th><fmt:message key="Title"/></th>
+                <th class="delete"><fmt:message key="Delete"/></th>
                 </thead>
                 <tbody class="table-sortable">
                     <c:forEach var="Model" items="${Models}">

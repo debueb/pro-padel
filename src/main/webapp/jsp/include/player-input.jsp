@@ -26,4 +26,3 @@
         <div class="explanation">${Password}</div>
     </div>
 </c:if>
-            

@@ -10,7 +10,7 @@
             </div>
             <hr>
         </c:forEach>
-        
+
         <div class="list-group">
             <c:forEach var="Module" items="${menuLinks}" varStatus="status">      
                 <jsp:include page="/jsp/include/list-group-item.jsp">
@@ -74,7 +74,7 @@
 </div>
 <script src="/js/noconcat/99_addtohomescreen.min.js"></script>
 <script defer type="text/javascript">
-    
+
     if (("standalone" in window.navigator) && window.navigator.standalone) {
         $("#iOSApp").hide();
     } else {

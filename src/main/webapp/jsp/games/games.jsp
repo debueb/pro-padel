@@ -19,15 +19,15 @@
                 </a>
             </c:forEach>
         </div>
-        
-            <c:if test="${not empty Event}">
-                <div class="unit list-group">
-                    <a href="/scores/event/${Event.id}" class="list-group-item ajaxify">
-                        <div class="list-item-text"><fmt:message key="ResultsIn"><fmt:param value="${Event.name}"/></fmt:message></div>
+
+        <c:if test="${not empty Event}">
+            <div class="unit list-group">
+                <a href="/scores/event/${Event.id}" class="list-group-item ajaxify">
+                    <div class="list-item-text"><fmt:message key="ResultsIn"><fmt:param value="${Event.name}"/></fmt:message></div>
                     </a>
                 </div>
 
-            </c:if>
+        </c:if>
     </div>
 </div>
 

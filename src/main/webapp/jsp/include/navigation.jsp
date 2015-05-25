@@ -35,7 +35,7 @@
                 <jsp:param name="title" value="${title}"/>
                 <jsp:param name="url" value="/logout"/>
             </jsp:include>
-    </c:when>
+        </c:when>
         <c:otherwise>
             <fmt:message key="Login" var="title"/>
             <jsp:include page="/jsp/include/list-menu-item.jsp">

@@ -110,7 +110,7 @@
                             </button>
                         </span>
                     </div>
-             
+
                     <%-- Teilnehmer --%>
                     <span class="relative block">
                         <fmt:message key="Participants" var="Participants"/>

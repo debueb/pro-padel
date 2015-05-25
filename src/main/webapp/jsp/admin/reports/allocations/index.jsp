@@ -4,9 +4,14 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
-        <div class="page-header">
-            <h1><fmt:message key="Allocations"/></h1>
+        <div class="page-header"></div>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4><fmt:message key="Allocations"/></h4>
+            </div>
         </div>
+
         <div class="datepicker-container">
             <div class="datepicker-text-container">
                 <span class="fa fa-calendar datepicker-icon"></span>
@@ -26,7 +31,7 @@
                         <thead>
                             <tr>
                                 <th class="text-center"><fmt:message key="TimeShort"/></th>
-                                <c:forEach var="WeekDay" items="${WeekDays}">
+                                    <c:forEach var="WeekDay" items="${WeekDays}">
                                     <th class="text-center ${Day == WeekDay ? 'booking-selected-date' : ''}">
                                         <a href="/bookings/${WeekDay}" class="ajaxify">
                                             <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>
@@ -40,26 +45,26 @@
                             <!--
                             <c:forEach var="TimeRange" items="${RangeMap}">
                                 <tr>
-                                    <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
-                                    <joda:format value="${TimeRange.endTime}" pattern="HH:mm" var="endTime"/>
-                                    <td class="booking-time">${startTime}<span>-</span>${endTime}</td>
-                                
-                                    <c:forEach var="WeekDay" items="${WeekDays}">
-                                        <c:set var="containsTimeSlot" value="false"/>
-                                        <c:forEach var="TimeSlot" items="${TimeSlots}">
-                                            <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
-                                                <c:set var="containsTimeSlot" value="true"/>
-                                                <c:set var="urlDetail" value="/admin/reports/bookinglist/${TimeSlot.date}"/>
-                                                <td class="booking-bookable ${fn:length(TimeSlot.bookings) == 0 ? 'booking-bookable-last' : ''}">
-                                                    <a class="block ajaxify" href="${urlDetail}">${fn:length(TimeSlot.bookings)}</a>
-                                                </td>
-                                            </c:if>
-                                        </c:forEach>
-                                        <c:if test="${containsTimeSlot == false}">
-                                            <td class="booking-disabled"></td>
+                                <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
+                                <joda:format value="${TimeRange.endTime}" pattern="HH:mm" var="endTime"/>
+                                <td class="booking-time">${startTime}<span>-</span>${endTime}</td>
+                            
+                                <c:forEach var="WeekDay" items="${WeekDays}">
+                                    <c:set var="containsTimeSlot" value="false"/>
+                                    <c:forEach var="TimeSlot" items="${TimeSlots}">
+                                        <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
+                                            <c:set var="containsTimeSlot" value="true"/>
+                                            <c:set var="urlDetail" value="/admin/reports/bookinglist/${TimeSlot.date}"/>
+                                            <td class="booking-bookable ${fn:length(TimeSlot.bookings) == 0 ? 'booking-bookable-last' : ''}">
+                                                <a class="block ajaxify" href="${urlDetail}">${fn:length(TimeSlot.bookings)}</a>
+                                            </td>
                                         </c:if>
                                     </c:forEach>
-                                </tr>
+                                    <c:if test="${containsTimeSlot == false}">
+                                        <td class="booking-disabled"></td>
+                                    </c:if>
+                                </c:forEach>
+                            </tr>
                             </c:forEach>
                             -->
                             <c:forEach var="TimeRange" items="${RangeMap}">
@@ -70,13 +75,13 @@
 
                                     <c:forEach var="WeekDay" items="${WeekDays}">
                                         <c:set var="offerCount" value="0"/>
-                                        
+
                                         <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
                                             <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
-                                               <c:set var="offerCount" value="${offerCount + fn:length(TimeSlot.config.offers)}"/>
+                                                <c:set var="offerCount" value="${offerCount + fn:length(TimeSlot.config.offers)}"/>
                                             </c:if> 
                                         </c:forEach>
-                                        
+
                                         <c:choose>
                                             <c:when test="${offerCount>0}">
                                                 <td class="booking-bookable">

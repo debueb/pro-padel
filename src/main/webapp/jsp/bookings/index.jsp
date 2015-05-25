@@ -9,7 +9,7 @@
         <div class="panel panel-info unit">
             <div class="panel-heading"><h4><fmt:message key="BookCourt"/></h4></div>
         </div>
-        
+
         <div class="datepicker-container">
             <div class="datepicker-text-container">
                 <span class="fa fa-calendar datepicker-icon"></span>
@@ -31,7 +31,7 @@
                         <thead>
                             <tr>
                                 <th class="text-center"><fmt:message key="TimeShort"/></th>
-                                <c:forEach var="WeekDay" items="${WeekDays}">
+                                    <c:forEach var="WeekDay" items="${WeekDays}">
                                     <th class="text-center ${Day == WeekDay ? 'booking-selected-date' : ''}">
                                         <a href="/bookings/${WeekDay}" class="ajaxify">
                                             <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>
@@ -85,21 +85,21 @@
                                     </tr>
                                 </c:if>
                             </c:forEach>
-                                <tr>
-                                    <td></td>
-                                    <c:forEach var="WeekDay" items="${WeekDays}">
-                                        <td class="text-center ${Day == WeekDay ? 'booking-selected-date' : ''}">
-                                            <a href="/bookings/${WeekDay}" class="ajaxify">
-                                                <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>
-                                                <br /><joda:format value="${WeekDay}" pattern="dd.MM."/>
-                                            </a>
-                                        </td>
-                                    </c:forEach>
-                                </tr>
+                            <tr>
+                                <td></td>
+                                <c:forEach var="WeekDay" items="${WeekDays}">
+                                    <td class="text-center ${Day == WeekDay ? 'booking-selected-date' : ''}">
+                                        <a href="/bookings/${WeekDay}" class="ajaxify">
+                                            <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>
+                                            <br /><joda:format value="${WeekDay}" pattern="dd.MM."/>
+                                        </a>
+                                    </td>
+                                </c:forEach>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
-                                
+
                 <jsp:include page="/jsp/bookings/include/leyenda.jsp"/>
             </c:otherwise>
         </c:choose>

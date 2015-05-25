@@ -4,9 +4,14 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
-        <div class="page-header">
-            <h1><fmt:message key="DirectDebit"/></h1>
+        <div class="page-header"></div>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4><fmt:message key="DirectDebit"/></h4>
+            </div>
         </div>
+
 
         <form action="#" class="form-signin paymill-form" method="POST" data-payment-type="directdebit">
 
@@ -18,10 +23,10 @@
             <input class="holdername form-control form-top-element" type="text" placeholder="${placeholder}"/>
             <fmt:message key="IBAN" var="placeholder"/>
             <input class="iban  form-control form-center-element" type="text" placeholder="${placeholder}" />
-            
+
             <fmt:message key="BIC" var="placeholder"/>
             <input class="bic form-control form-bottom-element" type="text" placeholder="${placeholder}"/>
-            
+
             <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Book"/></button>
             <a class="btn btn-primary btn-block unit ajaxify" href="/bookings/booking/${Booking.UUID}/abort"><fmt:message key="Cancel"/></a>
 
