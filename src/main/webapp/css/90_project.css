@@ -734,6 +734,9 @@ ui-state-hover,
 .table.table-leyenda > thead:first-child > tr:first-child > th {
   padding: 10px;
 }
+.table.table-booking {
+  border: 1px solid #afafaf;
+}
 .table.table-booking > tbody > tr > td,
 .table.table-booking > thead:first-child > tr:first-child > th,
 .table.table-leyenda > tbody > tr > td,

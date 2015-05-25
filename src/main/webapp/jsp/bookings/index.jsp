@@ -8,8 +8,9 @@
 
         <div class="panel panel-info unit">
             <div class="panel-heading"><h4><fmt:message key="BookCourt"/></h4></div>
-        </div>
-
+            <div class="panel-body">
+                
+            
         <div class="datepicker-container">
             <div class="datepicker-text-container">
                 <span class="fa fa-calendar datepicker-icon"></span>
@@ -105,5 +106,7 @@
         </c:choose>
     </div>
 </div>
+    </div>
+        </div>
 
 <jsp:include page="/jsp/include/footer.jsp"/>
