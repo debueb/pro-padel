@@ -10,7 +10,7 @@
             <div class="panel-heading">
                 <h4>${Team.name}</h4>
             </div>
-        </div>
+            <div class="panel-body">
 
 
         <h4><fmt:message key="Players"/></h4>
@@ -37,6 +37,8 @@
             </c:forEach>
         </div>
     </div>
+        </div>
+        </div>
 </div>
 
 <jsp:include page="/jsp/include/footer.jsp"/>

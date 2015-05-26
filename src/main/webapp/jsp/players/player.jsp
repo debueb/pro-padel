@@ -11,7 +11,7 @@
             <div class="panel-heading">
                 <h4>${Player}</h4>
             </div>
-        </div>
+            <div class="panel-body">
 
 
         <div class="text-center">
@@ -63,6 +63,8 @@
                 </div>
         </c:if>
     </div>
+                            </div>
+        </div>
 </div>
 
 <jsp:include page="/jsp/include/footer.jsp"/>

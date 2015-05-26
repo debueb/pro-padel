@@ -9,9 +9,8 @@
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4><fmt:message key="GameResultIn"><fmt:param value="${Game.event.name}"/></fmt:message></h4>
-                </div>
             </div>
-
+            <div class="panel-body">
         <c:set var="showScoreReporter" value="true" scope="request"/>
         <jsp:include page="/jsp/games/game-result.jsp"/>
         <div class="list-group unit">
@@ -56,7 +55,9 @@
                 <fmt:message key="NeedToParticipateToMailAllPlayers"><fmt:param value="${Player}"/></fmt:message>
                 </div>
         </c:if>
-    </div>
+    </div></div>
+        </div>
+
 </div>
 
 <jsp:include page="/jsp/include/footer.jsp"/>

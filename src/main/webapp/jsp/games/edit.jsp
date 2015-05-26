@@ -10,7 +10,7 @@
             <div class="panel-heading">
                 <h4><fmt:message key="GameResultIn"><fmt:param value="${Game.event.name}"/></fmt:message></h4>
                 </div>
-            </div>
+                <div class="panel-body">
 
             <div class="alert alert-danger">${error}</div>
         <form method="POST">
@@ -51,7 +51,8 @@
 
             <button type="submit" class="btn btn-primary btn-block unit"><fmt:message key="Save"/></button>
         </form>
-    </div>
+    </div></div>
+            </div>
 </div>
 
 <jsp:include page="/jsp/include/footer.jsp"/>
