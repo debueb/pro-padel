@@ -6,8 +6,9 @@
 
 package de.appsolve.padelcampus.listener;
 
-import de.appsolve.padelcampus.constants.Constants;
+import de.appsolve.padelcampus.utils.HtmlResourceUtil;
 import de.appsolve.padelcampus.utils.ModuleUtil;
+import java.util.logging.Level;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.sql.DataSource;
@@ -31,6 +32,9 @@ public class ContextInitializationListener implements ServletContextListener{
     @Autowired
     ModuleUtil moduleUtil;
     
+    @Autowired
+    HtmlResourceUtil htmlResourceUtil;
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         //since this is initialized by the servlet container (and not by spring), we need to inject the dependencies manually
@@ -50,6 +54,12 @@ public class ContextInitializationListener implements ServletContextListener{
         flyway.migrate();
         
         moduleUtil.reloadModules(sce.getServletContext());
+        
+        try {
+            htmlResourceUtil.updateCss(sce.getServletContext());
+        } catch (Exception ex) {
+            log.warn(ex);
+        }
     }
 
     @Override

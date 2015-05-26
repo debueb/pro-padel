@@ -25,12 +25,12 @@
                         <div><fmt:message key="ProfilePicture"/></div>
                         <div>
                             <div class="col-xs-12 text-center">
-                                <figure id="profile-picture">
+                                <figure id="picture" class="text-center">
                                     <c:set var="Player" value="${Model}" scope="request"/>
                                     <jsp:include page="/jsp/players/include/profile-image.jsp"/>
-                                    <div id="profile-picture-subtext" class="unit"><fmt:message key="ClickImageToUploadProfilePicture"/></div>
+                                    <div id="picture-subtext" class="unit"><fmt:message key="ClickImageToChange"/></div>
                                 </figure>
-                                <spf:input type="file" capture="camera" accept="image/*" id="profile-picture-input" path="profileImageMultipartFile" class="hidden"/>
+                                <spf:input type="file" capture="camera" accept="image/*" id="picture-input" path="profileImageMultipartFile" class="hidden"/>
                             </div>
                             <div class="clearfix"></div>
                         </div>

@@ -61,6 +61,7 @@
     <%--</c:if>--%>
     <body ontouchstart="">
         <div class="background-image"></div>
+        <div class="background-image blur"></div>
         <div class="wrapper">
             <c:if test="${empty param.embed}">
                 <div class="mobile-web-app-capable-status-bar"></div>

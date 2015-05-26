@@ -6,6 +6,7 @@
 package de.appsolve.padelcampus.utils;
 
 import de.appsolve.padelcampus.constants.Constants;
+import de.appsolve.padelcampus.db.dao.CssAttributeDAOI;
 import de.appsolve.padelcampus.db.model.CssAttribute;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,6 +29,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.lesscss.LessCompiler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +39,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class HtmlResourceUtil {
+    
+    @Autowired
+    CssAttributeDAOI cssAttributeDAO;
     
     private static final Logger log = Logger.getLogger(HtmlResourceUtil.class);
     
@@ -56,10 +61,9 @@ public class HtmlResourceUtil {
     
     private static final String ALL_MIN_CSS = "/css/all.min.css";
 
-    public void updateCss(ServletContext context, List<CssAttribute> cssAttributes) throws Exception {
+    public void updateCss(ServletContext context) throws Exception {
+        List<CssAttribute> cssAttributes = cssAttributeDAO.findAll();
         if (!cssAttributes.isEmpty()) {
-            
-            
             //PROBLEM: on openshift, the war file is not extracted. Thus, sortedFiles cannot be overwritten and must be read with context.getResource...
             
             //copy css sortedFiles to data directory
@@ -72,22 +76,11 @@ public class HtmlResourceUtil {
             //copy less sortedFiles
             copyResources(context, FOLDER_LESS, new File(DATA_DIR));
             //FileUtils.copyDirectory(new File(rootPath + FOLDER_LESS), new File(DATA_DIR + FOLDER_LESS));
-            //replace variables in variables.less
-            InputStream lessIs = context.getResourceAsStream(VARIABLES_LESS);
-            Path variablesLessOutput = Paths.get(DATA_DIR + VARIABLES_LESS);
-            String content = IOUtils.toString(lessIs, Constants.UTF8);
-            for (CssAttribute attribute : cssAttributes) {
-                content = content.replaceAll(attribute.getCssDefaultValue(), attribute.getCssValue());
-            }
             
-            //overwrite variables.less in data directory
-            if (!Files.exists(variablesLessOutput)){
-                if (!Files.exists(variablesLessOutput.getParent())){
-                    Files.createDirectory(variablesLessOutput.getParent());
-                }
-                Files.createFile(variablesLessOutput);
-            }
-            Files.write(variablesLessOutput, content.getBytes(Constants.UTF8), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            //replace variables in variables.less, 90_project.less
+            replaceVariables(context, cssAttributes, VARIABLES_LESS);
+            replaceVariables(context, cssAttributes, PROJECT_LESS);
+            
 
             //compile less and overwrite css sortedFiles in data directory
             LessCompiler lessCompiler = new LessCompiler();
@@ -174,5 +167,23 @@ public class HtmlResourceUtil {
                 FileUtils.copyURLToFile(resource, new File(destinationFolder, resourcePath));
             }
         }
+    }
+
+    private void replaceVariables(ServletContext context, List<CssAttribute> cssAttributes, String FILE_NAME) throws IOException {
+        InputStream lessIs = context.getResourceAsStream(FILE_NAME);
+        Path outputPath = Paths.get(DATA_DIR + FILE_NAME);
+        String content = IOUtils.toString(lessIs, Constants.UTF8);
+        for (CssAttribute attribute : cssAttributes) {
+            content = content.replaceAll(attribute.getCssDefaultValue(), attribute.getCssValue());
+        }
+
+        //overwrite variables.less in data directory
+        if (!Files.exists(outputPath)){
+            if (!Files.exists(outputPath.getParent())){
+                Files.createDirectory(outputPath.getParent());
+            }
+            Files.createFile(outputPath);
+        }
+        Files.write(outputPath, content.getBytes(Constants.UTF8), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
 }

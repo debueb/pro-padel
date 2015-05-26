@@ -438,15 +438,15 @@ app.main = {};
     };
     
     self.enableAdvancedProfile = function(){
-        $('#profile-picture').livequery(function(){
+        $('#picture').livequery(function(){
             $(this).on('click tap', function(){
-                $('#profile-picture-input').click();
+                $('#picture-input').click();
                 return false;
             });
-            $('#profile-picture-input').on('change', function(){
+            $('#picture-input').on('change', function(){
                 var value = $(this).val();
                 var lastIndex = (value.lastIndexOf("\\") === -1) ? 0 : value.lastIndexOf("\\")+1;
-                $('#profile-picture-subtext').text(value.slice(lastIndex)); 
+                $('#picture-subtext').text(value.slice(lastIndex)); 
             });
         });
         
