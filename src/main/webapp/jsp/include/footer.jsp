@@ -13,12 +13,16 @@
 <div class="push"></div>
 </div>
 <c:if test="${empty param.embed}">
-    <div class="footer small">
-        <span class="footer-container">
-            <c:forEach var="Module" items="${footerLinks}" varStatus="status">
-                <a href="${Module.url}" class="ajaxify">${Module.title}</a> ${not status.last ? ' | ' : ''}
-            </c:forEach>
-        </span>
+    <div class="footer small container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
+                <div class="footer-container">
+                <c:forEach var="Module" items="${footerLinks}" varStatus="status">
+                    <a href="${Module.url}" class="ajaxify">${Module.title}</a> ${not status.last ? ' | ' : ''}
+                </c:forEach>
+                </div>
+            </div>
+        </div>
     </div>
 </c:if>
 <a id="dummy-link" class="ajaxify" href="#"></a>
