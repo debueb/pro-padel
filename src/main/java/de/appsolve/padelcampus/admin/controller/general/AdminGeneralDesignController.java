@@ -10,9 +10,9 @@ import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.CssAttributeDAOI;
 import de.appsolve.padelcampus.db.model.CssAttribute;
 import de.appsolve.padelcampus.utils.HtmlResourceUtil;
-import java.util.Base64;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -50,7 +50,7 @@ public class AdminGeneralDesignController extends BaseController{
                     StringBuilder sb = new StringBuilder("url(data:");
                     sb.append(file.getContentType());
                     sb.append(";base64,");
-                    sb.append(Base64.getEncoder().encodeToString(file.getBytes()));
+                    sb.append(Base64.encodeBase64String(file.getBytes()));
                     sb.append(")");
                     att.setCssValue(sb.toString());
                 }
