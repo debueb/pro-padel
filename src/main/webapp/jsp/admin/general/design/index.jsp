@@ -28,7 +28,7 @@
                             <c:otherwise>
                                 <figure id="picture" class="unit">
                                     <div class="text-center"><fmt:message key="BackgroundImage"/></div>
-                                    <div class="unit" style="width: 100%; height: 100%; background-size: 100% 100%; content: ${empty Attribute.cssValue ? Attribute.cssDefaultValue : Attribute.cssValue}"></div>
+                                    <div class="unit" style="width: 100%; height: 100%; background-size: 100% 100%; content: ${empty Attribute.cssValue ? 'url(\'/images/bg.jpg\')' : Attribute.cssValue}"></div>
                                     <div id="picture-subtext" class="unit text-center"><fmt:message key="ClickImageToChange"/></div>
                                 </figure>
                                 <input type="file" capture="camera" accept="image/*" id="picture-input" name="backgroundImage" class="hidden"/>
