@@ -13,32 +13,32 @@
             <div class="panel-body">
 
 
-        <h4><fmt:message key="Players"/></h4>
-        <div class="list-group">
-            <c:forEach var="Player" items="${Team.players}">
-                <jsp:include page="/jsp/include/list-badge-item.jsp">
-                    <jsp:param name="msg" value="${Player}"/>
-                    <jsp:param name="url" value="/players/player/${Player.id}"/>
-                </jsp:include>
-            </c:forEach>
-        </div>
+                <h4><fmt:message key="Players"/></h4>
+                <div class="list-group">
+                    <c:forEach var="Player" items="${Team.players}">
+                        <jsp:include page="/jsp/include/list-badge-item.jsp">
+                            <jsp:param name="msg" value="${Player}"/>
+                            <jsp:param name="url" value="/players/player/${Player.id}"/>
+                        </jsp:include>
+                    </c:forEach>
+                </div>
 
-        <hr>
-        <h4><fmt:message key="Games"/></h4>
-        <div class="list-group">
-            <c:forEach var="EventGameMapEntry" items="${EventGameMap}">
-                <c:set var="Event" value="${EventGameMapEntry.key}"/>
-                <fmt:message key="AllGamesWithTeamInEvent" var="msg"><fmt:param value="${Team}"/><fmt:param value="${Event.name}"/></fmt:message>
-                <jsp:include page="/jsp/include/list-badge-item.jsp">
-                    <jsp:param name="msg" value="${msg}"/>
-                    <jsp:param name="url" value="/games/team/${Team.id}/event/${Event.id}"/>
-                    <jsp:param name="badge" value="${fn:length(EventGameMapEntry.value)}"/>
-                </jsp:include>
-            </c:forEach>
+                <hr>
+                <h4><fmt:message key="Games"/></h4>
+                <div class="list-group">
+                    <c:forEach var="EventGameMapEntry" items="${EventGameMap}">
+                        <c:set var="Event" value="${EventGameMapEntry.key}"/>
+                        <fmt:message key="AllGamesWithTeamInEvent" var="msg"><fmt:param value="${Team}"/><fmt:param value="${Event.name}"/></fmt:message>
+                        <jsp:include page="/jsp/include/list-badge-item.jsp">
+                            <jsp:param name="msg" value="${msg}"/>
+                            <jsp:param name="url" value="/games/team/${Team.id}/event/${Event.id}"/>
+                            <jsp:param name="badge" value="${fn:length(EventGameMapEntry.value)}"/>
+                        </jsp:include>
+                    </c:forEach>
+                </div>
+            </div>
         </div>
     </div>
-        </div>
-        </div>
 </div>
 
 <jsp:include page="/jsp/include/footer.jsp"/>
