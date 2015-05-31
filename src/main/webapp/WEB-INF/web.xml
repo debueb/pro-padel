@@ -175,14 +175,4 @@
         <error-code>500</error-code>
         <location>/error/500</location>
     </error-page>
-    
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>padelcampus</web-resource-name>
-            <url-pattern>/*</url-pattern>
-        </web-resource-collection>
-        <user-data-constraint>
-            <transport-guarantee>${transport-guarantee}</transport-guarantee>
-        </user-data-constraint>
-    </security-constraint>
 </web-app>

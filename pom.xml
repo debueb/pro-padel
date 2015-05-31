@@ -387,9 +387,6 @@
                 <!-- include compressed and concatenated CSS -->
                 <compress.css>false</compress.css>
                 
-                <!-- do not require https during development as LiveReload is not compatible -->
-                <transport-guarantee>NONE</transport-guarantee>
-                
                 <OPENSHIFT_MYSQL_DB_HOST>localhost</OPENSHIFT_MYSQL_DB_HOST>
                 <OPENSHIFT_MYSQL_DB_PORT>3306</OPENSHIFT_MYSQL_DB_PORT>
                 <OPENSHIFT_MYSQL_DB_USERNAME>padelcampus</OPENSHIFT_MYSQL_DB_USERNAME>
@@ -432,9 +429,6 @@
                 
                 <!-- include compressed and concatenated CSS -->
                 <compress.css>true</compress.css>
-                
-                <!-- make sure all requests are handled by https -->
-                <transport-guarantee>NONE</transport-guarantee>
             </properties>
         </profile>
     </profiles>
