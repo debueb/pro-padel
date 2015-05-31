@@ -57,20 +57,16 @@ html,
 body {
   height: 100%;
 }
-html {
+body {
+  padding-top: 50px;
+  background-color: #94cfea;
+}
+.wrapper {
   background: url('/images/bg.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-}
-body {
-  padding-top: 50px;
-  background-color: transparent;
-}
-.wrapper {
-  z-index: 2;
-  position: relative;
   min-height: 100%;
   height: auto !important;
   height: 100%;
@@ -85,7 +81,6 @@ body {
   z-index: 2;
   position: relative;
   padding-top: 20px;
-  padding-bottom: 20px;
   text-align: center;
 }
 .footer-container {
