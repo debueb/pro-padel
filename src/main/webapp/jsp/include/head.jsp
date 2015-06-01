@@ -60,37 +60,38 @@
     </head>
     <%--</c:if>--%>
     <body ontouchstart="">
-        <div class="wrapper">
-            <c:if test="${empty param.embed}">
-                <div class="mobile-web-app-capable-status-bar"></div>
-                <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-                    <div class="navbar-header">
-                        <c:choose>
-                            <c:when test="${pageContext.request.requestURI == '/jsp/index.jsp'}">
-                                <a class="navbar-brand ajaxify" href="/"><img src="images/logo.png" width="63" height="40"/>${pageContext.request.serverName}</a>
-                                </c:when>
-                                <c:otherwise>
-                                <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a><a class="navbar-icon home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>
-                                </c:otherwise>
-                            </c:choose>
-                        <a class="navbar-icon navbar-toggle">
-                            <div class="menu-line menu-line-1"></div>
-                            <div class="menu-line menu-line-2"></div>
-                            <div class="menu-line menu-line-3"></div>
+        <div class="background">
+            <div class="wrapper">
+                <c:if test="${empty param.embed}">
+                    <div class="mobile-web-app-capable-status-bar"></div>
+                    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+                        <div class="navbar-header">
+                            <c:choose>
+                                <c:when test="${pageContext.request.requestURI == '/jsp/index.jsp'}">
+                                    <a class="navbar-brand ajaxify" href="/"><img src="images/logo.png" width="63" height="40"/>${pageContext.request.serverName}</a>
+                                    </c:when>
+                                    <c:otherwise>
+                                    <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a><a class="navbar-icon home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>
+                                    </c:otherwise>
+                                </c:choose>
+                            <a class="navbar-icon navbar-toggle">
+                                <div class="menu-line menu-line-1"></div>
+                                <div class="menu-line menu-line-2"></div>
+                                <div class="menu-line menu-line-3"></div>
 
-                            <!--<span class="fa fa-lg fa-bars"></span>-->
-                        </a>        
+                                <!--<span class="fa fa-lg fa-bars"></span>-->
+                            </a>        
+                        </div>
+                        <div class="collapse navbar-collapse">
+                            <jsp:include page="/jsp/include/navigation.jsp"/>
+                        </div>
                     </div>
-                    <div class="collapse navbar-collapse">
-                        <jsp:include page="/jsp/include/navigation.jsp"/>
-                    </div>
+                </c:if>
+                <jsp:include page="/jsp/include/spinner.jsp"/>
+                <div id="shadow"><progress></progress></div>
+                <div id="site-menu">
+                    <jsp:include page="/jsp/include/navigation.jsp"/>
                 </div>
-            </c:if>
-            <jsp:include page="/jsp/include/spinner.jsp"/>
-            <div id="shadow"><progress></progress></div>
-            <div id="site-menu">
-                <jsp:include page="/jsp/include/navigation.jsp"/>
-            </div>
-            <div id="site-shadow"></div>
-            <div id="site-canvas">
-                <div class="container-fluid" id="content">
+                <div id="site-shadow"></div>
+                <div id="site-canvas">
+                    <div class="container-fluid" id="content">

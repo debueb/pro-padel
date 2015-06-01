@@ -58,35 +58,38 @@ body {
   height: 100%;
 }
 body {
-  padding-top: 50px;
   background-color: #94cfea;
 }
-.wrapper {
+.background {
   background: url('/images/bg.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  min-height: 100%;
-  height: auto !important;
+  display: table;
   height: 100%;
   width: 100%;
-  margin: 0 auto -55px;
 }
-.footer,
-.push {
-  min-height: 55px;
+.wrapper:before {
+  display: block;
+  height: 50px;
+  content: ' ';
+}
+.wrapper {
+  display: table-row;
+  height: 100%;
 }
 .footer {
-  z-index: 2;
-  position: relative;
-  padding-top: 20px;
-  text-align: center;
+  display: table-row;
 }
 .footer-container {
   background-color: white;
+  margin-top: 20px;
+  margin-bottom: 20px;
   padding: 5px;
   border-radius: 4px;
+  overflow: hidden;
+  text-align: center;
 }
 textarea,
 input[type="text"],
