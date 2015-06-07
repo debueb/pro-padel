@@ -3,10 +3,14 @@ package de.appsolve.padelcampus.db.dao;
 import de.appsolve.padelcampus.db.model.Game;
 import java.util.List;
 import de.appsolve.padelcampus.db.model.Event;
+import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Participant;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -58,9 +62,16 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
     @Override
     public List<Game> findByParticipantAndEventWithScoreOnly(Participant participant, Event event) {
         Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
-        criteria.add(Restrictions.isNotNull("scoreReporter"));
+        Criteria criteria = session.createCriteria(GameSet.class, "gameset");
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-        return filterByParticipant((List<Game>) criteria.list(), participant);
+        criteria.createAlias("gameset.game", "game");
+        //criteria.add(Restrictions.eq("game", "gameset.Game"));
+        criteria.add(Restrictions.eq("game.event", event));
+        List<GameSet> gameSets = (List<GameSet>) criteria.list();
+        Set<Game> games = new HashSet<>();
+        for (GameSet gameSet: gameSets){
+            games.add(gameSet.getGame());
+        }
+        return filterByParticipant(new ArrayList<>(games), participant);
     }
 }
