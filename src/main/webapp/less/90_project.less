@@ -170,7 +170,7 @@ textarea, input[type="text"], input[type="email"], input[type="submit"], input[t
     color: white;
 }
 #site-menu a:hover{
-    background: @bgColor;
+    background: @primaryLinkHoverColor;
 }
 a:active, a:hover{
     color: @primaryColor;
@@ -203,7 +203,7 @@ input[type="checkbox"]:checked ~ label:before{
     opacity: .9;
 }
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-state-hover,.ui-widget-content .ui-state-hover,.ui-widget-header .ui-state-hover,.ui-state-focus,.ui-widget-content .ui-state-focus,.ui-widget-header .ui-state-focus{
-    #gradient > .vertical(lighten(@bgColor, 10%), lighten(@bgColor, 20%));
+    #gradient > .vertical(lighten(@primaryLinkHoverColor, 10%), lighten(@primaryLinkHoverColor, 20%));
     color: @primaryLinkColor;
 }
 .panel-info{
@@ -354,7 +354,7 @@ table.table-scores tbody tr td{
     color: @white;
 }
 .navbar-default .navbar-brand:hover{
-    color: @bgColor;
+    color: @primaryLinkHoverColor;
 }
 a.navbar-icon{
     color: @white;
@@ -363,7 +363,7 @@ a.navbar-icon{
     color: white;
 }
 a.navbar-icon:active{
-    color: @bgColor;
+    color: @primaryLinkHoverColor;
 }
 .navbar-default .navbar-toggle .icon-bar{
     background-color: @white;
@@ -378,7 +378,7 @@ a.navbar-icon:active{
     color: @white;
 }
 .navbar-default .navbar-nav>li>a:hover{
-    color: @bgColor;
+    color: @primaryLinkHoverColor;
 }
 .table > thead > tr > th {
   border-bottom: 1px solid #999;
@@ -550,7 +550,7 @@ span.error{
 }
 .ui-widget-content table tbody tr td .ui-state-highlight{
     border-color: @borderColor;
-    background: @bgColor;
+    background: @primaryLinkHoverColor;
 }
 .ui-widget-content table tbody tr td .ui-state-active{
     background: @selectedBgColor;
@@ -632,10 +632,10 @@ span.error{
     font-weight: normal;
 }
 .accordion .ui-state-default{
-    background: lighten(@bgColor, 20%);
+    background: lighten(@primaryLinkHoverColor, 20%);
 }
 .accordion .ui-state-active{
-    background: @bgColor;
+    background: @primaryLinkHoverColor;
 }
 /* accordion end */
 
@@ -878,7 +878,7 @@ progress::-webkit-progress-bar, progress[value]::-webkit-progress-bar {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
 progress[value]::-webkit-progress-value {
-    background-color: darken(@bgColor, 20%);
+    background-color: darken(@primaryLinkHoverColor, 20%);
 
     border-radius: @border-radius-base; 
     background-size: 35px 40px, 100% 100%, 100% 100%;

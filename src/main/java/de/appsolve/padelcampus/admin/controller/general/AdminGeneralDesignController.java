@@ -10,6 +10,8 @@ import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.CssAttributeDAOI;
 import de.appsolve.padelcampus.db.model.CssAttribute;
 import de.appsolve.padelcampus.utils.HtmlResourceUtil;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.codec.binary.Base64;
@@ -71,12 +73,20 @@ public class AdminGeneralDesignController extends BaseController{
 
     private List<CssAttribute> getCssAttributes() {
         List<CssAttribute> atts = cssAttributeDAO.findAll();
-        if (atts.isEmpty()){
-            atts.add(getCssAttribute("bgColor", "#94cfea"));
-            atts.add(getCssAttribute("primaryColor", "#613815"));
-            atts.add(getCssAttribute("primaryLinkColor", "#31708f"));
-            atts.add(getCssAttribute("backgroundImage", "url\\('\\/images\\/bg\\.jpg'\\)"));
-        }
+        add(atts, "bgColor", "#94cfea");
+        add(atts, "primaryColor", "#613815");
+        add(atts, "primaryLinkColor", "#31708f");
+        add(atts, "primaryLinkHoverColor", "#94cfeb");
+        add(atts, "backgroundImage", "url\\('\\/images\\/bg\\.jpg'\\)");
+        Collections.sort(atts, new Comparator<CssAttribute>() {
+
+            @Override
+            public int compare(CssAttribute o1, CssAttribute o2) {
+                Boolean endsWith1 = o1.getName().endsWith("Color");
+                Boolean endsWith2 = o2.getName().endsWith("Color");
+                return endsWith2.compareTo(endsWith1);
+            }
+        });
         return atts;
     }
 
@@ -86,5 +96,18 @@ public class AdminGeneralDesignController extends BaseController{
         att.setCssDefaultValue(cssDefaultValue);
         att = cssAttributeDAO.saveOrUpdate(att);
         return att;
+    }
+
+    private void add(List<CssAttribute> atts, String name, String value) {
+        boolean exists = false;
+        for (CssAttribute att: atts){
+            if (att.getName().equals(name)){
+                exists = true;
+                break;
+            }
+        }
+        if (!exists){
+            atts.add(getCssAttribute(name, value));
+        }
     }
 }
