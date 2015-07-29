@@ -69,7 +69,7 @@ public class GamesController extends BaseController{
     @RequestMapping
     public ModelAndView getIndex(){
         ModelAndView mav = new ModelAndView("games/index");
-        mav.addObject("Events", eventDAO.findAll());
+        mav.addObject("Events", eventDAO.findAllActive());
         return mav;
     }
     

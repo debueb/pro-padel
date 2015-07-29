@@ -13,6 +13,8 @@ public interface GenericDAOI<T> {
    
    List<T> findAllFetchEagerly(String... associations);
    
+   public List<T> findAllFetchEagerlyWithAttributes(Map<String,Object> attributeMap, String... associations);
+   
    T findFirst();
 
    T saveOrUpdate(T entity);

@@ -78,4 +78,11 @@ public class EventDAO extends SortedGenericDAO<Event> implements EventDAOI{
     public List<Event> findAllFetchWithParticipantsAndPlayers() {
         return super.findAllFetchEagerly("participants", "participants.players");
     }
+
+    @Override
+    public List<Event> findAllActiveFetchWithParticipantsAndPlayers() {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("active", true);
+        return super.findAllFetchEagerlyWithAttributes(attributes, "participants", "participants.players");
+    }
 }

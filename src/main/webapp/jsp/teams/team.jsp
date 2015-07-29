@@ -25,17 +25,27 @@
 
                 <hr>
                 <h4><fmt:message key="Games"/></h4>
-                <div class="list-group">
-                    <c:forEach var="EventGameMapEntry" items="${EventGameMap}">
-                        <c:set var="Event" value="${EventGameMapEntry.key}"/>
-                        <fmt:message key="AllGamesWithTeamInEvent" var="msg"><fmt:param value="${Team}"/><fmt:param value="${Event.name}"/></fmt:message>
-                        <jsp:include page="/jsp/include/list-badge-item.jsp">
-                            <jsp:param name="msg" value="${msg}"/>
-                            <jsp:param name="url" value="/games/team/${Team.id}/event/${Event.id}"/>
-                            <jsp:param name="badge" value="${fn:length(EventGameMapEntry.value)}"/>
-                        </jsp:include>
-                    </c:forEach>
-                </div>
+                <c:choose>
+                    <c:when test="${not empty EventGameMap}">
+                        <div class="list-group">
+                            <c:forEach var="EventGameMapEntry" items="${EventGameMap}">
+                                <c:set var="Event" value="${EventGameMapEntry.key}"/>
+                                <fmt:message key="AllGamesWithTeamInEvent" var="msg"><fmt:param value="${Team}"/><fmt:param value="${Event.name}"/></fmt:message>
+                                <jsp:include page="/jsp/include/list-badge-item.jsp">
+                                    <jsp:param name="msg" value="${msg}"/>
+                                    <jsp:param name="url" value="/games/team/${Team.id}/event/${Event.id}"/>
+                                    <jsp:param name="badge" value="${fn:length(EventGameMapEntry.value)}"/>
+                                </jsp:include>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="alert alert-info">
+                            <fmt:message key="NoActiveGames"><fmt:param value="${Team}"/></fmt:message>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+                
             </div>
         </div>
     </div>

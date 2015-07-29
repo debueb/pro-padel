@@ -20,6 +20,7 @@ import de.appsolve.padelcampus.utils.Msg;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,15 @@ public class TeamsController extends BaseController{
     
     @RequestMapping("/all")
     public ModelAndView getAll(){
-        return getTeamsView("Alle Teams", teamDAO.findAll());
+        List<Event> events = eventDAO.findAllActiveFetchWithParticipantsAndPlayers();
+        List<Team> teams = new ArrayList<>();
+        for (Event event: events){
+            if (event.getActive()){
+                teams.addAll(event.getTeams());
+            }
+        }
+        Collections.sort(teams);
+        return getTeamsView("Alle Teams", teams);
     }
     
      @RequestMapping("/team/{teamId}")
@@ -96,10 +105,12 @@ public class TeamsController extends BaseController{
         Map<Event, ArrayList<Game>> eventGameMap = new HashMap<>();
         for (Game game: games){
             Event event = game.getEvent();
-            if (eventGameMap.containsKey(event)){
-                eventGameMap.get(event).add(game);
-            } else {
-                eventGameMap.put(event, new ArrayList<>(Arrays.asList(new Game[]{game})));
+            if (event.getActive()){
+                if (eventGameMap.containsKey(event)){
+                    eventGameMap.get(event).add(game);
+                } else {
+                    eventGameMap.put(event, new ArrayList<>(Arrays.asList(new Game[]{game})));
+                }
             }
         }
         mav.addObject("EventGameMap", eventGameMap);
@@ -108,7 +119,7 @@ public class TeamsController extends BaseController{
 
     private ModelAndView getIndexView() {
         ModelAndView mav = new ModelAndView("teams/index");
-        mav.addObject("Events", eventDAO.findAll());
+        mav.addObject("Events", eventDAO.findAllActive());
         return mav;
     }
 }

@@ -27,7 +27,7 @@ public class EventsController extends BaseController{
     
     @RequestMapping()
     public ModelAndView getAll(){
-        return new ModelAndView("events/index", "Models", eventDAO.findAllActive());
+        return new ModelAndView("events/index");
     }
     
     @RequestMapping("{eventId}")

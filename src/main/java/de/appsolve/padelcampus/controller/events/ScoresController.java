@@ -50,7 +50,7 @@ public class ScoresController extends BaseController{
     @RequestMapping
     public ModelAndView getIndex(){
         ModelAndView mav = new ModelAndView("scores/index");
-        mav.addObject("Events", eventDAO.findAll());
+        mav.addObject("Events", eventDAO.findAllActive());
         return mav;
     }
     

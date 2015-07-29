@@ -63,7 +63,7 @@ public class PlayersController extends BaseController {
     
     @RequestMapping("/all")
     public ModelAndView getAll(){
-        List<Event> allEvents = eventDAO.findAllFetchWithParticipantsAndPlayers();
+        List<Event> allEvents = eventDAO.findAllActiveFetchWithParticipantsAndPlayers();
         Set<Player> players = new TreeSet<>();
         for(Event event: allEvents){
             Set<Participant> participants = event.getParticipants();
@@ -132,7 +132,7 @@ public class PlayersController extends BaseController {
 
     private ModelAndView getIndexView() {
         ModelAndView mav = new ModelAndView("players/index");
-        mav.addObject("Events", eventDAO.findAll());
+        mav.addObject("Events", eventDAO.findAllActive());
         return mav;
     }
     

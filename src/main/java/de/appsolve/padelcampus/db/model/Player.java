@@ -216,7 +216,7 @@ public class Player extends Participant implements EmailContact{
     }
 
     public Set<SkillLevel> getNotificationSkillLevels() {
-        return notificationSkillLevels == null ? Collections.EMPTY_SET : notificationSkillLevels;
+        return notificationSkillLevels == null ? Collections.<SkillLevel>emptySet() : notificationSkillLevels;
     }
 
     public void setNotificationSkillLevels(Set<SkillLevel> notificationSkillLevels) {

@@ -142,4 +142,17 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return crit.list();
     }
+    
+    @Override
+    public List<T> findAllFetchEagerlyWithAttributes(Map<String,Object> attributeMap, String... associations){
+        Session session = entityManager.unwrap(Session.class);
+        final Criteria crit = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        for (String association: associations){
+            crit.setFetchMode(association, FetchMode.JOIN);
+        }
+        //we only want unique results
+        //see http://stackoverflow.com/questions/18753245/one-to-many-relationship-gets-duplicate-objects-whithout-using-distinct-why
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return crit.list();
+    }
 }
