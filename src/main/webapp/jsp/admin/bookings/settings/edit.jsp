@@ -44,7 +44,7 @@
 
                     <%-- Feiertage --%>
                     <div class="relative">
-                        <spf:select path="holidayKey" class="select-multiple form-control" data-style="form-center-element">
+                        <spf:select path="holidayKey" class="select-multiple form-control" data-style="form-center-element" data-container="body">
                             <spf:options items="${HolidayKeys}"/>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Holidays"/></span>
@@ -52,7 +52,7 @@
 
                     <%-- Von --%>
                     <span class="relative input-hour">
-                        <spf:select path="startTimeHour" class="select-simple form-left-element form-center-element">
+                        <spf:select path="startTimeHour" class="select-simple form-left-element form-center-element" data-container="body">
                             <c:forEach var="hour" begin="0" end="23">
                                 <fmt:formatNumber value="${hour}" minIntegerDigits="2" var="hour"/>
                                 <spf:option value="${hour}"/>
@@ -61,7 +61,7 @@
                         <span class="explanation-select"><fmt:message key="FromHour"/></span>
                     </span>
                     <span class="relative input-hour">
-                        <spf:select path="startTimeMinute" class="select-simple form-right-element form-center-element">
+                        <spf:select path="startTimeMinute" class="select-simple form-right-element form-center-element" data-container="body">
                             <c:forEach var="minute" begin="0" end="55" step="5">
                                 <fmt:formatNumber value="${minute}" minIntegerDigits="2" var="minute"/>
                                 <spf:option value="${minute}"/>
@@ -72,7 +72,7 @@
 
                     <%-- Bis --%>
                     <span class="relative input-hour">
-                        <spf:select path="endTimeHour" class="select-simple form-left-element form-center-element">
+                        <spf:select path="endTimeHour" class="select-simple form-left-element form-center-element" data-container="body">
                             <c:forEach var="hour" begin="0" end="23">
                                 <fmt:formatNumber value="${hour}" minIntegerDigits="2" var="hour"/>
                                 <spf:option value="${hour}"/>
@@ -81,7 +81,7 @@
                         <span class="explanation-select"><fmt:message key="UntilHour"/></span>
                     </span>
                     <span class="relative input-hour">
-                        <spf:select path="endTimeMinute" class="select-simple form-right-element form-center-element">
+                        <spf:select path="endTimeMinute" class="select-simple form-right-element form-center-element" data-container="body">
                             <c:forEach var="minute" begin="0" end="55" step="5">
                                 <fmt:formatNumber value="${minute}" minIntegerDigits="2" var="minute"/>
                                 <spf:option value="${minute}"/>
@@ -102,7 +102,7 @@
 
                     <%-- Min Dauer --%>
                     <div class="relative"> 
-                        <spf:select path="minDuration" class="select-simple form-center-element form-control">
+                        <spf:select path="minDuration" class="select-simple form-center-element form-control" data-container="body">
                             <spf:option value="10">10 <fmt:message key="Minutes"/></spf:option>
                             <spf:option value="15">15 <fmt:message key="Minutes"/></spf:option>
                             <spf:option value="30">30 <fmt:message key="Minutes"/></spf:option>
@@ -115,7 +115,7 @@
 
                     <%-- Min Interval --%>
                     <div class="relative"> 
-                        <spf:select path="minInterval" class="select-simple form-center-element form-control">
+                        <spf:select path="minInterval" class="select-simple form-center-element form-control" data-container="body">
                             <spf:option value="10">10 <fmt:message key="Minutes"/></spf:option>
                             <spf:option value="15">15 <fmt:message key="Minutes"/></spf:option>
                             <spf:option value="30">30 <fmt:message key="Minutes"/></spf:option>
@@ -128,7 +128,7 @@
 
                     <%-- Zahlungsmethoden --%>
                     <div class="relative">
-                        <spf:select path="paymentMethods" class="select-multiple form-control" data-style="form-center-element">
+                        <spf:select path="paymentMethods" class="select-multiple form-control" data-style="form-center-element" data-container="body">
                             <spf:options items="${PaymentMethods}"/>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="PaymentMethods"/></span>

@@ -15,7 +15,7 @@
                 <spf:form method="POST" class="form-signin" modelAttribute="Model">
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
                     <div class="relative">
-                        <select name="events" class="select-multiple form-control" data-style="form-top-element" multiple="true">
+                        <select name="events" class="select-multiple form-control" data-style="form-top-element" multiple="true" data-container="body">
                             <c:forEach items="${Events}" var="Event">
                                 <option value="${Event.id}">${Event}</option>
                             </c:forEach>
@@ -23,14 +23,14 @@
                         <span class="explanation-select"><fmt:message key="Events"/></span>
                     </div>
                     <span class="relative block">
-                        <spf:select path="offers" class="select-multiple form-control" data-style="form-center-element" multiple="true">
+                        <spf:select path="offers" class="select-multiple form-control" data-style="form-center-element" multiple="true" data-container="body">
                             <spf:options items="${Offers}" itemValue="id"/>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Offers"/></span>
                     </span>
 
                     <span class="relative block">
-                        <spf:select path="duration" class="select-simple form-control" data-style="form-center-element">
+                        <spf:select path="duration" class="select-simple form-control" data-style="form-center-element" data-container="body">
                             <c:forEach var="Duration" items="${Durations}">
                                 <option value="${Duration}" ${Duration == duration ? 'selected' : ''}>${Duration} <fmt:message key="Minutes"/></option>
                             </c:forEach>
@@ -54,7 +54,7 @@
 
                     <%-- Von Uhrzeit--%>
                     <span class="relative input-hour">
-                        <spf:select path="validFromHour" class="select-simple form-left-element form-center-element">
+                        <spf:select path="validFromHour" class="select-simple form-left-element form-center-element" data-container="body">
                             <c:forEach var="hour" begin="0" end="23">
                                 <fmt:formatNumber value="${hour}" minIntegerDigits="2" var="hour"/>
                                 <spf:option value="${hour}"/>
@@ -63,7 +63,7 @@
                         <span class="explanation-select"><fmt:message key="FromHour"/></span>
                     </span>
                     <span class="relative input-hour">
-                        <spf:select path="validFromMinute" class="select-simple form-right-element form-center-element">
+                        <spf:select path="validFromMinute" class="select-simple form-right-element form-center-element" data-container="body">
                             <c:forEach var="minute" begin="0" end="55" step="5">
                                 <fmt:formatNumber value="${minute}" minIntegerDigits="2" var="minute"/>
                                 <spf:option value="${minute}"/>
@@ -74,7 +74,7 @@
 
                     <%-- Bis Uhrzeit --%>
                     <span class="relative input-hour">
-                        <spf:select path="validUntilHour" class="select-simple form-left-element form-bottom-element">
+                        <spf:select path="validUntilHour" class="select-simple form-left-element form-bottom-element" data-container="body">
                             <c:forEach var="hour" begin="0" end="23">
                                 <fmt:formatNumber value="${hour}" minIntegerDigits="2" var="hour"/>
                                 <spf:option value="${hour}"/>
@@ -83,7 +83,7 @@
                         <span class="explanation-select"><fmt:message key="UntilHour"/></span>
                     </span>
                     <span class="relative input-hour">
-                        <spf:select path="validUntilMinute" class="select-simple form-right-element form-bottom-element">
+                        <spf:select path="validUntilMinute" class="select-simple form-right-element form-bottom-element" data-container="body">
                             <c:forEach var="minute" begin="0" end="55" step="5">
                                 <fmt:formatNumber value="${minute}" minIntegerDigits="2" var="minute"/>
                                 <spf:option value="${minute}"/>
