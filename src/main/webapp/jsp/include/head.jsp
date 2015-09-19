@@ -11,7 +11,6 @@
 
         <meta name="mobile-web-app-capable" content="yes"> <%-- Chrome M31 and up --%>
         <meta name="apple-mobile-web-app-capable" content="yes" /> <%-- Mobile Safari --%>
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="format-detection" content="telephone=no">
 
         <%-- https://mathiasbynens.be/notes/touch-icons --%>
@@ -63,7 +62,6 @@
         <div class="background">
             <div class="wrapper">
                 <c:if test="${empty param.embed}">
-                    <div class="mobile-web-app-capable-status-bar"></div>
                     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
                         <div class="navbar-header">
                             <c:choose>

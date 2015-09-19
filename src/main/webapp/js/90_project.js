@@ -313,25 +313,6 @@ app.main = {};
         });
     };
 
-    self.enableAddToHomeScreen = function () {
-        //addToHomeScreen will be called on the relevant pages
-        
-        //fix 20px status bar overlapping
-        var fixStatusBar = function(){
-            var statusBarHeight = 20;
-            if (("standalone" in window.navigator) && window.navigator.standalone) {
-                $('body, .navbar-fixed-top').css('margin-top', statusBarHeight+'px');
-                $('.navbar-nav').css('padding-bottom', $('.navbar-header').outerHeight() + statusBarHeight + 'px');
-                $('.mobile-web-app-capable-status-bar').show();
-            }
-        };
-        
-        $(window).on('statechangecomplete', function(){
-            fixStatusBar();
-        });
-        fixStatusBar();
-    };
-
     self.enableUpdateBooking = function () {
         var updateAll = function(){
             var target = $(this).find('option:selected').attr('data-target');
@@ -473,7 +454,6 @@ $(document).ready(function () {
     app.main.enableBookingLoginSelection();
     app.main.enableSelectPicker();
     app.main.enablePlusMinusInputFields();
-    app.main.enableAddToHomeScreen();
     app.main.enableUpdateBooking();
     app.main.enableRegexChecksOnInputs();
     app.main.enablePayMill();
