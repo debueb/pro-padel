@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  */
 @Controller()
-@RequestMapping("/")
+@RequestMapping(value = {"/", "index", "index.html"})
 public class RootController extends BaseController{
     
     @Autowired
