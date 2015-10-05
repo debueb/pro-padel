@@ -12,6 +12,8 @@
         <meta name="mobile-web-app-capable" content="yes"> <%-- Chrome M31 and up --%>
         <meta name="apple-mobile-web-app-capable" content="yes" /> <%-- Mobile Safari --%>
         <meta name="format-detection" content="telephone=no">
+        
+        <meta name="google-site-verification" content="zV4l09W2NsrN2uP1MCLQNG5mR8FPsmIPocAQiYGLaHs" />
 
         <%-- https://mathiasbynens.be/notes/touch-icons --%>
         <%-- we only use one touch-icon as it will be downscaled if necessary and the touch-icon has the same ratio on all devices --%>
