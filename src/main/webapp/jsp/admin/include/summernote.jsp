@@ -2,4 +2,5 @@
 <link href="/css/noconcat/summernote.css" rel="stylesheet">
 <link href="/css/noconcat/summernote.project.css" rel="stylesheet">
 <script src="/js/noconcat/summernote.js"></script>
+<script src="/js/noconcat/summernote-ext-video.js"></script>
 <script src="/js/noconcat/summernote.project.js"></script>

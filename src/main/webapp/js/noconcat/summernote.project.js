@@ -22,6 +22,19 @@ $(document).ready(function () {
 
     $('#summernote').livequery(function(){
         $(this).summernote({
+            toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+//            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+//            ['height', ['height']],
+            ['insert', ['link', 'picture', 'video', 'hr']],
+            ['table', ['table']],
+            ['view', ['fullscreen', 'codeview']]
+//            ['help', ['help']]
+          ],
             onImageUpload: function (files, editor, welEditable) {
                 data = new FormData();
                 data.append("file", files[0]);
