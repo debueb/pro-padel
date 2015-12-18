@@ -91,24 +91,20 @@ input[type="number"] {
 }
 .form-control::-webkit-input-placeholder {
   /* WebKit browsers */
-
   color: #afafaf;
 }
 .form-control:-moz-placeholder {
   /* Mozilla Firefox 4 to 18 */
-
   color: #afafaf;
   opacity: 1;
 }
 .form-control::-moz-placeholder {
   /* Mozilla Firefox 19+ */
-
   color: #afafaf;
   opacity: 1;
 }
 .form-control:-ms-input-placeholder {
   /* Internet Explorer 10+ */
-
   color: #afafaf;
 }
 #site-canvas {
@@ -121,14 +117,12 @@ input[type="number"] {
 .footer {
   -webkit-backface-visibility: hidden;
   /* this fixes iOS7 flickering a.k.a menu disappearing */
-
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   -webkit-transition: -webkit-transform 0.3s ease, right 0.3s ease;
   -moz-transition: transform 0.3s ease, right 0.3s ease;
   -ms-transition: transform 0.3s ease, right 0.3s ease;
   /* IE10 is actually unprefixed */
-
   -o-transition: transform 0.3s ease, right 0.3s ease;
   transition: transform 0.3s ease, right 0.3s ease;
 }
@@ -188,7 +182,7 @@ input[type="number"] {
   color: white;
 }
 #site-menu a:hover {
-  background: #94cfea;
+  background: #94cfeb;
 }
 a:active,
 a:hover {
@@ -237,11 +231,11 @@ input[type="checkbox"]:checked ~ label:before {
 .ui-state-focus,
 .ui-widget-content .ui-state-focus,
 .ui-widget-header .ui-state-focus {
-  background-image: -webkit-linear-gradient(top, #bfe2f2 0%, #e9f5fb 100%);
-  background-image: -o-linear-gradient(top, #bfe2f2 0%, #e9f5fb 100%);
-  background-image: linear-gradient(to bottom, #bfe2f2 0%, #e9f5fb 100%);
+  background-image: -webkit-linear-gradient(top, #bfe2f3 0%, #eaf6fb 100%);
+  background-image: -o-linear-gradient(top, #bfe2f3 0%, #eaf6fb 100%);
+  background-image: linear-gradient(to bottom, #bfe2f3 0%, #eaf6fb 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffbfe2f2', endColorstr='#ffe9f5fb', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffbfe2f3', endColorstr='#ffeaf6fb', GradientType=0);
   color: #31708f;
 }
 .panel-info {
@@ -390,7 +384,7 @@ table.table-scores tbody tr td {
   color: #ffffff;
 }
 .navbar-default .navbar-brand:hover {
-  color: #94cfea;
+  color: #94cfeb;
 }
 a.navbar-icon {
   color: #ffffff;
@@ -399,7 +393,7 @@ a.navbar-icon {
   color: white;
 }
 a.navbar-icon:active {
-  color: #94cfea;
+  color: #94cfeb;
 }
 .navbar-default .navbar-toggle .icon-bar {
   background-color: #ffffff;
@@ -414,7 +408,7 @@ a.navbar-icon:active {
   color: #ffffff;
 }
 .navbar-default .navbar-nav > li > a:hover {
-  color: #94cfea;
+  color: #94cfeb;
 }
 .table > thead > tr > th {
   border-bottom: 1px solid #999;
@@ -581,7 +575,7 @@ span.error {
 }
 .ui-widget-content table tbody tr td .ui-state-highlight {
   border-color: #c5dbec;
-  background: #94cfea;
+  background: #94cfeb;
 }
 .ui-widget-content table tbody tr td .ui-state-active {
   background: #69bce2;
@@ -665,10 +659,10 @@ ui-state-hover,
   font-weight: normal;
 }
 .accordion .ui-state-default {
-  background: #e9f5fb;
+  background: #eaf6fb;
 }
 .accordion .ui-state-active {
-  background: #94cfea;
+  background: #94cfeb;
 }
 /* accordion end */
 .alert:empty {
@@ -743,7 +737,6 @@ table.table-leyenda > tbody > tr > td {
 }
 .booking-offer a {
   /*padding: 5px 0;*/
-
 }
 .booking-offer-container {
   display: table;
@@ -894,15 +887,12 @@ pre {
 progress,
 progress[value] {
   /* Reset the default appearance */
-
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   /* Get rid of default border in Firefox. */
-
   border: none;
   /* Dimensions */
-
   width: 50%;
   height: 40px;
   position: absolute;
@@ -918,7 +908,7 @@ progress[value]::-webkit-progress-bar {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
 progress[value]::-webkit-progress-value {
-  background-color: #3fa9d9;
+  background-color: #3ea8db;
   border-radius: 4px;
   background-size: 35px 40px, 100% 100%, 100% 100%;
 }
@@ -1089,4 +1079,7 @@ div.product-chooser div.product-chooser-item input {
   .col-lg-6:nth-child(2n+1) {
     clear: left;
   }
+}
+textarea {
+  resize: none;
 }
