@@ -22,7 +22,6 @@ import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import de.appsolve.padelcampus.utils.VoucherUtil;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
