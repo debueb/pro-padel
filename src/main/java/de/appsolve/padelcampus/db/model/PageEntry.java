@@ -41,6 +41,9 @@ public class PageEntry extends SortableEntity{
     @Column
     private Boolean showOnHomepage;
     
+    @Column
+    private Boolean showContactForm;
+    
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Module.class, fetch = FetchType.EAGER)
     private Module module;
 
@@ -74,6 +77,14 @@ public class PageEntry extends SortableEntity{
 
     public void setShowOnHomepage(Boolean showOnHomepage) {
         this.showOnHomepage = showOnHomepage;
+    }
+
+    public Boolean getShowContactForm() {
+        return showContactForm == null ? Boolean.FALSE : showContactForm;
+    }
+
+    public void setShowContactForm(Boolean showContactForm) {
+        this.showContactForm = showContactForm;
     }
 
     public Module getModule() {

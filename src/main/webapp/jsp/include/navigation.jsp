@@ -7,12 +7,6 @@
             <jsp:param name="url" value="${Module.url}"/>
         </jsp:include>
     </c:forEach>
-    <fmt:message key="Contact" var="title"/>
-    <jsp:include page="/jsp/include/list-menu-item.jsp">
-        <jsp:param name="image" value="envelope"/>
-        <jsp:param name="title" value="${title}"/>
-        <jsp:param name="url" value="/contact"/>
-    </jsp:include>
     <c:if test="${not empty privileges}">
         <fmt:message key="Administration" var="title"/>
         <jsp:include page="/jsp/include/list-menu-item.jsp">

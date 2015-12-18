@@ -9,10 +9,10 @@
             <div class="panel-heading">
                 <h4><fmt:message key="Contact"/></h4>
             </div>
+            <div class="panel-body">
+                <div class="alert alert-success" role="alert"><fmt:message key="EmailWasSentSuccessfully"/></div>
+            </div>
         </div>
-
-
-        <div class="alert alert-success" role="alert"><fmt:message key="EmailWasSentSuccessfully"/></div>
     </div>
 </div>
 
