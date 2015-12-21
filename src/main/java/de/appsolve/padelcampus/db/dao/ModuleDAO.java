@@ -26,5 +26,9 @@ public class ModuleDAO extends SortedGenericDAO<Module> implements ModuleDAOI{
         attributes.put("showInMenu", true);
         return findByAttributes(attributes);
     }
-
+    
+    @Override
+    public Module findByTitle(String title) {
+        return findByAttribute("title", title);
+    }
 }

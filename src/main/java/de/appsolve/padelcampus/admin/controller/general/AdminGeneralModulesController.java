@@ -81,6 +81,15 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
     
     @Override
     public ModelAndView postEditView(@ModelAttribute("Model") Module model, HttpServletRequest request, BindingResult result){
+        if (model.getId() == null){
+            Module existingPageEntry = moduleDAO.findByTitle(model.getTitle());
+            if (existingPageEntry != null){
+                ModelAndView editView = getEditView(model);
+                result.rejectValue("title", "ModuleWithTitleAlreadyExists", new Object[]{model.getTitle()}, "ModuleWithTitleAlreadyExists");
+                return editView;
+            }
+        }
+        
         ModelAndView mav = super.postEditView(model, request, result);
         reloadModules();
         return mav;

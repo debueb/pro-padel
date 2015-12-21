@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.NumberUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
@@ -60,22 +61,33 @@ public class PageController extends BaseController{
     Msg msg;
     
     @RequestMapping()
-    public ModelAndView getIndex(@PathVariable("moduleId") Long moduleId){
-        return getIndexView(moduleId, new Mail());
+    public ModelAndView getIndex(@PathVariable("moduleId") String moduleTitle){
+        return getIndexView(getModule(moduleTitle), new Mail());
     }
     
     @RequestMapping(method=POST)
-    public ModelAndView postIndex(@PathVariable("moduleId") Long moduleId, @ModelAttribute("Mail") Mail mail, BindingResult bindingResult){
-        ModelAndView defaultView = getIndexView(moduleId, mail);
+    public ModelAndView postIndex(@PathVariable("moduleId") String moduleTitle, @ModelAttribute("Mail") Mail mail, BindingResult bindingResult){
+        Module module = getModule(moduleTitle);
+        ModelAndView defaultView = getIndexView(module, mail);
         return sendMail(defaultView, mail, bindingResult);
     }
 
-    private ModelAndView getIndexView(Long moduleId, Mail mail) {
-        Module module = moduleDAO.findById(moduleId);
+    private ModelAndView getIndexView(Module module, Mail mail) {
         ModelAndView mav = new ModelAndView("page/index");
         mav.addObject("PageEntries", pageEntryDAO.findByModule(module));
         mav.addObject("Module", module);
         mav.addObject("Mail", mail);
         return mav;
+    }
+
+    private Module getModule(String moduleTitle) {
+        Module module;
+        try {
+            Long id = Long.parseLong(moduleTitle);
+            module = moduleDAO.findById(id);
+        } catch (NumberFormatException e){
+            module = moduleDAO.findByTitle(moduleTitle);
+        }
+        return module;
     }
 }

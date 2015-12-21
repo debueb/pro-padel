@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Transient;
+import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -33,6 +34,7 @@ public class Module extends SortableEntity{
     
     @Column
     @NotEmpty(message = "{NotEmpty.title}")
+    @Pattern(regexp = "^[a-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}") 
     private String title;
     
     @Column
@@ -84,7 +86,7 @@ public class Module extends SortableEntity{
     public String getUrl(){
         switch (getModuleType()){
             case Page:
-                return "/"+getModuleType().name().toLowerCase() + "/" + getId();
+                return "/"+getModuleType().name().toLowerCase() + "/" + getTitle();
             default:
                return "/"+getModuleType().name().toLowerCase();
         }

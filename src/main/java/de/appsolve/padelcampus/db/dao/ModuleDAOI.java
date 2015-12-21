@@ -15,6 +15,7 @@ import java.util.List;
  */
 public interface ModuleDAOI extends GenericDAOI<Module>{
     
-    List<Module> findFooterModules();
-    List<Module> findMenuModules();
+    public List<Module> findFooterModules();
+    public List<Module> findMenuModules();
+    public Module findByTitle(String title);
 }
