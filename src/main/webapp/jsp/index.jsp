@@ -19,12 +19,6 @@
                     <jsp:param name="href" value="${Module.url}"/>
                 </jsp:include>
             </c:forEach>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/contact"/>
-                <jsp:param name="key" value="Contact"/>
-                <jsp:param name="icon" value="envelope"/>
-            </jsp:include>
-
             <c:if test="${client == 'iOS'}">
                 <jsp:include page="/jsp/include/list-group-item.jsp">
                     <jsp:param name="href" value="/app/ios"/>
