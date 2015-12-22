@@ -68,7 +68,7 @@
                                                                             <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
                                                                             <c:forEach var="Offer" items="${TimeSlot.availableOffers}">
                                                                                 <div class="booking-offer-row">
-                                                                                    <a class="ajaxify booking-offer" href="${urlDetail}?offer=${Offer.id}" style="background-color: ${Offer.hexColor}; height: ${100/offerCount}%;">
+                                                                                    <a class="ajaxify booking-offer" href="${urlDetail}?offer=${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${Offer.hexColor}; height: ${100/offerCount}%;">
                                                                                         ${TimeSlot.config.currency.symbol}${TimeSlot.config.basePrice}
                                                                                     </a>
                                                                                 </div>
