@@ -21,7 +21,8 @@ $(document).ready(function () {
     }
 
     $('#summernote').livequery(function(){
-        $(this).summernote({
+        var $self = $(this);
+        $self.summernote({
             toolbar: [
             ['style', ['style']],
             ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
@@ -54,7 +55,8 @@ $(document).ready(function () {
                     contentType: false,
                     processData: false,
                     success: function(url) {
-                        editor.insertImage(welEditable, url);
+                        $self.summernote('editor.insertImage', url);
+                        //editor.insertImage(welEditable, url);
                     },
                     error: function(e){
                         resetProgressBar();
