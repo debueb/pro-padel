@@ -133,10 +133,7 @@ public class BookingsController extends BaseController {
     public ModelAndView showBookingView(@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("offerId") Long offerId, HttpServletRequest request) throws ParseException, Exception {
         ModelAndView bookingView = getBookingView();
         try {
-            Offer offer = null;
-            if (offerId!=null){
-                offer = offerDAO.findById(offerId);
-            }
+            Offer offer = offerDAO.findById(offerId);
             validateAndAddObjectsToView(bookingView, request, new Booking(), day, time, offer);
         } catch (Exception e){
             bookingView.addObject("error", e.getMessage());
@@ -144,11 +141,10 @@ public class BookingsController extends BaseController {
         return bookingView;
     }
 
-    @RequestMapping(value = "{day}/{time}", method = POST)
-    public ModelAndView selectBooking(@PathVariable("day") String day, @PathVariable("time") String time, @ModelAttribute("Booking") Booking booking, BindingResult bindingResult, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "{day}/{time}/offer/{offerId}", method = POST)
+    public ModelAndView selectBooking(@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("offerId") Long offerId, @ModelAttribute("Booking") Booking booking, BindingResult bindingResult, HttpServletRequest request) throws Exception {
         ModelAndView bookingView = getBookingView();
-        String offerId = request.getParameter("offer");
-        Offer offer = offerDAO.findById(Long.parseLong(offerId));
+        Offer offer = offerDAO.findById(offerId);
         booking.setOffer(offer);
         try {
             validateAndAddObjectsToView(bookingView, request, booking, day, time, offer);
