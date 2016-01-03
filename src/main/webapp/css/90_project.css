@@ -1107,10 +1107,6 @@ a:focus {
   display: -moz-flex;
   display: -webkit-flex;
   display: flex;
-  -webkit-flex-direction: row;
-  -moz-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
   -webkit-flex-flow: row wrap;
   -moz-flex-flow: row wrap;
   -ms-flex-flow: row wrap;
@@ -1126,6 +1122,7 @@ a:focus {
 .col-leyenda-header {
   padding: 10px;
   text-align: center;
+  width: 100px;
 }
 .col-leyenda {
   border-top: 1px solid #cccccc;
