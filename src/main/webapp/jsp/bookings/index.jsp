@@ -113,7 +113,6 @@
                             </table>
                         </div>
 
-                        <jsp:include page="/jsp/bookings/include/leyenda.jsp"/>
                     </c:otherwise>
                 </c:choose>
             </div>
