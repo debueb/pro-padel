@@ -1,6 +1,6 @@
 <%@include file="/jsp/include/include.jsp"%>
 <div>
-    <table class="unit-2 table table-bordered table-leyenda table-fixed">
+    <table class="unit-2 table table-bordered table-round table-fixed">
         <thead>
         <th colspan="${fn:length(Offers)+1}"><fmt:message key="Leyenda"/></th>
         </thead>
