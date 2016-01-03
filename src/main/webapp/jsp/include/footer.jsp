@@ -14,7 +14,7 @@
 <c:if test="${empty param.embed}">
     <div class="footer small container-fluid">
         <div class="row-fluid">
-            <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
                 <div class="footer-container">
                 <c:forEach var="Module" items="${footerLinks}" varStatus="status">
                     <a href="${Module.url}" class="ajaxify">${Module.title}</a> ${not status.last ? ' | ' : ''}
