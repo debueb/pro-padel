@@ -6,7 +6,6 @@
 
 package de.appsolve.padelcampus.data;
 
-import de.appsolve.padelcampus.utils.FormatUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

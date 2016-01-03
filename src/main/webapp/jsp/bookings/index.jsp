@@ -11,20 +11,30 @@
             <div class="panel-body">
 
 
-                <div class="datepicker-container">
-                    <div class="datepicker-text-container">
+                <div class="datepicker-container ">
+                    <div class="datepicker-text-container ${empty RangeMap ? '' : 'form-top-element'}">
                         <span class="fa fa-calendar datepicker-icon"></span>
                         <div class="datepicker-text"></div>
                     </div>
                     <input type="hidden" class="datepicker-input" class="form-control" value="${Day}" />
-                    <div class="datepicker" data-show-on-init="false" data-redirect-on-select="/bookings/{date}" data-day-config='${dayConfigs}' data-max-date='${maxDate}'></div>
+                    <div class="datepicker" data-show-on-init="false" data-redirect-on-select="/bookings/{date}/{time}" data-day-config='${dayConfigs}' data-max-date='${maxDate}'></div>
                 </div>
-
                 <c:choose>
                     <c:when test="${empty RangeMap}">
                         <div class="alert alert-danger unit"><fmt:message key="NoBookableTimeSlotsAvailable"/></div>
                     </c:when>
                     <c:otherwise>
+                        <select id="timepicker" class="select-simple form-control form-bottom-element">
+                            <option value=""><fmt:message key="AllStartTimes"/></option>
+                            <c:forEach var="TimeRange" items="${RangeMap}">
+                                <c:if test="${TimeRange.offersAvailable}">
+                                    <option ${selectedTime == TimeRange.startTime ? 'selected' : ''}>
+                                        <joda:format value="${TimeRange.startTime}" pattern="HH:mm"/>
+                                    </option>
+                                </c:if>
+                            </c:forEach>
+                        </select>
+                            
                         <jsp:include page="/jsp/bookings/include/leyenda.jsp"/>
 
                         <div class="unit-2 table-responsive unit">
@@ -45,45 +55,47 @@
                                 <tbody>
                                     <c:forEach var="TimeRange" items="${RangeMap}">
                                         <c:if test="${TimeRange.offersAvailable}">
-                                            <tr>
-                                                <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
-                                                <joda:format value="${TimeRange.endTime}" pattern="HH:mm" var="endTime"/>
-                                                <td class="booking-time">${startTime}<span>-</span>${endTime}</td>
+                                            <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
+                                            <joda:format value="${TimeRange.endTime}" pattern="HH:mm" var="endTime"/>
+                                            <c:if test="${selectedTime == null or selectedTime == TimeRange.startTime}">
+                                                <tr>
+                                                    <td class="booking-time">${startTime}</td>
 
-                                                <c:forEach var="WeekDay" items="${WeekDays}">
-                                                    <c:set var="offerCount" value="0"/>
+                                                    <c:forEach var="WeekDay" items="${WeekDays}">
+                                                        <c:set var="offerCount" value="0"/>
 
-                                                    <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
-                                                        <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
-                                                            <c:set var="offerCount" value="${offerCount + fn:length(TimeSlot.availableOffers)}"/>
-                                                        </c:if> 
+                                                        <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
+                                                            <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
+                                                                <c:set var="offerCount" value="${offerCount + fn:length(TimeSlot.availableOffers)}"/>
+                                                            </c:if> 
+                                                        </c:forEach>
+
+                                                        <c:choose>
+                                                            <c:when test="${offerCount>0}">
+                                                                <td class="booking-bookable">
+                                                                    <div class="booking-offer-container">
+                                                                        <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
+                                                                            <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
+                                                                                <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
+                                                                                <c:forEach var="Offer" items="${TimeSlot.availableOffers}">
+                                                                                    <div class="booking-offer-row">
+                                                                                        <a class="ajaxify booking-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${Offer.hexColor}; height: ${100/offerCount}%;">
+                                                                                            ${TimeSlot.config.currency.symbol}${TimeSlot.config.basePrice}
+                                                                                        </a>
+                                                                                    </div>
+                                                                                </c:forEach>
+                                                                            </c:if>
+                                                                        </c:forEach>
+                                                                    </div>
+                                                                </td>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <td class="booking-disabled"></td>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </c:forEach>
-
-                                                    <c:choose>
-                                                        <c:when test="${offerCount>0}">
-                                                            <td class="booking-bookable">
-                                                                <div class="booking-offer-container">
-                                                                    <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
-                                                                        <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
-                                                                            <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
-                                                                            <c:forEach var="Offer" items="${TimeSlot.availableOffers}">
-                                                                                <div class="booking-offer-row">
-                                                                                    <a class="ajaxify booking-offer" href="${urlDetail}?offer=${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${Offer.hexColor}; height: ${100/offerCount}%;">
-                                                                                        ${TimeSlot.config.currency.symbol}${TimeSlot.config.basePrice}
-                                                                                    </a>
-                                                                                </div>
-                                                                            </c:forEach>
-                                                                        </c:if>
-                                                                    </c:forEach>
-                                                                </div>
-                                                            </td>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <td class="booking-disabled"></td>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </c:forEach>
-                                            </tr>
+                                                </tr>
+                                            </c:if>
                                         </c:if>
                                     </c:forEach>
                                     <tr>

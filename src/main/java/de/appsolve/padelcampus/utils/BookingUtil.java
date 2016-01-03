@@ -23,14 +23,12 @@ import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.UUID;
 import org.apache.log4j.Logger;
@@ -220,7 +218,7 @@ public class BookingUtil {
         return UUID.randomUUID().toString();
     }
 
-    public void addWeekView(LocalDate selectedDate, ModelAndView mav, Boolean preventOverlapping) throws JsonProcessingException {
+    public void addWeekView(LocalDate selectedDate, LocalTime selectedTime, ModelAndView mav, Boolean preventOverlapping) throws JsonProcessingException {
         //calculate date configuration for datepicker
         LocalDate today = new LocalDate(DEFAULT_TIMEZONE);
         LocalDate firstDay = today.dayOfMonth().withMinimumValue();
@@ -268,6 +266,7 @@ public class BookingUtil {
         }
         Collections.sort(rangeList);
         
+        mav.addObject("selectedTime", selectedTime);
         mav.addObject("dayConfigs", objectMapper.writeValueAsString(dayConfigs));
         mav.addObject("maxDate", lastDay.toString());
         mav.addObject("Day", selectedDate);

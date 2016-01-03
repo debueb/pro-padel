@@ -57,6 +57,33 @@ app.main = {};
             });
         });
     };
+    
+    self.redirectFromDateTimeSelection = function(){
+        var $datepicker = $('.datepicker'),
+            $timepicker = $('#timepicker'),
+            selectedDate = $datepicker.datepicker("getDate"),
+            selectedTime = $timepicker.val(),
+            redirectURL = $datepicker.attr('data-redirect-on-select');
+    
+        console.log($timepicker.val());
+        redirectURL = redirectURL.replace("{date}", $.datepicker.formatDate('yy-mm-dd', selectedDate));
+        if (selectedTime){
+            redirectURL = redirectURL.replace("{time}", selectedTime);
+        } else {
+            redirectURL = redirectURL.replace("{time}", '');
+        }
+        console.log(redirectURL);
+        $('#dummy-link').attr('href', redirectURL);
+        $('#dummy-link').click();
+    };
+    
+    self.enableTimePicker = function(){
+        $('#timepicker').livequery(function(){
+            $(this).on('change', function(){
+                app.main.redirectFromDateTimeSelection();
+            });
+        });
+    };
 
     self.enableDatePicker = function () {
 
@@ -118,10 +145,7 @@ app.main = {};
                     if (!redirectURL) {
                         datepicker.slideUp();
                     } else {
-                        var selectedDate = datepicker.datepicker("getDate");
-                        var formattedDate = $.datepicker.formatDate('yy-mm-dd', selectedDate);
-                        $('#dummy-link').attr('href', redirectURL.replace(/{date}/, formattedDate));
-                        $('#dummy-link').click();
+                        app.main.redirectFromDateTimeSelection();
                     }
                 },
                 beforeShowDay: function (date) {
@@ -458,4 +482,5 @@ $(document).ready(function () {
     app.main.enableRegexChecksOnInputs();
     app.main.enablePayMill();
     app.main.enableAdvancedProfile();
+    app.main.enableTimePicker();
 });

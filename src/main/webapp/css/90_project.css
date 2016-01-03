@@ -1100,3 +1100,7 @@ div.product-chooser div.product-chooser-item input {
 textarea {
   resize: none;
 }
+.bootstrap-select .btn:focus,
+a:focus {
+  outline: 0 !important;
+}

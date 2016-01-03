@@ -30,6 +30,7 @@ import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
+import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.RequestUtil;
@@ -68,7 +69,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -116,16 +116,21 @@ public class BookingsController extends BaseController {
 
     @RequestMapping()
     public ModelAndView getToday() throws JsonProcessingException {
-        return getIndexView(FormatUtils.DATE_HUMAN_READABLE.print(new DateTime()));
+        return getIndexView(DATE_HUMAN_READABLE.print(new DateTime()), null);
     }
 
     @RequestMapping("{day}")
     public ModelAndView getDay(@PathVariable("day") String day) throws JsonProcessingException {
-        return getIndexView(day);
+        return getIndexView(day, null);
     }
 
     @RequestMapping("{day}/{time}")
-    public ModelAndView showBookingView(@PathVariable("day") String day, @PathVariable("time") String time, @RequestParam(required=false, value="offer") Long offerId, HttpServletRequest request) throws ParseException, Exception {
+    public ModelAndView getDayTime(@PathVariable("day") String day, @PathVariable("time") String time) throws JsonProcessingException {
+        return getIndexView(day, time);
+    }
+    
+    @RequestMapping("{day}/{time}/offer/{offerId}")
+    public ModelAndView showBookingView(@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("offerId") Long offerId, HttpServletRequest request) throws ParseException, Exception {
         ModelAndView bookingView = getBookingView();
         try {
             Offer offer = null;
@@ -404,10 +409,14 @@ public class BookingsController extends BaseController {
         return getCancellationSuccessView(booking);
     }
 
-    private ModelAndView getIndexView(String day) throws JsonProcessingException {
+    private ModelAndView getIndexView(String day, String time) throws JsonProcessingException {
         LocalDate selectedDate = DATE_HUMAN_READABLE.parseLocalDate(day);
+        LocalTime selectedTime = null;
+        if (time!=null){
+            selectedTime = TIME_HUMAN_READABLE.parseLocalTime(time);
+        }
         ModelAndView indexView = new ModelAndView("bookings/index");
-        bookingUtil.addWeekView(selectedDate, indexView, true);
+        bookingUtil.addWeekView(selectedDate, selectedTime, indexView, true);
         return indexView;
     }
 
