@@ -27,7 +27,7 @@
             </c:when>
             <c:otherwise>
                 <div class="table-responsive unit">
-                    <table class="table table-bordered table-booking table-fixed">
+                    <table class="table table-bordered table-round table-booking table-fixed">
                         <thead>
                             <tr>
                                 <th class="text-center"><fmt:message key="TimeShort"/></th>

@@ -730,11 +730,6 @@ table.table-round {
   border: 1px solid #cccccc;
   border-collapse: separate;
 }
-table.table-round tr:last-child td:first-child {
-  -moz-border-radius-bottomleft: 6px;
-  -webkit-border-bottom-left-radius: 6px;
-  border-bottom-left-radius: 6px;
-}
 table.table-round tr:last-child td:last-child {
   -moz-border-radius-bottomright: 6px;
   -webkit-border-bottom-right-radius: 6px;
