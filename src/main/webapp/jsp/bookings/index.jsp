@@ -13,6 +13,7 @@
 
                 <div class="datepicker-container ">
                     <div class="datepicker-text-container ${empty RangeMap ? '' : 'form-top-element'}">
+                        <div class="datepicker-label"><fmt:message key="Date"/></div>
                         <span class="fa fa-calendar datepicker-icon"></span>
                         <div class="datepicker-text"></div>
                     </div>
@@ -24,16 +25,19 @@
                         <div class="alert alert-danger unit"><fmt:message key="NoBookableTimeSlotsAvailable"/></div>
                     </c:when>
                     <c:otherwise>
-                        <select id="timepicker" class="select-simple form-control form-bottom-element">
-                            <option value=""><fmt:message key="AllStartTimes"/></option>
-                            <c:forEach var="TimeRange" items="${RangeMap}">
-                                <c:if test="${TimeRange.offersAvailable}">
-                                    <option ${selectedTime == TimeRange.startTime ? 'selected' : ''}>
-                                        <joda:format value="${TimeRange.startTime}" pattern="HH:mm"/>
-                                    </option>
-                                </c:if>
-                            </c:forEach>
-                        </select>
+                        <div class="relative">
+                            <select id="timepicker" class="select-simple form-control form-bottom-element">
+                                <option value=""><fmt:message key="AllStartTimes"/></option>
+                                <c:forEach var="TimeRange" items="${RangeMap}">
+                                    <c:if test="${TimeRange.offersAvailable}">
+                                        <option ${selectedTime == TimeRange.startTime ? 'selected' : ''}>
+                                            <joda:format value="${TimeRange.startTime}" pattern="HH:mm"/>
+                                        </option>
+                                    </c:if>
+                                </c:forEach>
+                            </select>
+                            <span class="explanation-select"><fmt:message key="StartTime"/></span>
+                        </div>
                             
                         <jsp:include page="/jsp/bookings/include/leyenda.jsp"/>
 

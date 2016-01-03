@@ -1099,3 +1099,42 @@ textarea {
 a:focus {
   outline: 0 !important;
 }
+.container-flex {
+  -ms-box-orient: horizontal;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -moz-flex;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  -moz-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-flow: row wrap;
+  -moz-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
+.col-flex {
+  -webkit-flex: 1 0 auto;
+  -moz-flex: 1 0 auto;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+}
+.col-leyenda,
+.col-leyenda-header {
+  padding: 10px;
+  text-align: center;
+}
+.col-leyenda {
+  border-top: 1px solid #cccccc;
+}
+.col-leyenda:not(:last-child) {
+  border-right: 1px solid #cccccc;
+}
+.border-leyenda {
+  border: 1px solid #cccccc;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
