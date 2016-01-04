@@ -218,7 +218,7 @@ public class BookingUtil {
         return UUID.randomUUID().toString();
     }
 
-    public void addWeekView(LocalDate selectedDate, LocalTime selectedTime, ModelAndView mav, Boolean preventOverlapping) throws JsonProcessingException {
+    public void addWeekView(LocalDate selectedDate, LocalTime selectedTime, List<Offer> selectedOffers, ModelAndView mav, Boolean preventOverlapping) throws JsonProcessingException {
         //calculate date configuration for datepicker
         LocalDate today = new LocalDate(DEFAULT_TIMEZONE);
         LocalDate firstDay = today.dayOfMonth().withMinimumValue();
@@ -230,7 +230,6 @@ public class BookingUtil {
         List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsBetween(firstDay, lastDay);
         
         //calculate available time slots
-        Set<Offer> offers = new TreeSet<>();
         List<TimeSlot> timeSlots = new ArrayList<>();
         List<LocalDate> weekDays = new ArrayList<>();
         for (int i=1; i<=CalendarWeekDay.values().length; i++){
@@ -246,25 +245,30 @@ public class BookingUtil {
             }
         }
         
+        Set<Offer> offers = new TreeSet<>();
         List<TimeRange> rangeList = new ArrayList<>();
         //Map<TimeRange, List<TimeSlot>> rangeList = new TreeMap<>();
         for (TimeSlot slot: timeSlots){
+            Set<Offer> slotOffers = slot.getConfig().getOffers();
+            offers.addAll(slotOffers);
+            
             TimeRange range = new TimeRange();
             range.setStartTime(slot.getStartTime());
             range.setEndTime(slot.getEndTime());
-            
+
             if (rangeList.contains(range)){
                 range = rangeList.get(rangeList.indexOf(range));
             } else {
                 rangeList.add(range);
             }
-            
+
             List<TimeSlot> slotis = range.getTimeSlots();
             slotis.add(slot);
             range.setTimeSlots(slotis);
-            offers.addAll(slot.getConfig().getOffers());
         }
         Collections.sort(rangeList);
+        
+        
         
         mav.addObject("selectedTime", selectedTime);
         mav.addObject("dayConfigs", objectMapper.writeValueAsString(dayConfigs));
@@ -273,6 +277,7 @@ public class BookingUtil {
         mav.addObject("WeekDays", weekDays);
         mav.addObject("RangeMap", rangeList);
         mav.addObject("Offers", offers);
+        mav.addObject("SelectedOffers", selectedOffers);
     }
 
     public Long getBookingSlotsLeft(TimeSlot timeSlot, Offer offer, List<Booking> confirmedBookings) {

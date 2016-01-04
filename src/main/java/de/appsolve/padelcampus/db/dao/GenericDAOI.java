@@ -11,6 +11,8 @@ public interface GenericDAOI<T> {
    
    List<T> findAll();
    
+   List<T> findAll(List<Long> ids);
+   
    List<T> findAllFetchEagerly(String... associations);
    
    public List<T> findAllFetchEagerlyWithAttributes(Map<String,Object> attributeMap, String... associations);

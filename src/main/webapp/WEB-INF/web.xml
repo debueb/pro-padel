@@ -48,6 +48,13 @@
         <url-pattern>*.txt</url-pattern>
     </servlet-mapping>
     
+    <jsp-config>
+        <taglib>
+            <taglib-uri>http://www.appsolve.de</taglib-uri>
+            <taglib-location>/WEB-INF/appsolve.tld</taglib-location>
+        </taglib>
+    </jsp-config>
+    
     <filter>
         <description>Cross Site Scripting Filter that sanitizes user input</description>
         <filter-name>XSSFilter</filter-name>

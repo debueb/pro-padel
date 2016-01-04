@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
+import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
 import org.joda.time.LocalDate;
@@ -31,6 +32,9 @@ public class AdminReportsAllocationController extends BaseController{
     BookingDAOI bookingDAO;
     
     @Autowired
+    OfferDAOI offerDAO;
+    
+    @Autowired
     CalendarConfigDAOI calendarConfigDAO;
     
     @Autowired
@@ -49,7 +53,7 @@ public class AdminReportsAllocationController extends BaseController{
    
     private ModelAndView getBookingsView(LocalDate date) throws JsonProcessingException {
         ModelAndView mav = new ModelAndView("admin/reports/allocations/index");
-        bookingUtil.addWeekView(date, null, mav, false);
+        bookingUtil.addWeekView(date, null, offerDAO.findAll(), mav, false);
         return mav;
     }
 }

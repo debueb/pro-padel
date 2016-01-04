@@ -10,37 +10,51 @@
             <div class="panel-heading"><h4><fmt:message key="BookCourt"/></h4></div>
             <div class="panel-body">
 
-
+            <form type="GET">
                 <div class="datepicker-container ">
                     <div class="datepicker-text-container ${empty RangeMap ? '' : 'form-top-element'}">
                         <div class="datepicker-label"><fmt:message key="Date"/></div>
                         <span class="fa fa-calendar datepicker-icon"></span>
                         <div class="datepicker-text"></div>
                     </div>
-                    <input type="hidden" class="datepicker-input" class="form-control" value="${Day}" />
+                    <input type="hidden" name="date" class="datepicker-input" class="form-control" value="${Day}" />
                     <div class="datepicker" data-show-on-init="false" data-redirect-on-select="/bookings/{date}/{time}" data-day-config='${dayConfigs}' data-max-date='${maxDate}'></div>
                 </div>
+                <c:if test="${not empty RangeMap}">
+                    <div class="relative">
+                        <select id="timepicker" name="time" class="select-simple form-control form-center-element">
+                            <option value=""><fmt:message key="AllStartTimes"/></option>
+                            <c:forEach var="TimeRange" items="${RangeMap}">
+                                <c:if test="${TimeRange.offersAvailable}">
+                                    <option ${selectedTime == TimeRange.startTime ? 'selected' : ''}>
+                                        <joda:format value="${TimeRange.startTime}" pattern="HH:mm"/>
+                                    </option>
+                                </c:if>
+                            </c:forEach>
+                        </select>
+                        <span class="explanation-select"><fmt:message key="StartTime"/></span>
+                    </div>
+
+                    <div class="relative">
+                        <select id="timepicker" name="offers" class="select-multiple form-control form-bottom-element" multiple="true">
+                            <c:forEach var="Offer" items="${Offers}">
+                                <option value="${Offer.id}" ${as:contains(SelectedOffers, Offer) ? 'selected="selected"' : ''}>
+                                    ${Offer.name}
+                                </option>
+                            </c:forEach>
+                        </select>
+                        <span class="explanation-select"><fmt:message key="Offers"/></span>
+                    </div>
+                </c:if>
+                
+                <button type="submit" class="btn btn-primary unit stretch"><fmt:message key="Refresh"/></button>
+            </form>
+                        
                 <c:choose>
                     <c:when test="${empty RangeMap}">
                         <div class="alert alert-danger unit"><fmt:message key="NoBookableTimeSlotsAvailable"/></div>
                     </c:when>
                     <c:otherwise>
-                        <div class="relative">
-                            <select id="timepicker" class="select-simple form-control form-bottom-element">
-                                <option value=""><fmt:message key="AllStartTimes"/></option>
-                                <c:forEach var="TimeRange" items="${RangeMap}">
-                                    <c:if test="${TimeRange.offersAvailable}">
-                                        <option ${selectedTime == TimeRange.startTime ? 'selected' : ''}>
-                                            <joda:format value="${TimeRange.startTime}" pattern="HH:mm"/>
-                                        </option>
-                                    </c:if>
-                                </c:forEach>
-                            </select>
-                            <span class="explanation-select"><fmt:message key="StartTime"/></span>
-                        </div>
-                            
-                        <jsp:include page="/jsp/bookings/include/leyenda.jsp"/>
-
                         <div class="unit-2 table-responsive unit">
                             <table class="table table-bordered table-booking table-fixed">
                                 <thead>
@@ -63,7 +77,7 @@
                                             <joda:format value="${TimeRange.endTime}" pattern="HH:mm" var="endTime"/>
                                             <c:if test="${selectedTime == null or selectedTime == TimeRange.startTime}">
                                                 <tr>
-                                                    <td class="booking-time">${startTime}</td>
+                                                    <td class="booking-time">${startTime}<span> - </span>${endTime}</td>
 
                                                     <c:forEach var="WeekDay" items="${WeekDays}">
                                                         <c:set var="offerCount" value="0"/>
@@ -82,11 +96,14 @@
                                                                             <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
                                                                                 <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
                                                                                 <c:forEach var="Offer" items="${TimeSlot.availableOffers}">
-                                                                                    <div class="booking-offer-row">
-                                                                                        <a class="ajaxify booking-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${Offer.hexColor}; height: ${100/offerCount}%;">
-                                                                                            ${TimeSlot.config.currency.symbol}${TimeSlot.config.basePrice}
-                                                                                        </a>
-                                                                                    </div>
+                                                                                    <c:if test="${as:contains(SelectedOffers, Offer)}">
+                                                                                        <div class="booking-offer-row">
+                                                                                            <a class="ajaxify booking-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: #00FF00; height: ${100/offerCount}%;">
+                                                                                                <span>${Offer.name}</span> 
+                                                                                                <span>${TimeSlot.config.currency.symbol}${TimeSlot.config.basePrice}</span>
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    </c:if>
                                                                                 </c:forEach>
                                                                             </c:if>
                                                                         </c:forEach>
@@ -116,7 +133,6 @@
                                 </tbody>
                             </table>
                         </div>
-
                     </c:otherwise>
                 </c:choose>
             </div>

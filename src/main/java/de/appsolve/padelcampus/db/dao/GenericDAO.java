@@ -1,10 +1,11 @@
 package de.appsolve.padelcampus.db.dao;
 
 import de.appsolve.padelcampus.utils.GenericsUtils;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
@@ -12,6 +13,8 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -37,6 +40,21 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
     public List<T> findAll() {
         Session session = entityManager.unwrap(Session.class);
         Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        return (List<T>) criteria.list();
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<T> findAll(List<Long> ids) {
+        Session session = entityManager.unwrap(Session.class);
+        Criterion[] criterion = new Criterion[ids.size()];
+        for (int i=0; i<ids.size(); i++){
+            criterion[i] = Restrictions.eq("id", ids.get(i));
+        }
+        Disjunction or = Restrictions.or(criterion);
+        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        criteria.add(or);
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<T>) criteria.list();
     }
