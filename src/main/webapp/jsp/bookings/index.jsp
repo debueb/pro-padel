@@ -22,7 +22,7 @@
                 </div>
                 <c:if test="${not empty RangeMap}">
                     <div class="relative">
-                        <select id="timepicker" name="time" class="select-simple form-control form-center-element">
+                        <select name="time" class="select-simple form-control form-center-element">
                             <option value=""><fmt:message key="AllStartTimes"/></option>
                             <c:forEach var="TimeRange" items="${RangeMap}">
                                 <c:if test="${TimeRange.offersAvailable}">
@@ -36,7 +36,7 @@
                     </div>
 
                     <div class="relative">
-                        <select id="timepicker" name="offers" class="select-multiple form-control form-bottom-element" multiple="true">
+                        <select name="offers" class="select-multiple form-control form-bottom-element" multiple="true">
                             <c:forEach var="Offer" items="${Offers}">
                                 <option value="${Offer.id}" ${as:contains(SelectedOffers, Offer) ? 'selected="selected"' : ''}>
                                     ${Offer.name}

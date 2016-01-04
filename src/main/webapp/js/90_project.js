@@ -244,7 +244,7 @@ app.main = {};
                 tickIcon: 'fa-check',
                 dropupAuto: false,
                 selectedTextFormat: 'count > 2',
-                countSelectedText: '{0} selected'
+                countSelectedText: '{0}'
             });
         });
     };
