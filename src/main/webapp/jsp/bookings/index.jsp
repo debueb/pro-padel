@@ -62,7 +62,7 @@
                                         <th class="text-center"><fmt:message key="TimeShort"/></th>
                                             <c:forEach var="WeekDay" items="${WeekDays}">
                                             <th class="text-center ${Day == WeekDay ? 'booking-selected-date' : ''}">
-                                                <a href="/bookings/${WeekDay}" class="ajaxify">
+                                                <a href="/bookings/?date=${WeekDay}" class="ajaxify">
                                                     <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>
                                                     <br /><joda:format value="${WeekDay}" pattern="dd.MM."/>
                                                 </a>
@@ -97,7 +97,7 @@
                                                                                 <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
                                                                                 <c:forEach var="Offer" items="${TimeSlot.availableOffers}">
                                                                                     <c:if test="${as:contains(SelectedOffers, Offer)}">
-                                                                                        <div class="booking-offer-row">
+                                                                                        <div class="booking-offer-row ${TimeSlot.date == Day ? 'booking-offer-row-selected' : ''}">
                                                                                             <a class="ajaxify booking-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: #00FF00; height: ${100/offerCount}%;">
                                                                                                 <span>${Offer.name}</span> 
                                                                                                 <span>${TimeSlot.config.currency.symbol}${TimeSlot.config.basePrice}</span>

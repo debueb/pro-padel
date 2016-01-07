@@ -758,6 +758,10 @@ table.table-round > tbody > tr > td {
 .booking-offer-row {
   display: table-row;
 }
+.booking-offer-row-selected {
+  border-left: 1px solid #69bce2;
+  border-right: 1px solid #69bce2;
+}
 .booking-offer {
   display: table-cell;
   vertical-align: middle;
