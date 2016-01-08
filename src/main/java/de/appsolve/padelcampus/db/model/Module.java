@@ -34,7 +34,7 @@ public class Module extends SortableEntity{
     
     @Column
     @NotEmpty(message = "{NotEmpty.title}")
-    @Pattern(regexp = "^[a-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}") 
+    @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s\\-]*$", message = "{RegExp.AlphaNum}") 
     private String title;
     
     @Column
