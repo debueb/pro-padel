@@ -16,6 +16,7 @@ import de.appsolve.padelcampus.db.dao.AdminGroupDAOI;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.model.AdminGroup;
 import de.appsolve.padelcampus.db.model.Booking;
+import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Player;
 import java.util.HashSet;
@@ -26,6 +27,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import static de.appsolve.padelcampus.constants.Constants.SESSION_CUSTOMER;
+import de.appsolve.padelcampus.data.CustomerI;
 
 
 /*
@@ -144,5 +147,13 @@ public class SessionUtil {
             }
         }
         return null;
+    }
+
+    public void setCustomer(HttpServletRequest httpRequest, CustomerI customer) {
+        setObject(httpRequest, SESSION_CUSTOMER, customer);
+    }
+    
+    public CustomerI getCustomer(HttpServletRequest request){
+        return (CustomerI) getObject(request, SESSION_CUSTOMER);
     }
 }

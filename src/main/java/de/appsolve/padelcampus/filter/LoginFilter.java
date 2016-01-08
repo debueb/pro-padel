@@ -6,6 +6,9 @@
 package de.appsolve.padelcampus.filter;
 
 import static de.appsolve.padelcampus.constants.Constants.COOKIE_LOGIN_TOKEN;
+import de.appsolve.padelcampus.data.CustomerI;
+import de.appsolve.padelcampus.data.DefaultCustomer;
+import de.appsolve.padelcampus.db.dao.CustomerDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.SessionUtil;
@@ -25,6 +28,9 @@ import org.springframework.stereotype.Component;
 @Component("loginFilter")
 public class LoginFilter implements Filter {
 
+    @Autowired
+    CustomerDAOI customerDAO;
+    
     @Autowired
     PlayerDAOI playerDAO;
 
@@ -89,6 +95,19 @@ public class LoginFilter implements Filter {
                 }
             } else {
                 httpRequest.setAttribute("clientIdentifier", identifier);
+            }
+            
+            CustomerI customer = sessionUtil.getCustomer(httpRequest);
+            if (customer == null){
+                String hostHeader = httpRequest.getHeader("host");
+                if (!StringUtils.isEmpty(hostHeader)){
+                    String[] hostHeaderSplit = hostHeader.split(":");
+                    customer = customerDAO.findByDomainName(hostHeaderSplit[0]);
+                } 
+                if (customer == null){
+                    customer = new DefaultCustomer();
+                }
+                sessionUtil.setCustomer(httpRequest, customer);
             }
         } 
         chain.doFilter(request, response);

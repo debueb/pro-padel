@@ -12,7 +12,7 @@ import javax.persistence.Entity;
  * @author dominik
  */
 @Entity
-public class Image extends BaseEntity {
+public class Image extends CustomerEntity {
     
     private String filePath;
     

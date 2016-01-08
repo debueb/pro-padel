@@ -28,4 +28,11 @@ public abstract class SortedGenericDAO<T extends Comparable> extends GenericDAO<
         Collections.sort(results);
         return results;
     }
+    
+    @Override
+    public List<T> findByAttributesForAllCustomers(Map<String, Object> attributeMap) {
+        List<T> results = super.findByAttributesForAllCustomers(attributeMap);
+        Collections.sort(results);
+        return results;
+    }
 }

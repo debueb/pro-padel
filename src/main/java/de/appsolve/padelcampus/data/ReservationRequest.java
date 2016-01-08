@@ -22,7 +22,7 @@ import org.joda.time.LocalTime;
  * @author dominik
  */
 @Entity
-public class ReservationRequest extends BaseEntity{
+public class ReservationRequest extends CustomerEntity{
     
     private static final long serialVersionUID = 1L;
     

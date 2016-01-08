@@ -16,7 +16,7 @@
         <div class="row-fluid">
             <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
                 <div class="footer-container">
-                <c:forEach var="Module" items="${footerLinks}" varStatus="status">
+                <c:forEach var="Module" items="${footerLinks[sessionScope.customer.name]}" varStatus="status">
                     <a href="${Module.url}" class="ajaxify">${Module.title}</a> ${not status.last ? ' | ' : ''}
                 </c:forEach>
                 </div>

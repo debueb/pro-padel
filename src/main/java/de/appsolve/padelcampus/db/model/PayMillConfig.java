@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author dominik
  */
 @Entity
-public class PayMillConfig extends BaseEntity{
+public class PayMillConfig extends CustomerEntity{
     
     private static final long serialVersionUID = 1L;
     

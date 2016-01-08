@@ -17,6 +17,11 @@
         <listener-class>de.appsolve.padelcampus.listener.ContextInitializationListener</listener-class>
     </listener> 
     
+    <!-- expose request attributes via RequestContextHolder. Required for multi customer support -->
+    <listener>
+	<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+    
     <!-- loads spring-servlet.xml -->
     <servlet>
         <servlet-name>spring</servlet-name>

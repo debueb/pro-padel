@@ -18,7 +18,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author dominik
  */
 @Entity
-public class Contact extends BaseEntity implements EmailContact{
+public class Contact extends CustomerEntity implements EmailContact{
     
     @Transient
     private static final long serialVersionUID = 1L;

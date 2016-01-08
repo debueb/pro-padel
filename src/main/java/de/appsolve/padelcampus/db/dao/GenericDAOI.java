@@ -9,6 +9,8 @@ public interface GenericDAOI<T> {
 
    T findByIdFetchEagerly(final long id, String... associations);
    
+   List<T> findAllforAllCustomers();
+   
    List<T> findAll();
    
    List<T> findAll(List<Long> ids);
@@ -26,6 +28,8 @@ public interface GenericDAOI<T> {
    void deleteById(Long id);
 
    void delete(List<T> entities);
+   
+   List<T> findByAttributesForAllCustomers(Map<String, Object> attributeMap);
    
    List<T> findByAttributes(Map<String, Object> attributeMap);
    

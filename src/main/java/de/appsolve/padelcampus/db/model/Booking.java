@@ -30,7 +30,7 @@ import org.joda.time.LocalTime;
  * @author dominik
  */
 @Entity
-public class Booking extends BaseEntity{
+public class Booking extends CustomerEntity{
     
     @Transient
     private static final long serialVersionUID = 1L;

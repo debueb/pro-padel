@@ -6,11 +6,12 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import de.appsolve.padelcampus.data.CustomerI;
 import java.util.Set;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -19,7 +20,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author dominik
  */
 @Entity
-public class Facility extends CustomerEntity{
+public class Customer extends BaseEntity implements CustomerI{
     
     @Transient
     private static final long serialVersionUID = 1L;
@@ -28,9 +29,11 @@ public class Facility extends CustomerEntity{
     @NotEmpty(message = "{NotEmpty.name}")
     private String name;
     
-    @ManyToMany(fetch=FetchType.EAGER)
-    private Set<Offer> offers;
-    
+    @ElementCollection(fetch = FetchType.EAGER)
+    @NotEmpty(message = "{NotEmpty.domainNames}")
+    private Set<String> domainNames;
+
+    @Override
     public String getName() {
         return name;
     }
@@ -39,16 +42,16 @@ public class Facility extends CustomerEntity{
         this.name = name;
     }
 
-    public Set<Offer> getOffers() {
-        return offers;
+    public Set<String> getDomainNames() {
+        return domainNames;
     }
 
-    public void setOffers(Set<Offer> offers) {
-        this.offers = offers;
+    public void setDomainNames(Set<String> domainNames) {
+        this.domainNames = domainNames;
     }
-
+    
     @Override
-    public String toString() {
+    public String toString(){
         return name;
     }
 }

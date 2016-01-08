@@ -1,6 +1,6 @@
 <%@include file="/jsp/include/include.jsp"%>
 <ul class="nav navbar-nav">
-    <c:forEach var="Module" items="${menuLinks}" varStatus="status">      
+    <c:forEach var="Module" items="${menuLinks[sessionScope.customer.name]}" varStatus="status">      
         <jsp:include page="/jsp/include/list-menu-item.jsp">
             <jsp:param name="image" value="${Module.iconName}"/>
             <jsp:param name="title" value="${Module.title}"/>

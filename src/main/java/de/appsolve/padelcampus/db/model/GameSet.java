@@ -17,7 +17,7 @@ import javax.persistence.Transient;
  * @author dominik
  */
 @Entity
-public class GameSet extends BaseEntity{
+public class GameSet extends CustomerEntity{
     
     @Transient
     private static final long serialVersionUID = 1L;

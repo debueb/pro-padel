@@ -1,13 +1,15 @@
 package de.appsolve.padelcampus.db.dao;
 
+import de.appsolve.padelcampus.constants.Constants;
+import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.utils.GenericsUtils;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -19,6 +21,8 @@ import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Repository
 @Transactional
@@ -37,9 +41,16 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
 
     @SuppressWarnings("unchecked")
     @Override
+    public List<T> findAllforAllCustomers() {
+        Criteria criteria = getCriteriaForAllCustomers();
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        return (List<T>) criteria.list();
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
     public List<T> findAll() {
-        Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        Criteria criteria = getCriteria();
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<T>) criteria.list();
     }
@@ -47,13 +58,12 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
     @SuppressWarnings("unchecked")
     @Override
     public List<T> findAll(List<Long> ids) {
-        Session session = entityManager.unwrap(Session.class);
         Criterion[] criterion = new Criterion[ids.size()];
         for (int i=0; i<ids.size(); i++){
             criterion[i] = Restrictions.eq("id", ids.get(i));
         }
         Disjunction or = Restrictions.or(criterion);
-        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        Criteria criteria = getCriteria();
         criteria.add(or);
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<T>) criteria.list();
@@ -96,31 +106,22 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
 
     @Override
     public List<T> findByAttributes(Map<String, Object> attributeMap) {
-       //hibernate specific way of getting results
-
-        Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        Criteria criteria = getCriteria();
+        for (Map.Entry<String, Object> entry : attributeMap.entrySet()) {
+            criteria.add(Restrictions.eq(entry.getKey(), entry.getValue()));
+        }
+        //criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        return (List<T>) criteria.list();
+    }
+    
+    @Override
+    public List<T> findByAttributesForAllCustomers(Map<String, Object> attributeMap) {
+        Criteria criteria = getCriteriaForAllCustomers();
         for (Map.Entry<String, Object> entry : attributeMap.entrySet()) {
             criteria.add(Restrictions.eq(entry.getKey(), entry.getValue()));
         }
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<T>) criteria.list();
-
-        //alternative way of getting results without using session == the JPA way
-//       CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-//       Class<T> clazz = getGenericSuperClass(GenericDAO.class);
-//       CriteriaQuery<T> cq = cb.createQuery(clazz);
-//       Root<T> c = cq.from(clazz);
-//       Predicate[] predicates = new Predicate[attributeMap.size()];
-//       int i = 0;
-//       for (Map.Entry<String, Object> entry : attributeMap.entrySet()) {
-//           predicates[i] = cb.equal(c.get(entry.getKey()), entry.getValue());
-//           i++;
-//       }
-//       cq.where(predicates);
-//       TypedQuery<T> q = entityManager.createQuery(cq);
-//       List<T> results = q.getResultList();
-//       return results;
     }
 
     @Override
@@ -139,19 +140,17 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
     
     @Override
     public T findByIdFetchEagerly(final long id, String... associations) {
-        Session session = entityManager.unwrap(Session.class);
-        final Criteria crit = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        Criteria criteria = getCriteria();
         for (String association: associations){
-            crit.setFetchMode(association, FetchMode.JOIN);
+            criteria.setFetchMode(association, FetchMode.JOIN);
         }
-        crit.add(Property.forName("id").eq(id));
-        return (T) crit.uniqueResult();
+        criteria.add(Property.forName("id").eq(id));
+        return (T) criteria.uniqueResult();
     }
     
     @Override
     public List<T> findAllFetchEagerly(String... associations){
-        Session session = entityManager.unwrap(Session.class);
-        final Criteria crit = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        Criteria crit = getCriteria();
         for (String association: associations){
             crit.setFetchMode(association, FetchMode.JOIN);
         }
@@ -163,8 +162,7 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
     
     @Override
     public List<T> findAllFetchEagerlyWithAttributes(Map<String,Object> attributeMap, String... associations){
-        Session session = entityManager.unwrap(Session.class);
-        final Criteria crit = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        Criteria crit = getCriteria();
         for (String association: associations){
             crit.setFetchMode(association, FetchMode.JOIN);
         }
@@ -172,5 +170,36 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
         //see http://stackoverflow.com/questions/18753245/one-to-many-relationship-gets-duplicate-objects-whithout-using-distinct-why
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return crit.list();
+    }
+    
+    protected Criteria getCriteriaForAllCustomers() {
+        Session session = entityManager.unwrap(Session.class);
+        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        return criteria;
+    }
+    
+    protected Criteria getCriteria() {
+        Criteria criteria = getCriteriaForAllCustomers();
+        Customer customer = getCustomer();
+        if (customer != null){
+            criteria.add(Restrictions.eq("customer", customer));
+        }
+        return criteria;
+    }
+    
+    private Customer getCustomer(){
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest request = attr.getRequest();
+        Customer customer = null;
+        if (request!=null){
+            HttpSession session = request.getSession();
+            if (session!=null){
+                Object object = session.getAttribute(Constants.SESSION_CUSTOMER);
+                if (object instanceof Customer){
+                    return (Customer) object;
+                }
+            }
+        }
+        return customer;
     }
 }

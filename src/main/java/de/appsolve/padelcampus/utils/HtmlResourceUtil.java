@@ -7,7 +7,9 @@ package de.appsolve.padelcampus.utils;
 
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.dao.CssAttributeDAOI;
+import de.appsolve.padelcampus.db.dao.CustomerDAOI;
 import de.appsolve.padelcampus.db.model.CssAttribute;
+import de.appsolve.padelcampus.db.model.Customer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,7 +24,9 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletContext;
 import org.apache.commons.io.FileUtils;
@@ -39,6 +43,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class HtmlResourceUtil {
+    
+    @Autowired
+    CustomerDAOI customerDAO;
     
     @Autowired
     CssAttributeDAOI cssAttributeDAO;
@@ -62,42 +69,57 @@ public class HtmlResourceUtil {
     private static final String ALL_MIN_CSS = "/css/all.min.css";
 
     public void updateCss(ServletContext context) throws Exception {
-        List<CssAttribute> cssAttributes = cssAttributeDAO.findAll();
+        
+        List<Customer> customers = customerDAO.findAllforAllCustomers();
+        if (customers.isEmpty()){
+            applyCustomerCss(context, cssAttributeDAO.findAllforAllCustomers(), "");
+        } else {
+            for (Customer customer: customers){
+                Map<String, Object> attributeMap = new HashMap<>();
+                attributeMap.put("customer", customer);
+                List<CssAttribute> cssAttributes = cssAttributeDAO.findByAttributesForAllCustomers(attributeMap);
+                applyCustomerCss(context, cssAttributes, customer.getName());
+            } 
+        }
+    }
+    
+    private void applyCustomerCss(ServletContext context, List<CssAttribute> cssAttributes, String customerName) throws Exception {
         if (!cssAttributes.isEmpty()) {
             //PROBLEM: on openshift, the war file is not extracted. Thus, sortedFiles cannot be overwritten and must be read with context.getResource...
-            
+
+            File destDir = getCustomerDir(customerName);
+
             //copy css sortedFiles to data directory
-            copyResources(context, FOLDER_CSS, new File(DATA_DIR));
+            copyResources(context, FOLDER_CSS, destDir);
             //FileUtils.copyDirectory(new File(rootPath + FOLDER_CSS), new File(DATA_DIR + FOLDER_CSS));
-            
+
             //remove all.min.css from data directory as we do not want to concatenate it with itself
-            new File(DATA_DIR + ALL_MIN_CSS).delete();
-            
+            new File(destDir, ALL_MIN_CSS).delete();
+
             //copy less sortedFiles
-            copyResources(context, FOLDER_LESS, new File(DATA_DIR));
-            //FileUtils.copyDirectory(new File(rootPath + FOLDER_LESS), new File(DATA_DIR + FOLDER_LESS));
-            
+            copyResources(context, FOLDER_LESS, destDir);
+
             //replace variables in variables.less, 90_project.less
-            replaceVariables(context, cssAttributes, VARIABLES_LESS);
-            replaceVariables(context, cssAttributes, PROJECT_LESS);
-            
+            replaceVariables(context, cssAttributes, VARIABLES_LESS, destDir);
+            replaceVariables(context, cssAttributes, PROJECT_LESS, destDir);
+
 
             //compile less and overwrite css sortedFiles in data directory
             LessCompiler lessCompiler = new LessCompiler();
-            lessCompiler.compile(new File(DATA_DIR + File.separator + PROJECT_LESS), new File(DATA_DIR + File.separator + PROJECT_CSS));
-            lessCompiler.compile(new File(DATA_DIR + File.separator + BOOTSTRAP_LESS), new File(DATA_DIR + File.separator + BOOTSTRAP_CSS));
+            lessCompiler.compile(new File(destDir, PROJECT_LESS), new File(destDir, PROJECT_CSS));
+            lessCompiler.compile(new File(destDir, BOOTSTRAP_LESS), new File(destDir, BOOTSTRAP_CSS));
 
+            Path allMinCssPath = new File(destDir, ALL_MIN_CSS).toPath();
             //concatenate all sortedFiles into all.min.css
-            concatenateCss(Paths.get(DATA_DIR + FOLDER_CSS));
-            
+            concatenateCss(new File(destDir, FOLDER_CSS).toPath(), allMinCssPath);
+
             //reload content for css controller
-            reloadAllMinCss(context);
+            reloadAllMinCss(context, destDir);
         }
     }
 
-    private void concatenateCss(Path path) throws FileNotFoundException, IOException {
+    private void concatenateCss(Path path, Path outFile) throws FileNotFoundException, IOException {
         DirectoryStream<Path> cssFiles = getFiles(path, ".css");
-        Path outFile = getAllMinCssFile(DATA_DIR);
         if (Files.exists(outFile)){
             Files.delete(outFile);
         }
@@ -130,21 +152,17 @@ public class HtmlResourceUtil {
         return stream;
     }
 
-    private Path getAllMinCssFile(String dir) {
-        return Paths.get(dir + ALL_MIN_CSS);
-    }
-    
-    public String getAllMinCss(ServletContext context) throws IOException{
+    public String getAllMinCss(ServletContext context, String customerName) throws IOException{
         String cssContent = (String) context.getAttribute(ALL_MIN_CSS_APPLICATION_CONTEXT);
         if (cssContent == null){
-            cssContent = reloadAllMinCss(context);
+            cssContent = reloadAllMinCss(context, getCustomerDir(customerName));
         }
         return cssContent;
     }
 
-    private String reloadAllMinCss(ServletContext context) throws IOException {
-        Path cssFile = getAllMinCssFile(DATA_DIR);
+    private String reloadAllMinCss(ServletContext context, File customerDir) throws IOException {
         byte[] cssData;
+        Path cssFile = new File(customerDir, ALL_MIN_CSS).toPath();
         if (Files.exists(cssFile)){
             cssData = Files.readAllBytes(cssFile);
         } else {
@@ -169,9 +187,9 @@ public class HtmlResourceUtil {
         }
     }
 
-    private void replaceVariables(ServletContext context, List<CssAttribute> cssAttributes, String FILE_NAME) throws IOException {
+    private void replaceVariables(ServletContext context, List<CssAttribute> cssAttributes, String FILE_NAME, File destDir) throws IOException {
         InputStream lessIs = context.getResourceAsStream(FILE_NAME);
-        Path outputPath = Paths.get(DATA_DIR + FILE_NAME);
+        Path outputPath = new File(destDir, FILE_NAME).toPath();
         String content = IOUtils.toString(lessIs, Constants.UTF8);
         for (CssAttribute attribute : cssAttributes) {
             content = content.replaceAll(attribute.getCssDefaultValue(), attribute.getCssValue());
@@ -185,5 +203,9 @@ public class HtmlResourceUtil {
             Files.createFile(outputPath);
         }
         Files.write(outputPath, content.getBytes(Constants.UTF8), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+    }
+
+    private File getCustomerDir(String customerName) {
+       return new File(DATA_DIR + File.pathSeparator + customerName);
     }
 }

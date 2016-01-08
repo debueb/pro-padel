@@ -24,7 +24,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author dominik
  */
 @Entity
-public class AdminGroup extends BaseEntity{
+public class AdminGroup extends CustomerEntity{
     
     @Transient
     private static final long serialVersionUID = 1L;

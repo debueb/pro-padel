@@ -17,7 +17,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author dominik
  */
 @Entity
-public class PayPalConfig extends BaseEntity{
+public class PayPalConfig extends CustomerEntity{
     
     private static final long serialVersionUID = 1L;
     

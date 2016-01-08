@@ -17,7 +17,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author dominik
  */
 @Entity
-public class Offer extends BaseEntity{
+public class Offer extends CustomerEntity{
     
     @Transient
     private static final long serialVersionUID = 1L;

@@ -37,6 +37,7 @@ public class Constants {
     public static final String CONTACT_FORM_RECIPIENT_NAME  = "Dominik Wisskirchen";
     
     public static final String SESSION_USER                 = "user";
+    public static final String SESSION_CUSTOMER             = "customer";
     public static final String SESSION_PRIVILEGES           = "privileges";
     public static final String SESSION_LOGIN_REDIRECT_PATH  = "loginRedirectPath";
     public static final String SESSION_PROFILE_REDIRECT_PATH= "profileRedirectPath";

@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -28,6 +29,12 @@ public class CssController extends BaseController{
     @ResponseBody
     @RequestMapping(value="all.min.stylesheet", produces = "text/css")
     public String getAllMinCss(HttpServletRequest request) throws IOException{
-        return htmlResourceUtil.getAllMinCss(request.getServletContext());
+        return htmlResourceUtil.getAllMinCss(request.getServletContext(), "");
+    }
+    
+    @ResponseBody
+    @RequestMapping(value="{customerName}/all.min.stylesheet", produces = "text/css")
+    public String getAllMinCss(HttpServletRequest request, @PathVariable("customerName") String customerName) throws IOException{
+        return htmlResourceUtil.getAllMinCss(request.getServletContext(), customerName);
     }
 }

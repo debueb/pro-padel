@@ -18,7 +18,7 @@ import javax.persistence.Transient;
  * @author dominik
  */
 @Entity
-public class CssAttribute extends BaseEntity{
+public class CssAttribute extends CustomerEntity{
     
     @Transient
     private static final long serialVersionUID = 1L;

@@ -10,9 +10,8 @@
             </div>
             <hr>
         </c:forEach>
-
         <div class="list-group">
-            <c:forEach var="Module" items="${menuLinks}" varStatus="status">      
+            <c:forEach var="Module" items="${menuLinks[sessionScope.customer.name]}" varStatus="status">      
                 <jsp:include page="/jsp/include/list-group-item.jsp">
                     <jsp:param name="icon" value="${Module.iconName}"/>
                     <jsp:param name="title" value="${Module.title}"/>

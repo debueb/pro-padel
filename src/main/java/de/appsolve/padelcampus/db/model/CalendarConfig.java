@@ -34,7 +34,7 @@ import org.joda.time.LocalTime;
  * @author dominik
  */
 @Entity
-public class CalendarConfig extends BaseEntity{
+public class CalendarConfig extends CustomerEntity{
     
     @Transient
     private static final long serialVersionUID = 1L;
