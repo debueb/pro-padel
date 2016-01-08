@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,9 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
     
     @Override
     public ModelAndView postEditView(@ModelAttribute("Model") Module model, HttpServletRequest request, BindingResult result){
+        if (result.hasErrors()){
+            return super.getEditView(model);
+        }
         if (model.getId() == null){
             Module existingPageEntry = moduleDAO.findByTitle(model.getTitle());
             if (existingPageEntry != null){
