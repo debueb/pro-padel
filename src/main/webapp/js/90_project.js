@@ -431,6 +431,17 @@ app.main = {};
             });
 	});
     };
+    
+    self.enableGalleryAutoPlay = function(){
+        $('.gallery-autoplay').livequery(function(){
+            $(this).slick({
+                "autoplay": true,
+                "autoplaySpeed": 3000,
+                "arrows": false,
+                "adaptiveHeight": true
+            });  
+        });
+    };
     return app;
 }).apply(app.main);
 
@@ -450,4 +461,6 @@ $(document).ready(function () {
     app.main.enableRegexChecksOnInputs();
     app.main.enablePayMill();
     app.main.enableAdvancedProfile();
+    app.main.enableGalleryAutoPlay();
+    
 });
