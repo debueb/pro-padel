@@ -450,4 +450,11 @@ $(document).ready(function () {
     app.main.enableRegexChecksOnInputs();
     app.main.enablePayMill();
     app.main.enableAdvancedProfile();
+    
+    $('.gallery-autoplay').slick({
+        "autoplay": true,
+        "autoplaySpeed": 3000,
+        "arrows": false,
+        "adaptiveHeight": true
+    });
 });

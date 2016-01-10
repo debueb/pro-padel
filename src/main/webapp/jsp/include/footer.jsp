@@ -42,6 +42,7 @@
         <script src="/js/25_bootstrap-select.js"></script>
         <script src="/js/30_jquery-ui.min.js"></script>
         <script src="/js/noconcat/31_datepicker-de.js"></script>
+        <script src="/js/50_slick.min.js"></script>
         <script src="/js/80_jquery.livequery.min.js"></script>
         <script src="/js/90_project.js"></script>
         <script src="/js/91_jquery.history.min.js"></script>
