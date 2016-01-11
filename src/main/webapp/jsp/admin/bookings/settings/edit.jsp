@@ -94,7 +94,7 @@
 
                     <%-- Angebote --%>
                     <div class="relative">
-                        <spf:select path="offers" class="select-multiple form-control" data-style="form-center-element">
+                        <spf:select path="offers" class="select-multiple form-control" data-style="form-center-element" data-container="body">
                             <spf:options items="${Offers}" itemValue="id"/>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Offers"/></span>
