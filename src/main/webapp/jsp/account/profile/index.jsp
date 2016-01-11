@@ -40,7 +40,7 @@
 
                             <span class="relative block">
                                 <fmt:message key="SkillLevel" var="SkillLevelMsg"/>
-                                <spf:select path="notificationSkillLevels" class="select-multiple show-tick form-control" title="${SkillLevelMsg}" multiple="true">
+                                <spf:select path="notificationSkillLevels" class="select-multiple show-tick form-control" title="${SkillLevelMsg}" multiple="true" data-container="body">
                                     <c:forEach var="SkillLevel" items="${SkillLevels}">
                                         <c:set var="selected" value="${fn:contains(Model.notificationSkillLevels, SkillLevel) ? 'selected': 'false'}"/>
                                         <spf:option value="${SkillLevel}"><fmt:message key="${SkillLevel}"/></spf:option>

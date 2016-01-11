@@ -30,7 +30,7 @@
 
                     <%-- Start --%>
                     <span class="relative input-hour">
-                        <spf:select path="startTimeHour" class="select-simple form-left-element form-center-element">
+                        <spf:select path="startTimeHour" class="select-simple form-left-element form-center-element" data-container="body">
                             <c:forEach var="hour" begin="0" end="23">
                                 <fmt:formatNumber value="${hour}" minIntegerDigits="2" var="hour"/>
                                 <spf:option value="${hour}"/>
@@ -40,7 +40,7 @@
                     </span>
                     <div>
                         <span class="relative input-hour">
-                            <spf:select path="startTimeMinute" class="select-simple form-right-element form-center-element">
+                            <spf:select path="startTimeMinute" class="select-simple form-right-element form-center-element" data-container="body">
                                 <c:forEach var="minute" begin="0" end="55" step="5">
                                     <fmt:formatNumber value="${minute}" minIntegerDigits="2" var="minute"/>
                                     <spf:option value="${minute}"/>
@@ -54,7 +54,7 @@
 
                     <%-- Dauer --%>
                     <div class="relative"> 
-                        <spf:select path="duration" class="select-simple form-center-element form-control">
+                        <spf:select path="duration" class="select-simple form-center-element form-control" data-container="body">
                             <spf:option value="60">60 <fmt:message key="Minutes"/></spf:option>
                             <spf:option value="90">90 <fmt:message key="Minutes"/></spf:option>
                             <spf:option value="120">120 <fmt:message key="Minutes"/></spf:option>
@@ -66,7 +66,7 @@
                     <%-- Spielstärken --%>
                     <span class="relative block">
                         <fmt:message key="SkillLevel" var="SkillLevel"/>
-                        <spf:select path="skillLevels" class="select-multiple show-tick form-control" data-style="form-center-element" title="${SkillLevel}" multiple="true">
+                        <spf:select path="skillLevels" class="select-multiple show-tick form-control" data-style="form-center-element" title="${SkillLevel}" multiple="true" data-container="body">
                             <c:forEach var="SkillLevel" items="${SkillLevels}">
                                 <c:set var="selected" value="${fn:contains(Model.skillLevels, SkillLevel) ? 'selected': 'false'}"/>
                                 <spf:option value="${SkillLevel}"><fmt:message key="${SkillLevel}"/></spf:option>
@@ -78,7 +78,7 @@
                     <%-- Min. Teilnehmer --%>
                     <div class="input-group">
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-plus-minus form-control form-center-element form-left-element" data-type="minus" data-field="minPlayersCount">
+                            <button type="button" class="btn btn-default btn-plus-minus form-control form-center-element form-left-element" data-type="minus" data-field="minPlayersCount" data-container="body">
                                 <span class="fa fa-minus"></span>
                             </button>
                         </span>
@@ -87,7 +87,7 @@
                             <span class="explanation"><fmt:message key="MinPlayersCount"/></span>
                         </span>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-plus-minus form-control form-center-element form-right-element " data-type="plus" data-field="minPlayersCount">
+                            <button type="button" class="btn btn-default btn-plus-minus form-control form-center-element form-right-element " data-type="plus" data-field="minPlayersCount" data-container="body">
                                 <span class="fa fa-plus"></span>
                             </button>
                         </span>
@@ -96,7 +96,7 @@
                     <%-- Max. Teilnehmer --%>
                     <div class="input-group">
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-plus-minus form-control form-center-element form-left-element" data-type="minus" data-field="maxPlayersCount">
+                            <button type="button" class="btn btn-default btn-plus-minus form-control form-center-element form-left-element" data-type="minus" data-field="maxPlayersCount" data-container="body">
                                 <span class="fa fa-minus"></span>
                             </button>
                         </span>
@@ -105,7 +105,7 @@
                             <span class="explanation"><fmt:message key="MaxPlayersCount"/></span>
                         </span>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-plus-minus form-control form-center-element form-right-element" data-type="plus" data-field="maxPlayersCount">
+                            <button type="button" class="btn btn-default btn-plus-minus form-control form-center-element form-right-element" data-type="plus" data-field="maxPlayersCount" data-container="body">
                                 <span class="fa fa-plus"></span>
                             </button>
                         </span>
@@ -114,7 +114,7 @@
                     <%-- Teilnehmer --%>
                     <span class="relative block">
                         <fmt:message key="Participants" var="Participants"/>
-                        <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${Participants}" multiple="true" data-live-search="true">
+                        <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${Participants}" multiple="true" data-live-search="true" data-container="body">
                             <spf:options items="${Players}" itemValue="id"/>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Participants"/></span>

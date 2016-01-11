@@ -17,10 +17,10 @@
                     <spf:input type="hidden" path="position"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
 
-                    <spf:select path="moduleType" type="text" class="form-control form-top-element select-simple">
+                    <spf:select path="moduleType" type="text" class="form-control form-top-element select-simple" data-container="body">
                         <spf:options items="${ModuleTypes}" />
                     </spf:select>
-                    <spf:select path="iconName" type="text" class="form-control form-center-element select-simple" data-live-search="true">
+                    <spf:select path="iconName" type="text" class="form-control form-center-element select-simple" data-live-search="true" data-container="body">
                         <c:forEach var="IconName" items="${FontAwesomeIconNames}">
                             <spf:option data-icon="fa-${IconName}" value="${IconName}">${IconName}</spf:option>
                         </c:forEach>

@@ -28,7 +28,7 @@
                                     <c:forEach var="Participant" items="${Game.participants}">
                                         <td>
                                             <c:set var="key" value="game-${Game.id}-participant-${Participant.id}-set-${set}"/>
-                                            <select name="${key}" class="select-simple form-control">
+                                            <select name="${key}" class="select-simple form-control" data-container="body">
                                                 <option value="-1">-</option>
                                                 <c:choose>
                                                     <c:when test="${set < 3}">

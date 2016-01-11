@@ -21,7 +21,7 @@
             <spf:input path="name" type="text" class="form-control form-top-element" placeholder="${Name}"/>
 
             <fmt:message key="Offers" var="OffersMsg"/>
-            <spf:select path="offers" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${OffersMsg}" multiple="true">
+            <spf:select path="offers" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${OffersMsg}" multiple="true" data-container="body">
                 <spf:options items="${Offers}" itemLabel="name" itemValue="id"/>
             </spf:select>
 
