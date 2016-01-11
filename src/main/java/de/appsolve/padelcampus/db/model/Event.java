@@ -24,7 +24,7 @@ import org.joda.time.LocalDate;
  * @author dominik
  */
 @Entity
-public class Event extends CustomerEntity{
+public class Event extends ComparableEntity{
     
     @Transient
     private static final long serialVersionUID = 1L;

@@ -1,33 +1,36 @@
-package de.appsolve.padelcampus.db.dao;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package de.appsolve.padelcampus.db.dao.generic;
 
-import de.appsolve.padelcampus.constants.Constants;
-import de.appsolve.padelcampus.db.model.Customer;
+import de.appsolve.padelcampus.db.model.BaseEntityI;
 import de.appsolve.padelcampus.utils.GenericsUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
+/**
+ *
+ * @author dominik
+ * @param <T>
+ */
 @Repository
 @Transactional
-public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericDAOI<T> {
-
+public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils<T> implements BaseEntityDAOI<T>  {
+   
     private static final Logger log = Logger.getLogger(GenericDAO.class);
 
     @PersistenceContext
@@ -39,14 +42,6 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
         return entityManager.find(getGenericSuperClass(GenericDAO.class), id);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<T> findAllforAllCustomers() {
-        Criteria criteria = getCriteriaForAllCustomers();
-        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-        return (List<T>) criteria.list();
-    }
-    
     @SuppressWarnings("unchecked")
     @Override
     public List<T> findAll() {
@@ -84,7 +79,7 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
         session.saveOrUpdate(entity);
         return entity;
     }
-
+    
     @Override
     public void delete(T entity) {
         Session session = entityManager.unwrap(Session.class);
@@ -115,16 +110,6 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
     }
     
     @Override
-    public List<T> findByAttributesForAllCustomers(Map<String, Object> attributeMap) {
-        Criteria criteria = getCriteriaForAllCustomers();
-        for (Map.Entry<String, Object> entry : attributeMap.entrySet()) {
-            criteria.add(Restrictions.eq(entry.getKey(), entry.getValue()));
-        }
-        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-        return (List<T>) criteria.list();
-    }
-
-    @Override
     public T findByAttribute(String key, Object value) {
         Map<String, Object> attributeMap = new HashMap<>();
         attributeMap.put(key, value);
@@ -138,68 +123,10 @@ public abstract class GenericDAO<T> extends GenericsUtils<T> implements GenericD
         return objects.get(0);
     }
     
-    @Override
-    public T findByIdFetchEagerly(final long id, String... associations) {
-        Criteria criteria = getCriteria();
-        for (String association: associations){
-            criteria.setFetchMode(association, FetchMode.JOIN);
-        }
-        criteria.add(Property.forName("id").eq(id));
-        return (T) criteria.uniqueResult();
-    }
-    
-    @Override
-    public List<T> findAllFetchEagerly(String... associations){
-        Criteria crit = getCriteria();
-        for (String association: associations){
-            crit.setFetchMode(association, FetchMode.JOIN);
-        }
-        //we only want unique results
-        //see http://stackoverflow.com/questions/18753245/one-to-many-relationship-gets-duplicate-objects-whithout-using-distinct-why
-        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        return crit.list();
-    }
-    
-    @Override
-    public List<T> findAllFetchEagerlyWithAttributes(Map<String,Object> attributeMap, String... associations){
-        Criteria crit = getCriteria();
-        for (String association: associations){
-            crit.setFetchMode(association, FetchMode.JOIN);
-        }
-        //we only want unique results
-        //see http://stackoverflow.com/questions/18753245/one-to-many-relationship-gets-duplicate-objects-whithout-using-distinct-why
-        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        return crit.list();
-    }
-    
-    protected Criteria getCriteriaForAllCustomers() {
+    protected Criteria getCriteria() {
         Session session = entityManager.unwrap(Session.class);
         Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
         return criteria;
     }
     
-    protected Criteria getCriteria() {
-        Criteria criteria = getCriteriaForAllCustomers();
-        Customer customer = getCustomer();
-        if (customer != null){
-            criteria.add(Restrictions.eq("customer", customer));
-        }
-        return criteria;
-    }
-    
-    private Customer getCustomer(){
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpServletRequest request = attr.getRequest();
-        Customer customer = null;
-        if (request!=null){
-            HttpSession session = request.getSession();
-            if (session!=null){
-                Object object = session.getAttribute(Constants.SESSION_CUSTOMER);
-                if (object instanceof Customer){
-                    return (Customer) object;
-                }
-            }
-        }
-        return customer;
-    }
 }

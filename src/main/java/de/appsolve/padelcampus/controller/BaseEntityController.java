@@ -5,7 +5,7 @@
  */
 package de.appsolve.padelcampus.controller;
 
-import de.appsolve.padelcampus.db.model.BaseEntity;
+import de.appsolve.padelcampus.db.model.BaseEntityI;
 import de.appsolve.padelcampus.utils.Msg;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
@@ -21,7 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  * @param <T>
  */
-public abstract class BaseEntityController<T extends BaseEntity> extends BaseController implements BaseEntityControllerI {
+public abstract class BaseEntityController<T extends BaseEntityI> extends BaseController implements BaseEntityControllerI {
     
     private static final Logger log = Logger.getLogger(BaseEntityController.class);
     

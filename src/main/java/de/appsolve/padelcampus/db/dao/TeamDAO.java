@@ -1,5 +1,6 @@
 package de.appsolve.padelcampus.db.dao;
 
+import de.appsolve.padelcampus.db.dao.generic.SortedGenericDAO;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import java.util.ArrayList;

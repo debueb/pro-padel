@@ -7,7 +7,7 @@ package de.appsolve.padelcampus.admin.controller;
 
 import de.appsolve.padelcampus.controller.BaseEntityControllerI;
 import de.appsolve.padelcampus.controller.BaseEntityController;
-import de.appsolve.padelcampus.db.model.BaseEntity;
+import de.appsolve.padelcampus.db.model.BaseEntityI;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  * @param <T>
  */
-public abstract class AdminBaseController<T extends BaseEntity> extends BaseEntityController<T> implements BaseEntityControllerI{
+public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEntityController<T> implements BaseEntityControllerI{
     
     protected static final Logger log = Logger.getLogger(AdminBaseController.class);
     

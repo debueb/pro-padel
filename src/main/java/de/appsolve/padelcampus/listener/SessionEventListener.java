@@ -5,7 +5,7 @@
  */
 package de.appsolve.padelcampus.listener;
 
-import de.appsolve.padelcampus.db.dao.BookingDAOI;
+import de.appsolve.padelcampus.db.dao.BookingBaseDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import javax.servlet.http.HttpSessionEvent;
@@ -29,7 +29,7 @@ public class SessionEventListener implements HttpSessionListener, ApplicationCon
     Logger log = Logger.getLogger(SessionEventListener.class);
     
     @Autowired
-    BookingDAOI bookingDAO;
+    BookingBaseDAOI bookingBaseDAO;
     
     @Autowired
     SessionUtil sessionUtil;
@@ -64,7 +64,7 @@ public class SessionEventListener implements HttpSessionListener, ApplicationCon
         //also look for other blocking bookings that might no have been deleted
         log.info("Looking for unpaid blocking bookings");
         LocalDateTime maxAge = now.minusSeconds(se.getSession().getMaxInactiveInterval());
-        for (Booking blockingBooking : bookingDAO.findBlockedBookings()) {
+        for (Booking blockingBooking : bookingBaseDAO.findBlockedBookings()) {
             cancelBooking(blockingBooking, maxAge);
         }
     }
@@ -75,10 +75,7 @@ public class SessionEventListener implements HttpSessionListener, ApplicationCon
             LocalDateTime blockingTime = booking.getBlockingTime();
             if (blockingTime!=null && blockingTime.isBefore(maxAge)){
                 log.info("Cancelling booking [user="+booking.getPlayer().toString()+", date="+booking.getBookingDate()+", time="+booking.getBookingTime()+"] due to session timeout");
-                booking.setBlockingTime(null);
-                booking.setCancelled(true);
-                booking.setCancelReason("Session Timeout");
-                bookingDAO.saveOrUpdate(booking);
+                bookingBaseDAO.cancelBooking(booking);
             }
         }
     }

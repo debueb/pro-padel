@@ -5,7 +5,7 @@
  */
 package de.appsolve.padelcampus.tasks;
 
-import de.appsolve.padelcampus.db.dao.VoucherDAOI;
+import de.appsolve.padelcampus.db.dao.VoucherBaseDAOI;
 import de.appsolve.padelcampus.db.model.Voucher;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -24,16 +24,16 @@ public class VoucherCleanupTask {
     private static final Logger log = Logger.getLogger(VoucherCleanupTask.class);
     
     @Autowired
-    VoucherDAOI voucherDAO;
+    VoucherBaseDAOI voucherBaseDAO;
     
     @Scheduled(cron = "0 0 2 * * *") //second minute hour day month year, * = any, */5 = every 5
     public void deleteOldVouchers(){
         LocalDate now = new LocalDate();
         LocalDate oneMonthAgo = now.minusMonths(1);
-        List<Voucher> expiredVouchers = voucherDAO.findExpiredBefore(oneMonthAgo);
+        List<Voucher> expiredVouchers = voucherBaseDAO.findExpiredBefore(oneMonthAgo);
         log.info("Deleting "+expiredVouchers.size()+" Vouchers expired before "+oneMonthAgo);
         for (Voucher voucher: expiredVouchers){
-            voucherDAO.deleteById(voucher.getId());
+            voucherBaseDAO.deleteById(voucher.getId());
         }
     }
     

@@ -7,7 +7,7 @@
 package de.appsolve.padelcampus.admin.controller.general;
 
 import de.appsolve.padelcampus.constants.ModuleType;
-import de.appsolve.padelcampus.db.dao.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
@@ -44,9 +44,6 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
     
     @Autowired
     ModuleDAOI moduleDAO;
-    
-    @Autowired
-    ServletContext context;
     
     @Autowired
     ModuleUtil moduleUtil;
@@ -95,24 +92,24 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         }
         
         ModelAndView mav = super.postEditView(model, request, result);
-        reloadModules();
+        reloadModules(request);
         return mav;
     }
     
     @Override
     public ModelAndView postDelete(HttpServletRequest request, @PathVariable("id") Long id){
         ModelAndView mav = super.postDelete(request, id);
-        reloadModules();
+        reloadModules(request);
         return mav;
     }
     
     @Override
-    public void updateSortOrder(@ModelAttribute("Model") Module model, @RequestBody List<Long> orderedIds){
-        super.updateSortOrder(model, orderedIds);
-        reloadModules();
+    public void updateSortOrder(HttpServletRequest request, @ModelAttribute("Model") Module model, @RequestBody List<Long> orderedIds){
+        super.updateSortOrder(request, model, orderedIds);
+        reloadModules(request);
     }
 
-    private void reloadModules() {
-        moduleUtil.reloadModules(context);
+    private void reloadModules(HttpServletRequest request) {
+        moduleUtil.reloadModules(request);
     }
 }

@@ -6,9 +6,8 @@
 
 package de.appsolve.padelcampus.db.dao;
 
+import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
 import de.appsolve.padelcampus.db.model.Voucher;
-import java.util.List;
-import org.joda.time.LocalDate;
 
 /**
  *
@@ -17,6 +16,4 @@ import org.joda.time.LocalDate;
 public interface VoucherDAOI extends GenericDAOI<Voucher>{
     
     public Voucher findByUUID(String UUID);
-
-    public List<Voucher> findExpiredBefore(LocalDate oneMonthAgo);
 }

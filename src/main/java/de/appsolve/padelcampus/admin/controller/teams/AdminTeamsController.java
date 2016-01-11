@@ -7,7 +7,7 @@
 package de.appsolve.padelcampus.admin.controller.teams;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
-import de.appsolve.padelcampus.db.dao.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Player;

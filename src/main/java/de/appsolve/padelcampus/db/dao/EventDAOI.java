@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.db.dao;
 
+import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Participant;
 import java.util.List;

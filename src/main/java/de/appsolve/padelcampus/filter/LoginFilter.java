@@ -7,10 +7,10 @@ package de.appsolve.padelcampus.filter;
 
 import static de.appsolve.padelcampus.constants.Constants.COOKIE_LOGIN_TOKEN;
 import de.appsolve.padelcampus.data.CustomerI;
-import de.appsolve.padelcampus.data.DefaultCustomer;
 import de.appsolve.padelcampus.db.dao.CustomerDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
 import javax.servlet.Filter;
@@ -21,6 +21,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,11 @@ public class LoginFilter implements Filter {
 
     @Autowired
     SessionUtil sessionUtil;
+    
+    @Autowired
+    ModuleUtil moduleUtil;
+    
+    private static final String PATH_START_PAGE = "/start";
 
     /**
      * @param config
@@ -60,6 +66,29 @@ public class LoginFilter implements Filter {
             throws IOException, ServletException {
         if (request instanceof HttpServletRequest) {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
+            HttpServletResponse httpResponse = (HttpServletResponse) response;
+            
+            if (httpRequest.getRequestURI().contains(PATH_START_PAGE)){
+                chain.doFilter(request, response);
+                return;
+            }
+            
+            CustomerI customer = sessionUtil.getCustomer(httpRequest);
+            if (customer == null){
+                String hostHeader = httpRequest.getHeader("host");
+                if (!StringUtils.isEmpty(hostHeader)){
+                    String[] hostHeaderSplit = hostHeader.split(":");
+                    customer = customerDAO.findByDomainName(hostHeaderSplit[0]);
+                } 
+                if (customer == null){
+                    httpResponse.sendRedirect(PATH_START_PAGE);
+                    return;
+                }
+                sessionUtil.setCustomer(httpRequest, customer);
+            }
+            
+            
+            
             Player user = sessionUtil.getUser(httpRequest);
             if (user == null) {
                 Cookie[] cookies = httpRequest.getCookies();
@@ -97,18 +126,9 @@ public class LoginFilter implements Filter {
                 httpRequest.setAttribute("clientIdentifier", identifier);
             }
             
-            CustomerI customer = sessionUtil.getCustomer(httpRequest);
-            if (customer == null){
-                String hostHeader = httpRequest.getHeader("host");
-                if (!StringUtils.isEmpty(hostHeader)){
-                    String[] hostHeaderSplit = hostHeader.split(":");
-                    customer = customerDAO.findByDomainName(hostHeaderSplit[0]);
-                } 
-                if (customer == null){
-                    customer = new DefaultCustomer();
-                }
-                sessionUtil.setCustomer(httpRequest, customer);
-            }
+            
+            
+            moduleUtil.initModules(httpRequest);
         } 
         chain.doFilter(request, response);
     }

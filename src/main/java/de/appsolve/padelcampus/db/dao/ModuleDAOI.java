@@ -6,7 +6,7 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.model.Customer;
+import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
 import de.appsolve.padelcampus.db.model.Module;
 import java.util.List;
 
@@ -16,9 +16,7 @@ import java.util.List;
  */
 public interface ModuleDAOI extends GenericDAOI<Module>{
     
-    public List<Module> findAllFooterModules();
-    public List<Module> findAllMenuModules();
-    public List<Module> findFooterModules(Customer customer);
-    public List<Module> findMenuModules(Customer customer);
+    public List<Module> findFooterModules();
+    public List<Module> findMenuModules();
     public Module findByTitle(String title);
 }

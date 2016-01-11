@@ -6,13 +6,14 @@
 
 package de.appsolve.padelcampus.db.dao;
 
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Customer;
 
 /**
  *
  * @author dominik
  */
-public interface CustomerDAOI extends GenericDAOI<Customer>{
+public interface CustomerDAOI extends BaseEntityDAOI<Customer>{
     
     public Customer findByDomainName(String domainName);
 }

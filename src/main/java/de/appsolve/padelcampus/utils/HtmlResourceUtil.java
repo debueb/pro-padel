@@ -6,7 +6,7 @@
 package de.appsolve.padelcampus.utils;
 
 import de.appsolve.padelcampus.constants.Constants;
-import de.appsolve.padelcampus.db.dao.CssAttributeDAOI;
+import de.appsolve.padelcampus.db.dao.CssAttributeBaseDAOI;
 import de.appsolve.padelcampus.db.dao.CustomerDAOI;
 import de.appsolve.padelcampus.db.model.CssAttribute;
 import de.appsolve.padelcampus.db.model.Customer;
@@ -19,7 +19,6 @@ import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +47,7 @@ public class HtmlResourceUtil {
     CustomerDAOI customerDAO;
     
     @Autowired
-    CssAttributeDAOI cssAttributeDAO;
+    CssAttributeBaseDAOI cssAttributeBaseDAO;
     
     private static final Logger log = Logger.getLogger(HtmlResourceUtil.class);
     
@@ -70,14 +69,14 @@ public class HtmlResourceUtil {
 
     public void updateCss(ServletContext context) throws Exception {
         
-        List<Customer> customers = customerDAO.findAllforAllCustomers();
+        List<Customer> customers = customerDAO.findAll();
         if (customers.isEmpty()){
-            applyCustomerCss(context, cssAttributeDAO.findAllforAllCustomers(), "");
+            applyCustomerCss(context, cssAttributeBaseDAO.findAll(), "");
         } else {
             for (Customer customer: customers){
                 Map<String, Object> attributeMap = new HashMap<>();
                 attributeMap.put("customer", customer);
-                List<CssAttribute> cssAttributes = cssAttributeDAO.findByAttributesForAllCustomers(attributeMap);
+                List<CssAttribute> cssAttributes = cssAttributeBaseDAO.findByAttributes(attributeMap);
                 applyCustomerCss(context, cssAttributes, customer.getName());
             } 
         }

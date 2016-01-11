@@ -7,8 +7,6 @@
 package de.appsolve.padelcampus.listener;
 
 import de.appsolve.padelcampus.utils.HtmlResourceUtil;
-import de.appsolve.padelcampus.utils.ModuleUtil;
-import java.util.logging.Level;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.sql.DataSource;
@@ -30,9 +28,6 @@ public class ContextInitializationListener implements ServletContextListener{
     DataSource dataSource;
     
     @Autowired
-    ModuleUtil moduleUtil;
-    
-    @Autowired
     HtmlResourceUtil htmlResourceUtil;
 
     @Override
@@ -52,8 +47,6 @@ public class ContextInitializationListener implements ServletContextListener{
             log.info("migrate task: " + i.getVersion() + " : " + i.getDescription() + " from file: " + i.getScript());
         }
         flyway.migrate();
-        
-        moduleUtil.reloadModules(sce.getServletContext());
         
         try {
             htmlResourceUtil.updateCss(sce.getServletContext());

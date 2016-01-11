@@ -5,17 +5,17 @@
  */
 package de.appsolve.padelcampus.controller;
 
-import de.appsolve.padelcampus.db.dao.GenericDAOI;
-import de.appsolve.padelcampus.db.model.BaseEntity;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
+import de.appsolve.padelcampus.db.model.BaseEntityI;
 
 /**
  *
  * @author dominik
  * @param <T>
  */
-public interface BaseEntityControllerI<T extends BaseEntity> {
+public interface BaseEntityControllerI<T extends BaseEntityI> {
     
-    public GenericDAOI<T> getDAO();
+    public BaseEntityDAOI<T> getDAO();
     public String getModuleName();
     
 }

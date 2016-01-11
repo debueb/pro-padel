@@ -8,7 +8,7 @@ package de.appsolve.padelcampus.admin.controller.customers;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.db.dao.CustomerDAOI;
-import de.appsolve.padelcampus.db.dao.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
 import de.appsolve.padelcampus.db.model.Customer;
 import java.util.Collections;
 import java.util.List;
@@ -31,13 +31,13 @@ public class AdminCustomersController extends AdminBaseController<Customer> {
     
     @Override
     public ModelAndView showIndex(HttpServletRequest request){
-        List<Customer> all = customerDAO.findAllforAllCustomers();
+        List<Customer> all = customerDAO.findAll();
         Collections.sort(all);
         return getIndexView(all);
     }
     
     @Override
-    public GenericDAOI getDAO() {
+    public CustomerDAOI getDAO() {
         return customerDAO;
     }
 

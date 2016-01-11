@@ -1,5 +1,6 @@
-package de.appsolve.padelcampus.db.dao;
+package de.appsolve.padelcampus.db.dao.generic;
 
+import de.appsolve.padelcampus.db.model.ComparableEntity;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public abstract class SortedGenericDAO<T extends Comparable> extends GenericDAO<T> {
+public abstract class SortedGenericDAO<T extends ComparableEntity> extends GenericDAO<T> {
 
     private static final Logger log = Logger.getLogger(SortedGenericDAO.class);
 
@@ -25,13 +26,6 @@ public abstract class SortedGenericDAO<T extends Comparable> extends GenericDAO<
     @Override
     public List<T> findByAttributes(Map<String, Object> attributeMap) {
         List<T> results = super.findByAttributes(attributeMap);
-        Collections.sort(results);
-        return results;
-    }
-    
-    @Override
-    public List<T> findByAttributesForAllCustomers(Map<String, Object> attributeMap) {
-        List<T> results = super.findByAttributesForAllCustomers(attributeMap);
         Collections.sort(results);
         return results;
     }

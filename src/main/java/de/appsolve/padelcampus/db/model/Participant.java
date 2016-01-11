@@ -24,7 +24,7 @@ import javax.persistence.Transient;
     name="participantType",
     discriminatorType=DiscriminatorType.STRING
 )
-public abstract class Participant extends CustomerEntity implements ParticipantI{
+public abstract class Participant extends ComparableEntity implements ParticipantI{
     
     @Transient
     public String getDiscriminatorValue(){

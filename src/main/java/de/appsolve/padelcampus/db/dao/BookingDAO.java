@@ -1,5 +1,6 @@
 package de.appsolve.padelcampus.db.dao;
 ;
+import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import java.util.List;

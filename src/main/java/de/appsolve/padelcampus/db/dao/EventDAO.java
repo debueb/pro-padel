@@ -1,5 +1,6 @@
 package de.appsolve.padelcampus.db.dao;
 ;
+import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
 import java.util.List;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Participant;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @author dominik
  */
 @Component
-public class EventDAO extends SortedGenericDAO<Event> implements EventDAOI{
+public class EventDAO extends GenericDAO<Event> implements EventDAOI{
 
     @Override
     public List<Event> findAllWithParticipant(Participant participant) {
