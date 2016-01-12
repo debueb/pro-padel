@@ -49,94 +49,95 @@
                 
                 <button type="submit" class="btn btn-primary unit stretch"><fmt:message key="Refresh"/></button>
             </form>
-                        
-                <c:choose>
-                    <c:when test="${empty RangeMap}">
-                        <div class="alert alert-danger unit"><fmt:message key="NoBookableTimeSlotsAvailable"/></div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="unit-2 table-responsive unit">
-                            <table class="table table-bordered table-booking table-fixed">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center"><fmt:message key="TimeShort"/></th>
-                                            <c:forEach var="WeekDay" items="${WeekDays}">
-                                            <th class="text-center ${Day == WeekDay ? 'booking-selected-date' : ''}">
-                                                <a href="/bookings/?date=${WeekDay}" class="ajaxify">
-                                                    <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>
-                                                    <br /><joda:format value="${WeekDay}" pattern="dd.MM."/>
-                                                </a>
-                                            </th>
-                                        </c:forEach>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach var="TimeRange" items="${RangeMap}">
-                                        <c:if test="${TimeRange.offersAvailable}">
-                                            <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
-                                            <joda:format value="${TimeRange.endTime}" pattern="HH:mm" var="endTime"/>
-                                            <c:if test="${selectedTime == null or selectedTime == TimeRange.startTime}">
-                                                <tr>
-                                                    <td class="booking-time">${startTime}<span> - </span>${endTime}</td>
-
-                                                    <c:forEach var="WeekDay" items="${WeekDays}">
-                                                        <c:set var="offerCount" value="0"/>
-
-                                                        <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
-                                                            <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
-                                                                <c:set var="offerCount" value="${offerCount + fn:length(TimeSlot.availableOffers)}"/>
-                                                            </c:if> 
-                                                        </c:forEach>
-
-                                                        <c:choose>
-                                                            <c:when test="${offerCount>0}">
-                                                                <td class="booking-bookable">
-                                                                    <div class="booking-offer-container">
-                                                                        <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
-                                                                            <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
-                                                                                <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
-                                                                                <c:forEach var="Offer" items="${TimeSlot.availableOffers}">
-                                                                                    <c:if test="${as:contains(SelectedOffers, Offer)}">
-                                                                                        <div class="booking-offer-row ${TimeSlot.date == Day ? 'booking-offer-row-selected' : ''}">
-                                                                                            <a class="ajaxify booking-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: #00FF00; height: ${100/offerCount}%;">
-                                                                                                <span>${Offer.name}</span> 
-                                                                                                <span>${TimeSlot.config.currency.symbol}${TimeSlot.config.basePrice}</span>
-                                                                                            </a>
-                                                                                        </div>
-                                                                                    </c:if>
-                                                                                </c:forEach>
-                                                                            </c:if>
-                                                                        </c:forEach>
-                                                                    </div>
-                                                                </td>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <td class="booking-disabled"></td>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </c:forEach>
-                                                </tr>
-                                            </c:if>
-                                        </c:if>
-                                    </c:forEach>
-                                    <tr>
-                                        <td></td>
-                                        <c:forEach var="WeekDay" items="${WeekDays}">
-                                            <td class="text-center ${Day == WeekDay ? 'booking-selected-date' : ''}">
-                                                <a href="/bookings/${WeekDay}" class="ajaxify">
-                                                    <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>
-                                                    <br /><joda:format value="${WeekDay}" pattern="dd.MM."/>
-                                                </a>
-                                            </td>
-                                        </c:forEach>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
             </div>
         </div>
+                        
+        <c:choose>
+            <c:when test="${empty RangeMap}">
+                <div class="alert alert-danger unit"><fmt:message key="NoBookableTimeSlotsAvailable"/></div>
+            </c:when>
+            <c:otherwise>
+                <div class="unit-2 table-responsive unit">
+                    <table class="table table-booking table-fixed">
+                        <thead>
+                            <tr>
+                                <th class="text-center"><fmt:message key="TimeShort"/></th>
+                                    <c:forEach var="WeekDay" items="${WeekDays}">
+                                    <th class="text-center ${Day == WeekDay ? 'booking-selected-date' : ''}">
+                                        <a href="/bookings/?date=${WeekDay}" class="ajaxify">
+                                            <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>
+                                            <br /><joda:format value="${WeekDay}" pattern="dd.MM."/>
+                                        </a>
+                                    </th>
+                                </c:forEach>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="TimeRange" items="${RangeMap}">
+                                <c:if test="${TimeRange.offersAvailable}">
+                                    <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
+                                    <joda:format value="${TimeRange.endTime}" pattern="HH:mm" var="endTime"/>
+                                    <c:if test="${selectedTime == null or selectedTime == TimeRange.startTime}">
+                                        <tr>
+                                            <td class="booking-time">${startTime}<span> - </span>${endTime}</td>
+
+                                            <c:forEach var="WeekDay" items="${WeekDays}">
+                                                <c:set var="offerCount" value="0"/>
+
+                                                <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
+                                                    <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
+                                                        <c:set var="offerCount" value="${offerCount + fn:length(TimeSlot.availableOffers)}"/>
+                                                    </c:if> 
+                                                </c:forEach>
+
+                                                <c:choose>
+                                                    <c:when test="${offerCount>0}">
+                                                        <td class="booking-bookable">
+                                                            <div class="booking-offer-container">
+                                                                <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
+                                                                    <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
+                                                                        <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
+                                                                        <c:forEach var="Offer" items="${TimeSlot.availableOffers}">
+                                                                            <c:if test="${as:contains(SelectedOffers, Offer)}">
+                                                                                <div class="booking-offer-row ${TimeSlot.date == Day ? 'booking-offer-row-selected' : ''}">
+                                                                                    <a class="ajaxify booking-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: #00FF00; height: ${100/offerCount}%;">
+                                                                                        <span>${Offer.name}</span> 
+                                                                                        <span>${TimeSlot.config.currency.symbol}${TimeSlot.config.basePrice}</span>
+                                                                                    </a>
+                                                                                </div>
+                                                                            </c:if>
+                                                                        </c:forEach>
+                                                                    </c:if>
+                                                                </c:forEach>
+                                                            </div>
+                                                        </td>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <td class="booking-disabled"></td>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </c:forEach>
+                                        </tr>
+                                    </c:if>
+                                </c:if>
+                            </c:forEach>
+                            <tr>
+                                <td></td>
+                                <c:forEach var="WeekDay" items="${WeekDays}">
+                                    <td class="text-center ${Day == WeekDay ? 'booking-selected-date' : ''}">
+                                        <a href="/bookings/${WeekDay}" class="ajaxify">
+                                            <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>
+                                            <br /><joda:format value="${WeekDay}" pattern="dd.MM."/>
+                                        </a>
+                                    </td>
+                                </c:forEach>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </c:otherwise>
+        </c:choose>
+            
     </div>
 </div>
 

@@ -13,7 +13,6 @@
             </div>
         </div>
 
-
         <c:choose>
             <c:when test="${not empty Bookings}">
                 <div class="list-group">
