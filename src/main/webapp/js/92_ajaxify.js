@@ -50,7 +50,6 @@
             var $this = $(this);
 
             // Ajaxify
-            //$this.find('a:internal:not(.no-ajaxy):not([class^=ui-])').click(function (event) {
             $this.find('a.ajaxify').click(function (event) {
                 // Prepare
                 var
@@ -64,7 +63,24 @@
                 }
 
                 // Ajaxify this link
-                History.pushState(null, title, url);
+                History.pushState({data: null, method: 'GET'}, title, url);
+                event.preventDefault();
+                return false;
+            });
+            
+            $this.find('form.ajaxify').on('submit', function (event) {
+                var data = $(this).serialize(),
+                    method = $(this).attr('method'),
+                    url = $(this).attr('action');
+                
+                //in order to update the URL in the browser, we construct the URL here
+                //to avoid the ajax call from duplicating all parameters we set the data to null
+                if (method === 'GET'){
+                    url = url + '?' + data;
+                    data = null;
+                }
+                // Ajaxify this link
+                History.pushState({data: data, method: method}, null, url);
                 event.preventDefault();
                 return false;
             });
@@ -81,13 +97,16 @@
             // Prepare Variables
             var State = History.getState(),
                 url = State.url,
-                relativeUrl = url.replace(rootUrl, '');
+                relativeUrl = url.replace(rootUrl, ''),
+                data = State.data;
                     
             app.main.showSpinner();
            
             // Ajax Request the Traditional Page
             $.ajax({
                 url: url,
+                type: data.method,
+                data: data.data,
                 success: function (data, textStatus, jqXHR) {
                     // Prepare
                     var
