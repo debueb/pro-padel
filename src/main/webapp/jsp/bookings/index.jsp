@@ -10,7 +10,7 @@
             <div class="panel-heading"><h4><fmt:message key="BookCourt"/></h4></div>
             <div class="panel-body">
 
-            <form type="GET">
+            <form method="GET" class="ajaxify" action="${contextPath}/bookings">
                 <div class="datepicker-container ">
                     <div class="datepicker-text-container ${empty RangeMap ? '' : 'form-top-element'}">
                         <div class="datepicker-label"><fmt:message key="Date"/></div>

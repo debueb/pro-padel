@@ -37,7 +37,7 @@ app.main = {};
 
     self.enableForms = function () {
         //prevent duplicate form submission
-        $('form').livequery(function(){
+        $('form').not('.ajaxify').livequery(function(){
             $(this).on('submit', function () {
                 window.addEventListener("pagehide", function(){
                    self.hideSpinner();
