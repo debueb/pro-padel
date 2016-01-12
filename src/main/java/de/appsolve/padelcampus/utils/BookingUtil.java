@@ -16,8 +16,11 @@ import de.appsolve.padelcampus.data.TimeRange;
 import de.appsolve.padelcampus.data.TimeSlot;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
+import de.appsolve.padelcampus.db.dao.FacilityDAOI;
+import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
+import de.appsolve.padelcampus.db.model.Facility;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.jollyday.HolidayCalendar;
@@ -49,6 +52,12 @@ public class BookingUtil {
 
     @Autowired
     Msg msg;
+    
+    @Autowired
+    OfferDAOI offerDAO;
+    
+    @Autowired
+    FacilityDAOI facilityDAO;
     
     @Autowired
     BookingDAOI bookingDAO;
@@ -218,7 +227,7 @@ public class BookingUtil {
         return UUID.randomUUID().toString();
     }
 
-    public void addWeekView(LocalDate selectedDate, LocalTime selectedTime, List<Offer> selectedOffers, ModelAndView mav, Boolean preventOverlapping) throws JsonProcessingException {
+    public void addWeekView(LocalDate selectedDate, LocalTime selectedTime, List<Facility> selectedFacilities, ModelAndView mav, Boolean preventOverlapping) throws JsonProcessingException {
         //calculate date configuration for datepicker
         LocalDate today = new LocalDate(DEFAULT_TIMEZONE);
         LocalDate firstDay = today.dayOfMonth().withMinimumValue();
@@ -268,7 +277,14 @@ public class BookingUtil {
         }
         Collections.sort(rangeList);
         
-        
+        List<Offer> selectedOffers = new ArrayList<>();
+        if (selectedFacilities.isEmpty()){
+            selectedOffers = offerDAO.findAll();
+        } else {
+            for (Facility facility: selectedFacilities){
+                selectedOffers.addAll(facility.getOffers());
+            }
+        }
         
         mav.addObject("selectedTime", selectedTime);
         mav.addObject("dayConfigs", objectMapper.writeValueAsString(dayConfigs));
@@ -278,6 +294,8 @@ public class BookingUtil {
         mav.addObject("RangeMap", rangeList);
         mav.addObject("Offers", offers);
         mav.addObject("SelectedOffers", selectedOffers);
+        mav.addObject("SelectedFacilities", selectedFacilities);
+        mav.addObject("Facilities", facilityDAO.findAll());
     }
 
     public Long getBookingSlotsLeft(TimeSlot timeSlot, Offer offer, List<Booking> confirmedBookings) {

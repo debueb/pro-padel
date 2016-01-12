@@ -22,7 +22,7 @@
                 </div>
                 <c:if test="${not empty RangeMap}">
                     <div class="relative">
-                        <select name="time" class="select-simple form-control form-center-element" data-container="body">
+                        <select name="time" class="select-simple form-control ${empty Facilities ? 'form-bottom-element' : 'form-center-element'}" data-container="body">
                             <option value=""><fmt:message key="AllStartTimes"/></option>
                             <c:forEach var="TimeRange" items="${RangeMap}">
                                 <c:if test="${TimeRange.offersAvailable}">
@@ -35,16 +35,18 @@
                         <span class="explanation-select"><fmt:message key="StartTime"/></span>
                     </div>
 
-                    <div class="relative">
-                        <select name="offers" class="select-multiple form-control form-bottom-element" multiple="true" data-container="body">
-                            <c:forEach var="Offer" items="${Offers}">
-                                <option value="${Offer.id}" ${as:contains(SelectedOffers, Offer) ? 'selected="selected"' : ''}>
-                                    ${Offer.name}
-                                </option>
-                            </c:forEach>
-                        </select>
-                        <span class="explanation-select"><fmt:message key="Offers"/></span>
-                    </div>
+                    <c:if test="${not empty Facilities}">
+                        <div class="relative">
+                            <select name="facilities" class="select-multiple form-control form-bottom-element" multiple="true" data-container="body">
+                                <c:forEach var="Facility" items="${Facilities}">
+                                    <option value="${Facility.id}" ${as:contains(SelectedFacilities, Facility) ? 'selected="selected"' : ''}>
+                                        ${Facility.name}
+                                    </option>
+                                </c:forEach>
+                            </select>
+                            <span class="explanation-select"><fmt:message key="Offers"/></span>
+                        </div>
+                    </c:if>
                 </c:if>
                 
                 <button type="submit" class="btn btn-primary unit stretch"><fmt:message key="Refresh"/></button>
