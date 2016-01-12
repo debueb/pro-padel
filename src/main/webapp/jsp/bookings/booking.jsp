@@ -106,7 +106,6 @@
                                     </c:when>
                                     <c:otherwise>
                                         <button class="btn btn-primary btn-block unit btn-booking-submit" data-booking-type="loggedIn"><fmt:message key="Book"/></button>
-                                        <a class="btn btn-primary btn-block unit ajaxify" href="/bookings/${Booking.bookingDate}"><fmt:message key="ChangeBooking"/></a>
                                         <a class="btn btn-primary btn-block unit ajaxify" href="/bookings"><fmt:message key="Cancel"/></a>
                                     </c:otherwise>
                                 </c:choose>
