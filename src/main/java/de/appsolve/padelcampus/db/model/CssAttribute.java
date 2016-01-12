@@ -6,11 +6,8 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import de.appsolve.padelcampus.constants.CssAttributeKey;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Transient;
 
 /**
@@ -26,9 +23,6 @@ public class CssAttribute extends CustomerEntity{
     @Column
     private String name;
     
-    @Enumerated(EnumType.STRING)
-    private CssAttributeKey cssKey;
-    
     @Column
     private String cssDefaultValue;
     
@@ -41,14 +35,6 @@ public class CssAttribute extends CustomerEntity{
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public CssAttributeKey getCssKey() {
-        return cssKey;
-    }
-
-    public void setCssKey(CssAttributeKey cssKey) {
-        this.cssKey = cssKey;
     }
 
     public String getCssDefaultValue() {

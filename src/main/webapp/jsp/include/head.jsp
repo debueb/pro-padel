@@ -49,14 +49,14 @@
                 <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet">
             </c:when>
             <c:otherwise>
-                <link rel="stylesheet" href="/css/10_bootstrap.css">
-                <link rel="stylesheet" href="/css/20_bootstrap-select.css">
-                <link rel="stylesheet" href="/css/30_font-awesome.min.css">
-                <link rel="stylesheet" href="/css/40_jquery-ui.min.css">
-                <link rel="stylesheet" href="/css/50_slick.css">
-                <link rel="stylesheet" href="/css/90_project.css">
-                <link rel="stylesheet" href="/css/96_tennisball.css">
-                <link rel="stylesheet" href="/css/99_addtohomescreen.css">
+                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/10_bootstrap.css.stylesheet">
+                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/20_bootstrap-select.css.stylesheet">
+                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/30_font-awesome.min.css.stylesheet">
+                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/40_jquery-ui.min.css.stylesheet">
+                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/50_slick.css.stylesheet">
+                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/90_project.css.stylesheet">
+                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/96_tennisball.css.stylesheet">
+                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/99_addtohomescreen.css.stylesheet">
             </c:otherwise>
         </c:choose>
     </head>

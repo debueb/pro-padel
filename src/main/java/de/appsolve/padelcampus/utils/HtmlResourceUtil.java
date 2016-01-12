@@ -18,6 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -203,8 +204,22 @@ public class HtmlResourceUtil {
         }
         Files.write(outputPath, content.getBytes(Constants.UTF8), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
+    
+    public String getCssFile(ServletContext context, String name, String customer) throws IOException{
+        File customerDir = getCustomerDir(customer);
+        File cssDir = new File(customerDir, "css");
+        File file = new File(cssDir, name);
+        try {
+            byte[] bytes = Files.readAllBytes(file.toPath());
+            return new String(bytes, Constants.UTF8);
+        } catch (IOException e){
+            InputStream stream = context.getResourceAsStream("/css/"+name);
+            return IOUtils.toString(stream);
+        }
+        
+    }
 
     private File getCustomerDir(String customerName) {
-       return new File(DATA_DIR + File.pathSeparator + customerName);
+       return new File(DATA_DIR + File.separator + customerName);
     }
 }

@@ -28,8 +28,7 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
 
     @Override
     public List<Booking> findBlockedBookingsForDate(LocalDate date) {
-        Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        Criteria criteria = getCriteria();
         criteria.add(Restrictions.eq("bookingDate", date));
         criteria.add(Restrictions.isNotNull("blockingTime"));
         criteria.add(Restrictions.or(Restrictions.isNull("cancelled"), Restrictions.eq("cancelled", false)));
@@ -39,8 +38,7 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
     
     @Override
     public List<Booking> findBlockedBookingsBetween(LocalDate startDate, LocalDate endDate) {
-        Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        Criteria criteria = getCriteria();
         criteria.add(Restrictions.ge("bookingDate", startDate));
         criteria.add(Restrictions.le("bookingDate", endDate));
         criteria.add(Restrictions.isNotNull("blockingTime"));
@@ -51,8 +49,7 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
 
     @Override
     public List<Booking> findBlockedBookings() {
-        Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        Criteria criteria = getCriteria();
         criteria.add(Restrictions.isNotNull("blockingTime"));
         criteria.add(Restrictions.or(Restrictions.isNull("cancelled"), Restrictions.eq("cancelled", false)));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
@@ -61,8 +58,7 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
 
     @Override
     public List<Booking> findActiveBookingsBetween(LocalDate startDate, LocalDate endDate) {
-        Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        Criteria criteria = getCriteria();
         criteria.add(Restrictions.ge("bookingDate", startDate));
         criteria.add(Restrictions.le("bookingDate", endDate));
         criteria.add(Restrictions.or(Restrictions.eq("paymentConfirmed", true), Restrictions.eq("paymentMethod", PaymentMethod.Voucher)));
@@ -73,8 +69,7 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
 
     @Override
     public List<Booking> findReservations() {
-        Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        Criteria criteria = getCriteria();
         criteria.add(Restrictions.eq("paymentMethod", PaymentMethod.Reservation));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<Booking>) criteria.list();
