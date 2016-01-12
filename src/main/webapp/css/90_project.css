@@ -744,7 +744,8 @@ table.table-round > tbody > tr > td {
 .table > tbody > tr > td.booking-disabled {
   background: #e7e7e7;
 }
-.table > thead:first-child > tr:first-child > th.booking-selected-date {
+.table > thead:first-child > tr:first-child > th.booking-selected-date,
+.table > tbody > tr:last-child > td.booking-selected-date {
   background: #69bce2;
 }
 .booking-offer a {
