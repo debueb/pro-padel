@@ -127,7 +127,7 @@
                                 <td></td>
                                 <c:forEach var="WeekDay" items="${WeekDays}">
                                     <td class="text-center ${Day == WeekDay ? 'booking-selected-date' : ''}">
-                                        <a href="/bookings/${WeekDay}" class="ajaxify">
+                                        <a href="/bookings/?date=${WeekDay}" class="ajaxify">
                                             <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>
                                             <br /><joda:format value="${WeekDay}" pattern="dd.MM."/>
                                         </a>
