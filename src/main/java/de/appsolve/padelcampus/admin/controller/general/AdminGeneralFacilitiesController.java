@@ -29,9 +29,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class AdminGeneralFacilitiesController extends AdminBaseController<Facility> {
     
     @Autowired
-    PlayerDAOI playerDAO;
-    
-    @Autowired
     GenericDAOI<Facility> facilityDAO;
     
     @Autowired

@@ -17,12 +17,14 @@ import de.appsolve.padelcampus.data.OfferDurationPrice;
 import de.appsolve.padelcampus.data.TimeSlot;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
+import de.appsolve.padelcampus.db.dao.FacilityDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.VoucherDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Contact;
+import de.appsolve.padelcampus.db.model.Facility;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Voucher;
@@ -86,6 +88,9 @@ public class BookingsController extends BaseController {
     SessionUtil sessionUtil;
 
     @Autowired
+    FacilityDAOI facilityDAO;
+    
+    @Autowired
     PlayerDAOI playerDAO;
 
     @Autowired
@@ -119,16 +124,16 @@ public class BookingsController extends BaseController {
     public ModelAndView getToday(
             @RequestParam(value="date", required = false) String date,
             @RequestParam(value="time", required = false) String time,
-            @RequestParam(value="offers", required = false) List<Long> offerIds
+            @RequestParam(value="facilities", required = false) List<Long> facilityIds
     ) throws JsonProcessingException {
         if (StringUtils.isEmpty(date)){
             date = DATE_HUMAN_READABLE.print(new DateTime());
         }
-        List<Offer> offers;
-        if (offerIds == null){
-            offers = offerDAO.findAll();
+        List<Facility> offers;
+        if (facilityIds == null){
+            offers = facilityDAO.findAll();
         } else {
-            offers = offerDAO.findAll(offerIds);
+            offers = facilityDAO.findAll(facilityIds);
         } 
         return getIndexView(date, time, offers);
     }
@@ -419,14 +424,14 @@ public class BookingsController extends BaseController {
         return getCancellationSuccessView(booking);
     }
 
-    private ModelAndView getIndexView(String day, String time, List<Offer> offers) throws JsonProcessingException {
+    private ModelAndView getIndexView(String day, String time, List<Facility> facilities) throws JsonProcessingException {
         LocalDate selectedDate = DATE_HUMAN_READABLE.parseLocalDate(day);
         LocalTime selectedTime = null;
         if (!StringUtils.isEmpty(time)){
             selectedTime = TIME_HUMAN_READABLE.parseLocalTime(time);
         }
         ModelAndView indexView = new ModelAndView("bookings/index");
-        bookingUtil.addWeekView(selectedDate, selectedTime, offers, indexView, true);
+        bookingUtil.addWeekView(selectedDate, selectedTime, facilities, indexView, true);
         return indexView;
     }
 
