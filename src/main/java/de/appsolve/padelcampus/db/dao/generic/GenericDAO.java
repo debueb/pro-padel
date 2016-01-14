@@ -103,7 +103,7 @@ public abstract class GenericDAO<T extends CustomerEntity> extends BaseEntityDAO
         for (Map.Entry<String, Object> entry : attributeMap.entrySet()) {
             criteria.add(Restrictions.eq(entry.getKey(), entry.getValue()));
         }
-        //criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<T>) criteria.list();
     }
     
