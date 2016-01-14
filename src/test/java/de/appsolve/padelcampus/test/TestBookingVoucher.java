@@ -44,7 +44,7 @@ public abstract class TestBookingVoucher extends TestBase{
         Voucher testVoucher = VoucherUtil.createNewVoucher("test voucher", 60L, getNextMonday(), validFromTime, validUntilTime, CalendarWeekDay.valuesAsSet(), offers);
         voucherDAO.saveOrUpdate(testVoucher);
 
-        mockMvc.perform(post("/bookings/" + nextMonday + "/10:00")
+        mockMvc.perform(post("/bookings/" + nextMonday + "/10:00/offer/"+offer.getId())
                 .session(session)
                 .param("bookingDate", nextMonday.toString())
                 .param("bookingTime", "10:00")

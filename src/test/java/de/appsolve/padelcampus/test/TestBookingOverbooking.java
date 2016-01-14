@@ -33,12 +33,12 @@ public class TestBookingOverbooking extends TestBookingVoucher {
         bookViaVoucherAndNoLogin(offer2);
         
         LocalDate nextMonday = getNextMonday();
-        mockMvc.perform(get("/bookings/" + nextMonday + "/10:00")
+        mockMvc.perform(get("/bookings/" + nextMonday + "/10:00/offer/"+offer1.getId())
                 .session(session))
             .andExpect(view().name("bookings/booking"))
             .andExpect(model().attribute("error", msg.get("NoFreeCourtsForSelectedTimeAndDate")));
         
-        mockMvc.perform(post("/bookings/" + nextMonday + "/10:00")
+        mockMvc.perform(post("/bookings/" + nextMonday + "/10:00/offer/"+offer1.getId())
                 .session(session)
                 .param("bookingDate", nextMonday.toString())
                 .param("bookingTime", "10:00")

@@ -38,7 +38,7 @@ public class TestBookingDirectDebitLogin extends TestBase {
         player.setPasswordHash(DigestUtils.sha512Hex("test"));
         playerDAO.saveOrUpdate(player);
         
-        mockMvc.perform(post("/bookings/" + nextMonday + "/10:00")
+        mockMvc.perform(post("/bookings/" + nextMonday + "/10:00/offer/"+offer1.getId())
                 .session(session)
                 .param("bookingDate", nextMonday.toString())
                 .param("bookingTime", "10:00")

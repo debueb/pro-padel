@@ -26,7 +26,7 @@ public class TestBookingCreditCardRegister extends TestBase {
         log.info("Test booking workflow [paymentMethod: CreditCard, bookingType: register]");
         LocalDate nextMonday = getNextMonday();
         
-        mockMvc.perform(post("/bookings/" + nextMonday + "/10:00")
+        mockMvc.perform(post("/bookings/" + nextMonday + "/10:00/offer/"+offer1.getId())
                 .session(session)
                 .param("bookingDate", nextMonday.toString())
                 .param("bookingTime", "10:00")

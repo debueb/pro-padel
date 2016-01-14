@@ -34,38 +34,17 @@ public class TestCoreFunctions extends TestBase {
     public void testBookingsIndexPage() throws Exception {
         log.info("Make sure bookings index page contains time slots if a matching calendar config exists");
         LocalDate nextMonday = getNextMonday();
-        mockMvc.perform(get("/bookings/" + nextMonday))
+        mockMvc.perform(get("/bookings/?date=" + nextMonday))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bookings/index"))
                 .andExpect(model().attribute("RangeMap", not(hasSize(0))));
     }
 
     @Test
-    public void testBookingsDetailTimeUnavaiblablePage() throws Exception {
-        log.info("Make sure bookings detail page shows error if no time slot exists");
-        LocalDate nextMonday = getNextMonday();
-        mockMvc.perform(get("/bookings/" + nextMonday + "/09:00"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("bookings/booking"))
-                .andExpect(model().attributeExists("error"));
-    }
-
-    @Test
-    public void testBookingsDetailDateUnavaiblablePage() throws Exception {
-        log.info("Make sure bookings detail page shows error if no matching calendar config exists");
-        LocalDate nextMonday = getNextMonday();
-        LocalDate nextTuesday = nextMonday.plusDays(1);
-        mockMvc.perform(get("/bookings/" + nextTuesday + "/10:00"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("bookings/booking"))
-                .andExpect(model().attributeExists("error"));
-    }
-
-    @Test
-    public void testBookingsDetailPageHasDurations() throws Exception {
+    public void testBookingsDetailsPageHasDurations() throws Exception {
         log.info("Make sure bookings detail page contains duration when matching calendar config exists");
         LocalDate nextMonday = getNextMonday();
-        mockMvc.perform(get("/bookings/" + nextMonday + "/10:00"))
+        mockMvc.perform(get("/bookings/" + nextMonday + "/10:00/offer/"+offer1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bookings/booking"))
                 .andExpect(model().attribute("OfferDurationPrices", not(hasSize(0))));
