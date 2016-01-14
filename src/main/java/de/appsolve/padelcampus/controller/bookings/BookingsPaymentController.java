@@ -18,9 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 class BookingsPaymentController extends BaseController {
     
     @Autowired
-    Msg msg;
+    protected Msg msg;
     
     protected String getBookingDescription(Booking booking) {
-        return msg.get("ProjectName")+" "+msg.get("Booking")+" "+booking.getBookingDate().toString(FormatUtils.DATE_MEDIUM) + " "+booking.getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE) + " - "+booking.getAmountDouble()+" "+booking.getCurrency();
+        return msg.get("Booking")+" "+booking.getBookingDate().toString(FormatUtils.DATE_MEDIUM) + " "+booking.getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE) + " - "+booking.getAmountDouble()+" "+booking.getCurrency();
     }
 }

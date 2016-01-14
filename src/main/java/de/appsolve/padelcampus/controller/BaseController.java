@@ -78,7 +78,7 @@ public abstract class BaseController {
                 contacts.add(contact);
             }
             mail.setRecipients(new ArrayList<EmailContact>(contacts));
-            mail.setSubject("["+msg.get("ProjectName")+" Feedback] "+mail.getSubject());
+            mail.setSubject("[Feedback] "+mail.getSubject());
             MailUtils.send(mail);
             return new ModelAndView("contact/success");  
         } catch (MandrillApiError | IOException e){

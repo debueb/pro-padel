@@ -41,7 +41,7 @@
 
         <link rel="icon" href="/favicon.ico">
 
-        <title><fmt:message key="ProjectName"/></title>
+        <title>${sessionScope.customer}</title>
 
         <c:set var="compressCSS" value="${compress.css}"/>
         <c:choose>

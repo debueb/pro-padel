@@ -100,7 +100,7 @@ public class PlayersController extends BaseController {
         sb.append("FN:").append(player.toString()).append("\n");
         sb.append("EMAIL;type=INTERNET;type=WORK;type=pref:").append(player.getEmail()).append("\n");
         sb.append("TEL;type=CELL;type=VOICE;type=pref:").append(player.getPhone()).append("\n");
-        sb.append("NOTE:Added by ").append(msg.get("ProjectName")).append("\n");
+        sb.append("NOTE:Added by ").append(sessionUtil.getCustomer(request)).append("\n");
         sb.append("URL:").append(RequestUtil.getBaseURL(request)).append("/players/player/").append(player.getId()).append("\n");
         sb.append("END:VCARD");
         response.getOutputStream().write(sb.toString().getBytes(Charset.forName("UTF-8")));
