@@ -1,2 +1,2 @@
 <%@include file="/jsp/include/include.jsp"%>
-no customer selected
+web application not available under this domain
