@@ -16,7 +16,6 @@ import de.appsolve.padelcampus.db.dao.AdminGroupDAOI;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.model.AdminGroup;
 import de.appsolve.padelcampus.db.model.Booking;
-import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Player;
 import java.util.HashSet;

@@ -1,7 +1,6 @@
 package de.appsolve.padelcampus.db.dao;
 
 import de.appsolve.padelcampus.db.dao.generic.SortedGenericDAO;
-import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.db.model.Module;
 import java.util.HashMap;
 import java.util.List;
