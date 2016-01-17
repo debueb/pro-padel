@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -41,16 +42,16 @@ public class AdminReportsAllocationController extends BaseController{
     BookingUtil bookingUtil;
     
     @RequestMapping()
-    public ModelAndView getBookings() throws JsonProcessingException{
-        return getBookingsView(new LocalDate());
+    public ModelAndView getBookings(@RequestParam(value="date", required=false) String date) throws JsonProcessingException{
+        LocalDate localDate;
+        if (date == null){
+            localDate = new LocalDate();
+        } else {
+            localDate = DATE_HUMAN_READABLE.parseLocalDate(date);
+        }
+        return getBookingsView(localDate);
     }
     
-    @RequestMapping(value = "{date}")
-    public ModelAndView getBookingsForDate(@PathVariable("date") String date) throws JsonProcessingException{
-        LocalDate selectedDate = DATE_HUMAN_READABLE.parseLocalDate(date);
-        return getBookingsView(selectedDate);
-    }
-   
     private ModelAndView getBookingsView(LocalDate date) throws JsonProcessingException {
         ModelAndView mav = new ModelAndView("admin/reports/allocations/index");
         bookingUtil.addWeekView(date, null, facilityDAO.findAll(), mav, false);

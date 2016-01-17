@@ -23,6 +23,7 @@
                         <th><fmt:message key="BookingDate"/></th>
                         <th><fmt:message key="Offer"/></th>
                         <th><fmt:message key="Player"/></th>
+                        <th><fmt:message key="Comment"/></th>
                         <th><fmt:message key="PaymentMethod"/></th>
                         <th><fmt:message key="Price"/></th>
                         </thead>
@@ -35,6 +36,7 @@
                                     <td><joda:format value="${Booking.blockingTime}" pattern="yyyy-MM-dd"/></td>
                                     <td>${Booking.offer}</td>
                                     <td>${Booking.player}</td>
+                                    <td>${Booking.comment}</td>
                                     <td>${Booking.paymentMethod}</td>
                                     <td>${Booking.amount} ${Booking.currency.symbol}</td>
                                 </tr>

@@ -12,14 +12,17 @@
             </div>
         </div>
 
-        <div class="datepicker-container">
-            <div class="datepicker-text-container">
-                <span class="fa fa-calendar datepicker-icon"></span>
-                <div class="datepicker-text"></div>
+        <form method="GET" class="ajaxify" action="${contextPath}/admin/reports/allocations">
+            <div class="datepicker-container">
+                <div class="datepicker-text-container">
+                    <span class="fa fa-calendar datepicker-icon"></span>
+                    <div class="datepicker-text"></div>
+                </div>
+                <input type="hidden" name="date" class="datepicker-input" class="form-control" value="${Day}" />
+                <div class="datepicker" data-show-on-init="false" data-day-config='${dayConfigs}' data-max-date='${maxDate}'></div>
             </div>
-            <input type="hidden" class="datepicker-input" class="form-control" value="${Day}" />
-            <div class="datepicker" data-show-on-init="false" data-redirect-on-select="/admin/reports/allocations/{date}" data-day-config='${dayConfigs}' data-max-date='${maxDate}'></div>
-        </div>
+            <button type="submit" class="btn btn-primary unit stretch"><fmt:message key="Refresh"/></button>
+        </form>
 
         <c:choose>
             <c:when test="${empty RangeMap}">
