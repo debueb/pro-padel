@@ -47,7 +47,7 @@ public class AdminReportsTimesController extends BaseController{
     BookingDAOI bookingDAO;
     
     @Autowired
-    ObjectMapper objectMapper;
+    ObjectMapper exportObjectMapper;
     
     @Autowired
     BookingUtil bookingUtil;
@@ -119,7 +119,7 @@ public class AdminReportsTimesController extends BaseController{
         
         Collections.sort(chartData);
         mav.addObject("DateRange", dateRange);
-        mav.addObject("chartData", objectMapper.writeValueAsString(chartData));
+        mav.addObject("chartData", exportObjectMapper.writeValueAsString(chartData));
         return mav;
     }
 }
