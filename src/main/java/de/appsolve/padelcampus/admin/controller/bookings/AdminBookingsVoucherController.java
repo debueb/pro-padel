@@ -21,7 +21,6 @@ import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.dao.VoucherDAOI;
-import de.appsolve.padelcampus.db.model.Contact;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
@@ -149,11 +148,13 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
         if (!result.hasErrors()){
             for (String eventId: eventIds){
                 Long id = Long.parseLong(eventId);
-                Event event = eventDAO.findByIdFetchWithParticipantsAndPlayersAndGames(id);
+                Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(id);
                 
                 Map<Player, List<Game>> playerGameMap = new HashMap<>();
                 
-                for (Game game: event.getGames()){
+                List<Game> eventGames = gameDAO.findByEvent(event);
+                
+                for (Game game: eventGames){
                     Voucher voucher = VoucherUtil.createNewVoucher(model);
                     voucher.setComment(event.getName());
                     voucher.setGame(game);
