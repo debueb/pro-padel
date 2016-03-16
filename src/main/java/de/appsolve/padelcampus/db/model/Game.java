@@ -42,7 +42,7 @@ public class Game extends CustomerEntity{
     @OneToMany(fetch=FetchType.EAGER)
     private Set<GameSet> gameSets;
     
-    @OneToOne(fetch=FetchType.EAGER)
+    @OneToOne(fetch=FetchType.LAZY)
     private Player scoreReporter;
     
     @Column
