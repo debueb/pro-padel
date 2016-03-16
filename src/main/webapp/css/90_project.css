@@ -143,12 +143,12 @@ input[type="number"] {
   position: fixed;
   right: -200px;
   padding: 0px 15px;
-  background-color: #b56827;
-  background-image: -webkit-linear-gradient(top, #b56827 0%, #76441a 100%);
-  background-image: -o-linear-gradient(top, #b56827 0%, #76441a 100%);
-  background-image: linear-gradient(to bottom, #b56827 0%, #76441a 100%);
+  background-color: #8b501e;
+  background-image: -webkit-linear-gradient(top, #8b501e 0%, #613815 100%);
+  background-image: -o-linear-gradient(top, #8b501e 0%, #613815 100%);
+  background-image: linear-gradient(to bottom, #8b501e 0%, #613815 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffb56827', endColorstr='#ff76441a', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff8b501e', endColorstr='#ff613815', GradientType=0);
 }
 #site-menu .nav {
   position: absolute;
@@ -214,12 +214,12 @@ input[type="checkbox"]:checked ~ label:before {
 .navbar-default,
 .panel-info > .panel-heading,
 .ui-widget-header {
-  background-color: #b56827;
-  background-image: -webkit-linear-gradient(top, #76441a 0%, #b56827 100%);
-  background-image: -o-linear-gradient(top, #76441a 0%, #b56827 100%);
-  background-image: linear-gradient(to bottom, #76441a 0%, #b56827 100%);
+  background-color: #8b501e;
+  background-image: -webkit-linear-gradient(top, #613815 0%, #8b501e 100%);
+  background-image: -o-linear-gradient(top, #613815 0%, #8b501e 100%);
+  background-image: linear-gradient(to bottom, #613815 0%, #8b501e 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff76441a', endColorstr='#ffb56827', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff613815', endColorstr='#ff8b501e', GradientType=0);
   opacity: .9;
 }
 .ui-state-default,
@@ -737,9 +737,6 @@ table.table-round tr:last-child td:last-child {
 }
 table.table-round > tbody > tr > td {
   padding: 7px 3px;
-}
-.table > tbody > tr > td.booking-bookable {
-  height: 1px;
 }
 .table > tbody > tr > td.booking-disabled {
   background: #e7e7e7;
