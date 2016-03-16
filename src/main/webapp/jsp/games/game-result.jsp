@@ -22,6 +22,3 @@
         </div>
     </div>
 </div>
-<c:if test="${showScoreReporter}">
-    <div><fmt:message key="ScoreReportedBy"><fmt:param value="${contextPath}/players/player/${Game.scoreReporter.id}"/><fmt:param value="${Game.scoreReporter}"/></fmt:message><div>
-</c:if>
