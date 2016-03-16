@@ -60,6 +60,13 @@
         <!-- 
             do not upgrade this, later versions contain serious flaws 
             //https://github.com/paypal/PayPal-Java-SDK/issues/73
+            update 2016-03-16: PayPal API now only accepts TLSv1.2, 
+            //https://github.com/paypal/TLS-update#paypal-java-sdk-support
+            support for TLSv1.2 was only added in v1.4.0 of the REST API SDK
+            even though issue 73 has not been maked as resolved, we are forced to update
+            This, my friends, is why PayPal sucks so bad.
+            Oh yeah, and we cannot test it either, because the paypal sandbox
+            is down. Of course.
         -->
         <dependency>
             <groupId>com.paypal.sdk</groupId>
