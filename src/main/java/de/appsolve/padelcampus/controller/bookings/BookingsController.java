@@ -284,7 +284,7 @@ public class BookingsController extends BaseController {
                     return confirmView;
             }
         } catch (Exception e) {
-            log.error("Error while processing booking request: "+e.getMessage());
+            log.error("Error while processing booking request: "+e.getMessage(), e);
             confirmView.addObject("error", e.getMessage());
             return confirmView;
         }
