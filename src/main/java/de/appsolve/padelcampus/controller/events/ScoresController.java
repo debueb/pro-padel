@@ -56,7 +56,7 @@ public class ScoresController extends BaseController{
     
     @RequestMapping("/event/{eventId}")
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
-        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
         List<Game> eventGames = gameDAO.findByEvent(event);
         eventGameSets = gameSetDAO.findByEvent(event);
         List<ScoreEntry> scoreEntries = new ArrayList<>();

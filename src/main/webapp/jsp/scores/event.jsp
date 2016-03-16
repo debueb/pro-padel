@@ -43,7 +43,7 @@
             <jsp:include page="/jsp/include/list-badge-item.jsp">
                 <jsp:param name="msg" value="${msg}"/>
                 <jsp:param name="url" value="/games/event/${Event.id}/all"/>
-                <jsp:param name="badge" value="${fn:length(Event.games)}"/>
+                <jsp:param name="badge" value=""/>
             </jsp:include>
         </div>
     </div>
