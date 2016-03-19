@@ -154,16 +154,16 @@ public class GamesController extends BaseController{
     
     @RequestMapping("/event/{eventId}")
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
-        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
         ModelAndView mav = new ModelAndView("games/event", "Event", event);
         return mav;
     }
  
     @RequestMapping("/event/{eventId}/all")
     public ModelAndView getAllGamesForEvent(@PathVariable("eventId") Long eventId){
-        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        Event event = eventDAO.findByIdFetchWithGames(eventId);
         ModelAndView mav = new ModelAndView("games/games", "Games", event.getGames());
-        mav.addObject("title", "Spiele "+event.getName());
+        mav.addObject("title", msg.get("GamesIn", new Object[]{event.getName()}));
         addGameResultMap(mav, event.getGames());
         return mav;
     }
