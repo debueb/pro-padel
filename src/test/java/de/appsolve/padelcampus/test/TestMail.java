@@ -28,7 +28,7 @@ public class TestMail extends TestBase {
     public void sendMail() throws Exception {
         Mail mail = new Mail();
         mail.setBody("Test Email @#$%^&.\n\nThis is a new line.");
-        mail.setFrom("dominik@appsolve.de");
+        mail.setFrom("dominik@pro-padel.de");
         Contact contact = new Contact();
         contact.setEmailAddress("d.wisskirchen@gmail.com");
         contact.setEmailDisplayName("Dominik Wißkirchen");

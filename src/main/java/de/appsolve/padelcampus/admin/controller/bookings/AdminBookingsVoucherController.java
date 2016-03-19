@@ -26,7 +26,7 @@ import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.db.model.Voucher;
-import de.appsolve.padelcampus.mail.MailException;
+import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.MailUtils;

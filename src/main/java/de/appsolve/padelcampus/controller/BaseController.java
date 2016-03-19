@@ -11,7 +11,7 @@ import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.ContactDAOI;
 import de.appsolve.padelcampus.db.model.Contact;
-import de.appsolve.padelcampus.mail.MailException;
+import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import java.io.IOException;

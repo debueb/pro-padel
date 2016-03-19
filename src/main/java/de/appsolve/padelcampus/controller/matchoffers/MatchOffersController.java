@@ -16,7 +16,7 @@ import de.appsolve.padelcampus.db.dao.MatchOfferDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.MatchOffer;
 import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.mail.MailException;
+import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;

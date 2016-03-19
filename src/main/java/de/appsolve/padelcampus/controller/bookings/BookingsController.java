@@ -28,7 +28,7 @@ import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Voucher;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
-import de.appsolve.padelcampus.mail.MailException;
+import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
