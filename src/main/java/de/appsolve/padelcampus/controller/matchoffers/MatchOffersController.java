@@ -5,7 +5,6 @@
  */
 package de.appsolve.padelcampus.controller.matchoffers;
 
-import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
 import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_FROM_HOUR;
 import de.appsolve.padelcampus.constants.SkillLevel;
@@ -17,6 +16,7 @@ import de.appsolve.padelcampus.db.dao.MatchOfferDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.MatchOffer;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.mail.MailException;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
@@ -166,7 +166,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
                     }
                 }
             }
-        } catch (MandrillApiError | IOException e){
+        } catch (MailException | IOException e){
             log.error("Error while sending mails about new match offer: "+ e.getMessage());
         }
         return new ModelAndView("redirect:/matchoffers/"+model.getId());
@@ -286,7 +286,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
             
             //persist changes
             matchOfferDAO.saveOrUpdate(offer);
-        } catch (MandrillApiError | IOException e) {
+        } catch (MailException | IOException e) {
             log.error(e);
             view.addObject("error", msg.get("FailedToSendEmail"));
             return view;

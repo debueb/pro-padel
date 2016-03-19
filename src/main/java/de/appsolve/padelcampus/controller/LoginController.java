@@ -6,7 +6,6 @@
 
 package de.appsolve.padelcampus.controller;
 
-import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
 import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.COOKIE_LOGIN_TOKEN;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
@@ -15,6 +14,7 @@ import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.model.Contact;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.mail.MailException;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.RequestUtil;
@@ -180,7 +180,7 @@ public class LoginController extends BaseController{
         mail.setBody(StringEscapeUtils.unescapeJava(msg.get("ForgotPasswordMailBody", new Object[]{player.toString(), resetPasswordURL, RequestUtil.getBaseURL(request)})));
         try {
             MailUtils.send(mail);
-        } catch (MandrillApiError | IOException e) {
+        } catch (MailException | IOException e) {
             log.warn("Error while sending reset password instructions", e);
             bindingResult.addError(new ObjectError("email", e.toString()));
             return forgotPasswordView;

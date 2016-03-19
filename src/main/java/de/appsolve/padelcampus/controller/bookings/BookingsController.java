@@ -6,7 +6,6 @@ package de.appsolve.padelcampus.controller.bookings;
  * and open the template in the editor.
  */
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.CANCELLATION_POLICY_DEADLINE;
@@ -29,6 +28,7 @@ import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Voucher;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
+import de.appsolve.padelcampus.mail.MailException;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
@@ -326,7 +326,7 @@ public class BookingsController extends BaseController {
             MailUtils.send(mail);
             booking.setConfirmationMailSent(true);
             bookingDAO.saveOrUpdate(booking);
-        } catch (MandrillApiError | IOException ex) {
+        } catch (MailException | IOException ex) {
             log.error("Error while sending booking confirmation email", ex);
             mav.addObject("error", msg.get("FailedToSendBookingConfirmationEmail", new Object[]{FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()), FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime())}));
         } catch (Exception e){
@@ -411,7 +411,7 @@ public class BookingsController extends BaseController {
                 booking.setCancelled(true);
                 booking.setCancelReason("cancellation with replacement voucher");
                 bookingDAO.saveOrUpdate(booking);
-            } catch (MandrillApiError | IOException ex) {
+            } catch (MailException | IOException ex) {
                 log.error("Error while sending booking cancellation success email", ex);
                 throw (ex);
             }

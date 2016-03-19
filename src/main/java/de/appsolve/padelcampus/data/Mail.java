@@ -94,4 +94,9 @@ public class Mail {
         contacts.add(contact);
         setRecipients(contacts);
     }
+    
+    @Override
+    public String toString(){
+        return String.format("[from: %s, to: %s, subject: %s]", getFrom(), getRecipients(), getSubject());
+    }
 }

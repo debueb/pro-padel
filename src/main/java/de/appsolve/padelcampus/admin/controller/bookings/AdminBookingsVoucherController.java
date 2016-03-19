@@ -6,7 +6,6 @@
 
 package de.appsolve.padelcampus.admin.controller.bookings;
 
-import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
@@ -27,6 +26,7 @@ import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.db.model.Voucher;
+import de.appsolve.padelcampus.mail.MailException;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.MailUtils;
@@ -199,7 +199,7 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
                     mail.setBody(sb.toString());
                     try {
                         MailUtils.send(mail);
-                    } catch (MandrillApiError | IOException ex) {
+                    } catch (MailException | IOException ex) {
                         log.error("Error while sending voucher list to "+player.getEmail(), ex);
                     }
                 }

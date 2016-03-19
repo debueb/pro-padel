@@ -5,13 +5,13 @@
  */
 package de.appsolve.padelcampus.controller;
 
-import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
 import static de.appsolve.padelcampus.constants.Constants.CONTACT_FORM_RECIPIENT_MAIL;
 import static de.appsolve.padelcampus.constants.Constants.CONTACT_FORM_RECIPIENT_NAME;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.ContactDAOI;
 import de.appsolve.padelcampus.db.model.Contact;
+import de.appsolve.padelcampus.mail.MailException;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import java.io.IOException;
@@ -81,7 +81,7 @@ public abstract class BaseController {
             mail.setSubject("[Feedback] "+mail.getSubject());
             MailUtils.send(mail);
             return new ModelAndView("contact/success");  
-        } catch (MandrillApiError | IOException e){
+        } catch (MailException | IOException e){
             log.error("Error while sending contact email", e);
             bindingResult.addError(new ObjectError("from", e.toString()));
             return indexView;
