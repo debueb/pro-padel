@@ -79,7 +79,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
         
         //prevent removal of a team it has already played a game
         if (model.getId()!=null){
-            Event existingEvent = eventDAO.findByIdFetchWithParticipantsAndGames(model.getId());
+            Event existingEvent = eventDAO.findByIdFetchWithParticipants(model.getId());
             if (!existingEvent.getParticipants().equals(model.getParticipants())){
                 for (Participant participant: existingEvent.getParticipants()){
                     if (!model.getParticipants().contains(participant)){
