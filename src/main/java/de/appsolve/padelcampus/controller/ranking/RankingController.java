@@ -96,6 +96,7 @@ public class RankingController extends BaseController {
             
             switch (category){
                 case "male":
+                case "female":
                     mav.addObject("urlPath", "players/player");
                     if (p1 instanceof Player && p2 instanceof Player){
                         updateRanking(game, p1, p2);
@@ -116,9 +117,6 @@ public class RankingController extends BaseController {
                             updateRanking(game, p1, p2, t1.getPlayers(), t2.getPlayers());
                         }
                     }
-                    break;
-                case "female":
-                    mav.addObject("urlPath", "players/player");break;
                 case "teams":
                     mav.addObject("urlPath", "teams/team");
                     if (p1 instanceof Team && p2 instanceof Team){
