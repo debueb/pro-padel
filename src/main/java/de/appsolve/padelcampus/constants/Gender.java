@@ -9,11 +9,7 @@ package de.appsolve.padelcampus.constants;
  *
  * @author dominik
  */
-public enum ModuleType {
-    
-    Events,
-    Ranking,
-    Bookings,
-    MatchOffers,
-    Page
+public enum Gender {
+    male,
+    female
 }

@@ -82,6 +82,7 @@ public class AccountProfileController extends BaseController {
             persistedPlayer.setLastName(player.getLastName());
             persistedPlayer.setEmail(player.getEmail());
             persistedPlayer.setPhone(player.getPhone());
+            persistedPlayer.setGender(player.getGender());
             persistedPlayer.setSkillLevel(player.getSkillLevel());
             persistedPlayer.setEnableMatchNotifications(player.getEnableMatchNotifications());
             persistedPlayer.setNotificationSkillLevels(player.getNotificationSkillLevels());

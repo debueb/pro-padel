@@ -1,0 +1,1 @@
+UPDATE `Participant` SET gender = 'male' WHERE `participantType` = 'Player' and gender IS NULL;

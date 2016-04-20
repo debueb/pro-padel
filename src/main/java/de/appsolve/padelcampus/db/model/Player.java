@@ -7,6 +7,7 @@
 package de.appsolve.padelcampus.db.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.utils.CryptUtil;
@@ -102,6 +103,10 @@ public class Player extends Participant implements EmailContact{
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<SkillLevel> notificationSkillLevels;
+    
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
     
     public String getFirstName() {
         return firstName;
@@ -244,5 +249,13 @@ public class Player extends Participant implements EmailContact{
     @Override
     public String getEmailDisplayName() {
         return toString();
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 }

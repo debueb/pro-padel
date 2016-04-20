@@ -24,8 +24,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class GameDAO extends GenericDAO<Game> implements GameDAOI{
+    
+    @Override
+    public List<Game> findAllWithPlayers(){
+        return super.findAllFetchEagerly("participants.players");
+    }
 
-   @Override
+    @Override
     public List<Game> findByEvent(Event event) {
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("event", event);

@@ -17,9 +17,16 @@
     <div class="explanation">${EmailAddress}</div>
 </div>
 <div class="relative">
-    <spf:input path="phone" type="tel"  class="form-control ${not empty param.showPassword ? 'form-center-element' : 'form-bottom-element'}"/>
+    <spf:input path="phone" type="tel"  class="form-control form-center-element"/>
     <div class="explanation">${PhoneNumber}</div>
 </div>
+<span class="relative block">
+    <spf:select path="gender" class="select-simple form-control" data-style="${not empty param.showPassword ? 'form-center-element' : 'form-bottom-element'}" data-container="body">
+        <spf:option value="male"><fmt:message key="male"/></spf:option>
+        <spf:option value="female"><fmt:message key="female"/></spf:option>
+    </spf:select>
+    <span class="explanation-select"><fmt:message key="Gender"/></span>
+</span>
 <c:if test="${not empty param.showPassword}">
     <div class="relative">
         <spf:input path="password" type="password"  class="form-control form-bottom-element"/>

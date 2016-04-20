@@ -7,30 +7,30 @@ package de.appsolve.padelcampus.comparators;
 
 import java.util.Comparator;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  *
  * @author dominik
+ * @param <K>
+ * @param <V>
  */
-public class MapValueComparator implements Comparator{
+public class MapValueComparator<K extends Comparable, V extends Comparable<V>> implements Comparator<K>{
     
-    Map map;
+    Map<K,V> map;
  
-    public MapValueComparator(Map map) {
-            this.map = map;
+    public MapValueComparator(Map<K, V> map) {
+        this.map = map;
     }
 
     @Override
-    public int compare(Object keyA, Object keyB) {
-            Comparable valueA = (Comparable) map.get(keyA);
-            Comparable valueB = (Comparable) map.get(keyB);
-            return valueB.compareTo(valueA);
-    }
-    
-    public static Map sortByValue(Map unsortedMap) {
-        Map sortedMap = new TreeMap(new MapValueComparator(unsortedMap));
-        sortedMap.putAll(unsortedMap);
-        return sortedMap;
+    public int compare(K keyA, K keyB) {
+        V valueA = (V) map.get(keyA);
+        V valueB = (V) map.get(keyB);
+        int result = valueB.compareTo(valueA);
+        //in case the values of a map entry are identical, the key decides
+        if (result == 0){
+            result = keyA.compareTo(keyB);
+        }
+        return result;
     }
 }

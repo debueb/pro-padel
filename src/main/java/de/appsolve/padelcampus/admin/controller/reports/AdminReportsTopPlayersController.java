@@ -16,6 +16,8 @@ import de.appsolve.padelcampus.db.model.Player;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,7 +58,8 @@ public class AdminReportsTopPlayersController extends BaseController{
             map.put(player, count);
         }
         
-        Map sortedMap = MapValueComparator.sortByValue(map);
+        SortedMap<Player, Integer> sortedMap = new TreeMap<>(new MapValueComparator<>(map));
+        sortedMap.putAll(map);
         mav.addObject("chartData", objectMapper.writeValueAsString(sortedMap));
         
         return mav;
