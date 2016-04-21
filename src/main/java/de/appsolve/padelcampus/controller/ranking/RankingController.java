@@ -70,7 +70,7 @@ public class RankingController extends BaseController {
     public ModelAndView getIndex(@PathVariable("category") String category) throws Exception{
         rankingMap = new TreeMap<>();
         ModelAndView mav = new ModelAndView("ranking/ranking");
-        List<Game> games = gameDAO.findAllWithPlayers();
+        List<Game> games = gameDAO.findAll();
         LocalDate today = LocalDate.now();
         for (Game game: games){
             LocalDate endDate = game.getEvent().getEndDate();
