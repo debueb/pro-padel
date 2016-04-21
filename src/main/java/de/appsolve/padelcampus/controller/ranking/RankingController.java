@@ -108,7 +108,7 @@ public class RankingController extends BaseController {
                         players.addAll(t2.getPlayers());
                         boolean genderMatches = true;
                         for (Player player: players){
-                            if (!player.getGender().equals(Gender.valueOf(category))){
+                            if (player.getGender()!= null && !player.getGender().equals(Gender.valueOf(category))){
                                 genderMatches = false;
                                 break;
                             }
