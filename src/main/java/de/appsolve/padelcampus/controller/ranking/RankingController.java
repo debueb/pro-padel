@@ -86,7 +86,7 @@ public class RankingController extends BaseController {
                 continue;
             }
             if (game.getGameSets().isEmpty()){
-                //LOG.debug("Skipping game "+game+" as no game sets have been played");
+                LOG.debug("Skipping game "+game+" as no game sets have been played");
                 continue;
             }
             
@@ -117,6 +117,7 @@ public class RankingController extends BaseController {
                             updateRanking(game, p1, p2, t1.getPlayers(), t2.getPlayers());
                         }
                     }
+                    break;
                 case "teams":
                     mav.addObject("urlPath", "teams/team");
                     if (p1 instanceof Team && p2 instanceof Team){
