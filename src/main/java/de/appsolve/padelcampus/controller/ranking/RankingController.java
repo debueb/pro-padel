@@ -9,7 +9,9 @@ package de.appsolve.padelcampus.controller.ranking;
 import de.appsolve.padelcampus.comparators.MapValueComparator;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.controller.BaseController;
+import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
+import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Participant;
@@ -18,6 +20,7 @@ import de.appsolve.padelcampus.db.model.Team;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -59,6 +62,9 @@ public class RankingController extends BaseController {
     @Autowired
     GameDAOI gameDAO;
     
+    @Autowired
+    EventDAOI eventDAO;
+    
     private SortedMap<Participant, BigDecimal> rankingMap;
     
     @RequestMapping
@@ -70,8 +76,25 @@ public class RankingController extends BaseController {
     public ModelAndView getIndex(@PathVariable("category") String category) throws Exception{
         rankingMap = new TreeMap<>();
         ModelAndView mav = new ModelAndView("ranking/ranking");
-        List<Game> games = gameDAO.findAllWithPlayers();
+        
+
+        //the result set is too large for mysql to handle in memory and on openshift we cannot create temp files
+        //see https://bugzilla.redhat.com/show_bug.cgi?id=1329068
+        //List<Game> games = gameDAO.findAllWithPlayers();
+        
+        List<Event> events = eventDAO.findAll();
+        List<Game> games = new ArrayList<>();
         LocalDate today = LocalDate.now();
+        for (Event event: events){
+            LocalDate endDate = event.getEndDate();
+            int days = Days.daysBetween(today, endDate).getDays();
+            if (days > ELO_MAX_DAYS){
+                LOG.warn("Skipping event "+event+ " as it is older than "+ELO_MAX_DAYS+" days");
+                continue;
+            }
+            games.addAll(gameDAO.findByEventWithPlayers(event));
+        }
+        
         for (Game game: games){
             LocalDate endDate = game.getEvent().getEndDate();
             int days = Days.daysBetween(today, endDate).getDays();

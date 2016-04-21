@@ -30,6 +30,14 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
         return super.findAllFetchEagerly("participants.players");
     }
 
+    
+    @Override
+    public List<Game> findByEventWithPlayers(Event event) {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("event", event);
+        return findAllFetchEagerlyWithAttributes(attributes, "participants.players");
+    }
+    
     @Override
     public List<Game> findByEvent(Event event) {
         Map<String, Object> attributes = new HashMap<>();

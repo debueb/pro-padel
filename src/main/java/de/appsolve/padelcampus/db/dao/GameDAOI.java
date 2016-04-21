@@ -21,6 +21,7 @@ public interface GameDAOI extends GenericDAOI<Game>{
     List<Game> findAllWithPlayers();
     Game findByIdFetchWithTeamsAndScoreReporter(Long id);
     List<Game> findByEvent(Event event);
+    List<Game> findByEventWithPlayers(Event event);
     List<Game> findByParticipant(Participant participant);
     List<Game> findByParticipantAndEvent(Participant participant, Event event);
     List<Game> findByParticipantAndEventWithScoreOnly(Participant participant, Event event);
