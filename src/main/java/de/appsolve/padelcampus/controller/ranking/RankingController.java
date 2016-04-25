@@ -80,29 +80,12 @@ public class RankingController extends BaseController {
 
         //the result set is too large for mysql to handle in memory and on openshift we cannot create temp files
         //see https://bugzilla.redhat.com/show_bug.cgi?id=1329068
-        //List<Game> games = gameDAO.findAllWithPlayers();
         
-        List<Event> events = eventDAO.findAll();
-        List<Game> games = new ArrayList<>();
-        LocalDate today = LocalDate.now();
-        for (Event event: events){
-            LocalDate endDate = event.getEndDate();
-            int days = Days.daysBetween(today, endDate).getDays();
-            if (days > ELO_MAX_DAYS){
-                LOG.warn("Skipping event "+event+ " as it is older than "+ELO_MAX_DAYS+" days");
-                continue;
-            }
-            games.addAll(gameDAO.findByEventWithPlayers(event));
-        }
+        LocalDate date = LocalDate.now();
+        date = date.minusDays(ELO_MAX_DAYS);
+        List<Game> games = gameDAO.findAllYoungerThanWithPlayers(date);
         
         for (Game game: games){
-            LocalDate endDate = game.getEvent().getEndDate();
-            int days = Days.daysBetween(today, endDate).getDays();
-            if (days > ELO_MAX_DAYS){
-                LOG.warn("Skipping game "+game+ " as it is older than "+ELO_MAX_DAYS+" days");
-                continue;
-            }
-            
             Set<Participant> participants = game.getParticipants();
             if (participants.size() != 2){
                 LOG.warn("Skipping game "+game+" as it does not have 2 participants");
