@@ -7,6 +7,7 @@
 package de.appsolve.padelcampus.admin.controller.events;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
+import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
@@ -29,10 +30,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -97,6 +100,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
         }
         getDAO().saveOrUpdate(model);
         
+        
         //remove games that have not been played yet
         List<Game> eventGames = gameDAO.findByEvent(model);
         Iterator<Game> eventGameIterator = eventGames.iterator();
@@ -109,31 +113,50 @@ public class AdminEventsController extends AdminBaseController<Event>{
         }
         
         //generate games
-        for (Participant firstParticipant: model.getParticipants()){
-            for (Participant secondParticipant: model.getParticipants()){
-                if (!firstParticipant.equals(secondParticipant)){
-                    boolean gameExists = false;
-                    for (Game game: eventGames){
-                        if (game.getParticipants().contains(firstParticipant) && game.getParticipants().contains(secondParticipant)){
-                            gameExists = true;
-                            break;
+        
+        switch (model.getEventType()){
+            case SingleRoundRobin:
+                
+                for (Participant firstParticipant: model.getParticipants()){
+                    for (Participant secondParticipant: model.getParticipants()){
+                        if (!firstParticipant.equals(secondParticipant)){
+                            boolean gameExists = false;
+                            for (Game game: eventGames){
+                                if (game.getParticipants().contains(firstParticipant) && game.getParticipants().contains(secondParticipant)){
+                                    gameExists = true;
+                                    break;
+                                }
+                            }
+                            if (!gameExists){
+                                Game game = new Game();
+                                game.setEvent(model);
+                                Set<Participant> gameParticipants = new LinkedHashSet<>();
+                                gameParticipants.add(firstParticipant);
+                                gameParticipants.add(secondParticipant);
+                                game.setParticipants(gameParticipants);
+                                gameDAO.saveOrUpdate(game);
+                                eventGames.add(game);
+                            }
                         }
                     }
-                    if (!gameExists){
-                        Game game = new Game();
-                        game.setEvent(model);
-                        Set<Participant> gameParticipants = new LinkedHashSet<>();
-                        gameParticipants.add(firstParticipant);
-                        gameParticipants.add(secondParticipant);
-                        game.setParticipants(gameParticipants);
-                        gameDAO.saveOrUpdate(game);
-                        eventGames.add(game);
-                    }
                 }
-            }
+                
+                break;
+            case Knockout:
+                break;
+            default:
+                result.addError(new ObjectError("id", "Unsupported event type "+model.getEventType()));
+                return getEditView(model);
         }
         
+        
         return redirectToIndex(request);
+    }
+    
+    @RequestMapping(value={"edit/{modelId}/draws"}, method=GET)
+    public ModelAndView getDraws(@ModelAttribute("Model") Event model, HttpServletRequest request){
+        ModelAndView mav = getDrawsView(model);
+        return mav;
     }
     
     @Override
@@ -146,11 +169,18 @@ public class AdminEventsController extends AdminBaseController<Event>{
         List<Player> allPlayers = playerDAO.findAll();
         allPlayers.removeAll(event.getParticipants());
         mav.addObject("AllPlayers", allPlayers);
+        mav.addObject("EventTypes", EventType.values());
+        return mav;
+    }
+    
+    
+    private ModelAndView getDrawsView(Event model) {
+        ModelAndView mav = new ModelAndView("admin/events/draws", "Model", model);
         return mav;
     }
     
     @Override
-    public GenericDAOI getDAO() {
+    public GenericDAOI<Event> getDAO() {
         return eventDAO;
     }
 

@@ -16,8 +16,25 @@
                 <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
-                    <fmt:message key="EventName" var="EventName"/>
-                    <spf:input path="name" type="text" class="form-control form-top-element" placeholder="${EventName}" value='${Model.name}'/>
+                    
+                    <div class="relative">
+                        <fmt:message key="EventName" var="EventName"/>
+                        <spf:input path="name" type="text" class="form-control form-top-element" placeholder="${EventName}"/>
+                        <div class="explanation">${EventName}</div>
+                    </div>
+                    
+                    
+                    <spf:select path="eventType" class="select-simple form-control" data-style="form-center-element" title="${Participants}" data-container="body">
+                        <fmt:message key="EventType" var="Label"/>
+                        <spf:options items="${EventTypes}"/>
+                    </spf:select>
+                    
+                    <div class="relative">
+                        <fmt:message key="NumberOfGroups" var="NumberOfGroups"/>
+                        <spf:input path="numberOfGroups" type="number" class="form-control form-center-element" placeholder="${NumberOfGroups}"/>
+                        <div class="explanation">${NumberOfGroups}</div>
+                    </div>
+                   
 
                     <div class="datepicker-container">
                         <div class="datepicker-text-container form-center-element">
@@ -59,6 +76,9 @@
                         <spf:checkbox path="active" id="active"/><label for="active"><fmt:message key="Active"/>&nbsp;(<fmt:message key="PubliclyAvailable"/>)</label>
                     </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
+                    <c:if test="${not empty Model.id}">
+                        <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/draws"><fmt:message key="Draws"/></a>
+                    </c:if>
                 </spf:form>
             </div>
         </div>    

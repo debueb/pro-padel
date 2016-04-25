@@ -16,6 +16,7 @@
             <table class="table table-striped table-bordered">
                 <thead>
                 <th><fmt:message key="Name"/></th>
+                <th><fmt:message key="EventType"/></th>
                 <th><fmt:message key="Participants"/></th>
                 <th class="delete"><fmt:message key="Delete"/></th>
                 </thead>
@@ -23,6 +24,7 @@
                     <c:forEach var="Event" items="${Models}">
                         <tr>
                             <td><a class="ajaxify" href="/admin/events/edit/${Event.id}">${Event.name}</a></td>
+                            <td><a class="ajaxify" href="/admin/events/edit/${Event.id}">${Event.eventType}</a></td>
                             <td>
                                 <c:forEach var="Participant" items="${Event.participants}" varStatus="status">
                                     <c:choose>

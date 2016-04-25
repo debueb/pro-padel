@@ -6,11 +6,14 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import de.appsolve.padelcampus.constants.EventType;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
@@ -32,6 +35,13 @@ public class Event extends ComparableEntity{
     @Column
     @NotEmpty(message = "{NotEmpty.eventName}")
     private String name;
+    
+    @Column
+    @Enumerated(EnumType.STRING)
+    private EventType eventType;
+    
+    @Column
+    private Integer numberOfGroups;
     
     @Column
     private Boolean active;
@@ -57,6 +67,22 @@ public class Event extends ComparableEntity{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public EventType getEventType() {
+        return eventType == null ? EventType.SingleRoundRobin : eventType;
+    }
+
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
+    }
+
+    public Integer getNumberOfGroups() {
+        return numberOfGroups == null ? 1 : numberOfGroups;
+    }
+
+    public void setNumberOfGroups(Integer numberOfGroups) {
+        this.numberOfGroups = numberOfGroups;
     }
 
     public Boolean getActive() {
