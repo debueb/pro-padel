@@ -11,6 +11,7 @@ import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
 import java.util.List;
+import org.joda.time.LocalDate;
 
 /**
  *
@@ -18,11 +19,12 @@ import java.util.List;
  */
 public interface GameDAOI extends GenericDAOI<Game>{
     
-    List<Game> findAllWithPlayers();
     Game findByIdFetchWithTeamsAndScoreReporter(Long id);
     List<Game> findByEvent(Event event);
     List<Game> findByEventWithPlayers(Event event);
     List<Game> findByParticipant(Participant participant);
     List<Game> findByParticipantAndEvent(Participant participant, Event event);
     List<Game> findByParticipantAndEventWithScoreOnly(Participant participant, Event event);
+
+    public List<Game> findAllYoungerThanWithPlayers(LocalDate date);
 }
