@@ -76,7 +76,7 @@
                         <spf:checkbox path="active" id="active"/><label for="active"><fmt:message key="Active"/>&nbsp;(<fmt:message key="PubliclyAvailable"/>)</label>
                     </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
-                    <c:if test="${not empty Model.id}">
+                    <c:if test="${not empty Model.id and Model.eventType eq 'Knockout'}">
                         <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/draws"><fmt:message key="Draws"/></a>
                     </c:if>
                 </spf:form>
