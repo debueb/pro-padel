@@ -34,6 +34,7 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
         criteria.createAlias("event", "e");
         criteria.add(Restrictions.gt("e.endDate", date));
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria.setFetchSize(10);
         return (List<Game>) criteria.list();
     }
     
