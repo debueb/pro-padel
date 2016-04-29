@@ -12,6 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -39,7 +40,7 @@ public class Game extends CustomerEntity{
     @OrderBy(value = "name")
     private Set<Participant> participants;
     
-    @OneToMany(fetch=FetchType.EAGER)
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<GameSet> gameSets;
     
     @OneToOne(fetch=FetchType.LAZY)
@@ -47,6 +48,12 @@ public class Game extends CustomerEntity{
     
     @Column
     private String voucherUUID;
+    
+    @Column
+    private Integer round;
+    
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Game nextGame;
 
     public Event getEvent() {
         return event;
@@ -86,6 +93,22 @@ public class Game extends CustomerEntity{
 
     public void setVoucherUUID(String voucherUUID) {
         this.voucherUUID = voucherUUID;
+    }
+
+    public Integer getRound() {
+        return round;
+    }
+
+    public void setRound(Integer round) {
+        this.round = round;
+    }
+
+    public Game getNextGame() {
+        return nextGame;
+    }
+
+    public void setNextGame(Game nextGame) {
+        this.nextGame = nextGame;
     }
     
     public String getObfuscatedMailTo() throws UnsupportedEncodingException{

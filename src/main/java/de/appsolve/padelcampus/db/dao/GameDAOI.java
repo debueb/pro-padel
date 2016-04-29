@@ -19,6 +19,7 @@ import org.joda.time.LocalDate;
  */
 public interface GameDAOI extends GenericDAOI<Game>{
     
+    Game findByIdFetchWithNextGame(Long id);
     Game findByIdFetchWithTeamsAndScoreReporter(Long id);
     List<Game> findByEvent(Event event);
     List<Game> findByEventWithPlayers(Event event);

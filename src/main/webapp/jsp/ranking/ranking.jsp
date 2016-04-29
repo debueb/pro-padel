@@ -30,7 +30,7 @@
                         </thead>
                         <tbody>
                             <c:forEach var="Ranking" items="${Rankings}" varStatus="status">
-                                <c:set var="UrlTeam" value="${contextPath}/${urlPath}/${Ranking.key.id}"/>
+                                <c:set var="UrlTeam" value="${contextPath}/${detailUrl}/${Ranking.key.id}"/>
                                 <tr>
                                     <td class="text-center">${status.index+1}</td>
                                     <td><a href="${UrlTeam}" class="ajaxify">${Ranking.key}</a></td>

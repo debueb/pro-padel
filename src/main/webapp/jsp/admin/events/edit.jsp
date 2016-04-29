@@ -24,9 +24,12 @@
                     </div>
                     
                     
-                    <spf:select path="eventType" class="select-simple form-control" data-style="form-center-element" title="${Participants}" data-container="body">
-                        <fmt:message key="EventType" var="Label"/>
+                    <spf:select path="eventType" class="select-simple form-control" data-style="form-center-element" data-container="body">
                         <spf:options items="${EventTypes}"/>
+                    </spf:select>
+                    
+                    <spf:select path="gender" class="select-simple form-control" data-style="form-center-element" data-container="body">
+                        <spf:options items="${Genders}"/>
                     </spf:select>
                     
                     <div class="relative">
@@ -77,7 +80,7 @@
                     </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
                     <c:if test="${not empty Model.id and Model.eventType eq 'Knockout'}">
-                        <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/draws"><fmt:message key="Draws"/></a>
+                        <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/draws"><fmt:message key="ToDraws"/></a>
                     </c:if>
                 </spf:form>
             </div>

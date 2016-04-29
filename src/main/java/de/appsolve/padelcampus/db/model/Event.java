@@ -7,9 +7,11 @@
 package de.appsolve.padelcampus.db.model;
 
 import de.appsolve.padelcampus.constants.EventType;
+import de.appsolve.padelcampus.constants.Gender;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -41,6 +43,10 @@ public class Event extends ComparableEntity{
     private EventType eventType;
     
     @Column
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+    
+    @Column
     private Integer numberOfGroups;
     
     @Column
@@ -58,7 +64,7 @@ public class Event extends ComparableEntity{
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate endDate;
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="event")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="event", cascade = CascadeType.REMOVE)
     private Set<Game> games;
 
     public String getName() {
@@ -75,6 +81,14 @@ public class Event extends ComparableEntity{
 
     public void setEventType(EventType eventType) {
         this.eventType = eventType;
+    }
+
+    public Gender getGender() {
+        return gender == null ? Gender.male : gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     public Integer getNumberOfGroups() {
@@ -133,6 +147,16 @@ public class Event extends ComparableEntity{
             }
         }
         return teams;
+    }
+    
+    public Set<Player> getPlayers(){
+        Set<Player> players = new TreeSet<>();
+        for (Participant participant: participants){
+            if (participant instanceof Player){
+                players.add((Player)participant);
+            }
+        }
+        return players;
     }
     
     @Override

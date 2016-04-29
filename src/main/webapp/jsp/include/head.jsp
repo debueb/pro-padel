@@ -59,6 +59,31 @@
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/99_addtohomescreen.css.stylesheet">
             </c:otherwise>
         </c:choose>
+                
+        <c:set var="compressJS" value="${compress.js}"/>
+        <c:choose>
+            <c:when test="${compressJS or not empty param.debug}">
+                <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+                <script>window.jQuery || document.write('<script src="/js/noconcat/10_jquery-1.11.1.min.js">\x3C/script>');</script>
+                <script src="/js/all.min.js"></script>
+                <script src="/js/noconcat/31_datepicker-de.js"></script>
+            </c:when>
+            <c:otherwise>
+                <%-- we use jquery 1.x instead of 2.x to support older Android browsers. Specifically, jQuery.on() does not work on Android 2.1 --%>
+                <script src="/js/noconcat/10_jquery-1.11.1.min.js"></script>
+                <script src="/js/20_bootstrap.min.js"></script>
+                <script src="/js/25_bootstrap-select.js"></script>
+                <script src="/js/30_jquery-ui.min.js"></script>
+                <script src="/js/noconcat/31_datepicker-de.js"></script>
+                <script src="/js/50_slick.min.js"></script>
+                <script src="/js/80_jquery.livequery.min.js"></script>
+                <script src="/js/90_project.js"></script>
+                <script src="/js/91_jquery.history.min.js"></script>
+                <script src="/js/92_ajaxify.js"></script>
+                <script src="/js/95_ga.js"></script>
+                <script src="/js/98_ie10-viewport-bug-workaround.js"></script>
+            </c:otherwise>
+        </c:choose>
     </head>
     <%--</c:if>--%>
     <body ontouchstart="">

@@ -22,9 +22,10 @@
                 </thead>
                 <tbody>
                     <c:forEach var="Event" items="${Models}">
+                        <c:set var="url" value="/admin/events/edit/${Event.id}"/>
                         <tr>
-                            <td><a class="ajaxify" href="/admin/events/edit/${Event.id}">${Event.name}</a></td>
-                            <td><a class="ajaxify" href="/admin/events/edit/${Event.id}">${Event.eventType}</a></td>
+                            <td><a class="ajaxify" href="${url}">${Event.name}</a></td>
+                            <td><a class="ajaxify" href="${url}">${Event.eventType}</a></td>
                             <td>
                                 <c:forEach var="Participant" items="${Event.participants}" varStatus="status">
                                     <c:choose>
@@ -44,7 +45,7 @@
                 </tbody>
             </table>
         </div>
-        <a href="/admin/events/add" class="btn btn-primary unit ajaxify"><fmt:message key="NewEvent"/></a>
+        <a href="/admin/events/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewEvent"/></a>
     </div>
 </div>
 

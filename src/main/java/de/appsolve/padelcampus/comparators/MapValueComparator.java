@@ -14,7 +14,7 @@ import java.util.Map;
  * @param <K>
  * @param <V>
  */
-public class MapValueComparator<K extends Comparable, V extends Comparable<V>> implements Comparator<K>{
+public class MapValueComparator<K extends Comparable<K>, V extends Comparable<V>> implements Comparator<K>{
     
     Map<K,V> map;
  
@@ -26,7 +26,17 @@ public class MapValueComparator<K extends Comparable, V extends Comparable<V>> i
     public int compare(K keyA, K keyB) {
         V valueA = (V) map.get(keyA);
         V valueB = (V) map.get(keyB);
-        int result = valueB.compareTo(valueA);
+        int result = 0;
+        if (valueA == null && valueB == null){
+            return result;
+        }
+        if (valueA == null){
+            return -1;
+        }
+        if (valueB == null){
+            return 1;
+        }
+        result = valueB.compareTo(valueA);
         //in case the values of a map entry are identical, the key decides
         if (result == 0){
             result = keyA.compareTo(keyB);
