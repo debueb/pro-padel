@@ -2,7 +2,7 @@
 <jsp:include page="/jsp/include/head.jsp"/>
 <script src="${contextPath}/js/noconcat/tournament.js"></script>
 <div class="row">
-    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
         <jsp:include page="/jsp/include/back.jsp"/>
 
         <div class="page-header"></div>
@@ -11,11 +11,38 @@
             <div class="panel-heading">
                 <h4> ${Model.name}</h4>
             </div>
+            <div class="panel-body">
+                <div class="container-fluid">
+                    <div class="col-xs-4 text-right">
+                        <fmt:message key="StartDate"/>:
+                    </div>
+                    <div class="col-xs-8">
+                        <joda:format value="${Model.startDate}" pattern="EEEE, dd. MMMM yyyy"/>
+                    </div>
+                    <div class="col-xs-4 text-right">
+                        <fmt:message key="EndDate"/>:
+                    </div>
+                    <div class="col-xs-8">
+                        <joda:format value="${Model.endDate}" pattern="EEEE, dd. MMMM yyyy"/>
+                    </div>
+                    <div class="col-xs-4 text-right">
+                        <fmt:message key="Category"/>:
+                    </div>
+                    <div class="col-xs-8">
+                        <fmt:message key="${Model.gender}"/>
+                    </div>
+                    <div class="col-xs-4 text-right">
+                        <fmt:message key="Mode"/>:
+                    </div>
+                    <div class="col-xs-8">
+                        ${Model.eventType}
+                    </div>
+                </div>
+            </div>
         </div>
-
-
     </div>
 </div>
+
 <div class="tournament-container">
 
     <canvas id="canvas"></canvas>
@@ -71,7 +98,7 @@
 
     </div>
 
-</div>
+</div>        
 
 
 <jsp:include page="/jsp/include/footer.jsp"/>     
