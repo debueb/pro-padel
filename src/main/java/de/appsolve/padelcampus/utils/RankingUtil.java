@@ -143,7 +143,7 @@ public class RankingUtil {
         while (iterator.hasNext()){
             Map.Entry<Participant, BigDecimal> entry = iterator.next();
             BigDecimal value = entry.getValue();
-            value = value.setScale(2, RoundingMode.HALF_UP);
+            value = value.setScale(0, RoundingMode.HALF_UP);
             entry.setValue(value);
         }
         
