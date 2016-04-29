@@ -16,6 +16,16 @@
 
         <div class="list-group">
             <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/admin/bookings/offers"/>
+                <jsp:param name="key" value="Offers"/>
+                <jsp:param name="icon" value="dribbble"/>
+            </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/admin/bookings/facilities"/>
+                <jsp:param name="key" value="Facilities"/>
+                <jsp:param name="icon" value="building"/>
+            </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
                 <jsp:param name="href" value="/admin/bookings/paypal"/>
                 <jsp:param name="key" value="PayPal"/>
                 <jsp:param name="icon" value="paypal"/>

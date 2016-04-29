@@ -22,19 +22,19 @@
                 <tbody>
                     <c:forEach var="Model" items="${Models}">
                         <tr>
-                            <td><a class="ajaxify" href="/admin/general/facilities/edit/${Model.id}">${Model.name}</a></td>
+                            <td><a class="ajaxify" href="/${moduleName}/edit/${Model.id}">${Model.name}</a></td>
                             <td>
                                 <c:forEach var="Offer" items="${Model.offers}" varStatus="status">
-                                    <a class="ajaxify" href="/admin/general/facilities/edit/${Model.id}">${Offer}</a>${status.last ? "" : ", "}
+                                    <a class="ajaxify" href="/${moduleName}/edit/${Model.id}">${Offer}</a>${status.last ? "" : ", "}
                                 </c:forEach>
                             </td>
-                            <td class="delete"><a href="/admin/general/facilities/${Event.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
+                            <td class="delete"><a href="/${moduleName}/${Model.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>
         </div>
-        <a href="/admin/general/facilities/add" class="btn btn-primary unit ajaxify"><fmt:message key="NewFacility"/></a>
+        <a href="/${moduleName}/add" class="btn btn-primary unit ajaxify"><fmt:message key="NewFacility"/></a>
     </div>
 </div>
 
