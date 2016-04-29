@@ -84,11 +84,16 @@ public class Module extends SortableEntity{
     }
     
     public String getUrl(){
+        String moduleName = "/" + getModuleType().name().toLowerCase();
         switch (getModuleType()){
             case Page:
-                return "/"+getModuleType().name().toLowerCase() + "/" + getTitle();
+                return moduleName + "/" + getTitle();
+            case EventsSingleRoundRobin:
+                return "/events?eventType=SingleRoundRobin";
+            case EventsKnockout:
+                return "/events?eventType=Knockout";
             default:
-               return "/"+getModuleType().name().toLowerCase();
+               return moduleName;
         }
     }
 

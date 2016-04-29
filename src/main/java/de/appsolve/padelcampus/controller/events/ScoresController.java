@@ -17,6 +17,7 @@ import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Participant;
+import de.appsolve.padelcampus.utils.RankingUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,7 +46,8 @@ public class ScoresController extends BaseController{
     @Autowired
     GameSetDAOI gameSetDAO;
     
-    private List<GameSet> eventGameSets = new ArrayList<>();
+    @Autowired
+    RankingUtil rankingUtil;
     
     @RequestMapping
     public ModelAndView getIndex(){
@@ -58,74 +60,17 @@ public class ScoresController extends BaseController{
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipants(eventId);
         List<Game> eventGames = gameDAO.findByEvent(event);
-        eventGameSets = gameSetDAO.findByEvent(event);
+        List<GameSet> eventGameSets = gameSetDAO.findByEvent(event);
         List<ScoreEntry> scoreEntries = new ArrayList<>();
         for (Participant participant: event.getParticipants()){
-            int matchesPlayed   = 0;
-            int matchesWon      = 0;
-            int totalSetsPlayed = 0;
-            int totalSetsWon    = 0;
-            int totalGamesPlayed= 0;
-            int totalGamesWon   = 0;
-                
-            for (Game game: eventGames){
-                if (game.getParticipants().contains(participant)){
-                    int setsPlayed      = 0;
-                    int setsWon         = 0;
-                
-                    Map<Integer, Integer> setMapP1 = getSetMapForParticipant(game, participant);
-                    Map<Integer, Integer> setMapP2 = new HashMap<>();
-                    for (Participant opponent: game.getParticipants()){
-                        if (!opponent.equals(participant)){
-                            setMapP2 = getSetMapForParticipant(game, opponent);
-                            break;
-                        }
-                    }
-
-                    for (Integer set: setMapP1.keySet()){
-                        setsPlayed++;
-                        totalSetsPlayed++;
-                        int gamesWonP1  = setMapP1.get(set) == null ? 0 : setMapP1.get(set);
-                        int gamesWonP2  = setMapP2.get(set) == null ? 0 : setMapP2.get(set);
-                        totalGamesWon    += gamesWonP1;
-                        setsWon          += gamesWonP1 > gamesWonP2 ? 1 : 0;
-                        totalSetsWon     += gamesWonP1 > gamesWonP2 ? 1 : 0;
-                        totalGamesPlayed += gamesWonP1 + gamesWonP2;
-                    }
-
-                    if (setsPlayed>0){
-                        matchesPlayed++;
-                        matchesWon += setsWon > (setsPlayed-setsWon) ? 1 : 0;
-                    }
-                }
-            }
             
-            ScoreEntry entry = new ScoreEntry();
-            entry.setParticipant(participant);
-            entry.setTotalPoints(matchesWon*MATCH_WIN_FACTOR+(matchesPlayed-matchesWon)*MATCH_PLAY_FACTOR);
-            entry.setMatchesPlayed(matchesPlayed);
-            entry.setMatchesWon(matchesWon);
-            entry.setSetsPlayed(totalSetsPlayed);
-            entry.setSetsWon(totalSetsWon);
-            entry.setGamesWon(totalGamesWon);
-            entry.setGamesPlayed(totalGamesPlayed);
-
-            scoreEntries.add(entry);
+            ScoreEntry scoreEntry = rankingUtil.getScore(participant, eventGames, eventGameSets);
+            scoreEntries.add(scoreEntry);
         }
         Collections.sort(scoreEntries);
         
         ModelAndView mav = new ModelAndView("scores/event", "Event", event);
         mav.addObject("ScoreEntries", scoreEntries);
         return mav;
-    }
-
-    private Map<Integer, Integer> getSetMapForParticipant(Game game, Participant participant) {
-        Map<Integer, Integer> setMap = new HashMap<>();
-        for (GameSet set: eventGameSets){
-            if (set.getGame().equals(game) && set.getParticipant().equals(participant)){
-                setMap.put(set.getSetNumber(), set.getSetGames());
-            }
-        }
-        return setMap;
     }
 }

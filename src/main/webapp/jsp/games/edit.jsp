@@ -11,8 +11,8 @@
                 <h4><fmt:message key="GameResultIn"><fmt:param value="${Game.event.name}"/></fmt:message></h4>
                 </div>
                 <div class="panel-body">
-
-                    <div class="alert alert-danger">${error}</div>
+                <jsp:include page="/jsp/games/score-reporter.jsp"/>
+                <div class="alert alert-danger">${error}</div>
                 <form method="POST">
                     <table style="width: 100%;" class="table-editgame table-fixed">
                         <thead>
@@ -50,6 +50,14 @@
                     </table>
 
                     <button type="submit" class="btn btn-primary btn-block unit"><fmt:message key="Save"/></button>
+                    <c:choose>
+                        <c:when test="${empty param.redirectUrl}">
+                            <a class="btn btn-primary btn-block unit" href="/games/game/${Game.id}"><fmt:message key="Cancel"/></a>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="btn btn-primary btn-block unit" href="/${param.redirectUrl}"><fmt:message key="Cancel"/></a>
+                        </c:otherwise>
+                    </c:choose>
                 </form>
             </div></div>
     </div>

@@ -5,8 +5,10 @@
  */
 package de.appsolve.padelcampus.utils;
 
-import de.appsolve.padelcampus.comparators.MapValueComparator;
+import static de.appsolve.padelcampus.constants.Constants.MATCH_PLAY_FACTOR;
+import static de.appsolve.padelcampus.constants.Constants.MATCH_WIN_FACTOR;
 import de.appsolve.padelcampus.constants.Gender;
+import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.model.Game;
@@ -249,6 +251,68 @@ public class RankingUtil {
         for (Player player: players1){
             rankingMap.put(player, newR1);
         }
+    }
+
+    public ScoreEntry getScore(Participant participant, Collection<Game> games, Collection<GameSet> gameSets) {
+        int matchesPlayed   = 0;
+            int matchesWon      = 0;
+            int totalSetsPlayed = 0;
+            int totalSetsWon    = 0;
+            int totalGamesPlayed= 0;
+            int totalGamesWon   = 0;
+                
+            for (Game game: games){
+                if (game.getParticipants().contains(participant)){
+                    int setsPlayed      = 0;
+                    int setsWon         = 0;
+                
+                    Map<Integer, Integer> setMapP1 = getSetMapForParticipant(game, participant, gameSets);
+                    Map<Integer, Integer> setMapP2 = new HashMap<>();
+                    for (Participant opponent: game.getParticipants()){
+                        if (!opponent.equals(participant)){
+                            setMapP2 = getSetMapForParticipant(game, opponent, gameSets);
+                            break;
+                        }
+                    }
+
+                    for (Integer set: setMapP1.keySet()){
+                        setsPlayed++;
+                        totalSetsPlayed++;
+                        int gamesWonP1  = setMapP1.get(set) == null ? 0 : setMapP1.get(set);
+                        int gamesWonP2  = setMapP2.get(set) == null ? 0 : setMapP2.get(set);
+                        totalGamesWon    += gamesWonP1;
+                        setsWon          += gamesWonP1 > gamesWonP2 ? 1 : 0;
+                        totalSetsWon     += gamesWonP1 > gamesWonP2 ? 1 : 0;
+                        totalGamesPlayed += gamesWonP1 + gamesWonP2;
+                    }
+
+                    if (setsPlayed>0){
+                        matchesPlayed++;
+                        matchesWon += setsWon > (setsPlayed-setsWon) ? 1 : 0;
+                    }
+                }
+            }
+            
+            ScoreEntry entry = new ScoreEntry();
+            entry.setParticipant(participant);
+            entry.setTotalPoints(matchesWon*MATCH_WIN_FACTOR+(matchesPlayed-matchesWon)*MATCH_PLAY_FACTOR);
+            entry.setMatchesPlayed(matchesPlayed);
+            entry.setMatchesWon(matchesWon);
+            entry.setSetsPlayed(totalSetsPlayed);
+            entry.setSetsWon(totalSetsWon);
+            entry.setGamesWon(totalGamesWon);
+            entry.setGamesPlayed(totalGamesPlayed);
+            return entry;
+    }
+    
+    private Map<Integer, Integer> getSetMapForParticipant(Game game, Participant participant, Collection<GameSet> gameSets) {
+        Map<Integer, Integer> setMap = new HashMap<>();
+        for (GameSet set: gameSets){
+            if (set.getGame().equals(game) && set.getParticipant().equals(participant)){
+                setMap.put(set.getSetNumber(), set.getSetGames());
+            }
+        }
+        return setMap;
     }
     
 }

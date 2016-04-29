@@ -297,6 +297,7 @@ table.table-scores tbody tr td{
 }
 .table-editgame tbody td, .table-editgame thead th{
     padding: 5px;
+    word-wrap: break-word;
 }
 
 .radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"]{
@@ -1106,3 +1107,105 @@ textarea {
     border-top-left-radius: @border-radius-large;
     border-top-right-radius: @border-radius-large;
 }
+
+/* tournament */
+.tournament-container{
+    position: relative;
+    width: 100%;
+    height: 100%; 
+    overflow-x: scroll;
+    margin-top: 20px;
+}
+
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+}
+
+.region {
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+}
+
+.round {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  padding: 0 20px;
+  float: left;
+  width: 250px;
+  max-width: 250px;
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+.round .game{
+  background: #FFF;
+  border-radius: 3px;
+  overflow: hidden;
+  pointer-events: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.round .game, .round .game a {
+  display: flex;
+  flex-direction: column;
+  max-height: 80px;
+}
+.round .game .team, .round .game a .team {
+  display: flex;
+  align-items: center;
+  flex: 1 1 40px;
+  cursor: pointer;
+  border-left: 10px solid @primaryColor;
+  transition: .2s;
+  /* keep this for smoother transitions: */
+  box-shadow: inset 0 40px 0 rgba(255, 255, 255, 0);
+}
+.round .game .team:first-child{
+    border-bottom: 1px solid lightgray;
+}
+
+.round .game .team .team-name, .round .game a .team .team-name {
+  flex: 1 1 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-left: 10px;
+  text-overflow: ellipsis;
+}
+.round .game a .team .team-score {
+  font-weight: 600;
+  flex: 0 1 40px;
+}
+.round .game .team .team-score:empty, .round .game a .team .team-score:empty {
+  display: none;
+}
+.round .game .team.team-hover, .round .game a .team.team-hover {
+  background: #CFC59A;
+  color: #FFF !important;
+  box-shadow: inset 0 40px 0 rgba(255, 255, 255, 0.2);
+}
+
+.round .game .team:active, .round .game a .team:active {
+  box-shadow: inset 0 40px 0 rgba(255, 255, 255, 0);
+}
+.round .game .team.team-loser, .round .game a .team.team-loser {
+  background: #F7F7F7;
+  color: #BBB;
+}
+
+.region-right .round {
+  float: right;
+}
+.region-right .round .team {
+  border-left: 0;
+  border-right: 10px solid #DDD;
+  flex-direction: row-reverse;
+  text-align: right;
+}
+/* end tournament*/

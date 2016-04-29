@@ -12,9 +12,7 @@
                 </div>
                 <div class="panel-body">
                 <jsp:include page="/jsp/games/game-result.jsp"/>
-                <c:if test="${Game.scoreReporter ne null}">
-                    <div><fmt:message key="ScoreReportedBy"><fmt:param value="${contextPath}/players/player/${Game.scoreReporter.id}"/><fmt:param value="${Game.scoreReporter}"/></fmt:message></div>
-                </c:if>
+                <jsp:include page="/jsp/games/score-reporter.jsp"/>
                 <div class="list-group unit">
                     <a href="/games/game/${Game.id}/edit" class="list-group-item ajaxify" >
                         <div class="list-item-text"><fmt:message key="EditResult"/></div>

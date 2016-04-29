@@ -8,7 +8,7 @@
 
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4><fmt:message key="Games"/>${Event.name}</h4>
+                <h4><fmt:message key="Games"/> ${Event.name}</h4>
             </div>
         </div>
 

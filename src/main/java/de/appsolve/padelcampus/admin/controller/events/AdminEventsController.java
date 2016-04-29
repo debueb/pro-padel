@@ -21,6 +21,7 @@ import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
+import de.appsolve.padelcampus.utils.EventsUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import java.math.BigDecimal;
@@ -75,6 +76,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
     
     @Autowired
     RankingUtil rankingUtil;
+    
+    @Autowired
+    EventsUtil eventsUtil;
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -357,17 +361,8 @@ public class AdminEventsController extends AdminBaseController<Event>{
     
     private ModelAndView getDrawsView(Long eventId) {
         Event event = eventDAO.findByIdFetchWithGames(eventId);
+        SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGames(event);
         ModelAndView mav = new ModelAndView("admin/events/draws", "Model", event);
-        SortedMap<Integer, List<Game>> roundGames = new TreeMap<>();
-        
-        for (Game game: event.getGames()){
-            List<Game> games = roundGames.get(game.getRound());
-            if (games == null){
-                games = new ArrayList<>();
-            }
-            games.add(game);
-            roundGames.put(game.getRound(), games);
-        }
         mav.addObject("RoundGameMap", roundGames);
         return mav;
     }

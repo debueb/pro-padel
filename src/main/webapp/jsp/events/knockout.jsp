@@ -9,7 +9,7 @@
 
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4><fmt:message key="Draws"/> ${Model.name}</h4>
+                <h4> ${Model.name}</h4>
             </div>
         </div>
 
@@ -26,13 +26,18 @@
                 <c:forEach var="Game" items="${RoundGameMapEntry.value}">
 
                     <article class="game">
-                        <c:if test="${RoundGameMapEntry.key == 0}"><a class="ajaxify" href="${contextPath}/admin/events/edit/${Model.id}/draws/game/${Game.id}"></c:if>
+                        <c:if test="${fn:length(Game.participants) == 2}"><a class="ajaxify" href="${contextPath}/games/game/${Game.id}/edit?redirectUrl=events/${Model.id}"></c:if>
                             <c:forEach var="Participant" items="${Game.participants}">
-                                <div class="team" data-team="${Participant.id}">
-
-                                    <span class="team-name">${Participant.name}</span>
-                                    <span class="team-score"></span>
-                                </div>
+                                <div class="team team-${Participant.id}" data-team="${Participant.id}">
+                                        <span class="team-name">${Participant.name}</span>
+                                        <span class="team-score">
+                                            <c:forEach var="GameSet" items="${Game.gameSets}">
+                                                <c:if test="${GameSet.participant == Participant}">
+                                                    ${GameSet.setGames}
+                                                </c:if>
+                                            </c:forEach>
+                                        </span>
+                                    </div>
                             </c:forEach>
                             <c:choose>
                                 <c:when test="${RoundGameMapEntry.key == 0 and fn:length(Game.participants) == 1}">
@@ -58,20 +63,14 @@
                                     </div>
                                 </c:when>
                             </c:choose>
-
-                            <c:if test="${RoundGameMapEntry.key == 0}"></a></c:if>
-                        </article>
+                        <c:if test="${fn:length(Game.participants) == 2}"></a></c:if>
+                    </article>
                 </c:forEach>
             </section>
         </c:forEach>    
 
     </div>
 
-</div>
-<div class="row unit">
-    <div class="col-xs-4 col-xs-offset-4 text-center">
-        <a class="btn btn-primary btn-block" href="/admin/events"><fmt:message key="AllEvents"/></a>
-    </div>
 </div>
 
 

@@ -1,6 +1,6 @@
 var Tournament = function() {
     var defaults = {
-        width: 3,
+        width: 2,
         color: '#BBB',
         radius: 15,
         regionSelector: '.region',
@@ -76,7 +76,7 @@ var Tournament = function() {
                             $nextGame = $nextGames.eq( Math.floor(i/2) ),
                         
                             color = $winner.length ? $winner.css('border-left-color') : that.options.color,
-                            width = $winner.length ? that.options.width : 0.5,
+                            width = that.options.width,
             
                             calcFn = rightAlign ? that.calcLeft : that.calcRight,
                             start  = calcFn( $winner.length ? $winner : $(this) , that.containerOffset);
@@ -93,7 +93,7 @@ var Tournament = function() {
                             that.drawSCurve(start, end, color, width, that.options.radius, radiusAdjust);
                         } else {
                             // single curve for collapsed columns
-                            var end = that.calcCenter($nextGame);
+                            var end = that.calcCenter($nextGame, that.containerOffset);
                             that.drawCurve(start, end, 'horizontal', color, width, that.options.radius);
                         }
                     }); // /game
@@ -114,19 +114,19 @@ var Tournament = function() {
         // +-----+
         // x     |
         // +-----+
-        calcLeft: function ($object) {
+        calcLeft: function ($object, offset) {
             return {
-                x: $object.offset().left,
-                y: $object.offset().top - 70  + $object.outerHeight() / 2
+                x: $object.offset().left - offset.left,
+                y: $object.offset().top - offset.top  + $object.outerHeight() / 2
             };
         },
         // +-----+
         // |  x  |
         // +-----+
-        calcCenter: function ($object) {
+        calcCenter: function ($object, offset) {
             return {
-                x: $object.offset().left + $object.outerWidth()  / 2,
-                y: $object.offset().top  + $object.outerHeight() / 2
+                x: $object.offset().left - offset.left + $object.outerWidth()  / 2,
+                y: $object.offset().top - offset.top + $object.outerHeight() / 2
             };
         },
         

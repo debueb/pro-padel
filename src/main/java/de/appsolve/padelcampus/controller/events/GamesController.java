@@ -9,6 +9,7 @@ package de.appsolve.padelcampus.controller.events;
 import de.appsolve.padelcampus.controller.BaseController;
 import static de.appsolve.padelcampus.constants.Constants.FIRST_SET;
 import static de.appsolve.padelcampus.constants.Constants.NUMBER_OF_SETS;
+import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.GameSetDAOI;
@@ -20,6 +21,7 @@ import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.utils.Msg;
+import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,11 +35,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -66,6 +70,9 @@ public class GamesController extends BaseController{
     @Autowired
     Msg msg;
     
+    @Autowired
+    RankingUtil rankingUtil;
+    
     @RequestMapping
     public ModelAndView getIndex(){
         ModelAndView mav = new ModelAndView("games/index");
@@ -91,17 +98,17 @@ public class GamesController extends BaseController{
     }
     
     @RequestMapping(value="/game/{gameId}/edit", method=POST)
-    public ModelAndView postGame(@PathVariable("gameId") Long gameId,HttpServletRequest request){
+    public ModelAndView postGame(@PathVariable("gameId") Long gameId, @RequestParam("redirectUrl") String redirectUrl, HttpServletRequest request){
         
         Player user = sessionUtil.getUser(request);
         if (user == null){
             return getLoginView(request);
         }
-        Game game = gameDAO.findById(gameId);
+        Game game = gameDAO.findByIdFetchWithNextGame(gameId);
         List<GameSet> gameSets = new ArrayList<>();
         Set<GameSet> gameSetsToRemove = new HashSet<>();
-        for (Participant participant: game.getParticipants()){
-            for (int set=FIRST_SET; set<=NUMBER_OF_SETS; set++){
+        for (int set=FIRST_SET; set<=NUMBER_OF_SETS; set++){
+            for (Participant participant: game.getParticipants()){
                 String setGames = request.getParameter(getKey(game, participant, set));
                 Integer numSetGames = Integer.parseInt(setGames);
                 GameSet gameSet = gameSetDAO.findBy(game, participant, set);
@@ -149,7 +156,37 @@ public class GamesController extends BaseController{
             game.setScoreReporter(user);
         }
         gameDAO.saveOrUpdate(game);
-        return new ModelAndView("redirect:/games/game/"+gameId);
+        
+        Game nextGame = game.getNextGame();
+        if (nextGame != null){
+            //update next game
+            //make sure game score is reset if it exists
+            nextGame.getGameSets().clear();
+            
+            //make sure next game does not contain any of the participants of the current game
+            nextGame.getParticipants().removeAll(game.getParticipants());
+            
+            //determine winner
+            Participant winner = null;
+            for (Participant p: game.getParticipants()){
+                ScoreEntry score = rankingUtil.getScore(p, Arrays.asList(new Game[]{game}), game.getGameSets());
+                if (score.getMatchesWon() == 1){
+                    winner = p;
+                    break;
+                }
+            }
+            if (winner != null){
+                nextGame.getParticipants().add(winner);
+            }
+            
+            gameDAO.saveOrUpdate(nextGame);
+        }
+        
+        if (StringUtils.isEmpty(redirectUrl))
+        {        
+            return new ModelAndView("redirect:/games/game/"+gameId);
+        }
+        return new ModelAndView("redirect:/"+redirectUrl);
     }
     
     @RequestMapping("/event/{eventId}")
@@ -204,7 +241,7 @@ public class GamesController extends BaseController{
         return mav;
     }
     private ModelAndView getEditView(Long gameId) {
-        Game game = gameDAO.findById(gameId);
+        Game game = gameDAO.findByIdFetchWithTeamsAndScoreReporter(gameId);
         ModelAndView mav = new ModelAndView("games/edit", "Game", game);
         mav.addObject("GamesMap", getGamesMap(game));
         return mav;
