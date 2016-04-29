@@ -64,11 +64,15 @@ public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEnt
     protected ModelAndView getIndexView(List<T> models){
         ModelAndView mav = new ModelAndView(getModuleName()+"/index");
         mav.addObject("Models", models);
+        mav.addObject("moduleName", getModuleName());
         return mav;
     }
     
     protected ModelAndView getEditView(T model){
-        return new ModelAndView("/"+getModuleName()+"/edit", "Model", model);
+        ModelAndView mav =  new ModelAndView("/"+getModuleName()+"/edit");
+        mav.addObject("Model", model);
+        mav.addObject("moduleName", getModuleName());
+        return mav;
     }
     
     protected List<T> findAll() {

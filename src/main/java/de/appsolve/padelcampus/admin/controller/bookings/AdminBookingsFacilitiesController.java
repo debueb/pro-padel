@@ -4,11 +4,10 @@
  * and open the template in the editor.
  */
 
-package de.appsolve.padelcampus.admin.controller.general;
+package de.appsolve.padelcampus.admin.controller.bookings;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
-import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Facility;
 import de.appsolve.padelcampus.db.model.Offer;
 import java.util.Set;
@@ -25,8 +24,8 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  */
 @Controller()
-@RequestMapping("/admin/general/facilities")
-public class AdminGeneralFacilitiesController extends AdminBaseController<Facility> {
+@RequestMapping("/admin/bookings/facilities")
+public class AdminBookingsFacilitiesController extends AdminBaseController<Facility> {
     
     @Autowired
     GenericDAOI<Facility> facilityDAO;
@@ -59,6 +58,6 @@ public class AdminGeneralFacilitiesController extends AdminBaseController<Facili
 
     @Override
     public String getModuleName() {
-        return "admin/general/facilities";
+        return "admin/bookings/facilities";
     }
 }

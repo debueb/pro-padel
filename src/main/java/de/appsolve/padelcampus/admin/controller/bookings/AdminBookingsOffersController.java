@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package de.appsolve.padelcampus.admin.controller.general;
+package de.appsolve.padelcampus.admin.controller.bookings;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author dominik
  */
 @Controller()
-@RequestMapping("/admin/general/offers")
-public class AdminGeneralOffersController extends AdminBaseController<Offer> {
+@RequestMapping("/admin/bookings/offers")
+public class AdminBookingsOffersController extends AdminBaseController<Offer> {
     
     @Autowired
     PlayerDAOI playerDAO;
@@ -35,6 +35,6 @@ public class AdminGeneralOffersController extends AdminBaseController<Offer> {
 
     @Override
     public String getModuleName() {
-        return "admin/general/offers";
+        return "admin/bookings/offers";
     }
 }

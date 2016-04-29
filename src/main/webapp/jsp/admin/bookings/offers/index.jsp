@@ -21,8 +21,8 @@
                 <tbody>
                     <c:forEach var="Model" items="${Models}">
                         <tr>
-                            <td><a class="ajaxify" href="/admin/general/offers/edit/${Model.id}">${Model.name}</a></td>
-                            <td class="delete"><a href="/admin/general/offers/${Model.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
+                            <td><a class="ajaxify" href="/${moduleName}/edit/${Model.id}">${Model.name}</a></td>
+                            <td class="delete"><a href="/${moduleName}/${Model.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
                         </tr>
                     </c:forEach>
                 </tbody>
