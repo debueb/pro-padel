@@ -160,8 +160,6 @@ public class GamesController extends BaseController{
         Game nextGame = game.getNextGame();
         if (nextGame != null){
             //update next game
-            //make sure game score is reset if it exists
-            nextGame.getGameSets().clear();
             
             //make sure next game does not contain any of the participants of the current game
             nextGame.getParticipants().removeAll(game.getParticipants());
