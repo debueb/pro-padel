@@ -6,9 +6,9 @@
 
 package de.appsolve.padelcampus.controller.events;
 
-import de.appsolve.padelcampus.controller.BaseController;
 import static de.appsolve.padelcampus.constants.Constants.FIRST_SET;
 import static de.appsolve.padelcampus.constants.Constants.NUMBER_OF_SETS;
+import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
@@ -26,9 +26,6 @@ import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
