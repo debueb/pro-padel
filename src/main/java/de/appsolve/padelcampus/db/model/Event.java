@@ -66,6 +66,9 @@ public class Event extends ComparableEntity{
     
     @OneToMany(fetch=FetchType.LAZY, mappedBy="event", cascade = CascadeType.REMOVE)
     private Set<Game> games;
+    
+    @Column
+    private String location;
 
     public String getName() {
         return name;
@@ -137,6 +140,14 @@ public class Event extends ComparableEntity{
 
     public void setGames(Set<Game> games) {
         this.games = games;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
     
     public Set<Team> getTeams(){

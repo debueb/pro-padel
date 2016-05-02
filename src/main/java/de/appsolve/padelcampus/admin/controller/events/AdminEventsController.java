@@ -25,6 +25,7 @@ import de.appsolve.padelcampus.utils.EventsUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -98,8 +99,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
     public ModelAndView postEditView(@ModelAttribute("Model") Event model, HttpServletRequest request, BindingResult result){
         validator.validate(model, result);
         
-        //prevent removal of a team if it has already played a game
         if (model.getId()!=null){
+            
+            //prevent removal of a team if it has already played a game
             Event existingEvent = eventDAO.findByIdFetchWithParticipants(model.getId());
             if (!existingEvent.getParticipants().equals(model.getParticipants())){
                 for (Participant participant: existingEvent.getParticipants()){
@@ -107,9 +109,15 @@ public class AdminEventsController extends AdminBaseController<Event>{
                         List<Game> existingGames = gameDAO.findByParticipantAndEventWithScoreOnly(participant, model);
                         if (!existingGames.isEmpty()){
                             result.reject("TeamHasAlreadyPlayedInEvent", new Object[]{participant.toString(), existingGames.size(), model.toString()}, null);
+                            break;
                         }
                     }
                 }
+            }
+            
+            //prevent switching from one event type to another
+            if (!existingEvent.getEventType().equals(model.getEventType())){
+                result.reject("CannotModifyEventTypeOfExistingEvent");
             }
         }
         
@@ -125,14 +133,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
             case SingleRoundRobin:
                 
                 //remove games that have not been played yet
-                Iterator<Game> eventGameIterator = eventGames.iterator();
-                while (eventGameIterator.hasNext()){
-                    Game game = eventGameIterator.next();
-                    if (game.getGameSets().isEmpty()){                
-                        eventGameIterator.remove();
-                        gameDAO.deleteById(game.getId());
-                    }
-                }
+                removeGamesWithoutGameSets(eventGames);
                 
                 
                 for (Participant firstParticipant: model.getParticipants()){
@@ -160,6 +161,21 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 }
                 break;
                 
+            case GroupKnockout:
+                //remove games that have not been played yet
+                removeGamesWithoutGameSets(eventGames);
+                
+                Integer maxNumberOfParticipantsPerGrp = new BigDecimal(model.getParticipants().size()).divide(new BigDecimal(model.getNumberOfGroups())).setScale(0, RoundingMode.UP).intValue();
+                ArrayList<Participant> rankedParticipants =  getRankedParticipants(model);
+                
+                //fill up empty spots with bye's
+                int maxParticipants = maxNumberOfParticipantsPerGrp*model.getNumberOfGroups();
+                for (int i=maxParticipants; i>model.getParticipants().size() ; i--){
+                    rankedParticipants.add(i-1, null);
+                }
+                
+                //ToDo: determine seed positions
+                break;
             case Knockout:
                 //check min number of participants
                 if (model.getParticipants().size()<3){
@@ -190,19 +206,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 //this is a new event
                 
                 //determine ranking
-                Participant firstParticipant = model.getParticipants().iterator().next();
-                SortedMap<Participant, BigDecimal> ranking = new TreeMap<>();
-                if (firstParticipant instanceof Player){
-                    ranking = rankingUtil.getRanking(model.getGender(), model.getPlayers());
-                } else if (firstParticipant instanceof Team){
-                    List<Team> teams = new ArrayList<>();
-                    for (Participant p: model.getParticipants()){
-                        Team team = (Team) p;
-                        teams.add(teamDAO.findByIdFetchWithPlayers(team.getId()));
-                    }
-                    ranking = rankingUtil.getTeamRanking(model.getGender(), teams);
-                }
-                ArrayList<Participant> participants =  new ArrayList<>(ranking.keySet());
+                ArrayList<Participant> participants =  getRankedParticipants(model);
                 
                 //determine seed positions
                 List<Integer> seedingPositions = getSeedPositions(participants);
@@ -420,5 +424,32 @@ public class AdminEventsController extends AdminBaseController<Event>{
 
     private ModelAndView redirectToDraws(Event model) {
         return new ModelAndView("redirect:/admin/events/edit/"+model.getId()+"/draws");
+    }
+
+    private ArrayList<Participant> getRankedParticipants(Event model) {
+        Participant firstParticipant = model.getParticipants().iterator().next();
+        SortedMap<Participant, BigDecimal> ranking = new TreeMap<>();
+        if (firstParticipant instanceof Player){
+            ranking = rankingUtil.getRanking(model.getGender(), model.getPlayers());
+        } else if (firstParticipant instanceof Team){
+            List<Team> teams = new ArrayList<>();
+            for (Participant p: model.getParticipants()){
+                Team team = (Team) p;
+                teams.add(teamDAO.findByIdFetchWithPlayers(team.getId()));
+            }
+            ranking = rankingUtil.getTeamRanking(model.getGender(), teams);
+        }
+        return new ArrayList<>(ranking.keySet());
+    }
+
+    private void removeGamesWithoutGameSets(List<Game> eventGames) {
+        Iterator<Game> eventGameIterator = eventGames.iterator();
+        while (eventGameIterator.hasNext()){
+            Game game = eventGameIterator.next();
+            if (game.getGameSets().isEmpty()){                
+                eventGameIterator.remove();
+                gameDAO.deleteById(game.getId());
+            }
+        }
     }
 }

@@ -92,6 +92,8 @@ public class Module extends SortableEntity{
                 return "/events?eventType=SingleRoundRobin";
             case EventsKnockout:
                 return "/events?eventType=Knockout";
+            case EventsGroupKnockout:
+                return "/events?eventType=GroupKnockout";
             default:
                return moduleName;
         }

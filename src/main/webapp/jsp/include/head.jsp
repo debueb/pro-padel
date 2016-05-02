@@ -45,7 +45,7 @@
 
         <c:set var="compressCSS" value="${compress.css}"/>
         <c:choose>
-            <c:when test="${compressCSS or not empty param.debug}">
+            <c:when test="${compressCSS or empty param.debug}">
                 <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet">
             </c:when>
             <c:otherwise>
@@ -62,7 +62,7 @@
                 
         <c:set var="compressJS" value="${compress.js}"/>
         <c:choose>
-            <c:when test="${compressJS or not empty param.debug}">
+            <c:when test="${compressJS or empty param.debug}">
                 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
                 <script>window.jQuery || document.write('<script src="/js/noconcat/10_jquery-1.11.1.min.js">\x3C/script>');</script>
                 <script src="/js/all.min.js"></script>

@@ -12,5 +12,6 @@ package de.appsolve.padelcampus.constants;
 public enum EventType {
     
     SingleRoundRobin,
-    Knockout
+    Knockout,
+    GroupKnockout
 }

@@ -20,6 +20,7 @@ import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
@@ -73,6 +74,9 @@ public class GamesController extends BaseController{
     @Autowired
     RankingUtil rankingUtil;
     
+    @Autowired
+    GameUtil gameUtil;
+    
     @RequestMapping
     public ModelAndView getIndex(){
         ModelAndView mav = new ModelAndView("games/index");
@@ -84,7 +88,7 @@ public class GamesController extends BaseController{
     public ModelAndView getGame(@PathVariable("gameId") Long gameId){
         Game game = gameDAO.findByIdFetchWithTeamsAndScoreReporter(gameId);
         ModelAndView indexView = new ModelAndView("games/game", "Game", game);
-        addGameResultMap(indexView, game);
+        gameUtil.addGameResultMap(indexView, game);
         return indexView;
     }
     
@@ -199,7 +203,7 @@ public class GamesController extends BaseController{
         Event event = eventDAO.findByIdFetchWithGames(eventId);
         ModelAndView mav = new ModelAndView("games/games", "Games", event.getGames());
         mav.addObject("title", msg.get("GamesIn", new Object[]{event.getName()}));
-        addGameResultMap(mav, event.getGames());
+        gameUtil.addGameResultMap(mav, event.getGames());
         return mav;
     }
  
@@ -211,7 +215,7 @@ public class GamesController extends BaseController{
         ModelAndView mav = new ModelAndView("games/games", "Games", games);
         mav.addObject("title", event.getName());
         mav.addObject("subtitle", team.toString());
-        addGameResultMap(mav, games);
+        gameUtil.addGameResultMap(mav, games);
         return mav;
     }
     
@@ -222,7 +226,7 @@ public class GamesController extends BaseController{
         ModelAndView mav = new ModelAndView("games/games", "Games", games);
         String title = msg.get("AllGamesWith", new Object[]{team.getName()});
         mav.addObject("title", title);
-        addGameResultMap(mav, games);
+        gameUtil.addGameResultMap(mav, games);
         return mav;
     }
 
@@ -235,7 +239,7 @@ public class GamesController extends BaseController{
         String title = msg.get("AllGamesWithTeamInEvent", new Object[]{team.getName(), event.getName()});
         mav.addObject("title", title);
         mav.addObject("Event", event);
-        addGameResultMap(mav, games);
+        gameUtil.addGameResultMap(mav, games);
         return mav;
     }
     private ModelAndView getEditView(Long gameId) {
@@ -260,42 +264,6 @@ public class GamesController extends BaseController{
             }
         }
         return gamesMap;
-    }
-
-    private void addGameResultMap(ModelAndView mav, Game game) {
-        addGameResultMap(mav, Arrays.asList(new Game[]{game}));
-    }
-    
-    private void addGameResultMap(ModelAndView mav, Collection<Game> games) {
-        Map<Game, String> map = new HashMap<>();
-        for (Game game : games) {
-            List<GameSet> gameSets = new ArrayList<>(game.getGameSets());
-            StringBuilder result = new StringBuilder();
-            
-            Collections.sort(gameSets);
-            int gameSetsDisplayed=0;
-            for (int set=FIRST_SET; set<gameSets.size(); set++){
-                int participantId = 0;
-                for (Participant participant: game.getParticipants()){
-                    String setGames = "-";
-                    for (GameSet gs: gameSets){
-                        if (gs.getSetNumber() == set && gs.getParticipant().equals(participant)){
-                            setGames = gs.getSetGames()+"";
-                            gameSetsDisplayed++;
-                            break;
-                        }
-                    }
-                    result.append(setGames);
-                    result.append(participantId%2==0 ? ":" : " "); //separate games by colon, sets by space
-                    participantId++;
-                }
-                if (gameSetsDisplayed == gameSets.size()){
-                    break; //do not display third set if it was not played
-                }
-            }
-            map.put(game, result.toString());
-        }
-        mav.addObject("GameResultMap", map);
     }
 
     private ModelAndView getLoginView(HttpServletRequest request) {

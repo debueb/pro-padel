@@ -1,45 +1,11 @@
 <%@include file="/jsp/include/include.jsp"%>
 <jsp:include page="/jsp/include/head.jsp"/>
 <script src="${contextPath}/js/noconcat/tournament.js"></script>
+
+
 <div class="row">
-    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-        <jsp:include page="/jsp/include/back.jsp"/>
-
-        <div class="page-header"></div>
-
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h4> ${Model.name}</h4>
-            </div>
-            <div class="panel-body">
-                <div class="container-fluid">
-                    <div class="col-xs-4 text-right">
-                        <fmt:message key="StartDate"/>:
-                    </div>
-                    <div class="col-xs-8">
-                        <joda:format value="${Model.startDate}" pattern="EEEE, dd. MMMM yyyy"/>
-                    </div>
-                    <div class="col-xs-4 text-right">
-                        <fmt:message key="EndDate"/>:
-                    </div>
-                    <div class="col-xs-8">
-                        <joda:format value="${Model.endDate}" pattern="EEEE, dd. MMMM yyyy"/>
-                    </div>
-                    <div class="col-xs-4 text-right">
-                        <fmt:message key="Category"/>:
-                    </div>
-                    <div class="col-xs-8">
-                        <fmt:message key="${Model.gender}"/>
-                    </div>
-                    <div class="col-xs-4 text-right">
-                        <fmt:message key="Mode"/>:
-                    </div>
-                    <div class="col-xs-8">
-                        ${Model.eventType}
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
+        <jsp:include page="/jsp/events/include/info.jsp"/>
     </div>
 </div>
 
@@ -56,7 +22,7 @@
                         <c:if test="${fn:length(Game.participants) == 2}"><a class="ajaxify" href="${contextPath}/games/game/${Game.id}/edit?redirectUrl=events/${Model.id}"></c:if>
                             <c:forEach var="Participant" items="${Game.participants}">
                                 <div class="team team-${Participant.id}" data-team="${Participant.id}">
-                                        <span class="team-name">${Participant.name}</span>
+                                        <span class="team-name">${Participant}</span>
                                         <span class="team-score">
                                             <c:forEach var="GameSet" items="${Game.gameSets}">
                                                 <c:if test="${GameSet.participant == Participant}">

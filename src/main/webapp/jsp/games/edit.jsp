@@ -18,7 +18,17 @@
                         <thead>
                         <th></th>
                             <c:forEach var="Participant" items="${Game.participants}">
-                            <th class="text-center">${Participant}</th>
+                            <th class="text-center">
+                                <c:choose>
+                                    <c:when test="${Participant.discriminatorValue == 'player'}">
+                                        <c:set var="url_participant" value="/players/player/${Participant.id}"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="url_participant" value="/teams/team/${Participant.id}"/>
+                                    </c:otherwise>
+                                </c:choose>
+                                <a href="${url_participant}">${Participant}</a>
+                            </th>
                             </c:forEach>
                         </thead>
                         <tbody>

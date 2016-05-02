@@ -52,6 +52,9 @@ public class Game extends CustomerEntity{
     @Column
     private Integer round;
     
+    @Column
+    private Integer groupNumber;
+    
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Game nextGame;
 
@@ -101,6 +104,14 @@ public class Game extends CustomerEntity{
 
     public void setRound(Integer round) {
         this.round = round;
+    }
+
+    public Integer getGroupNumber() {
+        return groupNumber;
+    }
+
+    public void setGroupNumber(Integer groupNumber) {
+        this.groupNumber = groupNumber;
     }
 
     public Game getNextGame() {

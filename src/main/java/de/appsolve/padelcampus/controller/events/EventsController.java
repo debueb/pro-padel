@@ -12,12 +12,15 @@ import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.utils.EventsUtil;
+import de.appsolve.padelcampus.utils.GameUtil;
 import java.util.List;
 import java.util.SortedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -34,6 +37,9 @@ public class EventsController extends BaseController{
     
     @Autowired
     EventsUtil eventsUtil;
+    
+    @Autowired
+    GameUtil gameUtil;
     
     @RequestMapping()
     public ModelAndView getAll(@RequestParam(value="eventType", required = false) EventType eventType){
@@ -63,6 +69,34 @@ public class EventsController extends BaseController{
                 break;
         }
         
+        return mav;
+    }
+    
+    @RequestMapping("{eventId}/groupgames")
+    public ModelAndView getEventGroupGames(@PathVariable("eventId") Long eventId){
+        Event event = eventDAO.findByIdFetchWithGames(eventId);
+        ModelAndView mav = new ModelAndView("events/groupknockout/groupgames", "Model", event);
+        gameUtil.addGameResultMap(mav, event.getGames());
+        return mav;
+    }
+    
+    @RequestMapping(method=GET, value="{eventId}/groupgamesend")
+    public ModelAndView getEventGroupGamesEnd(@PathVariable("eventId") Long eventId){
+        Event event = eventDAO.findById(eventId);
+        ModelAndView mav = new ModelAndView("events/groupknockout/groupgamesend", "Model", event);
+        return mav;
+    }
+    
+    @RequestMapping(method=POST, value="{eventId}/groupgamesend")
+    public ModelAndView saveEventGroupGamesEnd(@PathVariable("eventId") Long eventId){
+        Event event = eventDAO.findById(eventId);
+        return new ModelAndView("redirect:/events/"+eventId+"/knockoutgames");
+    }
+    
+    @RequestMapping("{eventId}/knockoutgames")
+    public ModelAndView getEventKnockoutGames(@PathVariable("eventId") Long eventId){
+        Event event = eventDAO.findById(eventId);
+        ModelAndView mav = new ModelAndView("events/groupknockout/knockoutgames", "Model", event);
         return mav;
     }
 }

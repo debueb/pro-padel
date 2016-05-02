@@ -14,6 +14,7 @@ public enum ModuleType {
     Events,
     EventsSingleRoundRobin,
     EventsKnockout,
+    EventsGroupKnockout,
     Ranking,
     Bookings,
     MatchOffers,

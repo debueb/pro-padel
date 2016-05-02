@@ -1,5 +1,4 @@
 <%@include file="/jsp/include/include.jsp"%>
-<fmt:message key="AllGames" var="msg"/>
 <div class="list-item-text">
     <div class="text">
         <c:forEach var="Participant" items="${Game.participants}" varStatus="status">

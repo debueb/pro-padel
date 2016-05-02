@@ -23,13 +23,16 @@
                         <div class="explanation">${EventName}</div>
                     </div>
                     
-                    
-                    <spf:select path="eventType" class="select-simple form-control" data-style="form-center-element" data-container="body">
-                        <spf:options items="${EventTypes}"/>
+                    <spf:select path="gender" class="select-simple form-control" data-style="form-center-element" data-container="body">
+                        <c:forEach var="Gender" items="${Genders}">
+                            <spf:option value="${Gender}"><fmt:message key="${Gender}"/></spf:option>
+                        </c:forEach>
                     </spf:select>
                     
-                    <spf:select path="gender" class="select-simple form-control" data-style="form-center-element" data-container="body">
-                        <spf:options items="${Genders}"/>
+                    <spf:select path="eventType" class="select-simple form-control" data-style="form-center-element" data-container="body">
+                        <c:forEach var="EventType" items="${EventTypes}">
+                            <spf:option value="${EventType}"><fmt:message key="${EventType}"/></spf:option>
+                        </c:forEach>
                     </spf:select>
                     
                     <div class="relative">
@@ -38,7 +41,6 @@
                         <div class="explanation">${NumberOfGroups}</div>
                     </div>
                    
-
                     <div class="datepicker-container">
                         <div class="datepicker-text-container form-center-element">
                             <div class="datepicker-label"><fmt:message key="Start"/></div>
@@ -57,6 +59,12 @@
                         </div>
                         <spf:input type="hidden" path="endDate" class="datepicker-input form-control" value="${Model.endDate}"/>
                         <div class="datepicker" data-show-on-init="false" data-allow-past="true"></div>
+                    </div>
+                        
+                    <div class="relative">
+                        <fmt:message key="LocationDesc" var="LocationDesc"/>
+                        <spf:input path="location" type="text" class="form-control form-center-element" placeholder="${LocationDesc}"/>
+                        <div class="explanation"><fmt:message key="Location"/></div>
                     </div>
 
                     <fmt:message key="Participants" var="Participants"/>

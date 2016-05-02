@@ -18,6 +18,7 @@
                 <th><fmt:message key="Name"/></th>
                 <th><fmt:message key="EventType"/></th>
                 <th><fmt:message key="Participants"/></th>
+                <th><fmt:message key="Active"/></th>
                 <th class="delete"><fmt:message key="Delete"/></th>
                 </thead>
                 <tbody>
@@ -25,7 +26,7 @@
                         <c:set var="url" value="/admin/events/edit/${Event.id}"/>
                         <tr>
                             <td><a class="ajaxify" href="${url}">${Event.name}</a></td>
-                            <td><a class="ajaxify" href="${url}">${Event.eventType}</a></td>
+                            <td><a class="ajaxify" href="${url}"><fmt:message key="${Event.eventType}"/></a></td>
                             <td>
                                 <c:forEach var="Participant" items="${Event.participants}" varStatus="status">
                                     <c:choose>
@@ -39,6 +40,7 @@
                                     <a class="ajaxify" href="${url_participant}">${Participant}</a>${status.last ? "" : ", "}
                                 </c:forEach>
                             </td>
+                            <td class="text-center"><a class="ajaxify" href="${url}"><i class="fa fa-${Event.active ? 'check' : 'close'}"/></a></td>
                             <td class="delete"><a href="/admin/events/${Event.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
                         </tr>
                     </c:forEach>
