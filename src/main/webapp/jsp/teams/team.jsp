@@ -31,7 +31,7 @@
                             <c:forEach var="Event" items="${Events}">
                                 <jsp:include page="/jsp/include/list-badge-item.jsp">
                                     <jsp:param name="msg" value="${Event.name}"/>
-                                    <jsp:param name="url" value="/events/${Event.id}"/>
+                                    <jsp:param name="url" value="/events/event/${Event.id}"/>
                                 </jsp:include>
                             </c:forEach>
                         </div>

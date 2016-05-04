@@ -13,7 +13,7 @@
         <div class="list-group">
             <c:forEach var="Event" items="${Models}">
                 <jsp:include page="/jsp/include/list-group-item.jsp">
-                    <jsp:param name="href" value="/events/${Event.id}"/>
+                    <jsp:param name="href" value="/events/event/${Event.id}"/>
                     <jsp:param name="title" value="${Event.name}"/>
                 </jsp:include>
             </c:forEach>

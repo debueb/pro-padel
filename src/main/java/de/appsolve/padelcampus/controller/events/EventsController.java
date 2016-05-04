@@ -10,8 +10,10 @@ import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
+import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
+import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import de.appsolve.padelcampus.utils.GameUtil;
@@ -46,6 +48,9 @@ public class EventsController extends BaseController{
     private static final Integer NUMBER_OF_PARTICIPANTS_TO_PROCEED_TO_KNOCKOUT_GAMES = 2;
     
     @Autowired
+    ModuleDAOI moduleDAO;
+    
+    @Autowired
     EventDAOI eventDAO;
     
     @Autowired
@@ -57,21 +62,24 @@ public class EventsController extends BaseController{
     @Autowired
     RankingUtil rankingUtil;
     
-    @RequestMapping()
-    public ModelAndView getAll(@RequestParam(value="eventType", required = false) EventType eventType){
-        List<Event> events;
-        if (eventType == null){
-            events = eventDAO.findAllActive();
-        } else {
-            events = eventDAO.findAllActiveWithEventType(eventType);
+    @RequestMapping("{moduleTitle}")
+    public ModelAndView getEvent(@PathVariable("moduleTitle") String moduleTitle){
+        Module module = moduleDAO.findByTitle(moduleTitle);
+        List<Event> events = eventDAO.findAll();
+        Iterator<Event> iterator = events.iterator();
+        while (iterator.hasNext()){
+            Event event = iterator.next();
+            if (!module.getEventTypes().contains(event.getEventType())){
+                iterator.remove();
+            }
         }
         if (events.size()==1){
-            return new ModelAndView("redirect:/events/"+events.get(0).getId());
+            return new ModelAndView("redirect:/events/event/"+events.get(0).getId());
         }
         return new ModelAndView("events/index", "Models", events);
     }
     
-    @RequestMapping("{eventId}")
+    @RequestMapping("event/{eventId}")
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findById(eventId);
         String eventType = event.getEventType().toString().toLowerCase();
@@ -88,7 +96,7 @@ public class EventsController extends BaseController{
         return mav;
     }
     
-    @RequestMapping("{eventId}/groupgames")
+    @RequestMapping("event/{eventId}/groupgames")
     public ModelAndView getEventGroupGames(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithGames(eventId);
         ModelAndView mav = new ModelAndView("events/groupknockout/groupgames", "Model", event);
@@ -104,13 +112,13 @@ public class EventsController extends BaseController{
         return mav;
     }
     
-    @RequestMapping(method=GET, value="{eventId}/groupgamesend")
+    @RequestMapping(method=GET, value="event/{eventId}/groupgamesend")
     public ModelAndView getEventGroupGamesEnd(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findById(eventId);
         return getGroupGamesEndView(event);
     }
     
-    @RequestMapping(method=POST, value="{eventId}/groupgamesend")
+    @RequestMapping(method=POST, value="event/{eventId}/groupgamesend")
     public ModelAndView saveEventGroupGamesEnd(@PathVariable("eventId") Long eventId, @ModelAttribute("Model") Event dummy, BindingResult result){
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
         
@@ -173,10 +181,10 @@ public class EventsController extends BaseController{
         
         eventsUtil.createKnockoutGames(event, rankedParticipants);
         
-        return new ModelAndView("redirect:/events/"+eventId+"/knockoutgames");
+        return new ModelAndView("redirect:/events/event/"+eventId+"/knockoutgames");
     }
     
-    @RequestMapping("{eventId}/knockoutgames")
+    @RequestMapping("event/{eventId}/knockoutgames")
     public ModelAndView getEventKnockoutGames(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithGames(eventId);
         ModelAndView mav = new ModelAndView("events/knockout", "Model", event);

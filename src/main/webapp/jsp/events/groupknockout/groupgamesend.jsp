@@ -17,7 +17,7 @@
                         <fmt:message key="ConfirmGroupPhaseEnd"><fmt:param value="${Model.name}"/></fmt:message>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block"><fmt:message key="Confirm"/></button>
-                    <a class="btn btn-primary btn-block" href="${contextPath}/events/${Model.id}"><fmt:message key="Cancel"/></a>
+                    <a class="btn btn-primary btn-block" href="${contextPath}/events/event/${Model.id}"><fmt:message key="Cancel"/></a>
                 </spf:form>
             </div>
         </div>

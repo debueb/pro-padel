@@ -445,6 +445,32 @@ app.main = {};
             });  
         });
     };
+    
+    self.enableSelectToggle = function () {
+        
+        var showSelect = function(){
+            //hide all select-toggle- elements
+            $(document).find("[class^='select-toggle-']").hide();
+            
+            var selectedValues = [];
+            $(document).find('select.select-toggle').each(function(){
+                selectedValues.push($(this).val());
+            });
+            
+            for (var i=0; i<selectedValues.length; i++){
+                $(document).find('[class~="select-toggle-' + selectedValues[i] + '"]').fadeIn();
+            }
+        };
+        
+        $('select.select-toggle').livequery(function(){
+            showSelect.apply(this);
+            
+            $('select.select-toggle').on('change', function () {
+                showSelect.apply(this);
+            });
+        });
+    };
+    
     return app;
 }).apply(app.main);
 
@@ -465,5 +491,6 @@ $(document).ready(function () {
     app.main.enablePayMill();
     app.main.enableAdvancedProfile();
     app.main.enableGalleryAutoPlay();
+    app.main.enableSelectToggle();
     
 });

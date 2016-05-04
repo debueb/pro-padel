@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.admin.controller.general;
 
+import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
@@ -16,10 +17,7 @@ import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATT
 import de.appsolve.padelcampus.utils.ModuleUtil;
 import java.io.IOException;
 import java.util.List;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,8 +37,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller()
 @RequestMapping("/admin/general/modules")
 public class AdminGeneralModulesController extends AdminSortableController<Module> {
-    
-    private static final Logger log = Logger.getLogger(AdminGeneralModulesController.class);
     
     @Autowired
     ModuleDAOI moduleDAO;
@@ -67,6 +63,7 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
     protected ModelAndView getEditView(Module model){
         ModelAndView mav = super.getEditView(model);
         mav.addObject("ModuleTypes", ModuleType.values());
+        mav.addObject("EventTypes", EventType.values());
         try {
             String fileContents = FileUtil.getFileContents("font-awesome-icon-names.txt");
             String[] iconNames = fileContents.split("\n");

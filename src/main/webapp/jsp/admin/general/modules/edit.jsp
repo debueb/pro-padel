@@ -17,18 +17,32 @@
                     <spf:input type="hidden" path="position"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
 
-                    <spf:select path="moduleType" type="text" class="form-control form-top-element select-simple" data-container="body">
-                        <c:forEach var="ModuleType" items="${ModuleTypes}">
-                            <spf:option value="${ModuleType}"><fmt:message key="${ModuleType}"/></spf:option>
-                        </c:forEach>
-                    </spf:select>
-                    <spf:select path="iconName" type="text" class="form-control form-center-element select-simple" data-live-search="true" data-container="body">
+                    <fmt:message var="Title" key="Title"/>
+                    <spf:input path="title" type="text" class="form-control form-top-element" placeholder="${Title}"/>
+                    <div class="relative">
+                        <spf:select path="moduleType" type="text" class="form-control form-center-element select-simple select-toggle" data-container="body">
+                            <c:forEach var="ModuleType" items="${ModuleTypes}">
+                                <spf:option value="${ModuleType}"><fmt:message key="${ModuleType}"/></spf:option>
+                            </c:forEach>
+                        </spf:select>
+                        <div class="explanation-select"><fmt:message key="Type"/></div>
+                    </div>
+                    
+                    <div class="select-toggle-Events relative">
+                        <spf:select path="eventTypes" type="text" class="form-control form-center-element select-multiple" multiple="multiple" data-container="body">
+                            <c:forEach var="EventType" items="${EventTypes}">
+                                <spf:option value="${EventType}"><fmt:message key="${EventType}"/></spf:option>
+                            </c:forEach>
+                        </spf:select>
+                        <div class="explanation-select"><fmt:message key="EventType"/></div>
+                    </div>
+                    
+                    <spf:select path="iconName" type="text" class="form-control form-bottom-element select-simple" data-live-search="true" data-container="body">
                         <c:forEach var="IconName" items="${FontAwesomeIconNames}">
                             <spf:option data-icon="fa-${IconName}" value="${IconName}">${IconName}</spf:option>
                         </c:forEach>
                     </spf:select>
-                    <fmt:message var="Title" key="Title"/>
-                    <spf:input path="title" type="text" class="form-control form-bottom-element" placeholder="${Title}"/>
+                    
                     <div>
                         <spf:checkbox path="showInMenu" />
                         <label class="checkbox" for="showInMenu1"><fmt:message key="ShowInMenu"/></label>

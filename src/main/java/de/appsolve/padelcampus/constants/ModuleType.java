@@ -12,9 +12,6 @@ package de.appsolve.padelcampus.constants;
 public enum ModuleType {
     
     Events,
-    EventsSingleRoundRobin,
-    EventsKnockout,
-    EventsGroupKnockout,
     Ranking,
     Bookings,
     MatchOffers,

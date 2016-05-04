@@ -18,7 +18,7 @@
                     <div class="list-group">
                         <c:forEach var="Game" items="${GameList}">
                             <c:set var="Game" value="${Game}" scope="request"/>
-                            <a href="/games/game/${Game.id}/edit?redirectUrl=events/${Model.id}/groupgames" class="list-group-item ajaxify">
+                            <a href="/games/game/${Game.id}/edit?redirectUrl=events/event/${Model.id}/groupgames" class="list-group-item ajaxify">
                                 <jsp:include page="/jsp/games/game-result.jsp"/>
                             </a>
                         </c:forEach>
@@ -29,12 +29,12 @@
         
         <c:choose>
             <c:when test="${empty RoundGameMap}">
-                <a class="btn btn-primary btn-block unit" href="/events/${Model.id}/groupgamesend"><fmt:message key="EndGroupGames"/></a>
+                <a class="btn btn-primary btn-block unit" href="/events/event/${Model.id}/groupgamesend"><fmt:message key="EndGroupGames"/></a>
             </c:when>
             <c:otherwise>
                 <div class="list-group">
                     <jsp:include page="/jsp/include/list-group-item.jsp">
-                        <jsp:param name="href" value="/events/${Model.id}/knockoutgames"/>
+                        <jsp:param name="href" value="/events/event/${Model.id}/knockoutgames"/>
                         <jsp:param name="key" value="KnockoutGames"/>
                         <jsp:param name="icon" value="list-ol"/>
                     </jsp:include>

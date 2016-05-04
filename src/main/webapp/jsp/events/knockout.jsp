@@ -19,7 +19,7 @@
                 <c:forEach var="Game" items="${RoundGameMapEntry.value}">
 
                     <article class="game">
-                        <c:if test="${fn:length(Game.participants) == 2}"><a class="ajaxify" href="${contextPath}/games/game/${Game.id}/edit?redirectUrl=events/${Model.id}${Model.eventType == 'GroupKnockout' ? '/knockoutgames' : ''}"></c:if>
+                        <c:if test="${fn:length(Game.participants) == 2}"><a class="ajaxify" href="${contextPath}/games/game/${Game.id}/edit?redirectUrl=events/event/${Model.id}${Model.eventType == 'GroupKnockout' ? '/knockoutgames' : ''}"></c:if>
                             <c:forEach var="Participant" items="${Game.participants}">
                                 <div class="team team-${Participant.id}" data-team="${Participant.id}">
                                         <span class="team-name">${Participant}</span>
@@ -72,7 +72,7 @@
             
         <div class="list-group">
             <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/events/${Model.id}/groupgames"/>
+                <jsp:param name="href" value="/events/event/${Model.id}/groupgames"/>
                 <jsp:param name="key" value="GroupGames"/>
                 <jsp:param name="icon" value="group"/>
             </jsp:include>

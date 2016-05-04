@@ -6,11 +6,17 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.ModuleType;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -42,6 +48,10 @@ public class Module extends SortableEntity{
     
     @Column
     private Boolean showInFooter;
+    
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<EventType> eventTypes;
     
     public ModuleType getModuleType() {
         return moduleType;
@@ -82,18 +92,21 @@ public class Module extends SortableEntity{
     public void setShowInFooter(Boolean showInFooter) {
         this.showInFooter = showInFooter;
     }
+
+    public Set<EventType> getEventTypes() {
+        return eventTypes;
+    }
+
+    public void setEventTypes(Set<EventType> eventTypes) {
+        this.eventTypes = eventTypes;
+    }
     
     public String getUrl(){
         String moduleName = "/" + getModuleType().name().toLowerCase();
         switch (getModuleType()){
             case Page:
+            case Events:
                 return moduleName + "/" + getTitle();
-            case EventsSingleRoundRobin:
-                return "/events?eventType=SingleRoundRobin";
-            case EventsKnockout:
-                return "/events?eventType=Knockout";
-            case EventsGroupKnockout:
-                return "/events?eventType=GroupKnockout";
             default:
                return moduleName;
         }

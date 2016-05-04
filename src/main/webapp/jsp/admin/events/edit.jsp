@@ -43,7 +43,7 @@
                     <c:choose>
                         <c:when test="${empty Model.id}">
                             <div class="relative">
-                                <spf:select path="eventType" class="select-simple form-control" data-style="form-center-element" data-container="body">
+                                <spf:select path="eventType" class="select-simple form-control select-toggle" data-style="form-center-element" data-container="body">
                                     <c:forEach var="EventType" items="${EventTypes}">
                                         <spf:option value="${EventType}"><fmt:message key="${EventType}"/></spf:option>
                                     </c:forEach>
@@ -56,7 +56,7 @@
                         </c:otherwise>
                     </c:choose>
                     
-                    <div class="relative">
+                    <div class="select-toggle-GroupKnockout relative">
                         <fmt:message key="NumberOfGroups" var="NumberOfGroups"/>
                         <spf:input path="numberOfGroups" type="number" class="form-control form-center-element" placeholder="${NumberOfGroups}"/>
                         <div class="explanation-select">${NumberOfGroups}</div>

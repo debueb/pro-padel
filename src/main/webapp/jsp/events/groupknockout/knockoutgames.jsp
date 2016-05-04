@@ -12,7 +12,7 @@
                 <div class="alert alert-info unit">
                     <fmt:message key="GroupPhaseNotYetEnded"/>
                 </div>
-                <a class="btn btn-primary btn-block unit" href="/events/${Model.id}/groupgamesend"><fmt:message key="EndGroupGames"/></a>
+                <a class="btn btn-primary btn-block unit" href="/events/event/${Model.id}/groupgamesend"><fmt:message key="EndGroupGames"/></a>
             </div>
         </div>
     </div>
