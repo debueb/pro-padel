@@ -1210,7 +1210,7 @@ a:focus {
 }
 .round .game a .team .team-score {
   font-weight: 600;
-  flex: 0 1 42px;
+  flex: 0 1 48px;
   padding-right: 10px;
   text-align: right;
 }
