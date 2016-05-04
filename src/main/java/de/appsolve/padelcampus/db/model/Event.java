@@ -69,6 +69,9 @@ public class Event extends ComparableEntity{
     
     @Column
     private String location;
+    
+    @Column(length=8000)
+    private String description;
 
     public String getName() {
         return name;
@@ -148,6 +151,14 @@ public class Event extends ComparableEntity{
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
     
     public Set<Team> getTeams(){

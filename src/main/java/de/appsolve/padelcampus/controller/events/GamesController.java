@@ -168,7 +168,7 @@ public class GamesController extends BaseController{
             //determine winner
             Participant winner = null;
             for (Participant p: game.getParticipants()){
-                ScoreEntry score = rankingUtil.getScore(p, Arrays.asList(new Game[]{game}), game.getGameSets());
+                ScoreEntry score = rankingUtil.getScore(p, Arrays.asList(new Game[]{game}));
                 if (score.getMatchesWon() == 1){
                     winner = p;
                     break;
@@ -229,8 +229,8 @@ public class GamesController extends BaseController{
 
     @RequestMapping("/team/{teamId}/event/{eventId}")
     public ModelAndView getTeamGamesByEvent(@PathVariable("teamId") Long teamId, @PathVariable("eventId") Long eventId){
-        Team team = teamDAO.findById(teamId);
         Event event = eventDAO.findById(eventId);
+        Team team = teamDAO.findById(teamId);
         List<Game> games = gameDAO.findByParticipantAndEvent(team, event);
         ModelAndView mav = new ModelAndView("games/games", "Games", games);
         String title = msg.get("AllGamesWithTeamInEvent", new Object[]{team.getName(), event.getName()});
@@ -264,7 +264,11 @@ public class GamesController extends BaseController{
     }
 
     private ModelAndView getLoginView(HttpServletRequest request) {
-        sessionUtil.setLoginRedirectPath(request, request.getRequestURL().toString());
+        String redirectPath = request.getParameter("redirectUrl");
+        if (redirectPath == null){
+            redirectPath = request.getRequestURL().toString();
+        }
+        sessionUtil.setLoginRedirectPath(request, redirectPath);
         return new ModelAndView("redirect:/login");
     }
 }

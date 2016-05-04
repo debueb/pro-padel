@@ -239,13 +239,16 @@ app.main = {};
     self.enableSelectPicker = function () {
         var selector = '.select-simple, .select-multiple';
         $(selector).livequery(function(){
-            $(this).selectpicker({
+            var options = {
                 iconBase: 'fa',
                 tickIcon: 'fa-check',
                 dropupAuto: false,
-                selectedTextFormat: 'count > 2',
                 countSelectedText: '{0}'
-            });
+            };
+            if (!!$(this).attr('data-selected-text-format')){
+                options.selectedTextFormat = 'count > 2';
+            }
+            $(this).selectpicker(options);
         });
     };
 

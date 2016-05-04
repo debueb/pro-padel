@@ -11,12 +11,14 @@
                 <h4><fmt:message key="EndGroupGames"/></h4>
             </div>
             <div class="panel-body">
-                <div class="alert alert-warning unit">
-                    <fmt:message key="ConfirmGroupPhaseEnd"><fmt:param value="${Model.name}"/></fmt:message>
-                </div>
-                <form method="POST">
+                <spf:form method="POST" modelAttribute="Model">
+                    <div class="alert alert-danger"><spf:errors path="*"/></div>
+                    <div class="alert alert-warning unit">
+                        <fmt:message key="ConfirmGroupPhaseEnd"><fmt:param value="${Model.name}"/></fmt:message>
+                    </div>
                     <button type="submit" class="btn btn-primary btn-block"><fmt:message key="Confirm"/></button>
-                </form>
+                    <a class="btn btn-primary btn-block" href="${contextPath}/events/${Model.id}"><fmt:message key="Cancel"/></a>
+                </spf:form>
             </div>
         </div>
         

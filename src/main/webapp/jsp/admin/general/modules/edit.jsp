@@ -18,7 +18,9 @@
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
 
                     <spf:select path="moduleType" type="text" class="form-control form-top-element select-simple" data-container="body">
-                        <spf:options items="${ModuleTypes}" />
+                        <c:forEach var="ModuleType" items="${ModuleTypes}">
+                            <spf:option value="${ModuleType}"><fmt:message key="${ModuleType}"/></spf:option>
+                        </c:forEach>
                     </spf:select>
                     <spf:select path="iconName" type="text" class="form-control form-center-element select-simple" data-live-search="true" data-container="body">
                         <c:forEach var="IconName" items="${FontAwesomeIconNames}">

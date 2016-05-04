@@ -66,9 +66,9 @@ $(document).ready(function () {
             }
         });
     });
-    $('#news-form').livequery(function(){
+    $('.summernote-form').livequery(function(){
         $(this).on('submit', function () {
-            $("#message").val($('#summernote').code());
+            $("#summernote-input").val($('#summernote').code());
         });
     });
 });

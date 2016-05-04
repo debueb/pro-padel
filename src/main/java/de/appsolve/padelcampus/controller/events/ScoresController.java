@@ -60,14 +60,7 @@ public class ScoresController extends BaseController{
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipants(eventId);
         List<Game> eventGames = gameDAO.findByEvent(event);
-        List<GameSet> eventGameSets = gameSetDAO.findByEvent(event);
-        List<ScoreEntry> scoreEntries = new ArrayList<>();
-        for (Participant participant: event.getParticipants()){
-            
-            ScoreEntry scoreEntry = rankingUtil.getScore(participant, eventGames, eventGameSets);
-            scoreEntries.add(scoreEntry);
-        }
-        Collections.sort(scoreEntries);
+        List<ScoreEntry> scoreEntries = rankingUtil.getScores(event.getParticipants(), eventGames);
         
         ModelAndView mav = new ModelAndView("scores/event", "Event", event);
         mav.addObject("ScoreEntries", scoreEntries);

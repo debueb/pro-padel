@@ -30,7 +30,7 @@
                             <td>
                                 <c:forEach var="Participant" items="${Event.participants}" varStatus="status">
                                     <c:choose>
-                                        <c:when test="${Participant.discriminatorValue == 'player'}">
+                                        <c:when test="${Participant.discriminatorValue == 'Player'}">
                                             <c:set var="url_participant" value="/admin/players/edit/${Participant.id}"/>
                                         </c:when>
                                         <c:otherwise>

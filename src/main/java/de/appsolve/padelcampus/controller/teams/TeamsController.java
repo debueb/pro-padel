@@ -18,13 +18,11 @@ import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.utils.Msg;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,18 +100,14 @@ public class TeamsController extends BaseController{
     private ModelAndView getTeamView(Team team) {
         ModelAndView mav = new ModelAndView("teams/team", "Team", team);
         List<Game> games = gameDAO.findByParticipant(team);
-        Map<Event, ArrayList<Game>> eventGameMap = new HashMap<>();
+        Set<Event> events = new TreeSet<>();
         for (Game game: games){
             Event event = game.getEvent();
             if (event.getActive()){
-                if (eventGameMap.containsKey(event)){
-                    eventGameMap.get(event).add(game);
-                } else {
-                    eventGameMap.put(event, new ArrayList<>(Arrays.asList(new Game[]{game})));
-                }
+                events.add(event);
             }
         }
-        mav.addObject("EventGameMap", eventGameMap);
+        mav.addObject("Events", events);
         return mav;
     }
 

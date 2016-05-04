@@ -5,25 +5,42 @@
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <div class="page-header"></div>
         
-        <div class="panel panel-info unit">
-            
-            <div class="panel-heading">
-                <h4><fmt:message key="Group"/> 1</h4>
-            </div>
-            <div class="panel-body">
-                <div class="list-group">
-                    <c:forEach var="Game" items="${Model.games}">
-                        <c:set var="Game" value="${Game}" scope="request"/>
-                        <a href="/games/game/${Game.id}/edit?redirectUrl=events/${Model.id}/groupgames" class="list-group-item ajaxify">
-                            <jsp:include page="/jsp/games/game-result.jsp"/>
-                        </a>
-                    </c:forEach>
+        <jsp:include page="/jsp/events/include/info.jsp"/>
+        
+        <c:forEach var="GroupMapEntry" items="${GroupGameMap}">
+            <c:set var="GroupNumber" value="${GroupMapEntry.key}"/>
+            <c:set var="GameList" value="${GroupMapEntry.value}"/>
+            <div class="panel panel-info unit">
+                <div class="panel-heading">
+                    <h4><fmt:message key="Group"/> ${GroupNumber+1}</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="list-group">
+                        <c:forEach var="Game" items="${GameList}">
+                            <c:set var="Game" value="${Game}" scope="request"/>
+                            <a href="/games/game/${Game.id}/edit?redirectUrl=events/${Model.id}/groupgames" class="list-group-item ajaxify">
+                                <jsp:include page="/jsp/games/game-result.jsp"/>
+                            </a>
+                        </c:forEach>
+                    </div>
                 </div>
             </div>
-        </div>
-            
-            
-        <a class="btn btn-primary btn-block unit" href="/events/${Model.id}/groupgamesend"><fmt:message key="EndGroupGames"/></a>
+        </c:forEach>
+        
+        <c:choose>
+            <c:when test="${empty RoundGameMap}">
+                <a class="btn btn-primary btn-block unit" href="/events/${Model.id}/groupgamesend"><fmt:message key="EndGroupGames"/></a>
+            </c:when>
+            <c:otherwise>
+                <div class="list-group">
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/events/${Model.id}/knockoutgames"/>
+                        <jsp:param name="key" value="KnockoutGames"/>
+                        <jsp:param name="icon" value="list-ol"/>
+                    </jsp:include>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
 

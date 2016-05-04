@@ -18,7 +18,7 @@
                 <fmt:message key="Category"/>:
             </div>
             <div class="col-xs-8">
-                <fmt:message key="${Model.gender}"/>
+                <fmt:message key="Mode_${Model.gender}"/>
             </div>
             <div class="col-xs-4 text-right">
                 <fmt:message key="Mode"/>:
@@ -32,6 +32,14 @@
                 </div>
                 <div class="col-xs-8">
                     <a href="https://www.google.com/maps/search/${Model.location}" target="blank">${Model.location}</a>
+                </div>
+            </c:if>
+                <c:if test="${not empty Model.description and Model.description ne '<p><br></p>'}">
+                <div class="col-xs-4 text-right">
+                    <fmt:message key="Description"/>:
+                </div>
+                <div class="col-xs-8">
+                    ${Model.description}
                 </div>
             </c:if>
         </div>

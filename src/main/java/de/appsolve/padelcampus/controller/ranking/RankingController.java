@@ -43,16 +43,16 @@ public class RankingController extends BaseController {
     }
     
     @RequestMapping("{gender}/{category}")
-    public ModelAndView getTeamRanking(@PathVariable("gender") Gender gender, @PathVariable("category") String category){
+    public ModelAndView getRanking(@PathVariable("gender") Gender gender, @PathVariable("category") String category){
         ModelAndView mav = new ModelAndView("ranking/ranking");
+        mav.addObject("gender", gender);
+        mav.addObject("category", category);
         SortedMap<? extends Participant, BigDecimal> rankings = null;
         switch (category){
             case "singles":
-                mav.addObject("detailUrl", "players/player");
                 rankings = rankingUtil.getRanking(gender);
                 break;
             case "doubles":
-                mav.addObject("detailUrl", "teams/team");
                 List<Team> allTeams = teamDAO.findAllFetchWithPlayers();
                 Iterator<Team> teams = allTeams.iterator();
                 while (teams.hasNext()){

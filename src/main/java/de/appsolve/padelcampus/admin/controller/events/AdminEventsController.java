@@ -9,6 +9,7 @@ package de.appsolve.padelcampus.admin.controller.events;
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
+import de.appsolve.padelcampus.data.EventGroups;
 import de.appsolve.padelcampus.data.GameData;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
@@ -25,16 +26,18 @@ import de.appsolve.padelcampus.utils.EventsUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
@@ -85,7 +88,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
     
-        binder.registerCustomEditor(Set.class, "participants", new CustomCollectionEditor(Set.class) {
+        binder.registerCustomEditor(Set.class, new CustomCollectionEditor(Set.class) {
             @Override
             protected Object convertElement(Object element) {
                 Long id = Long.parseLong((String) element);
@@ -126,7 +129,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
         }
         model = getDAO().saveOrUpdate(model);
         
-        
         //generate games
         List<Game> eventGames = gameDAO.findByEvent(model);
         switch (model.getEventType()){
@@ -135,47 +137,12 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 //remove games that have not been played yet
                 removeGamesWithoutGameSets(eventGames);
                 
+                createMissingGames(model, eventGames, model.getParticipants(), null);
                 
-                for (Participant firstParticipant: model.getParticipants()){
-                    for (Participant secondParticipant: model.getParticipants()){
-                        if (!firstParticipant.equals(secondParticipant)){
-                            boolean gameExists = false;
-                            for (Game game: eventGames){
-                                if (game.getParticipants().contains(firstParticipant) && game.getParticipants().contains(secondParticipant)){
-                                    gameExists = true;
-                                    break;
-                                }
-                            }
-                            if (!gameExists){
-                                Game game = new Game();
-                                game.setEvent(model);
-                                Set<Participant> gameParticipants = new LinkedHashSet<>();
-                                gameParticipants.add(firstParticipant);
-                                gameParticipants.add(secondParticipant);
-                                game.setParticipants(gameParticipants);
-                                gameDAO.saveOrUpdate(game);
-                                eventGames.add(game);
-                            }
-                        }
-                    }
-                }
                 break;
                 
             case GroupKnockout:
-                //remove games that have not been played yet
-                removeGamesWithoutGameSets(eventGames);
-                
-                Integer maxNumberOfParticipantsPerGrp = new BigDecimal(model.getParticipants().size()).divide(new BigDecimal(model.getNumberOfGroups())).setScale(0, RoundingMode.UP).intValue();
-                ArrayList<Participant> rankedParticipants =  getRankedParticipants(model);
-                
-                //fill up empty spots with bye's
-                int maxParticipants = maxNumberOfParticipantsPerGrp*model.getNumberOfGroups();
-                for (int i=maxParticipants; i>model.getParticipants().size() ; i--){
-                    rankedParticipants.add(i-1, null);
-                }
-                
-                //ToDo: determine seed positions
-                break;
+                return redirectToGroupDraws(model);
             case Knockout:
                 //check min number of participants
                 if (model.getParticipants().size()<3){
@@ -208,71 +175,8 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 //determine ranking
                 ArrayList<Participant> participants =  getRankedParticipants(model);
                 
-                //determine seed positions
-                List<Integer> seedingPositions = getSeedPositions(participants);
+                eventsUtil.createKnockoutGames(model, participants);
                 
-                
-                //fill up empty spots with bye's
-                for (int i=model.getParticipants().size(); i< numGamesPerRound*2; i++){
-                    participants.add(null);
-                }
-                
-                //create games
-                int round=0;
-                SortedMap<Integer, List<Game>> roundGames = new TreeMap<>();
-                while (numGamesPerRound>=1){
-                    List<Game> games = new ArrayList<>();
-                    for (int i=0; i<numGamesPerRound; i++){
-                        Game game = new Game();
-                        game.setEvent(model);
-                        game.setRound(round);
-                        game = gameDAO.saveOrUpdate(game);
-                        
-                        if (round==0){
-                            //set participants
-                            Set<Participant> gameParticipants = new HashSet<>();
-                            addParticipants(gameParticipants, participants.get(seedingPositions.get(i*2)));
-                            addParticipants(gameParticipants, participants.get(seedingPositions.get(i*2+1)));
-                            game.setParticipants(gameParticipants);
-                        } else {
-                            //set game chain
-                            List<Game> previousRoundGames = roundGames.get(round-1);
-                            Game first = previousRoundGames.get(i*2);
-                            Game second = previousRoundGames.get(i*2+1);
-                            first.setNextGame(game);
-                            second.setNextGame(game);
-                            gameDAO.saveOrUpdate(first);
-                            gameDAO.saveOrUpdate(second);
-                            
-                            
-                            if (round==1){
-                                //advance seeds that have bye's
-                                if (first.getParticipants().size()==1){
-                                    game.setParticipants(new HashSet<>(first.getParticipants()));
-                                }
-                                if (second.getParticipants().size()==1){
-                                    Set<Participant> existingParticipants = game.getParticipants();
-                                    if (existingParticipants == null){
-                                        existingParticipants = new HashSet<>();
-                                    }
-                                    existingParticipants.addAll(new HashSet<>(second.getParticipants()));
-                                    game.setParticipants(existingParticipants);
-                                }
-                            }
-                            
-                        }
-                        
-                        if (numGamesPerRound == 1){
-                            //TODO: when we are in the final, check if we also play for third place
-                        }
-                        
-                        game = gameDAO.saveOrUpdate(game);
-                        games.add(game);
-                    }
-                    roundGames.put(round, games);
-                    numGamesPerRound = numGamesPerRound/2;
-                    round++;
-                }
                 return redirectToDraws(model);
             default:
                 result.addError(new ObjectError("id", "Unsupported event type "+model.getEventType()));
@@ -324,6 +228,52 @@ public class AdminEventsController extends AdminBaseController<Event>{
         return new ModelAndView("redirect:/admin/events/edit/"+eventId+"/draws");
     }
     
+    @RequestMapping(value={"edit/{eventId}/groupdraws"}, method=GET)
+    public ModelAndView getGroupDraws(@PathVariable("eventId") Long eventId){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        
+        return getGroupDrawsView(event, getDefaultEventGroups(event));
+    }
+    
+    @RequestMapping(value={"edit/{eventId}/groupdraws"}, method=POST)
+    public ModelAndView postGroupDraws(@PathVariable("eventId") Long eventId, @ModelAttribute("Model") @Valid EventGroups eventGroups, BindingResult bindingResult, HttpServletRequest request){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        Iterator<Map.Entry<Integer, Set<Participant>>> iterator = eventGroups.getGroupParticipants().entrySet().iterator();
+        while(iterator.hasNext()){
+            Map.Entry<Integer, Set<Participant>> entry = iterator.next();
+            if (entry.getValue() == null){
+                bindingResult.reject("PleaseSelectParticipantsForEachGroup");
+            }
+        }
+        
+        if (bindingResult.hasErrors()){
+            return getGroupDrawsView(event, eventGroups);
+        }
+        
+        //remove games that have not been played yet
+        removeGamesWithoutGameSets(event.getGames());
+        
+        //remove games with teams that are no longer part of a group
+        Iterator<Game> gameIterator = event.getGames().iterator();
+        while (gameIterator.hasNext()){
+            Game game = gameIterator.next();
+            Integer groupNumber = game.getGroupNumber();
+            Set<Participant> groupParticipants = eventGroups.getGroupParticipants().get(groupNumber);
+            if (!groupParticipants.containsAll(game.getParticipants())){
+                gameIterator.remove();
+                gameDAO.deleteById(eventId);
+            }
+        }
+                
+        //create missing games
+        for (int groupNumber=0; groupNumber<event.getNumberOfGroups(); groupNumber++){
+            Set<Participant> groupParticipants = eventGroups.getGroupParticipants().get(groupNumber);
+            createMissingGames(event, event.getGames(), groupParticipants, groupNumber);
+        }
+        
+        return redirectToIndex(request);
+    }
+    
     @Override
     protected ModelAndView getDeleteView(Event model) {
         return new ModelAndView("/admin/events/delete", "Model", model);
@@ -334,6 +284,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
     public ModelAndView postDelete(HttpServletRequest request, @PathVariable("id") Long id){
         try {
             Event event = eventDAO.findByIdFetchWithGames(id);
+            for (Game game: event.getGames()){
+                game.getGameSets().clear();
+            }
             event.getGames().clear();
             eventDAO.saveOrUpdate(event);
             
@@ -379,6 +332,13 @@ public class AdminEventsController extends AdminBaseController<Event>{
         return mav;
     }
     
+    private ModelAndView getGroupDrawsView(Event event, EventGroups eventGroups){
+        ModelAndView mav = new ModelAndView("admin/events/groupdraws");
+        mav.addObject("Event", event);
+        mav.addObject("Model", eventGroups);
+        return mav;
+    }
+    
     @Override
     public GenericDAOI<Event> getDAO() {
         return eventDAO;
@@ -397,29 +357,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
     @Override
     public Event findById(Long id){
         return eventDAO.findByIdFetchWithParticipants(id);
-    }
-
-    private void addParticipants(Set<Participant> gameParticipants, Participant p) {
-        if (p != null){
-            gameParticipants.add(p);
-        }
-    }
-
-    private List<Integer> getSeedPositions(List<Participant> participants) {
-        Double numberOfDivisionRuns = Math.log(participants.size()) / Math.log(2)-1;
-        List<Integer> seedingPositions = new ArrayList<>();
-        seedingPositions.add(0);
-        seedingPositions.add(1);
-        for (int divisionRun=0; divisionRun<numberOfDivisionRuns; divisionRun++){
-            int size = seedingPositions.size();
-            List<Integer> newSeeedingPositions = new ArrayList<>();
-            for (Integer position: seedingPositions){
-                newSeeedingPositions.add(position);
-                newSeeedingPositions.add(size*2-1-position);
-            }
-            seedingPositions = newSeeedingPositions;
-        }
-        return seedingPositions;
     }
 
     private ModelAndView redirectToDraws(Event model) {
@@ -442,13 +379,67 @@ public class AdminEventsController extends AdminBaseController<Event>{
         return new ArrayList<>(ranking.keySet());
     }
 
-    private void removeGamesWithoutGameSets(List<Game> eventGames) {
+    private void removeGamesWithoutGameSets(Collection<Game> eventGames) {
         Iterator<Game> eventGameIterator = eventGames.iterator();
         while (eventGameIterator.hasNext()){
             Game game = eventGameIterator.next();
             if (game.getGameSets().isEmpty()){                
                 eventGameIterator.remove();
                 gameDAO.deleteById(game.getId());
+            }
+        }
+    }
+
+    private ModelAndView redirectToGroupDraws(Event model) {
+        return new ModelAndView("redirect:/admin/events/edit/"+model.getId()+"/groupdraws");
+    }
+
+    private EventGroups getDefaultEventGroups(Event event) {
+        //initialize participant map
+        Map<Integer, Set<Participant>> participantMap = new TreeMap<>();
+        for (int i=0; i<event.getNumberOfGroups(); i++){
+            participantMap.put(i, new TreeSet<Participant>());
+        }
+        
+        //fill participant map from existing games if possible
+        for (Game game: event.getGames()){
+            Integer groupNumber = game.getGroupNumber();
+            if (groupNumber != null){
+                Set<Participant> groupParticipants = participantMap.get(groupNumber);
+                groupParticipants.addAll(game.getParticipants());
+                participantMap.put(groupNumber, groupParticipants);
+            }
+        }
+        EventGroups eventGroups = new EventGroups();
+        eventGroups.setGroupParticipants(participantMap);
+        return eventGroups;
+    }
+
+    private void createMissingGames(Event event, Collection<Game> existingGames, Set<Participant> participants, Integer groupNumber) {
+        for (Participant firstParticipant: participants){
+            for (Participant secondParticipant: participants){
+                if (!firstParticipant.equals(secondParticipant)){
+                    boolean gameExists = false;
+                    for (Game game: existingGames){
+                        if (game.getParticipants().contains(firstParticipant) && game.getParticipants().contains(secondParticipant)){
+                            gameExists = true;
+                            break;
+                        }
+                    }
+                    if (!gameExists){
+                        Game game = new Game();
+                        game.setEvent(event);
+                        if (groupNumber != null){
+                            game.setGroupNumber(groupNumber);
+                        }
+                        Set<Participant> gameParticipants = new LinkedHashSet<>();
+                        gameParticipants.add(firstParticipant);
+                        gameParticipants.add(secondParticipant);
+                        game.setParticipants(gameParticipants);
+                        gameDAO.saveOrUpdate(game);
+                        existingGames.add(game);
+                    }
+                }
             }
         }
     }

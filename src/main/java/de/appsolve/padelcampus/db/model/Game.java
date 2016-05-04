@@ -40,7 +40,7 @@ public class Game extends CustomerEntity{
     @OrderBy(value = "name")
     private Set<Participant> participants;
     
-    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<GameSet> gameSets;
     
     @OneToOne(fetch=FetchType.LAZY)

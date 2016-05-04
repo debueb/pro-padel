@@ -24,17 +24,14 @@
                 </div>
 
                 <hr>
-                <h4><fmt:message key="Games"/></h4>
+                <h4><fmt:message key="EventParticipations"/></h4>
                 <c:choose>
-                    <c:when test="${not empty EventGameMap}">
+                    <c:when test="${not empty Events}">
                         <div class="list-group">
-                            <c:forEach var="EventGameMapEntry" items="${EventGameMap}">
-                                <c:set var="Event" value="${EventGameMapEntry.key}"/>
-                                <fmt:message key="AllGamesWithTeamInEvent" var="msg"><fmt:param value="${Team}"/><fmt:param value="${Event.name}"/></fmt:message>
+                            <c:forEach var="Event" items="${Events}">
                                 <jsp:include page="/jsp/include/list-badge-item.jsp">
-                                    <jsp:param name="msg" value="${msg}"/>
-                                    <jsp:param name="url" value="/games/team/${Team.id}/event/${Event.id}"/>
-                                    <jsp:param name="badge" value="${fn:length(EventGameMapEntry.value)}"/>
+                                    <jsp:param name="msg" value="${Event.name}"/>
+                                    <jsp:param name="url" value="/events/${Event.id}"/>
                                 </jsp:include>
                             </c:forEach>
                         </div>

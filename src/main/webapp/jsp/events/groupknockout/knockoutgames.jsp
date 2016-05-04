@@ -4,9 +4,7 @@
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <div class="page-header"></div>
-
         <div class="panel panel-info">
-            
             <div class="panel-heading">
                 <h4><fmt:message key="KnockoutGames"/></h4>
             </div>
@@ -17,8 +15,6 @@
                 <a class="btn btn-primary btn-block unit" href="/events/${Model.id}/groupgamesend"><fmt:message key="EndGroupGames"/></a>
             </div>
         </div>
-        
-        
     </div>
 </div>
 

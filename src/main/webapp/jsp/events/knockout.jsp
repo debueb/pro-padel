@@ -19,7 +19,7 @@
                 <c:forEach var="Game" items="${RoundGameMapEntry.value}">
 
                     <article class="game">
-                        <c:if test="${fn:length(Game.participants) == 2}"><a class="ajaxify" href="${contextPath}/games/game/${Game.id}/edit?redirectUrl=events/${Model.id}"></c:if>
+                        <c:if test="${fn:length(Game.participants) == 2}"><a class="ajaxify" href="${contextPath}/games/game/${Game.id}/edit?redirectUrl=events/${Model.id}${Model.eventType == 'GroupKnockout' ? '/knockoutgames' : ''}"></c:if>
                             <c:forEach var="Participant" items="${Game.participants}">
                                 <div class="team team-${Participant.id}" data-team="${Participant.id}">
                                         <span class="team-name">${Participant}</span>
@@ -64,7 +64,22 @@
 
     </div>
 
-</div>        
+</div>     
+
+<c:if test="${not empty GroupGameMap}">
+    <div class="row unit-2">
+        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
+            
+        <div class="list-group">
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="href" value="/events/${Model.id}/groupgames"/>
+                <jsp:param name="key" value="GroupGames"/>
+                <jsp:param name="icon" value="group"/>
+            </jsp:include>
+        </div>
+        </div>
+    </div>
+</c:if>
 
 
 <jsp:include page="/jsp/include/footer.jsp"/>     

@@ -3,7 +3,16 @@
   background: white;
 }
 .note-editor {
-  border: 1px solid #ccc;
+    margin-bottom: 0 !important;
+    border: 1px solid #ccc;
+}
+.form-center-element .panel{
+    border-radius: 0;
+    border-bottom: 0;
+}
+.form-bottom-element .panel{
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 .form-bottom-element .note-editable {
   border-bottom-left-radius: 4px;
@@ -11,6 +20,7 @@
 }
 .note-editor .note-toolbar {
   border: 0;
+  padding-right: 100px;
 }
 .modal-backdrop {
   display: none;
