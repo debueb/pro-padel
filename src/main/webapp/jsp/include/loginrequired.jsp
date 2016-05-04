@@ -8,14 +8,16 @@
             <div class="panel-heading">
                 <h4>${title}</h4>
             </div>
+            <div class="panel-body">
+                <div class="alert alert-info unit">
+                    <fmt:message key="LoginRequiredForThisFeature"/>
+                </div>
+                <a class="btn btn-primary btn-block ajaxify unit" href="/login?redirect=${redirectURL}"><fmt:message key="Login"/></a>
+                <a class="btn btn-primary btn-block ajaxify" href="/login/register?redirect=${redirectURL}"><fmt:message key="Register"/></a>
+                <a class="btn btn-primary btn-block ajaxify btn-back"><fmt:message key="Cancel"/></a>
+            </div>
         </div>
-
-        <div class="alert alert-info unit">
-            <fmt:message key="LoginRequiredForThisFeature"/>
-        </div>
-        <a class="btn btn-primary btn-block unit" href="/login?redirect=${redirectURL}"><fmt:message key="Login"/></a>
-        <a class="btn btn-primary btn-block" href="/login/register?redirect=${redirectURL}"><fmt:message key="Register"/></a>
-        <a class="btn btn-primary btn-block btn-back"><fmt:message key="Cancel"/></a>
     </div>
 </div>
+
 <jsp:include page="/jsp/include/footer.jsp"/>
