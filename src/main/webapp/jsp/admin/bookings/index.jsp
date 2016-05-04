@@ -11,47 +11,45 @@
             <div class="panel-heading">
                 <h4><fmt:message key="Bookings"/></h4>
             </div>
-        </div>
-
-
-        <div class="list-group">
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/bookings/offers"/>
-                <jsp:param name="key" value="Offers"/>
-                <jsp:param name="icon" value="dribbble"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/bookings/facilities"/>
-                <jsp:param name="key" value="Facilities"/>
-                <jsp:param name="icon" value="building"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/bookings/paypal"/>
-                <jsp:param name="key" value="PayPal"/>
-                <jsp:param name="icon" value="paypal"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/bookings/paymill"/>
-                <jsp:param name="key" value="PayMill"/>
-                <jsp:param name="icon" value="credit-card"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/bookings/voucher"/>
-                <jsp:param name="key" value="Vouchers"/>
-                <jsp:param name="icon" value="gift"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/bookings/settings"/>
-                <jsp:param name="key" value="CalendarSettings"/>
-                <jsp:param name="icon" value="calendar"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/bookings/reservations"/>
-                <jsp:param name="key" value="CourtReservations"/>
-                <jsp:param name="icon" value="cube"/>
-            </jsp:include>
+            <div class="panel-body"><div class="list-group">
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/bookings/offers"/>
+                        <jsp:param name="key" value="Offers"/>
+                        <jsp:param name="icon" value="dribbble"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/bookings/facilities"/>
+                        <jsp:param name="key" value="Facilities"/>
+                        <jsp:param name="icon" value="building"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/bookings/paypal"/>
+                        <jsp:param name="key" value="PayPal"/>
+                        <jsp:param name="icon" value="paypal"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/bookings/paymill"/>
+                        <jsp:param name="key" value="PayMill"/>
+                        <jsp:param name="icon" value="credit-card"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/bookings/voucher"/>
+                        <jsp:param name="key" value="Vouchers"/>
+                        <jsp:param name="icon" value="gift"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/bookings/settings"/>
+                        <jsp:param name="key" value="CalendarSettings"/>
+                        <jsp:param name="icon" value="calendar"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/bookings/reservations"/>
+                        <jsp:param name="key" value="CourtReservations"/>
+                        <jsp:param name="icon" value="cube"/>
+                    </jsp:include>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 <jsp:include page="/jsp/include/footer.jsp"/>

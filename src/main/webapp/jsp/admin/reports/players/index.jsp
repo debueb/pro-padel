@@ -11,9 +11,10 @@
             <div class="panel-heading">
                 <h4><fmt:message key="TopPlayers"/></h4>
             </div>
+            <div class="panel-body">
+                <div id="players" class="unit"></div>
+            </div>
         </div>
-
-        <div id="players" class="unit"></div>
     </div>
 </div>
 <script>

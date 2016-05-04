@@ -36,7 +36,7 @@
                         </tbody>
                     </table>
                 </div>
-                <a href="/admin/players/add" class="btn btn-primary unit ajaxify"><fmt:message key="NewPlayer"/></a>
+                <a href="/admin/players/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewPlayer"/></a>
             </div>
         </div>
     </div>

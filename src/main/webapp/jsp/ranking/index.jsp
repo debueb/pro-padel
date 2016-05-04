@@ -13,11 +13,11 @@
             </div>
             <div class="panel-body">
                 <fmt:message key="RankingDesc"/>
+                <div class="unit-2">
+                    <jsp:include page="/jsp/ranking/include/links.jsp"/>
+                </div>
             </div>
         </div>
-
-        <jsp:include page="/jsp/ranking/include/links.jsp"/>
-
     </div>
 </div>
 

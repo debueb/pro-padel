@@ -9,45 +9,45 @@
             <div class="panel-heading">
                 <h4><fmt:message key="AllEvents"/></h4>
             </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <th><fmt:message key="Name"/></th>
+                        <th><fmt:message key="EventType"/></th>
+                        <th><fmt:message key="Participants"/></th>
+                        <th><fmt:message key="Active"/></th>
+                        <th class="delete"><fmt:message key="Delete"/></th>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="Event" items="${Models}">
+                                <c:set var="url" value="/admin/events/edit/${Event.id}"/>
+                                <tr>
+                                    <td><a class="ajaxify" href="${url}">${Event.name}</a></td>
+                                    <td><a class="ajaxify" href="${url}"><fmt:message key="${Event.eventType}"/></a></td>
+                                    <td>
+                                        <c:forEach var="Participant" items="${Event.participants}" varStatus="status">
+                                            <c:choose>
+                                                <c:when test="${Participant.discriminatorValue == 'Player'}">
+                                                    <c:set var="url_participant" value="/admin/players/edit/${Participant.id}"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:set var="url_participant" value="/admin/teams/edit/${Participant.id}"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <a class="ajaxify" href="${url_participant}">${Participant}</a>${status.last ? "" : ", "}
+                                        </c:forEach>
+                                    </td>
+                                    <td class="text-center"><a class="ajaxify" href="${url}"><i class="fa fa-${Event.active ? 'check' : 'close'}"/></a></td>
+                                    <td class="delete"><a href="/admin/events/${Event.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+                <a href="/admin/events/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewEvent"/></a>
+            </div>
         </div>
-
-
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-                <thead>
-                <th><fmt:message key="Name"/></th>
-                <th><fmt:message key="EventType"/></th>
-                <th><fmt:message key="Participants"/></th>
-                <th><fmt:message key="Active"/></th>
-                <th class="delete"><fmt:message key="Delete"/></th>
-                </thead>
-                <tbody>
-                    <c:forEach var="Event" items="${Models}">
-                        <c:set var="url" value="/admin/events/edit/${Event.id}"/>
-                        <tr>
-                            <td><a class="ajaxify" href="${url}">${Event.name}</a></td>
-                            <td><a class="ajaxify" href="${url}"><fmt:message key="${Event.eventType}"/></a></td>
-                            <td>
-                                <c:forEach var="Participant" items="${Event.participants}" varStatus="status">
-                                    <c:choose>
-                                        <c:when test="${Participant.discriminatorValue == 'Player'}">
-                                            <c:set var="url_participant" value="/admin/players/edit/${Participant.id}"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:set var="url_participant" value="/admin/teams/edit/${Participant.id}"/>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    <a class="ajaxify" href="${url_participant}">${Participant}</a>${status.last ? "" : ", "}
-                                </c:forEach>
-                            </td>
-                            <td class="text-center"><a class="ajaxify" href="${url}"><i class="fa fa-${Event.active ? 'check' : 'close'}"/></a></td>
-                            <td class="delete"><a href="/admin/events/${Event.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
-        <a href="/admin/events/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewEvent"/></a>
     </div>
 </div>
 

@@ -35,7 +35,7 @@
                         </tbody>
                     </table>
                 </div>
-                <a href="/admin/general/modules/add" class="btn btn-primary unit ajaxify"><fmt:message key="Add"/></a>
+                <a href="/admin/general/modules/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="Add"/></a>
             </div>
         </div>
     </div>

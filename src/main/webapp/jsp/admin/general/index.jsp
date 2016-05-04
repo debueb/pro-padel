@@ -11,27 +11,26 @@
             <div class="panel-heading">
                 <h4><fmt:message key="General"/></h4>
             </div>
-        </div>
-
-
-        <div class="list-group">
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/general/admingroups"/>
-                <jsp:param name="key" value="AdminGroups"/>
-                <jsp:param name="icon" value="fire"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/general/design"/>
-                <jsp:param name="key" value="Design"/>
-                <jsp:param name="icon" value="sun-o"/>
-            </jsp:include>
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/admin/general/modules"/>
-                <jsp:param name="key" value="Modules"/>
-                <jsp:param name="icon" value="cubes"/>
-            </jsp:include>
+            <div class="panel-body">
+                <div class="list-group">
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/general/admingroups"/>
+                        <jsp:param name="key" value="AdminGroups"/>
+                        <jsp:param name="icon" value="fire"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/general/design"/>
+                        <jsp:param name="key" value="Design"/>
+                        <jsp:param name="icon" value="sun-o"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/general/modules"/>
+                        <jsp:param name="key" value="Modules"/>
+                        <jsp:param name="icon" value="cubes"/>
+                    </jsp:include>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 <jsp:include page="/jsp/include/footer.jsp"/>

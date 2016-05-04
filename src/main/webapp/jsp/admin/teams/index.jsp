@@ -33,7 +33,7 @@
                         </c:forEach>
                     </tbody>
                 </table>
-                <a href="/admin/teams/add" class="btn btn-primary unit ajaxify"><fmt:message key="NewTeam"/></a>
+                <a href="/admin/teams/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewTeam"/></a>
             </div>
         </div>
 

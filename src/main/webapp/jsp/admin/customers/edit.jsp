@@ -11,19 +11,20 @@
             <div class="panel-heading">
                 <h4><fmt:message key="Customer"/></h4>
             </div>
+            <div class="panel-body">
+                <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
+                    <spf:input type="hidden" path="id"/>
+                    <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
+                    <fmt:message var="Name" key="Name"/>
+                    <spf:input path="name" type="text" class="form-control form-top-element" placeholder="${Name}"/>
+
+                    <fmt:message key="DomainNames" var="DomainNames"/>
+                    <spf:input path="domainNames" type="text" class="form-control form-bottom-element" placeholder="${DomainNames}"/>
+
+                    <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
+                </spf:form>
+            </div>
         </div>
-
-        <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
-            <spf:input type="hidden" path="id"/>
-            <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
-            <fmt:message var="Name" key="Name"/>
-            <spf:input path="name" type="text" class="form-control form-top-element" placeholder="${Name}"/>
-
-            <fmt:message key="DomainNames" var="DomainNames"/>
-            <spf:input path="domainNames" type="text" class="form-control form-bottom-element" placeholder="${DomainNames}"/>
-
-            <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
-        </spf:form>
     </div>
 </div>
 
