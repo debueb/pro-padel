@@ -410,6 +410,9 @@
                 <!-- include compressed and concatenated CSS -->
                 <compress.css>false</compress.css>
                 
+                <!-- log4j log level -->
+                <log4j.loglevel>DEBUG</log4j.loglevel>
+                
                 <OPENSHIFT_MYSQL_DB_HOST>localhost</OPENSHIFT_MYSQL_DB_HOST>
                 <OPENSHIFT_MYSQL_DB_PORT>3306</OPENSHIFT_MYSQL_DB_PORT>
                 <OPENSHIFT_MYSQL_DB_USERNAME>padelcampus</OPENSHIFT_MYSQL_DB_USERNAME>
@@ -452,6 +455,9 @@
                 
                 <!-- include compressed and concatenated CSS -->
                 <compress.css>true</compress.css>
+                
+                <!-- log4j log level -->
+                <log4j.loglevel>INFO</log4j.loglevel>
             </properties>
         </profile>
     </profiles>
