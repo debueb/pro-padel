@@ -22,7 +22,7 @@
                             <table class="table table-bordered table-scores">
                                 <thead>
                                 <th class="text-center">#</th>
-                                <th>Team</th>
+                                <th><fmt:message key="Name"/></th>
                                 <th class="text-center"><fmt:message key="Points"/></th>
                                 </thead>
                                 <tbody>
