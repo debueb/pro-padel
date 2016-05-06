@@ -13,6 +13,7 @@
             <div class="panel-body">
                 <spf:form method="POST" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>
+                    <spf:input type="hidden" path="name"/>
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
                     <div class="alert alert-warning unit">
                         <fmt:message key="ConfirmGroupPhaseEnd"><fmt:param value="${Model.name}"/></fmt:message>
