@@ -259,7 +259,7 @@
         <dependency>
             <groupId>com.sparkpost</groupId>
             <artifactId>sparkpost-lib</artifactId>
-            <version>0.12</version>
+            <version>0.15</version>
         </dependency>
     </dependencies>
 
