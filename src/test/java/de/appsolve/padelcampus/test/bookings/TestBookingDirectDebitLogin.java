@@ -37,6 +37,9 @@ public class TestBookingDirectDebitLogin extends TestBase {
         Player player = new Player();
         player.setEmail("padelcampus-unittest-2@appsolve.de");
         player.setPasswordHash(DigestUtils.sha512Hex("test"));
+        player.setFirstName("dummy");
+        player.setLastName("dummy");
+        player.setPhone("004917497568349");
         playerDAO.saveOrUpdate(player);
         
         mockMvc.perform(post("/bookings/" + nextMonday + "/10:00/offer/"+offer1.getId())
