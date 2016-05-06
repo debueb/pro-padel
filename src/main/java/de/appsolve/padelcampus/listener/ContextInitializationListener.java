@@ -41,7 +41,7 @@ public class ContextInitializationListener implements ServletContextListener{
 
         //do database migrations if necessary
         Flyway flyway = new Flyway();
-        flyway.setInitOnMigrate(true);
+        flyway.setBaselineOnMigrate(true);
         flyway.setDataSource(dataSource);
         for (MigrationInfo i : flyway.info().all()) {
             log.info("migrate task: " + i.getVersion() + " : " + i.getDescription() + " from file: " + i.getScript());
