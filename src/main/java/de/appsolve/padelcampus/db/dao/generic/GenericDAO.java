@@ -91,9 +91,8 @@ public abstract class GenericDAO<T extends CustomerEntity> extends BaseEntityDAO
 
     @Override
     public void delete(List<T> entities) {
-        Session session = entityManager.unwrap(Session.class);
         for (T entity : entities) {
-            session.delete(entity);
+            deleteById(entity.getId());
         }
     }
 
