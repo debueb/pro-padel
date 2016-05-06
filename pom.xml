@@ -261,6 +261,13 @@
             <artifactId>sparkpost-lib</artifactId>
             <version>0.15</version>
         </dependency>
+        <!-- javax.el-api somehow required by hibernate-validator -->
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>3.0.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
