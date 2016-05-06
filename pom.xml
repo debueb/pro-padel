@@ -12,8 +12,8 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.springframework.version>4.0.7.RELEASE</org.springframework.version>
-        <org.hibernate.version>4.3.6.Final</org.hibernate.version>
+        <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
+        <org.hibernate.version>4.3.11.Final</org.hibernate.version>
     </properties>
     
     <dependencies>
@@ -204,7 +204,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>4.1.1.RELEASE</version>
+            <version>${org.springframework.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
