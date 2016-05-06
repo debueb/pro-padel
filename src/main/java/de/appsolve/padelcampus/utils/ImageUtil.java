@@ -37,8 +37,8 @@ public class ImageUtil {
             resizedImage = Scalr.resize(originalImage, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.AUTOMATIC, width, height, Scalr.OP_ANTIALIAS);
             //fix iOS always sending landscape image with EXIF orientation metadata
             Metadata metadata = ImageMetadataReader.readMetadata(new ByteArrayInputStream(bytes.clone()));
-            if (metadata.containsDirectory(ExifIFD0Directory.class)){
-                ExifIFD0Directory directory = metadata.getDirectory(ExifIFD0Directory.class);
+            if (metadata.containsDirectoryOfType(ExifIFD0Directory.class)){
+                ExifIFD0Directory directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
                 if (directory!=null && directory.containsTag(ExifIFD0Directory.TAG_ORIENTATION)){
                     Integer value = directory.getInteger(ExifIFD0Directory.TAG_ORIENTATION);
                     if (value!=null){
