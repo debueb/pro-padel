@@ -75,7 +75,7 @@
         <dependency>
             <groupId>com.googlecode.webutilities</groupId>
             <artifactId>webutilities</artifactId>
-            <version>0.0.7</version>
+            <version>0.0.8</version>
             <!-- conflicts with org.lesscss:lesscss rhino dependency -->
             <exclusions>
                 <exclusion>
