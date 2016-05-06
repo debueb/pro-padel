@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.appsolve.padelcampus.test;
+package de.appsolve.padelcampus.test.bookings;
 
 import org.junit.Test;
 

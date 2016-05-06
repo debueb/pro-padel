@@ -8,27 +8,30 @@ package de.appsolve.padelcampus.test;
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.Currency;
+import de.appsolve.padelcampus.constants.PaymentMethod;
+import de.appsolve.padelcampus.db.dao.AdminGroupDAOI;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
+import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
+import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.dao.VoucherDAOI;
-import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
-import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Voucher;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ContextConfiguration;
@@ -45,6 +48,7 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {"/testContext.xml"})
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class TestBase extends TestCase {
     
     protected MockMvc mockMvc;
@@ -60,7 +64,7 @@ public abstract class TestBase extends TestCase {
     protected static final Logger log = Logger.getLogger(TestBase.class);
     
     @Autowired
-    private WebApplicationContext wac;
+    protected WebApplicationContext wac;
     
     @Autowired
     private MockHttpSession _session;
@@ -72,30 +76,42 @@ public abstract class TestBase extends TestCase {
     private CalendarConfigDAOI calendarConfigDAO;
     
     @Autowired
-    BookingDAOI bookingDAO;
+    protected BookingDAOI bookingDAO;
     
     @Autowired
-    PlayerDAOI playerDAO;
+    protected PlayerDAOI playerDAO;
     
     @Autowired
-    VoucherDAOI voucherDAO;
+    protected TeamDAOI teamDAO;
+    
+    @Autowired
+    protected VoucherDAOI voucherDAO;
+    
+    @Autowired
+    protected AdminGroupDAOI adminGroupDAO;
+    
+    @Autowired
+    protected EventDAOI eventDAO;
     
     @Before
     @Override
     public void setUp() {
         
-        List<Booking> bookings = bookingDAO.findAll();
-        for(Booking booking: bookings){
-            bookingDAO.deleteById(booking.getId());
-        }
         
-        List<Player> players = playerDAO.findAll();
-        for (Player player: players){
-            playerDAO.deleteById(player.getId());
-        }
         
         
         if (mockMvc == null){
+            eventDAO.delete(eventDAO.findAll());
+            
+            adminGroupDAO.delete(adminGroupDAO.findAll());
+
+            bookingDAO.delete(bookingDAO.findAll());
+
+            teamDAO.delete(teamDAO.findAll());
+
+            playerDAO.delete(playerDAO.findAll());
+            
+            
             for (CalendarConfig config: calendarConfigDAO.findAll()){
                 calendarConfigDAO.deleteById(config.getId());
             }
@@ -131,6 +147,7 @@ public abstract class TestBase extends TestCase {
             calendarConfig.setStartDate(getNextMonday());
             calendarConfig.setStartTimeHour(10);
             calendarConfig.setStartTimeMinute(00);
+            calendarConfig.setPaymentMethods(new HashSet<>(Arrays.asList(PaymentMethod.values())));
             calendarConfigDAO.saveOrUpdate(calendarConfig);
             
             mockMvc = webAppContextSetup(this.wac).build();

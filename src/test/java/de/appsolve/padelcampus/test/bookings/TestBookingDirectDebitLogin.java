@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.appsolve.padelcampus.test;
+package de.appsolve.padelcampus.test.bookings;
 
 import de.appsolve.padelcampus.constants.BookingType;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_BOOKING;
@@ -11,6 +11,7 @@ import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.test.TestBase;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.joda.time.LocalDate;
 import org.junit.Test;
