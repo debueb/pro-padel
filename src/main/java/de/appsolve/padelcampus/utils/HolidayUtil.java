@@ -9,6 +9,7 @@ import static de.appsolve.padelcampus.constants.Constants.NO_HOLIDAY_KEY;
 import de.jollyday.CalendarHierarchy;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
+import de.jollyday.ManagerParameters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class HolidayUtil {
         List<String> holidayKeys = new ArrayList<>();
         holidayKeys.add(NO_HOLIDAY_KEY);
         for (HolidayCalendar c: HolidayCalendar.values()){
-            HolidayManager m = HolidayManager.getInstance(c);
+            HolidayManager m = HolidayManager.getInstance(ManagerParameters.create(c));
             CalendarHierarchy calendarHierarchy = m.getCalendarHierarchy();
             for (String key : calendarHierarchy.getChildren().keySet()) {
                 holidayKeys.add(c.name() + "-" + key);

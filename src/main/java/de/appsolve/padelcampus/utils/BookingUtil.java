@@ -25,6 +25,7 @@ import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
+import de.jollyday.ManagerParameters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -217,7 +218,7 @@ public class BookingUtil {
             String country = holidayKeySplit[0];
             String region = holidayKeySplit[1];
 
-            HolidayManager countryHolidays = HolidayManager.getInstance(HolidayCalendar.valueOf(country));
+            HolidayManager countryHolidays = HolidayManager.getInstance(ManagerParameters.create(HolidayCalendar.valueOf(country)));
             isHoliday = countryHolidays.isHoliday(date, region);
         }
         return isHoliday;
