@@ -50,6 +50,15 @@ public class Event extends ComparableEntity{
     private Integer numberOfGroups;
     
     @Column
+    private Integer numberOfSets;
+    
+    @Column
+    private Integer numberOfGamesPerSet;
+    
+    @Column
+    private Integer numberOfGamesInFinalSet;
+    
+    @Column
     private Boolean active;
     
     @ManyToMany(fetch=FetchType.LAZY)
@@ -103,6 +112,30 @@ public class Event extends ComparableEntity{
 
     public void setNumberOfGroups(Integer numberOfGroups) {
         this.numberOfGroups = numberOfGroups;
+    }
+
+    public Integer getNumberOfSets() {
+        return numberOfSets == null ? 3 : numberOfSets;
+    }
+
+    public void setNumberOfSets(Integer numberOfSets) {
+        this.numberOfSets = numberOfSets;
+    }
+
+    public Integer getNumberOfGamesPerSet() {
+        return numberOfGamesPerSet == null ? 7 : numberOfGamesPerSet;
+    }
+
+    public void setNumberOfGamesPerSet(Integer numberOfGamesPerSet) {
+        this.numberOfGamesPerSet = numberOfGamesPerSet;
+    }
+
+    public Integer getNumberOfGamesInFinalSet() {
+        return numberOfGamesInFinalSet == null ? 1 : numberOfGamesInFinalSet;
+    }
+
+    public void setNumberOfGamesInFinalSet(Integer numberOfGamesInFinalSet) {
+        this.numberOfGamesInFinalSet = numberOfGamesInFinalSet;
     }
 
     public Boolean getActive() {

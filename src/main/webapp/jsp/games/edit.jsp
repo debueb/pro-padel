@@ -32,20 +32,20 @@
                             </c:forEach>
                         </thead>
                         <tbody>
-                            <c:forEach begin="1" end="3" step="1" var="set">
+                            <c:forEach begin="1" end="${Game.event.numberOfSets}" step="1" var="set" varStatus="status">
                                 <tr>
-                                    <td>${set}. <fmt:message key="Set"/><c:if test="${set == 3}"> Champions TieBreak</c:if></td>
+                                    <td>${set}. <fmt:message key="Set"/></td>
                                     <c:forEach var="Participant" items="${Game.participants}">
                                         <td>
                                             <c:set var="key" value="game-${Game.id}-participant-${Participant.id}-set-${set}"/>
                                             <select name="${key}" class="select-simple form-control" data-container="body">
                                                 <option value="-1">-</option>
                                                 <c:choose>
-                                                    <c:when test="${set < 3}">
-                                                        <c:set var="end" value="7"/>
+                                                    <c:when test="${status.last}">
+                                                        <c:set var="end" value="${Game.event.numberOfGamesInFinalSet}"/>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <c:set var="end" value="1"/>
+                                                        <c:set var="end" value="${Game.event.numberOfGamesPerSet}"/>
                                                     </c:otherwise>
                                                 </c:choose>
                                                 <c:forEach begin="0" end="${end}" step="1" var="current">

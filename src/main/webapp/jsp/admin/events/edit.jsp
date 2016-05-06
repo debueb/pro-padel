@@ -57,9 +57,8 @@
                     </c:choose>
                     
                     <div class="select-toggle-GroupKnockout relative">
-                        <fmt:message key="NumberOfGroups" var="NumberOfGroups"/>
-                        <spf:input path="numberOfGroups" type="number" class="form-control form-center-element" placeholder="${NumberOfGroups}"/>
-                        <div class="explanation-select">${NumberOfGroups}</div>
+                        <spf:input path="numberOfGroups" type="number" class="form-control form-center-element"/>
+                        <div class="explanation-select"><fmt:message key="NumberOfGroups"/></div>
                     </div>
                    
                     <div class="datepicker-container">
@@ -86,6 +85,22 @@
                         <fmt:message key="LocationDesc" var="LocationDesc"/>
                         <spf:input path="location" type="text" class="form-control form-center-element" placeholder="${LocationDesc}"/>
                         <div class="explanation"><fmt:message key="Location"/></div>
+                    </div>
+                    
+                    <div class="select-toggle-GroupKnockout relative">
+                        <spf:input path="numberOfSets" type="number" class="form-control form-center-element"/>
+                        <div class="explanation-select"><fmt:message key="MaxNumberOfSets"/></div>
+                    </div>
+                    
+                    <div class="select-toggle-GroupKnockout relative">
+                        
+                        <spf:input path="numberOfGamesPerSet" type="number" class="form-control form-center-element"/>
+                        <div class="explanation-select"><fmt:message key="MaxNumberOfGamesPerSet"/></div>
+                    </div>
+                    
+                    <div class="select-toggle-GroupKnockout relative">
+                        <spf:input path="numberOfGamesInFinalSet" type="number" class="form-control form-center-element"/>
+                        <div class="explanation-select"><fmt:message key="MaxNumberOfGamesInFinalSet"/></div>
                     </div>
 
                     <div class="relative">
