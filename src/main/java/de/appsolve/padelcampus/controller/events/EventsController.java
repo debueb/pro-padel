@@ -63,7 +63,7 @@ public class EventsController extends BaseController{
     @RequestMapping("{moduleTitle}")
     public ModelAndView getEvent(@PathVariable("moduleTitle") String moduleTitle){
         Module module = moduleDAO.findByTitle(moduleTitle);
-        List<Event> events = eventDAO.findAll();
+        List<Event> events = eventDAO.findAllActive();
         Iterator<Event> iterator = events.iterator();
         while (iterator.hasNext()){
             Event event = iterator.next();

@@ -11,16 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.springframework.stereotype.Component;import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
-import java.util.List;
-import de.appsolve.padelcampus.db.model.Event;
-import de.appsolve.padelcampus.db.model.Participant;
-import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.db.model.Team;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import org.springframework.stereotype.Component;
 
 /**
@@ -61,15 +51,6 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI{
         return findByAttributes(attributes);
     }
     
-    
-    @Override
-    public List<Event> findAllActiveWithEventType(EventType eventType) {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("active", true);
-        attributes.put("eventType", eventType);
-        return findByAttributes(attributes);
-    }
-
     @Override
     public Event findByIdFetchWithGames(Long id) {
         return super.findByIdFetchEagerly(id, "games");

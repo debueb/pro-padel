@@ -33,8 +33,6 @@ public interface EventDAOI extends GenericDAOI<Event>{
     List<Event> findAllWithParticipant(Participant participant);
 
     public List<Event> findAllActive();
-    
-    public List<Event> findAllActiveWithEventType(EventType eventType);
 
     public List<Event> findAllActiveFetchWithParticipantsAndPlayers();
 }
