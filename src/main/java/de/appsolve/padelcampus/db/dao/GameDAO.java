@@ -7,6 +7,7 @@ import java.util.List;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Participant;
+import de.appsolve.padelcampus.db.model.Team;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
@@ -29,13 +31,34 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
     
     @Override
     public List<Game> findAllYoungerThanWithPlayers(LocalDate date) {
+        
+        //does not work on Openshift
+        //https://bugzilla.redhat.com/show_bug.cgi?id=1329068
+        
+//        Criteria criteria = getCriteria();
+//        criteria.setFetchMode("participants.players", FetchMode.JOIN);
+//        criteria.createAlias("event", "e");
+//        criteria.add(Restrictions.gt("e.endDate", date));
+//        criteria.add(Restrictions.isNotEmpty("gameSets"));
+//        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//        return (List<Game>) criteria.list();
+
         Criteria criteria = getCriteria();
-        criteria.setFetchMode("participants.players", FetchMode.JOIN);
+        //criteria.setFetchMode("participants.players", FetchMode.JOIN);
         criteria.createAlias("event", "e");
         criteria.add(Restrictions.gt("e.endDate", date));
         criteria.add(Restrictions.isNotEmpty("gameSets"));
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        return (List<Game>) criteria.list();
+        List<Game> games = (List<Game>) criteria.list();
+        for (Game game: games){
+            for (Participant participant: game.getParticipants()){
+                if (participant instanceof Team){
+                    Team t = (Team)participant;
+                    Hibernate.initialize(t.getPlayers());
+                }
+            }
+        }
+        return games;
     }
     
     @Override
