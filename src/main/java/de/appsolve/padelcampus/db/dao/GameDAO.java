@@ -33,6 +33,7 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
         criteria.setFetchMode("participants.players", FetchMode.JOIN);
         criteria.createAlias("event", "e");
         criteria.add(Restrictions.gt("e.endDate", date));
+        criteria.add(Restrictions.isNotEmpty("gameSets"));
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return (List<Game>) criteria.list();
     }
