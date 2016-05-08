@@ -61,9 +61,29 @@ public class RankingUtil {
 
     @Autowired
     EventDAOI eventDAO;
+    private LocalDate date;
 
+    public SortedMap<Participant, BigDecimal> getTeamRanking(Gender gender) {
+        List<Game> games = getGamesInLastYear(gender);
+        SortedMap<Participant, BigDecimal> ranking = getRanking(games);
+        Set<Team> teams = new HashSet<>();
+        for (Game game: games){
+            Set<Participant> participants = game.getParticipants();
+            for (Participant p : participants){
+                if (p instanceof Team){
+                    teams.add((Team)p);
+                }
+            }
+        }
+        return getTeamRanking(ranking, teams);
+    }
+    
     public SortedMap<Participant, BigDecimal> getTeamRanking(Gender category, Collection<Team> teams) {
         SortedMap<Participant, BigDecimal> ranking = getRanking(category);
+        return getTeamRanking(ranking, teams);
+    }
+    
+    private SortedMap<Participant, BigDecimal> getTeamRanking(SortedMap<Participant, BigDecimal> ranking, Collection<Team> teams) {
         SortedMap<Participant, BigDecimal> teamRanking = new TreeMap<>();
 
         for (Team team : teams) {
@@ -76,11 +96,17 @@ public class RankingUtil {
                 }
             }
             teamScore = teamScore.divide(new BigDecimal(team.getPlayers().size()));
+            teamScore = teamScore.setScale(0, RoundingMode.HALF_UP);
             teamRanking.put(team, teamScore);
         }
         return SortUtil.sortMap(teamRanking);
     }
 
+    public SortedMap<Participant, BigDecimal> getRanking(Gender gender) {
+        List<Game> games = getGamesInLastYear(gender);
+        return getRanking(games);
+    }
+    
     public SortedMap<Participant, BigDecimal> getRanking(Gender category, Collection<Player> participants) {
         SortedMap<Participant, BigDecimal> ranking = getRanking(category);
         ranking.keySet().retainAll(participants);
@@ -92,16 +118,9 @@ public class RankingUtil {
         }
         return ranking;
     }
-
-    public SortedMap<Participant, BigDecimal> getRanking(Gender category) {
+    
+    private SortedMap<Participant, BigDecimal> getRanking(List<Game> games) {
         rankingMap = new TreeMap<>();
-
-        //the result set is too large for mysql to handle in memory and on openshift we cannot create temp files
-        //see https://bugzilla.redhat.com/show_bug.cgi?id=1329068
-        LocalDate date = LocalDate.now();
-        date = date.minusDays(ELO_MAX_DAYS);
-        List<Game> games = gameDAO.findAllYoungerThanWithPlayers(date);
-
         for (Game game : games) {
             Set<Participant> participants = game.getParticipants();
             if (participants.size() != 2) {
@@ -117,25 +136,7 @@ public class RankingUtil {
             Participant p1 = iterator.next();
             Participant p2 = iterator.next();
 
-            if (p1 instanceof Player && p2 instanceof Player) {
-                updateRanking(game, p1, p2);
-            } else if (p1 instanceof Team && p2 instanceof Team) {
-                Team t1 = (Team) p1;
-                Team t2 = (Team) p2;
-                Set<Player> players = new HashSet<>();
-                players.addAll(t1.getPlayers());
-                players.addAll(t2.getPlayers());
-                boolean genderMatches = true;
-                for (Player player : players) {
-                    if (player.getGender() != null && !player.getGender().equals(category)) {
-                        genderMatches = false;
-                        break;
-                    }
-                }
-                if (genderMatches) {
-                    updateRanking(game, p1, p2, t1.getPlayers(), t2.getPlayers());
-                }
-            }
+            updateRanking(game, p1, p2);
         }
         Iterator<Map.Entry<Participant, BigDecimal>> iterator = rankingMap.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -149,29 +150,16 @@ public class RankingUtil {
         return sortedMap;
     }
 
-    private void updateRanking(Game game, Participant p1, Participant p2, Set<Player> players1, Set<Player> players2) {
-        BigDecimal r1 = getTeamRanking(players1);
-        BigDecimal r2 = getTeamRanking(players2);
-
-        BigDecimal tr1 = getTransformedRating(r1);
-        BigDecimal tr2 = getTransformedRating(r2);
-
-        BigDecimal e1 = getExpectedScore(tr1, tr2);
-        BigDecimal e2 = getExpectedScore(tr2, tr1);
-
-        BigDecimal s1 = getScore(game, p1);
-        BigDecimal s2 = getScore(game, p2);
-
-        BigDecimal newR1 = ELO_K_FACTOR.multiply((s1.subtract(e1))).add(r1);
-        BigDecimal newR2 = ELO_K_FACTOR.multiply((s2.subtract(e2))).add(r2);
-
-        updateTeamRanking(players1, newR1);
-        updateTeamRanking(players2, newR2);
-    }
-
     private void updateRanking(Game game, Participant p1, Participant p2) {
-        BigDecimal r1 = getRanking(p1);
-        BigDecimal r2 = getRanking(p2);
+        BigDecimal r1;
+        BigDecimal r2;
+        if (p1 instanceof Team && p2 instanceof Team){
+            r1 = getTeamRanking((Team)p1);
+            r2 = getTeamRanking((Team)p2);
+        } else {
+            r1 = getRanking(p1);
+            r2 = getRanking(p2);
+        }
 
         BigDecimal tr1 = getTransformedRating(r1);
         BigDecimal tr2 = getTransformedRating(r2);
@@ -185,10 +173,21 @@ public class RankingUtil {
         BigDecimal newR1 = ELO_K_FACTOR.multiply((s1.subtract(e1))).add(r1);
         BigDecimal newR2 = ELO_K_FACTOR.multiply((s2.subtract(e2))).add(r2);
 
-        rankingMap.put(p1, newR1);
-        rankingMap.put(p2, newR2);
+        if (p1 instanceof Team && p2 instanceof Team){
+            updateTeamRanking((Team)p1, newR1);
+            updateTeamRanking((Team)p2, newR2);
+        } else {
+            rankingMap.put(p1, newR1);
+            rankingMap.put(p2, newR2);
+        }
     }
-
+    
+    private void updateTeamRanking(Team team, BigDecimal newR1) {
+        for (Player player : team.getPlayers()) {
+            rankingMap.put(player, newR1);
+        }
+    }
+    
     private BigDecimal getRanking(Participant participant) {
         BigDecimal rating = rankingMap.get(participant);
         if (rating == null) {
@@ -236,19 +235,13 @@ public class RankingUtil {
         return new BigDecimal(0.5);
     }
 
-    private BigDecimal getTeamRanking(Set<Player> players1) {
+    private BigDecimal getTeamRanking(Team team) {
         BigDecimal ranking = BigDecimal.ZERO;
-        for (Player player : players1) {
+        for (Player player : team.getPlayers()) {
             ranking = ranking.add(getRanking(player));
         }
-        ranking = ranking.divide(new BigDecimal(players1.size()));
+        ranking = ranking.divide(new BigDecimal(team.getPlayers().size()));
         return ranking;
-    }
-
-    private void updateTeamRanking(Set<Player> players1, BigDecimal newR1) {
-        for (Player player : players1) {
-            rankingMap.put(player, newR1);
-        }
     }
 
     public ScoreEntry getScore(Participant participant, Collection<Game> games) {
@@ -327,4 +320,10 @@ public class RankingUtil {
         return scoreEntries;
     }
 
+    private List<Game> getGamesInLastYear(Gender gender) {
+        LocalDate date = LocalDate.now();
+        date = date.minusDays(ELO_MAX_DAYS);
+        List<Game> games = gameDAO.findAllYoungerThanForGenderWithPlayers(date, gender);
+        return games;
+    }
 }

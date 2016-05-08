@@ -49,30 +49,11 @@ public class RankingController extends BaseController {
         mav.addObject("category", category);
         SortedMap<? extends Participant, BigDecimal> rankings = null;
         switch (category){
-            case "singles":
+            case "individual":
                 rankings = rankingUtil.getRanking(gender);
                 break;
-            case "doubles":
-                List<Team> allTeams = teamDAO.findAllFetchWithPlayers();
-                Iterator<Team> teams = allTeams.iterator();
-                while (teams.hasNext()){
-                    Team team = teams.next();
-                    switch (category){
-                        case "doubles":
-                            boolean genderMatches = true;
-                            for (Player player: team.getPlayers()){
-                                if (!player.getGender().equals(gender)){
-                                    genderMatches = false;
-                                    break;
-                                }
-                            }
-                            if (!genderMatches){
-                                teams.remove();
-                            }
-                        break;
-                    }
-                }
-                rankings = rankingUtil.getTeamRanking(gender, allTeams);
+            case "team":
+                rankings = rankingUtil.getTeamRanking(gender);
                 break;
         }
         mav.addObject("Rankings", rankings);

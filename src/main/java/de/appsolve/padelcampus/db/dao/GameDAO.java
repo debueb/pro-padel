@@ -1,5 +1,6 @@
 package de.appsolve.padelcampus.db.dao;
 ;
+import de.appsolve.padelcampus.constants.Gender;
 import org.joda.time.LocalDate;
 import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
 import de.appsolve.padelcampus.db.model.Game;
@@ -15,7 +16,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 public class GameDAO extends GenericDAO<Game> implements GameDAOI{
     
     @Override
-    public List<Game> findAllYoungerThanWithPlayers(LocalDate date) {
+    public List<Game> findAllYoungerThanForGenderWithPlayers(LocalDate date, Gender gender) {
         
         //does not work on Openshift
         //https://bugzilla.redhat.com/show_bug.cgi?id=1329068
@@ -47,6 +47,7 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
         //criteria.setFetchMode("participants.players", FetchMode.JOIN);
         criteria.createAlias("event", "e");
         criteria.add(Restrictions.gt("e.endDate", date));
+        criteria.add(Restrictions.eq("e.gender", gender));
         criteria.add(Restrictions.isNotEmpty("gameSets"));
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         List<Game> games = (List<Game>) criteria.list();
@@ -123,5 +124,4 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
         }
         return filterByParticipant(new ArrayList<>(games), participant);
     }
-
 }

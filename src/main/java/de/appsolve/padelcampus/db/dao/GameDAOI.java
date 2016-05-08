@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.db.dao;
 
+import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
@@ -27,5 +28,5 @@ public interface GameDAOI extends GenericDAOI<Game>{
     List<Game> findByParticipantAndEvent(Participant participant, Event event);
     List<Game> findByParticipantAndEventWithScoreOnly(Participant participant, Event event);
 
-    public List<Game> findAllYoungerThanWithPlayers(LocalDate date);
+    public List<Game> findAllYoungerThanForGenderWithPlayers(LocalDate date, Gender gender);
 }

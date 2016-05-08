@@ -11,5 +11,6 @@ package de.appsolve.padelcampus.constants;
  */
 public enum Gender {
     male,
-    female
+    female,
+    mixed
 }
