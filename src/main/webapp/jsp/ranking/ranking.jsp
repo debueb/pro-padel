@@ -18,7 +18,7 @@
                         <div class="alert alert-info"><fmt:message key="NoRankingsYet"/></div>
                     </c:when>
                     <c:otherwise>
-                        <div style="margin-bottom: 20px;">
+                        <div>
                             <table class="table table-bordered table-scores">
                                 <thead>
                                 <th class="text-center">#</th>
