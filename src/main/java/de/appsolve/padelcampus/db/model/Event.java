@@ -19,6 +19,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -74,6 +75,7 @@ public class Event extends ComparableEntity{
     private LocalDate endDate;
     
     @OneToMany(fetch=FetchType.LAZY, mappedBy="event", cascade = CascadeType.REMOVE)
+    @OrderBy(value = "id")
     private Set<Game> games;
     
     @Column
