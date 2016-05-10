@@ -32,7 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/page/{moduleId}")
 public class PageController extends BaseController{
     
-    private static final Logger log = Logger.getLogger(PageController.class);
+    private static final Logger LOG = Logger.getLogger(PageController.class);
     
     @Autowired
     ModuleDAOI moduleDAO;
@@ -70,6 +70,7 @@ public class PageController extends BaseController{
     }
 
     private Module getModule(String moduleTitle) {
+        LOG.info("Displaying page "+moduleTitle);
         Module module;
         try {
             Long id = Long.parseLong(moduleTitle);
