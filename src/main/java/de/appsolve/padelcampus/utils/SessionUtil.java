@@ -75,6 +75,7 @@ public class SessionUtil {
         return null;
     }
     
+    @SuppressWarnings("unchecked")
     public Set<Privilege> getPrivileges(HttpServletRequest request){
         HttpSession session = request.getSession();
         if (session != null) {
