@@ -30,6 +30,7 @@ public class ModuleDAO extends SortedGenericDAO<Module> implements ModuleDAOI{
     
     @Override
     public Module findByTitle(String title) {
+        title = title.replace("-", " ");
         return findByAttribute("title", title);
     }
 }

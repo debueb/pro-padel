@@ -40,7 +40,7 @@ public class Module extends SortableEntity{
     
     @Column
     @NotEmpty(message = "{NotEmpty.title}")
-    @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s\\-]*$", message = "{RegExp.AlphaNum}") 
+    @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}") 
     private String title;
     
     @Column
@@ -106,10 +106,11 @@ public class Module extends SortableEntity{
         switch (getModuleType()){
             case Page:
             case Events:
-                return moduleName + "/" + getTitle();
-            default:
-               return moduleName;
+                moduleName += "/" + getTitle();
+                break;
         }
+        moduleName = moduleName.replace(" ", "-");
+        return moduleName;
     }
 
     @Override
