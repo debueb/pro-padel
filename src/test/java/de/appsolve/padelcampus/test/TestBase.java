@@ -24,7 +24,6 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
@@ -38,6 +37,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -49,9 +49,11 @@ import org.springframework.web.context.WebApplicationContext;
 @WebAppConfiguration
 @ContextConfiguration(locations = {"/testContext.xml"})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public abstract class TestBase extends TestCase {
+public abstract class TestBase  {
     
     protected MockMvc mockMvc;
+    
+//    protected WebClient webClient;
     
     protected MockHttpSession session;
     
@@ -94,7 +96,6 @@ public abstract class TestBase extends TestCase {
     protected EventDAOI eventDAO;
     
     @Before
-    @Override
     public void setUp() {
         
         
@@ -150,7 +151,10 @@ public abstract class TestBase extends TestCase {
             calendarConfig.setPaymentMethods(new HashSet<>(Arrays.asList(PaymentMethod.values())));
             calendarConfigDAO.saveOrUpdate(calendarConfig);
             
-            mockMvc = webAppContextSetup(this.wac).build();
+            mockMvc =   webAppContextSetup(this.wac)
+                        .alwaysDo(print())
+                        .build();
+            
             session = _session;
         }
     }

@@ -9,12 +9,16 @@ import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.Privilege;
 import de.appsolve.padelcampus.db.model.AdminGroup;
+import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.test.*;
+import de.appsolve.padelcampus.test.matchers.ModelAttributeToStringEquals;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import org.apache.log4j.Logger;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -124,20 +128,15 @@ public class TestKnockoutTournament extends TestBase {
 
         
         //update games
-//        LOG.info("check tournament view");
-//        HtmlPage page = webClient.getPage("http://localhost/events/event/1");
-//        List<?> elems = page.getByXPath("//div[@class='team']");
-//        assertTrue(elems.size()==23);
+        LOG.info("check tournament view");
+        SortedMap<Integer, List<Game>> roundGames = new TreeMap<>();
         
         mockMvc.perform(get("/events/event/1")
             .session(session))
-            .andExpect(status().isOk());
-            //.andExpect(content().string("Knockout Tournament"))
-            //.andExpect(xpath("//div[@class='team']").nodeCount(23));
-                
-//                ;
-       
-        
-       
+            .andExpect(status().isOk())
+                .andExpect(model().hasNoErrors())
+                .andExpect(new ModelAttributeToStringEquals("RoundGameMap", "{0=[Team 0, Team 6 vs. Team 8, Team 2, Team 4], 1=[Team 0, Team 2 vs. Team 4], 2=[]}"))
+                ;
+               
     }
 }
