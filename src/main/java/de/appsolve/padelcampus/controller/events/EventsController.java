@@ -7,32 +7,21 @@
 package de.appsolve.padelcampus.controller.events;
 
 import de.appsolve.padelcampus.controller.BaseController;
-import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Module;
-import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.SortedMap;
-import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -42,8 +31,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller()
 @RequestMapping("/events")
 public class EventsController extends BaseController{
-    
-    private static final Integer NUMBER_OF_PARTICIPANTS_TO_PROCEED_TO_KNOCKOUT_GAMES = 2;
     
     @Autowired
     ModuleDAOI moduleDAO;
@@ -110,78 +97,6 @@ public class EventsController extends BaseController{
         return mav;
     }
     
-    @RequestMapping(method=GET, value="event/{eventId}/groupgamesend")
-    public ModelAndView getEventGroupGamesEnd(@PathVariable("eventId") Long eventId){
-        Event event = eventDAO.findById(eventId);
-        return getGroupGamesEndView(event);
-    }
-    
-    @RequestMapping(method=POST, value="event/{eventId}/groupgamesend")
-    public ModelAndView saveEventGroupGamesEnd(@PathVariable("eventId") Long eventId, @ModelAttribute("Model") Event dummy, BindingResult result){
-        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
-        
-        SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGames(event);
-        if (!roundGames.isEmpty()){
-            result.reject("GroupGamesAlreadyEnded");
-            return getGroupGamesEndView(dummy);
-        }
-        
-        SortedMap<Integer, List<Game>> groupGames = eventsUtil.getGroupGames(event);
-        Iterator<Map.Entry<Integer, List<Game>>> iterator = groupGames.entrySet().iterator();
-        
-        //determine best participants of each group
-        Map<Integer, List<Participant>> rankedGroupParticipants = new TreeMap<>();
-        while (iterator.hasNext()){
-            Map.Entry<Integer, List<Game>> entry = iterator.next();
-            Integer groupNumber = entry.getKey();
-            List<Game> games = entry.getValue();
-            
-            //determine participant based on games to filter out participants who did not play
-            Set<Participant> participants = new HashSet<>();
-            List<Game> playedGames = new ArrayList<>();
-            for (Game game: games){
-                if (!game.getGameSets().isEmpty()){
-                    participants.addAll(game.getParticipants());
-                    playedGames.add(game);
-                }
-            }
-            
-            if (participants.isEmpty() || playedGames.isEmpty()){
-                result.reject("CannotEndGroupGames");
-                return getGroupGamesEndView(dummy);
-            }
-            
-            //get list of score entries sorted by rank
-            List<ScoreEntry> scoreEntries =  rankingUtil.getScores(participants, playedGames);
-            for (int groupPos=0; groupPos<NUMBER_OF_PARTICIPANTS_TO_PROCEED_TO_KNOCKOUT_GAMES; groupPos++){
-                List<Participant> rankedParticipants = rankedGroupParticipants.get(groupNumber);
-                if (rankedParticipants == null){
-                    rankedParticipants = new ArrayList<>();
-                }
-                Participant p = null;
-                try {
-                    p = scoreEntries.get(groupPos).getParticipant();
-                } catch (IndexOutOfBoundsException e){
-                    //could happen when not enough games were played in one group
-                }
-                rankedParticipants.add(p);
-                rankedGroupParticipants.put(groupNumber, rankedParticipants);
-            }
-        }
-        
-        //sort participants so that group winners are first
-        List<Participant> rankedParticipants = new ArrayList<>();
-        for (int groupPos=0; groupPos<NUMBER_OF_PARTICIPANTS_TO_PROCEED_TO_KNOCKOUT_GAMES; groupPos++){
-            for (int group=0; group<event.getNumberOfGroups(); group++){
-                rankedParticipants.add(rankedGroupParticipants.get(group).get(groupPos));
-            }
-        }
-        
-        eventsUtil.createKnockoutGames(event, rankedParticipants);
-        
-        return new ModelAndView("redirect:/events/event/"+eventId+"/knockoutgames");
-    }
-    
     @RequestMapping("event/{eventId}/knockoutgames")
     public ModelAndView getEventKnockoutGames(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithGames(eventId);
@@ -194,11 +109,6 @@ public class EventsController extends BaseController{
         
         mav.addObject("GroupGameMap", groupGameMap);
         mav.addObject("RoundGameMap", roundGameMap);
-        return mav;
-    }
-
-    private ModelAndView getGroupGamesEndView(Event event) {
-        ModelAndView mav = new ModelAndView("events/groupknockout/groupgamesend", "Model", event);
         return mav;
     }
 }

@@ -29,7 +29,7 @@
         
         <c:choose>
             <c:when test="${empty RoundGameMap}">
-                <a class="btn btn-primary btn-block unit" href="/events/event/${Model.id}/groupgamesend"><fmt:message key="EndGroupGames"/></a>
+                <a class="btn btn-primary btn-block unit" href="/admin/events/event/${Model.id}/groupgamesend"><fmt:message key="EndGroupGames"/></a>
             </c:when>
             <c:otherwise>
                 <div class="list-group">
