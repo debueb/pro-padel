@@ -60,6 +60,11 @@
                         <spf:input path="numberOfGroups" type="number" class="form-control form-center-element"/>
                         <div class="explanation-select"><fmt:message key="NumberOfGroups"/></div>
                     </div>
+                    
+                    <div class="select-toggle-GroupKnockout relative">
+                        <spf:input path="numberOfWinnersPerGroup" type="number" class="form-control form-center-element"/>
+                        <div class="explanation-select"><fmt:message key="NumberOfWinnersPerGroups"/></div>
+                    </div>
                    
                     <div class="datepicker-container">
                         <div class="datepicker-text-container form-center-element">

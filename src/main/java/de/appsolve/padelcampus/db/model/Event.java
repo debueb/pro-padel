@@ -51,6 +51,9 @@ public class Event extends ComparableEntity{
     private Integer numberOfGroups;
     
     @Column
+    private Integer numberOfWinnersPerGroup;
+    
+    @Column
     private Integer numberOfSets;
     
     @Column
@@ -109,11 +112,19 @@ public class Event extends ComparableEntity{
     }
 
     public Integer getNumberOfGroups() {
-        return numberOfGroups == null ? 1 : numberOfGroups;
+        return numberOfGroups == null ? 2 : numberOfGroups;
     }
 
     public void setNumberOfGroups(Integer numberOfGroups) {
         this.numberOfGroups = numberOfGroups;
+    }
+
+    public Integer getNumberOfWinnersPerGroup() {
+        return numberOfWinnersPerGroup == null ? 2 : numberOfWinnersPerGroup;
+    }
+
+    public void setNumberOfWinnersPerGroup(Integer numberOfWinnersPerGroup) {
+        this.numberOfWinnersPerGroup = numberOfWinnersPerGroup;
     }
 
     public Integer getNumberOfSets() {

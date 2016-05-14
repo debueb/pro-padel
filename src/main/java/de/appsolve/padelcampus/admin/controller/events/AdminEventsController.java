@@ -65,8 +65,6 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/admin/events")
 public class AdminEventsController extends AdminBaseController<Event>{
     
-    private static final Integer NUMBER_OF_PARTICIPANTS_TO_PROCEED_TO_KNOCKOUT_GAMES = 2;
-    
     @Autowired
     EventDAOI eventDAO;
     
@@ -262,10 +260,12 @@ public class AdminEventsController extends AdminBaseController<Event>{
         while (gameIterator.hasNext()){
             Game game = gameIterator.next();
             Integer groupNumber = game.getGroupNumber();
-            Set<Participant> groupParticipants = eventGroups.getGroupParticipants().get(groupNumber);
-            if (!groupParticipants.containsAll(game.getParticipants())){
-                gameIterator.remove();
-                gameDAO.deleteById(eventId);
+            if (groupNumber != null){
+                Set<Participant> groupParticipants = eventGroups.getGroupParticipants().get(groupNumber);
+                if (!groupParticipants.containsAll(game.getParticipants())){
+                    gameIterator.remove();
+                    gameDAO.deleteById(eventId);
+                }
             }
         }
                 
@@ -348,7 +348,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
             
             //get list of score entries sorted by rank
             List<ScoreEntry> scoreEntries =  rankingUtil.getScores(participants, playedGames);
-            for (int groupPos=0; groupPos<NUMBER_OF_PARTICIPANTS_TO_PROCEED_TO_KNOCKOUT_GAMES; groupPos++){
+            for (int groupPos=0; groupPos<event.getNumberOfWinnersPerGroup(); groupPos++){
                 List<Participant> rankedParticipants = rankedGroupParticipants.get(groupNumber);
                 if (rankedParticipants == null){
                     rankedParticipants = new ArrayList<>();
@@ -366,7 +366,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
         
         //sort participants so that group winners are first
         List<Participant> rankedParticipants = new ArrayList<>();
-        for (int groupPos=0; groupPos<NUMBER_OF_PARTICIPANTS_TO_PROCEED_TO_KNOCKOUT_GAMES; groupPos++){
+        for (int groupPos=0; groupPos<event.getNumberOfWinnersPerGroup(); groupPos++){
             for (int group=0; group<event.getNumberOfGroups(); group++){
                 rankedParticipants.add(rankedGroupParticipants.get(group).get(groupPos));
             }
