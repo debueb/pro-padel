@@ -14,7 +14,7 @@ import de.appsolve.padelcampus.data.GameData;
 import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Event;
@@ -72,7 +72,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
     GameDAOI gameDAO;
     
     @Autowired
-    GenericDAOI<Participant> participantDAO;
+    BaseEntityDAOI<Participant> participantDAO;
     
     @Autowired
     TeamDAOI teamDAO;
@@ -416,7 +416,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
     }
     
     @Override
-    public GenericDAOI<Event> getDAO() {
+    public BaseEntityDAOI<Event> getDAO() {
         return eventDAO;
     }
 

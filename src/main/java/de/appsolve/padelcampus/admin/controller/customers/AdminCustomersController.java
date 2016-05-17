@@ -8,7 +8,7 @@ package de.appsolve.padelcampus.admin.controller.customers;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.db.dao.CustomerDAOI;
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Customer;
 import java.util.Collections;
 import java.util.List;

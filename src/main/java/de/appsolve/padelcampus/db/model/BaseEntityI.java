@@ -12,5 +12,6 @@ import java.io.Serializable;
  * @author dominik
  */
 public interface BaseEntityI extends Serializable, Comparable<BaseEntityI>{
-    
+ 
+    public Long getId();
 }

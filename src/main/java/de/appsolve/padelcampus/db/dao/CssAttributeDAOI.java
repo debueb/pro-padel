@@ -6,13 +6,13 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.CssAttribute;
 
 /**
  *
  * @author dominik
  */
-public interface CssAttributeDAOI extends GenericDAOI<CssAttribute>{
+public interface CssAttributeDAOI extends BaseEntityDAOI<CssAttribute>{
     
 }

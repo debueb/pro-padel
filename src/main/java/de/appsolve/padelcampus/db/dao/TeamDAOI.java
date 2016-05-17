@@ -6,7 +6,7 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author dominik
  */
-public interface TeamDAOI extends GenericDAOI<Team>{
+public interface TeamDAOI extends BaseEntityDAOI<Team>{
     
     Team findByIdFetchWithPlayers(Long id);
     

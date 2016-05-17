@@ -6,7 +6,7 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Player;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.joda.time.LocalDate;
  *
  * @author dominik
  */
-public interface BookingDAOI extends GenericDAOI<Booking>{
+public interface BookingDAOI extends BaseEntityDAOI<Booking>{
     
     public Booking findByUUID(String UUID);
     

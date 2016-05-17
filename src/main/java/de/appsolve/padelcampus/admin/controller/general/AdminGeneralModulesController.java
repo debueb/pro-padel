@@ -8,7 +8,7 @@ package de.appsolve.padelcampus.admin.controller.general;
 
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.ModuleType;
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
@@ -50,7 +50,7 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
     }
     
     @Override
-    public GenericDAOI getDAO() {
+    public BaseEntityDAOI getDAO() {
         return moduleDAO;
     }
 

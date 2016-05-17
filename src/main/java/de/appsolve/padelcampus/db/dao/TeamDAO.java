@@ -1,6 +1,6 @@
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.SortedGenericDAO;
+import de.appsolve.padelcampus.db.dao.generic.SortedBaseDAO;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @author dominik
  */
 @Component
-public class TeamDAO extends SortedGenericDAO<Team> implements TeamDAOI{
+public class TeamDAO extends SortedBaseDAO<Team> implements TeamDAOI{
 
     @Override
     public List<Team> findByPlayer(Player player) {
@@ -36,5 +36,11 @@ public class TeamDAO extends SortedGenericDAO<Team> implements TeamDAOI{
     @Override
     public List<Team> findAllFetchWithPlayers() {
         return super.findAllFetchEagerly("players");
+    }
+    
+    @Override
+    public Team saveOrUpdate(Team team){
+        team.setCustomer(getCustomer());
+        return super.saveOrUpdate(team);
     }
 }

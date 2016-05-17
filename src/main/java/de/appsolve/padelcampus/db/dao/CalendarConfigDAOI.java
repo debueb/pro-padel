@@ -6,7 +6,7 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.joda.time.LocalDate;
  *
  * @author dominik
  */
-public interface CalendarConfigDAOI extends GenericDAOI<CalendarConfig>{
+public interface CalendarConfigDAOI extends BaseEntityDAOI<CalendarConfig>{
     
     List<CalendarConfig> findBetween(LocalDate startDate, LocalDate endDate);
     List<CalendarConfig> findFor(LocalDate date) throws CalendarConfigException;

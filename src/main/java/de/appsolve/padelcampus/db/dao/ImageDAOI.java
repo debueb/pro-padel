@@ -6,14 +6,14 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Image;
 
 /**
  *
  * @author dominik
  */
-public interface ImageDAOI extends GenericDAOI<Image>{
+public interface ImageDAOI extends BaseEntityDAOI<Image>{
     
     Image findBySha256(String sha256);
 }

@@ -6,14 +6,14 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Voucher;
 
 /**
  *
  * @author dominik
  */
-public interface VoucherDAOI extends GenericDAOI<Voucher>{
+public interface VoucherDAOI extends BaseEntityDAOI<Voucher>{
     
     public Voucher findByUUID(String UUID);
 }

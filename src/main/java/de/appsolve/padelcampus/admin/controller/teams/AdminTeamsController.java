@@ -7,7 +7,7 @@
 package de.appsolve.padelcampus.admin.controller.teams;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Player;
@@ -59,7 +59,7 @@ public class AdminTeamsController extends AdminBaseController<Team> {
     }
 
     @Override
-    public GenericDAOI getDAO() {
+    public BaseEntityDAOI getDAO() {
         return teamDAO;
     }
 

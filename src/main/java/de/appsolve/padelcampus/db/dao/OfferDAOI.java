@@ -6,13 +6,13 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Offer;
 
 /**
  *
  * @author dominik
  */
-public interface OfferDAOI extends GenericDAOI<Offer>{
+public interface OfferDAOI extends BaseEntityDAOI<Offer>{
     
 }

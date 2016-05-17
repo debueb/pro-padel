@@ -11,7 +11,7 @@ import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.controller.BaseEntityController;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.MatchOfferDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.MatchOffer;
@@ -317,7 +317,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
     }
 
     @Override
-    public GenericDAOI getDAO() {
+    public BaseEntityDAOI getDAO() {
         return matchOfferDAO;
     }
     

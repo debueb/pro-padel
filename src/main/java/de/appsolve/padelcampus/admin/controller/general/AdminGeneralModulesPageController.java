@@ -6,7 +6,7 @@
 
 package de.appsolve.padelcampus.admin.controller.general;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.dao.PageEntryDAOI;
 import de.appsolve.padelcampus.db.model.Module;
@@ -53,7 +53,7 @@ public class AdminGeneralModulesPageController extends AdminSortableController<P
     }
     
     @Override
-    public GenericDAOI getDAO() {
+    public BaseEntityDAOI getDAO() {
         return pageEntryDAO;
     }
     

@@ -7,7 +7,7 @@
 package de.appsolve.padelcampus.db.dao;
 
 import de.appsolve.padelcampus.constants.Gender;
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
@@ -18,7 +18,7 @@ import org.joda.time.LocalDate;
  *
  * @author dominik
  */
-public interface GameDAOI extends GenericDAOI<Game>{
+public interface GameDAOI extends BaseEntityDAOI<Game>{
     
     Game findByIdFetchWithNextGame(Long id);
     Game findByIdFetchWithTeamsAndScoreReporter(Long id);

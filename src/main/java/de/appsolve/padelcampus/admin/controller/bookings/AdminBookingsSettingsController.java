@@ -12,7 +12,7 @@ import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.dao.PayMillConfigDAOI;
 import de.appsolve.padelcampus.db.dao.PayPalConfigDAOI;
@@ -205,7 +205,7 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
     }
 
     @Override
-    public GenericDAOI getDAO() {
+    public BaseEntityDAOI getDAO() {
         return calendarConfigDAO;
     }
 

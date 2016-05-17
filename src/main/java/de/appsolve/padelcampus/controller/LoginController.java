@@ -287,7 +287,7 @@ public class LoginController extends BaseController{
             }
             
             //create player object which also generates a UUID
-            player = playerDAO.createOrUpdate(player);
+            player = playerDAO.saveOrUpdate(player);
             
             String confirmRegistrationURL = RequestUtil.getBaseURL(request)+"/login/confirm/"+player.getUUID();
             

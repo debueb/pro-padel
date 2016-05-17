@@ -5,22 +5,30 @@
  */
 package de.appsolve.padelcampus.db.dao.generic;
 
+import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.model.BaseEntityI;
+import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.utils.GenericsUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  *
@@ -31,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils<T> implements BaseEntityDAOI<T>  {
    
-    private static final Logger log = Logger.getLogger(GenericDAO.class);
+    private static final Logger LOG = Logger.getLogger(BaseEntityDAO.class);
 
     @PersistenceContext
     protected EntityManager entityManager;
@@ -93,9 +101,8 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
 
     @Override
     public void delete(List<T> entities) {
-        Session session = entityManager.unwrap(Session.class);
         for (T entity : entities) {
-            session.delete(entity);
+            deleteById(entity.getId());
         }
     }
 
@@ -105,7 +112,7 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         for (Map.Entry<String, Object> entry : attributeMap.entrySet()) {
             criteria.add(Restrictions.eq(entry.getKey(), entry.getValue()));
         }
-        //criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<T>) criteria.list();
     }
     
@@ -118,9 +125,43 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
             return null;
         }
         if (objects.size() != 1) {
-            log.warn("Query for [type=" + getGenericSuperClassName(GenericDAO.class) + ", key=" + key + ", value=" + value + "] returned " + objects.size() + " results, expected 1.");
+            LOG.warn("Query for [type=" + getGenericSuperClassName(GenericDAO.class) + ", key=" + key + ", value=" + value + "] returned " + objects.size() + " results, expected 1.");
         }
         return objects.get(0);
+    }
+    
+    @Override
+    public T findByIdFetchEagerly(final long id, String... associations) {
+        Criteria criteria = getCriteria();
+        for (String association: associations){
+            criteria.setFetchMode(association, FetchMode.JOIN);
+        }
+        criteria.add(Property.forName("id").eq(id));
+        return (T) criteria.uniqueResult();
+    }
+    
+    @Override
+    public List<T> findAllFetchEagerly(String... associations){
+        Criteria crit = getCriteria();
+        for (String association: associations){
+            crit.setFetchMode(association, FetchMode.JOIN);
+        }
+        //we only want unique results
+        //see http://stackoverflow.com/questions/18753245/one-to-many-relationship-gets-duplicate-objects-whithout-using-distinct-why
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return crit.list();
+    }
+    
+    @Override
+    public List<T> findAllFetchEagerlyWithAttributes(Map<String,Object> attributeMap, String... associations){
+        Criteria crit = getCriteria();
+        for (String association: associations){
+            crit.setFetchMode(association, FetchMode.JOIN);
+        }
+        //we only want unique results
+        //see http://stackoverflow.com/questions/18753245/one-to-many-relationship-gets-duplicate-objects-whithout-using-distinct-why
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return crit.list();
     }
     
     protected Criteria getCriteria() {
@@ -129,4 +170,18 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         return criteria;
     }
     
+    protected Customer getCustomer(){
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest request = attr.getRequest();
+        if (request!=null){
+            HttpSession session = request.getSession();
+            if (session!=null){
+                Object object = session.getAttribute(Constants.SESSION_CUSTOMER);
+                if (object instanceof Customer){
+                    return (Customer) object;
+                }
+            }
+        }
+        return null;
+    }
 }

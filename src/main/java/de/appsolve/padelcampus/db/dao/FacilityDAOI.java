@@ -6,13 +6,13 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Facility;
 
 /**
  *
  * @author dominik
  */
-public interface FacilityDAOI extends GenericDAOI<Facility>{
+public interface FacilityDAOI extends BaseEntityDAOI<Facility>{
     
 }

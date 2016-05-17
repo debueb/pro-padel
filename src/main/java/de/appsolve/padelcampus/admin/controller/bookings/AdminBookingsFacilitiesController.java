@@ -7,7 +7,7 @@
 package de.appsolve.padelcampus.admin.controller.bookings;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Facility;
 import de.appsolve.padelcampus.db.model.Offer;
 import java.util.Set;
@@ -28,10 +28,10 @@ import org.springframework.web.servlet.ModelAndView;
 public class AdminBookingsFacilitiesController extends AdminBaseController<Facility> {
     
     @Autowired
-    GenericDAOI<Facility> facilityDAO;
+    BaseEntityDAOI<Facility> facilityDAO;
     
     @Autowired
-    GenericDAOI<Offer> offerDAO;
+    BaseEntityDAOI<Offer> offerDAO;
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -52,7 +52,7 @@ public class AdminBookingsFacilitiesController extends AdminBaseController<Facil
     }
    
     @Override
-    public GenericDAOI getDAO() {
+    public BaseEntityDAOI getDAO() {
         return facilityDAO;
     }
 

@@ -6,12 +6,12 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.PayMillConfig;
 
 /**
  *
  * @author dominik
  */
-public interface PayMillConfigDAOI extends GenericDAOI<PayMillConfig>{
+public interface PayMillConfigDAOI extends BaseEntityDAOI<PayMillConfig>{
 }

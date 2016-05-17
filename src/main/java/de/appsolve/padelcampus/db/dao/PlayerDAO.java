@@ -1,7 +1,7 @@
 package de.appsolve.padelcampus.db.dao;
 
 import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
-import de.appsolve.padelcampus.db.dao.generic.SortedGenericDAO;
+import de.appsolve.padelcampus.db.dao.generic.SortedBaseDAO;
 import de.appsolve.padelcampus.db.model.MatchOffer;
 import de.appsolve.padelcampus.db.model.Player;
 import java.util.Collections;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  * @author dominik
  */
 @Component
-public class PlayerDAO extends SortedGenericDAO<Player> implements PlayerDAOI{
+public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
 
     @Override
     public Player findByEmail(String email) {
@@ -38,12 +38,13 @@ public class PlayerDAO extends SortedGenericDAO<Player> implements PlayerDAOI{
     }
     
     @Override
-    public Player createOrUpdate(Player player){
+    public Player saveOrUpdate(Player player){
         if (StringUtils.isEmpty(player.getUUID())){
             UUID randomUUID = UUID.randomUUID();
             player.setUUID(randomUUID.toString());
         }
-        return saveOrUpdate(player);
+        player.setCustomer(getCustomer());
+        return super.saveOrUpdate(player);
     }
 
     @Override

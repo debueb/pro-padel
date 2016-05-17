@@ -25,6 +25,7 @@ public abstract class BaseEntity implements BaseEntityI{
     @Column(unique = true, nullable = false)
     private Long id;
 
+    @Override
     public Long getId() {
         return id;
     }

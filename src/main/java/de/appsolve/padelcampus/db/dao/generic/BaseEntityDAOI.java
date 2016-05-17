@@ -35,4 +35,10 @@ public interface BaseEntityDAOI<T extends BaseEntityI> {
    List<T> findByAttributes(Map<String, Object> attributeMap);
    
    T findByAttribute(String key, Object value);
+   
+   T findByIdFetchEagerly(final long id, String... associations);
+   
+   public List<T> findAllFetchEagerlyWithAttributes(Map<String,Object> attributeMap, String... associations);
+   
+   public List<T> findAllFetchEagerly(String... associations);
 }

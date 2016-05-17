@@ -6,12 +6,12 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Contact;
 
 /**
  *
  * @author dominik
  */
-public interface ContactDAOI extends GenericDAOI<Contact>{
+public interface ContactDAOI extends BaseEntityDAOI<Contact>{
 }

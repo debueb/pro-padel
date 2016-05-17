@@ -6,7 +6,7 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.PageEntry;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author dominik
  */
-public interface PageEntryDAOI extends GenericDAOI<PageEntry>{
+public interface PageEntryDAOI extends BaseEntityDAOI<PageEntry>{
     
     public List<PageEntry> findByModule(Module module);
     public List<PageEntry> findForHomePage();

@@ -6,7 +6,7 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.GameSet;
@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author dominik
  */
-public interface GameSetDAOI extends GenericDAOI<GameSet>{
+public interface GameSetDAOI extends BaseEntityDAOI<GameSet>{
     
     List<GameSet> findByGame(Game game);
     List<GameSet> findByEvent(Event event);

@@ -6,7 +6,7 @@
 
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.MatchOffer;
 import de.appsolve.padelcampus.db.model.Player;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author dominik
  */
-public interface MatchOfferDAOI extends GenericDAOI<MatchOffer>{
+public interface MatchOfferDAOI extends BaseEntityDAOI<MatchOffer>{
     
     List<MatchOffer> findCurrent();
     List<MatchOffer> findBy(Player player);

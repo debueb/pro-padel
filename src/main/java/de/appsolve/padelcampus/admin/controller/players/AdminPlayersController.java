@@ -7,7 +7,7 @@
 package de.appsolve.padelcampus.admin.controller.players;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
-import de.appsolve.padelcampus.db.dao.generic.GenericDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Player;
 import javax.servlet.http.HttpServletRequest;
@@ -53,12 +53,12 @@ public class AdminPlayersController extends AdminBaseController<Player> {
         player.setLastName(model.getLastName());
         player.setPhone(model.getPhone());
         player.setGender(model.getGender());
-        playerDAO.createOrUpdate(player);
+        playerDAO.saveOrUpdate(player);
         return redirectToIndex(request);
     }
     
     @Override
-    public GenericDAOI getDAO() {
+    public BaseEntityDAOI getDAO() {
         return playerDAO;
     }
     
