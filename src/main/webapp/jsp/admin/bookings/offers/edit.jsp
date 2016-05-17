@@ -34,7 +34,7 @@
                             </button>
                         </span>
                         <span class="relative">
-                            <spf:input type="text" path="maxConcurrentBookings" class="form-control text-center input-plus-minus form-center-element" min="1" max="10"/>
+                            <spf:input type="text" path="maxConcurrentBookings" class="form-control text-center input-plus-minus form-center-element" min="1" max="128"/>
                             <span class="explanation"><fmt:message key="MaxConcurrentBookings"/></span>
                         </span>
                         <span class="input-group-btn">
