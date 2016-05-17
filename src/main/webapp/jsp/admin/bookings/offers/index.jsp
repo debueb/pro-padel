@@ -25,7 +25,7 @@
                         </tbody>
                     </table>
                 </div>
-                <a href="/admin/general/offers/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewOffer"/></a>
+                <a href="/admin/bookings/offers/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewOffer"/></a>
             </div>
         </div>
     </div>
