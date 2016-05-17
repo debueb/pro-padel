@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,8 +52,6 @@ public class HtmlResourceUtil {
     
     private static final Logger log = Logger.getLogger(HtmlResourceUtil.class);
     
-    private static final String ALL_MIN_CSS_APPLICATION_CONTEXT = "all.min.css";
-
     @Value("${OPENSHIFT_DATA_DIR}")
     private String DATA_DIR;
 
@@ -113,7 +112,7 @@ public class HtmlResourceUtil {
             concatenateCss(new File(destDir, FOLDER_CSS).toPath(), allMinCssPath);
 
             //reload content for css controller
-            reloadAllMinCss(context, destDir);
+            context.setAttribute(customerName, null);
         }
     }
 
@@ -152,9 +151,10 @@ public class HtmlResourceUtil {
     }
 
     public String getAllMinCss(ServletContext context, String customerName) throws IOException{
-        String cssContent = (String) context.getAttribute(ALL_MIN_CSS_APPLICATION_CONTEXT);
+        String cssContent = (String) context.getAttribute(customerName);
         if (cssContent == null){
             cssContent = reloadAllMinCss(context, getCustomerDir(customerName));
+            context.setAttribute(customerName, cssContent);
         }
         return cssContent;
     }
@@ -170,7 +170,6 @@ public class HtmlResourceUtil {
             cssData = IOUtils.toByteArray(is);
         }
         String css = new String(cssData, Constants.UTF8);
-        context.setAttribute(ALL_MIN_CSS_APPLICATION_CONTEXT, css);
         return css;
     }
 
@@ -213,7 +212,7 @@ public class HtmlResourceUtil {
             return new String(bytes, Constants.UTF8);
         } catch (IOException e){
             InputStream stream = context.getResourceAsStream("/css/"+name);
-            return IOUtils.toString(stream);
+            return IOUtils.toString(stream, StandardCharsets.UTF_8);
         }
         
     }
