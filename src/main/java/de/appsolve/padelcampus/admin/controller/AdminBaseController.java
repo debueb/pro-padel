@@ -61,7 +61,7 @@ public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEnt
         return redirectToIndex(request);
     }
     
-    protected ModelAndView getIndexView(List<T> models){
+    protected ModelAndView getIndexView(Iterable<T> models){
         ModelAndView mav = new ModelAndView(getModuleName()+"/index");
         mav.addObject("Models", models);
         mav.addObject("moduleName", getModuleName());

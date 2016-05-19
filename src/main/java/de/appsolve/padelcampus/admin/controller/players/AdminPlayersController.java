@@ -18,6 +18,8 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import de.appsolve.padelcampus.db.repositories.PlayerRepository;
+import org.springframework.data.domain.PageRequest;
 
 /**
  *
@@ -29,6 +31,15 @@ public class AdminPlayersController extends AdminBaseController<Player> {
     
     @Autowired
     PlayerDAOI playerDAO;
+    
+    @Autowired
+    PlayerRepository playerRepository;
+    
+    @Override
+    public ModelAndView showIndex(HttpServletRequest request){
+        Iterable<Player> all = playerRepository.findAll(new PageRequest(0, 10));
+        return getIndexView(all);
+    }
     
     @Override
     public ModelAndView postEditView(@ModelAttribute("Model") Player model, HttpServletRequest request, BindingResult result){

@@ -12,7 +12,7 @@
             <div class="panel-body">
 
                 <div class="">
-                    <table class="table table-striped table-bordered datatable">
+                    <table class="table table-striped table-bordered">
                         <thead>
                         <th><fmt:message key="FirstName"/></th>
                         <th><fmt:message key="LastName"/></th>
