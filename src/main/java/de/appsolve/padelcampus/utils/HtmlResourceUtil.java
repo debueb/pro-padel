@@ -44,6 +44,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class HtmlResourceUtil {
     
+    private LessCompiler lessCompiler;
+    
     @Autowired
     CustomerDAOI customerDAO;
     
@@ -103,7 +105,9 @@ public class HtmlResourceUtil {
 
 
             //compile less and overwrite css sortedFiles in data directory
-            LessCompiler lessCompiler = new LessCompiler();
+            if (lessCompiler == null){
+                lessCompiler = new LessCompiler();
+            }
             lessCompiler.compile(new File(destDir, PROJECT_LESS), new File(destDir, PROJECT_CSS));
             lessCompiler.compile(new File(destDir, BOOTSTRAP_LESS), new File(destDir, BOOTSTRAP_CSS));
 
