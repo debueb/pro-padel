@@ -42,6 +42,7 @@ import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -49,7 +50,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -89,16 +89,14 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         });
     }
     
-    @RequestMapping()
     @Override
-    public ModelAndView showIndex(HttpServletRequest request){
+    public ModelAndView showIndex(HttpServletRequest request, Pageable pageable){
         ModelAndView mav = new ModelAndView("admin/bookings/reservations/index");
         List<Booking> reservations = bookingDAO.findReservations();
         mav.addObject("Reservations", reservations);
         return mav;
     }
     
-    @RequestMapping("add")
     @Override
     public ModelAndView showAddView(){
         ReservationRequest request = new ReservationRequest();
@@ -110,7 +108,6 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         return getAddView(request);
     }
     
-    @RequestMapping(value="add", method=POST)
     @Override
     public ModelAndView postEditView(@ModelAttribute("Model") ReservationRequest reservationRequest, HttpServletRequest request, BindingResult bindingResult){
         ModelAndView addView = getAddView(reservationRequest);

@@ -14,6 +14,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,7 +36,7 @@ public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEnt
     protected Validator validator;
     
     @RequestMapping()
-    public ModelAndView showIndex(HttpServletRequest request){
+    public ModelAndView showIndex(HttpServletRequest request, Pageable pageable){
         List<T> all = findAll();
         Collections.sort(all);
         return getIndexView(all);

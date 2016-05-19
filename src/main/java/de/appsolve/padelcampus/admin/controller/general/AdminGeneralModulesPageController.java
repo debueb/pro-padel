@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -58,7 +59,7 @@ public class AdminGeneralModulesPageController extends AdminSortableController<P
     }
     
     @Override
-    public ModelAndView showIndex(HttpServletRequest request){
+    public ModelAndView showIndex(HttpServletRequest request, Pageable pageable){
         Module module = getModule(request);
         List<PageEntry> all = pageEntryDAO.findByModule(module);
         Collections.sort(all);

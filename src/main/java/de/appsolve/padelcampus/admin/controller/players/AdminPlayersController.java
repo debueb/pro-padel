@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import de.appsolve.padelcampus.db.repositories.PlayerRepository;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 
 /**
  *
@@ -36,8 +39,8 @@ public class AdminPlayersController extends AdminBaseController<Player> {
     PlayerRepository playerRepository;
     
     @Override
-    public ModelAndView showIndex(HttpServletRequest request){
-        Iterable<Player> all = playerRepository.findAll(new PageRequest(0, 10));
+    public ModelAndView showIndex(HttpServletRequest request, @PageableDefault(size=10, sort="firstName", direction = Sort.Direction.ASC) Pageable pageable){
+        Page<Player> all = playerRepository.findAll(pageable);
         return getIndexView(all);
     }
     

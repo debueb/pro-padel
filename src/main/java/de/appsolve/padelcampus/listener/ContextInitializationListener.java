@@ -7,56 +7,46 @@
 package de.appsolve.padelcampus.listener;
 
 import de.appsolve.padelcampus.utils.HtmlResourceUtil;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationInfo;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  *
  * @author dominik
  */
-public class ContextInitializationListener implements ServletContextListener{
+public class ContextInitializationListener implements InitializingBean{
 
-    private static final Logger log = Logger.getLogger(ContextInitializationListener.class);
+    private static final Logger LOG = Logger.getLogger(ContextInitializationListener.class);
     
     @Autowired
     DataSource dataSource;
     
     @Autowired
     HtmlResourceUtil htmlResourceUtil;
+    
+    @Autowired
+    ServletContext servletContext;
 
     @Override
-    public void contextInitialized(ServletContextEvent sce) {
-        //since this is initialized by the servlet container (and not by spring), we need to inject the dependencies manually
-        WebApplicationContextUtils
-            .getRequiredWebApplicationContext(sce.getServletContext())
-            .getAutowireCapableBeanFactory()
-            .autowireBean(this);
-
-
+    public void afterPropertiesSet() throws Exception {
         //do database migrations if necessary
         Flyway flyway = new Flyway();
         flyway.setBaselineOnMigrate(true);
         flyway.setDataSource(dataSource);
         for (MigrationInfo i : flyway.info().all()) {
-            log.info("migrate task: " + i.getVersion() + " : " + i.getDescription() + " from file: " + i.getScript());
+            LOG.info("migrate task: " + i.getVersion() + " : " + i.getDescription() + " from file: " + i.getScript());
         }
         flyway.migrate();
         
         try {
-            htmlResourceUtil.updateCss(sce.getServletContext());
+            htmlResourceUtil.updateCss(servletContext);
         } catch (Exception ex) {
-            log.warn(ex);
+            LOG.warn(ex);
         }
-    }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        //empty
     }
 }

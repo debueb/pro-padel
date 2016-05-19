@@ -8,15 +8,10 @@ package de.appsolve.padelcampus.admin.controller.customers;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.db.dao.CustomerDAOI;
-import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Customer;
-import java.util.Collections;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  *
@@ -28,13 +23,6 @@ public class AdminCustomersController extends AdminBaseController<Customer> {
     
     @Autowired
     CustomerDAOI customerDAO;
-    
-    @Override
-    public ModelAndView showIndex(HttpServletRequest request){
-        List<Customer> all = customerDAO.findAll();
-        Collections.sort(all);
-        return getIndexView(all);
-    }
     
     @Override
     public CustomerDAOI getDAO() {

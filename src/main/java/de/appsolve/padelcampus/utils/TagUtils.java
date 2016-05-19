@@ -15,5 +15,9 @@ public class TagUtils {
  
     public static boolean contains(Collection<?> coll, Object o) {
         return coll.contains(o);
-      }
+    }
+    
+    public static Integer min(Integer a, Integer b){
+        return Math.min(a, b);
+    }
 }
