@@ -71,7 +71,7 @@
             $this.find('form.ajaxify').on('submit', function (event) {
                 var data = $(this).serialize(),
                     method = $(this).attr('method'),
-                    url = $(this).attr('action');
+                    url = $(this).attr('action') || "";
                 
                 //in order to update the URL in the browser, we construct the URL here
                 //to avoid the ajax call from duplicating all parameters we set the data to null
