@@ -76,7 +76,7 @@
                 //in order to update the URL in the browser, we construct the URL here
                 //to avoid the ajax call from duplicating all parameters we set the data to null
                 if (method === 'GET'){
-                    url = url + '?' + data;
+                    url = url + '?' + decodeURIComponent(data);
                     data = null;
                 }
                 // Ajaxify this link
