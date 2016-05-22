@@ -47,6 +47,7 @@ public class DispatcherConfig extends WebMvcConfigurerAdapter{
         ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
         source.setCacheSeconds(env.getProperty("messagesReloadInterval", Integer.class, 0));
         source.setBasename("/WEB-INF/ValidationMessages");
+        source.setDefaultEncoding("UTF-8");
         return source;
     }
     
