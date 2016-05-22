@@ -11,6 +11,9 @@
             <div class="panel-heading">
                 <h4><fmt:message key="Draws"/> ${Model.name}</h4>
             </div>
+            <div class="panel-body">
+                <fmt:message key="EditDrawsDesc"/>
+            </div>
         </div>
 
 
