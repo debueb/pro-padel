@@ -10,6 +10,8 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Participant;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  *
@@ -25,7 +27,9 @@ public interface EventDAOI extends BaseEntityDAOI<Event>{
     
     Event findByIdFetchWithParticipantsAndPlayers(Long id);
     
-    List<Event> findAllFetchWithParticipants();
+    public List<Event> findAllFetchWithParticipants();
+    
+    Page<Event> findAllFetchWithParticipants(Pageable pageable);
     
     List<Event> findAllFetchWithParticipantsAndPlayers();
     

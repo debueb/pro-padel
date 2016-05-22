@@ -44,6 +44,10 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -97,6 +101,11 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 return participantDAO.findById(id);
             }
         });
+    }
+    
+    @Override
+    public ModelAndView showIndex(HttpServletRequest request, @PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable, @RequestParam(required = false, name = "search") String search){
+        return super.showIndex(request, pageable, search);
     }
     
     @Override
@@ -426,8 +435,13 @@ public class AdminEventsController extends AdminBaseController<Event>{
     }
     
     @Override
-    public List<Event> findAll(){
-        return eventDAO.findAllFetchWithParticipants();
+    public Page<Event> findAll(Pageable pageable){
+        return eventDAO.findAllFetchWithParticipants(pageable);
+    }
+    
+    @Override
+    protected Page<Event> findAllByFuzzySearch(String search) {
+        return eventDAO.findAllByFuzzySearch(search, "participants");
     }
     
     @Override

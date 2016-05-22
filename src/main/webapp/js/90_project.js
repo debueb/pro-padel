@@ -471,6 +471,24 @@ app.main = {};
         });
     };
     
+    self.enableAutoSearch = function(){
+        $('form.search').livequery(function(){
+            
+            var timeout;
+            
+            var $form = $(this);
+            $form.find('input[name="search"]').on('keyup', function(){
+                if (!!timeout){
+                    clearTimeout(timeout);
+                }
+                timeout = setTimeout(function(){
+                    $form.submit();
+                }, 1000);
+               
+           });
+        });
+    };  
+    
     return app;
 }).apply(app.main);
 
@@ -492,5 +510,6 @@ $(document).ready(function () {
     app.main.enableAdvancedProfile();
     app.main.enableGalleryAutoPlay();
     app.main.enableSelectToggle();
+    app.main.enableAutoSearch();
     
 });

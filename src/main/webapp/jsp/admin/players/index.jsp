@@ -12,6 +12,8 @@
             <div class="panel-body">
 
                 <div class="">
+                    <jsp:include page="/jsp/admin/include/search.jsp"/>
+                    
                     <table class="table table-striped table-bordered">
                         <thead>
                         <th><fmt:message key="FirstName"/></th>
@@ -22,7 +24,7 @@
                         <th class="delete"><fmt:message key="Delete"/></th>
                         </thead>
                         <tbody>
-                            <c:forEach var="Player" items="${Models.content}">
+                            <c:forEach var="Player" items="${Page.content}">
                                 <c:set var="editUrl" value="/admin/players/edit/${Player.id}"/>
                                 <tr>
                                     <td><a class="block ajaxify" href="${editUrl}">${Player.firstName}</a></td>
@@ -36,15 +38,7 @@
                         </tbody>
                     </table>
                         
-                   
-                    <nav class="unit">
-                        <div>${(Models.number+1) * Models.size - Models.size + 1} - ${as:min((Models.number+1) * Models.size, Models.totalElements)} / ${Models.totalElements}</div>
-                        <ul class="pagination">
-                            <c:forEach begin="0" end="${Models.totalElements-1}" step="${Models.size}" var="count" varStatus="status">
-                                <li class="${Models.number == status.count-1 ? 'active' : ''}"><a class="ajaxify" href="?page=${status.count-1}">${status.count}</a></li>
-                            </c:forEach>
-                        </ul>
-                    </nav>
+                    <jsp:include page="/jsp/admin/include/pagination.jsp"/>
                 </div>
                 
                 

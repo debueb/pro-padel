@@ -11,6 +11,7 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Player;
 import javax.servlet.http.HttpServletRequest;
+import org.jadira.usertype.spi.utils.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -18,11 +19,11 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import de.appsolve.padelcampus.db.repositories.PlayerRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -35,13 +36,9 @@ public class AdminPlayersController extends AdminBaseController<Player> {
     @Autowired
     PlayerDAOI playerDAO;
     
-    @Autowired
-    PlayerRepository playerRepository;
-    
     @Override
-    public ModelAndView showIndex(HttpServletRequest request, @PageableDefault(size=10, sort="firstName", direction = Sort.Direction.ASC) Pageable pageable){
-        Page<Player> all = playerRepository.findAll(pageable);
-        return getIndexView(all);
+    public ModelAndView showIndex(HttpServletRequest request, @PageableDefault(size = 10, sort = "firstName", direction = Sort.Direction.ASC) Pageable pageable, @RequestParam(required = false, name = "search") String search){
+        return super.showIndex(request, pageable, search);
     }
     
     @Override

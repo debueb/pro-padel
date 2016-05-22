@@ -24,7 +24,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.CacheControl;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -44,7 +43,6 @@ import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 @ComponentScan(useDefaultFilters = true, basePackages = "de.appsolve", excludeFilters={@Filter(org.springframework.stereotype.Controller.class)})
 @PropertySource(value="classpath:settings.properties")
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "de.appsolve.padelcampus.db.repositories")
 public class AppConfig {
     
     @Autowired

@@ -9,12 +9,14 @@ import de.appsolve.padelcampus.controller.BaseEntityControllerI;
 import de.appsolve.padelcampus.controller.BaseEntityController;
 import de.appsolve.padelcampus.db.model.BaseEntityI;
 import java.lang.reflect.ParameterizedType;
-import java.util.Collections;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 /**
  *
@@ -36,9 +39,13 @@ public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEnt
     protected Validator validator;
     
     @RequestMapping()
-    public ModelAndView showIndex(HttpServletRequest request, Pageable pageable){
-        List<T> all = findAll();
-        Collections.sort(all);
+    public ModelAndView showIndex(HttpServletRequest request, Pageable pageable, @RequestParam(required = false, name = "search") String search){
+        Page<T> all;
+        if (!StringUtils.isEmpty(search)){
+            all = findAllByFuzzySearch(search);
+        } else {
+            all = findAll(pageable);
+        }
         return getIndexView(all);
     }
     
@@ -62,9 +69,10 @@ public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEnt
         return redirectToIndex(request);
     }
     
-    protected ModelAndView getIndexView(Iterable<T> models){
+    protected ModelAndView getIndexView(Page<T> page){
         ModelAndView mav = new ModelAndView(getModuleName()+"/index");
-        mav.addObject("Models", models);
+        mav.addObject("Page", page);
+        mav.addObject("Models", page.getContent());
         mav.addObject("moduleName", getModuleName());
         return mav;
     }
@@ -76,8 +84,12 @@ public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEnt
         return mav;
     }
     
-    protected List<T> findAll() {
-        return getDAO().findAll();
+    protected Page<T> findAll(Pageable pageable) {
+        return getDAO().findAll(pageable);
+    }
+    
+    protected Page<T> findAllByFuzzySearch(String search) {
+        return getDAO().findAllByFuzzySearch(search);
     }
 
     protected T findById(Long modelId) {

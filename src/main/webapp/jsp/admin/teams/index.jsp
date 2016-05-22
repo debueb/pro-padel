@@ -11,16 +11,16 @@
             </div>
             <div class="panel-body">
 
+                <jsp:include page="/jsp/admin/include/search.jsp"/>
 
-
-                <table class="table table-striped table-bordered datatable">
+                <table class="table table-striped table-bordered">
                     <thead>
                     <th><fmt:message key="TeamName"/></th>
                     <th><fmt:message key="Players"/></th>
                     <th class="delete"><fmt:message key="Delete"/></th>
                     </thead>
                     <tbody>
-                        <c:forEach var="Team" items="${Models}">
+                        <c:forEach var="Team" items="${Page.content}">
                             <tr>
                                 <td><a class="ajaxify" href="/admin/teams/edit/${Team.id}">${Team.name}</a></td>
                                 <td>
@@ -33,6 +33,9 @@
                         </c:forEach>
                     </tbody>
                 </table>
+                    
+                <jsp:include page="/jsp/admin/include/pagination.jsp"/>
+                
                 <a href="/admin/teams/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewTeam"/></a>
             </div>
         </div>

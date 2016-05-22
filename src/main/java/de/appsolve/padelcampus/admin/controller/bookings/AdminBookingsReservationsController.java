@@ -90,7 +90,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     }
     
     @Override
-    public ModelAndView showIndex(HttpServletRequest request, Pageable pageable){
+    public ModelAndView showIndex(HttpServletRequest request, Pageable pageable, String search){
         ModelAndView mav = new ModelAndView("admin/bookings/reservations/index");
         List<Booking> reservations = bookingDAO.findReservations();
         mav.addObject("Reservations", reservations);

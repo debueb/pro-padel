@@ -1,6 +1,5 @@
 package de.appsolve.padelcampus.db.dao;
 ;
-import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
 import java.util.List;
 import de.appsolve.padelcampus.db.model.Event;
@@ -8,9 +7,14 @@ import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -77,6 +81,11 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI{
     }
     
     @Override
+    public Page<Event> findAllFetchWithParticipants(Pageable pageable) {
+        return super.findAllFetchEagerly(pageable, "participants");
+    }
+    
+    @Override
     public List<Event> findAllFetchWithParticipantsAndPlayers() {
         return super.findAllFetchEagerly("participants", "participants.players");
     }
@@ -86,5 +95,10 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI{
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("active", true);
         return super.findAllFetchEagerlyWithAttributes(attributes, "participants", "participants.players");
+    }
+    
+    @Override
+    protected Set<String> getIndexedProperties(){
+       return new HashSet<>(Arrays.asList("name")); 
     }
 }

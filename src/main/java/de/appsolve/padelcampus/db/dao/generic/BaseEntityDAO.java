@@ -9,9 +9,13 @@ import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.model.BaseEntityI;
 import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.utils.GenericsUtils;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
@@ -23,8 +27,15 @@ import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -60,6 +71,46 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     
     @SuppressWarnings("unchecked")
     @Override
+    public Page<T> findAllFetchEagerly(Pageable pageable, String... associations){
+        //http://stackoverflow.com/questions/2183617/criteria-api-returns-a-too-small-resultset
+        
+        //get the ids of every object that matches the pageable conditions
+        //we cannot get the objects directly because we use FetchMode.JOIN which returns the scalar product of all rows in all affected tables
+        //and CriteriaSpecification.DISTINCT_ROOT_ENTITY does not work on SQL Level but on in Java after the result is returned from SQL
+        Criteria criteria = getPageableCriteria(pageable);
+        criteria.setProjection(Projections.distinct(Projections.property("id")));
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        List<Long> list = criteria.list();
+        
+        //once we have the required ids we query for the complete objects
+        Criteria objectCriteria = getCriteria();
+        for (String association: associations){
+            objectCriteria.setFetchMode(association, FetchMode.JOIN);
+        }
+        objectCriteria.add(Restrictions.in("id", list));
+        objectCriteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        addOrderBy(objectCriteria, pageable);
+        List<T> objects = objectCriteria.list();
+        
+        //we also need the total number of rows
+        Criteria rowCountCritieria = getCriteria();
+        rowCountCritieria.setProjection(Projections.rowCount());
+        Long resultCount = (Long)rowCountCritieria.uniqueResult();
+        if (resultCount == null){
+            resultCount = objects.size()+0L;
+        }
+        PageImpl<T> page = new PageImpl<>(new ArrayList<>(objects), pageable, resultCount);
+        return page;
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public Page<T> findAll(Pageable pageable){
+        return findAllFetchEagerly(pageable, new String[0]);
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
     public List<T> findAll(List<Long> ids) {
         Criterion[] criterion = new Criterion[ids.size()];
         for (int i=0; i<ids.size(); i++){
@@ -72,6 +123,31 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         return (List<T>) criteria.list();
     }
 
+    @Override
+    public Page<T> findAllByFuzzySearch(String search, String... associations){
+        Criteria criteria = getCriteria();
+        for (String association: associations){
+            criteria.setFetchMode(association, FetchMode.JOIN);
+        }
+        List<Criterion> predicates = new ArrayList<>();
+        for (String indexedPropery: getIndexedProperties()){
+            predicates.add(Restrictions.ilike(indexedPropery, search, MatchMode.ANYWHERE));
+        }
+        if (!predicates.isEmpty()){
+            criteria.add(Restrictions.or(predicates.toArray(new Criterion[predicates.size()])));
+        }
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        @SuppressWarnings("unchecked")
+        List<T> objects = criteria.list();
+        PageImpl<T> page = new PageImpl<>(objects);
+        return page;
+    }
+    
+    @Override
+    public Page<T> findAllByFuzzySearch(String search){
+        return findAllByFuzzySearch(search, new String[0]);
+    }
+    
     @Override
     public T findFirst() {
         List<T> allConfigs = findAll();
@@ -183,5 +259,38 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
             }
         }
         return null;
+    }
+
+    private Criteria getPageableCriteria(Pageable pageable) {
+        Criteria criteria = getCriteria();
+        addOrderBy(criteria, pageable);
+        criteria.setFirstResult(pageable.getPageNumber()*pageable.getPageSize());
+        criteria.setMaxResults(pageable.getPageSize());
+        
+        return criteria;
+    }
+
+    private void addOrderBy(Criteria criteria, Pageable pageable) {
+        Sort sort = pageable.getSort();
+        if (sort != null){
+            Iterator<Sort.Order> iterator = sort.iterator();
+            while (iterator.hasNext()){
+                Sort.Order order = iterator.next();
+                Order hibernateOrder;
+                switch (order.getDirection()){
+                    case ASC:
+                        hibernateOrder = Order.asc(order.getProperty());
+                        break;
+                    default:
+                        hibernateOrder = Order.desc(order.getProperty());
+                        break;
+                }
+                criteria.addOrder(hibernateOrder);
+            }
+        }
+    }
+    
+    protected Set<String> getIndexedProperties(){
+        return new HashSet<>();
     }
 }

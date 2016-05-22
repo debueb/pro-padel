@@ -14,12 +14,18 @@ import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import java.util.List;
 import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -35,6 +41,11 @@ public class AdminTeamsController extends AdminBaseController<Team> {
     
     @Autowired
     TeamDAOI teamDAO;
+    
+    @Override
+    public ModelAndView showIndex(HttpServletRequest request, @PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable, @RequestParam(required = false, name = "search") String search){
+        return super.showIndex(request, pageable, search);
+    }
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -69,8 +80,14 @@ public class AdminTeamsController extends AdminBaseController<Team> {
     }
     
     @Override
-    protected List<Team> findAll() {
-        return teamDAO.findAllFetchWithPlayers();
+    protected Page<Team> findAll(Pageable pageable) {
+        Page<Team> findAllFetchWithPlayers = teamDAO.findAllFetchWithPlayers(pageable);
+        return findAllFetchWithPlayers;
+    }
+    
+    @Override
+    protected Page<Team> findAllByFuzzySearch(String search) {
+        return teamDAO.findAllByFuzzySearch(search, "players");
     }
 
     @Override

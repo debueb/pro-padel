@@ -10,6 +10,7 @@
                 <h4><fmt:message key="AllEvents"/></h4>
             </div>
             <div class="panel-body">
+                <jsp:include page="/jsp/admin/include/search.jsp"/>
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead>
@@ -20,7 +21,7 @@
                         <th class="delete"><fmt:message key="Delete"/></th>
                         </thead>
                         <tbody>
-                            <c:forEach var="Event" items="${Models}">
+                            <c:forEach var="Event" items="${Page.content}">
                                 <c:set var="url" value="/admin/events/edit/${Event.id}"/>
                                 <tr>
                                     <td><a class="ajaxify" href="${url}">${Event.name}</a></td>
@@ -45,6 +46,7 @@
                         </tbody>
                     </table>
                 </div>
+                <jsp:include page="/jsp/admin/include/pagination.jsp"/>
                 <a href="/admin/events/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewEvent"/></a>
             </div>
         </div>

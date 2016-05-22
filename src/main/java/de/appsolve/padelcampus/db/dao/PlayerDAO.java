@@ -4,9 +4,12 @@ import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
 import de.appsolve.padelcampus.db.dao.generic.SortedBaseDAO;
 import de.appsolve.padelcampus.db.model.MatchOffer;
 import de.appsolve.padelcampus.db.model.Player;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -73,5 +76,10 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
             }
         }
         return interestedPlayers;
+    }
+    
+    @Override
+    protected Set<String> getIndexedProperties(){
+       return new HashSet<>(Arrays.asList("firstName", "lastName", "email", "phone")); 
     }
 }

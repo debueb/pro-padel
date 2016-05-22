@@ -10,6 +10,8 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  *
@@ -21,5 +23,5 @@ public interface TeamDAOI extends BaseEntityDAOI<Team>{
     
     List<Team> findByPlayer(Player player);
     
-    List<Team> findAllFetchWithPlayers();
+    Page<Team> findAllFetchWithPlayers(Pageable pageable);
 }
