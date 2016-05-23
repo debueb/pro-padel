@@ -68,13 +68,7 @@
     <div class="row unit-2">
         <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
             
-        <div class="list-group">
-            <jsp:include page="/jsp/include/list-group-item.jsp">
-                <jsp:param name="href" value="/events/event/${Model.id}/groupgames"/>
-                <jsp:param name="key" value="GroupGames"/>
-                <jsp:param name="icon" value="group"/>
-            </jsp:include>
-        </div>
+        <jsp:include page="/jsp/events/include/links.jsp"/>
         </div>
     </div>
 </c:if>

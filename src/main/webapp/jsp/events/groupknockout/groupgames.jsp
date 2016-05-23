@@ -74,13 +74,7 @@
                 <a class="btn btn-primary btn-block unit ajaxify" href="/admin/events/event/${Model.id}/groupgamesend"><fmt:message key="EndGroupGames"/></a>
             </c:when>
             <c:otherwise>
-                <div class="list-group">
-                    <jsp:include page="/jsp/include/list-group-item.jsp">
-                        <jsp:param name="href" value="/events/event/${Model.id}/knockoutgames"/>
-                        <jsp:param name="key" value="KnockoutGames"/>
-                        <jsp:param name="icon" value="list-ol"/>
-                    </jsp:include>
-                </div>
+                <jsp:include page="/jsp/events/include/links.jsp"/>
             </c:otherwise>
         </c:choose>
     </div>
