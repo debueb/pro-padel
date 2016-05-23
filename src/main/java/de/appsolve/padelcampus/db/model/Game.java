@@ -8,6 +8,7 @@ package de.appsolve.padelcampus.db.model;
 
 import static de.appsolve.padelcampus.constants.Constants.UTF8;
 import de.appsolve.padelcampus.utils.CryptUtil;
+import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.LinkedHashSet;
@@ -22,6 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
+import org.joda.time.LocalTime;
 
 /**
  *
@@ -54,6 +56,12 @@ public class Game extends CustomerEntity{
     
     @Column
     private Integer groupNumber;
+    
+    @Column
+    private Integer startTimeHour;
+    
+    @Column
+    private Integer startTimeMinute;
     
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Game nextGame;
@@ -112,6 +120,26 @@ public class Game extends CustomerEntity{
 
     public void setGroupNumber(Integer groupNumber) {
         this.groupNumber = groupNumber;
+    }
+
+    public Integer getStartTimeMinute() {
+        return startTimeMinute;
+    }
+
+    public void setStartTimeMinute(Integer startTimeMinute) {
+        this.startTimeMinute = startTimeMinute;
+    }
+
+    public Integer getStartTimeHour() {
+        return startTimeHour;
+    }
+
+    public void setStartTimeHour(Integer startTimeHour) {
+        this.startTimeHour = startTimeHour;
+    }
+    
+    public LocalTime getStartTime(){
+        return TIME_HUMAN_READABLE.parseLocalTime(getStartTimeHour()+":"+getStartTimeMinute());
     }
 
     public Game getNextGame() {
