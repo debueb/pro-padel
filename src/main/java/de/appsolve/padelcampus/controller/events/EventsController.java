@@ -17,6 +17,7 @@ import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -86,6 +87,15 @@ public class EventsController extends BaseController{
                 break;
         }
         
+        return mav;
+    }
+    
+    @RequestMapping("event/{eventId}/participants")
+    public ModelAndView getEventParticipants(@PathVariable("eventId") Long eventId){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        SortedMap<Participant, BigDecimal> rankedParticipants = rankingUtil.getRankedParticipants(event);
+        ModelAndView mav = new ModelAndView("events/participants", "Model", event);
+        mav.addObject("RankedParticipants", rankedParticipants);
         return mav;
     }
     

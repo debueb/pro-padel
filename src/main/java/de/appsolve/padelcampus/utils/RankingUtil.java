@@ -11,6 +11,8 @@ import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
+import de.appsolve.padelcampus.db.dao.TeamDAOI;
+import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Participant;
@@ -61,8 +63,10 @@ public class RankingUtil {
 
     @Autowired
     EventDAOI eventDAO;
-    private LocalDate date;
-
+    
+    @Autowired
+    TeamDAOI teamDAO;
+    
     public SortedMap<Participant, BigDecimal> getTeamRanking(Gender gender) {
         List<Game> games = getGamesInLastYear(gender);
         SortedMap<Participant, BigDecimal> ranking = getRanking(games);
@@ -318,6 +322,22 @@ public class RankingUtil {
         }
         Collections.sort(scoreEntries);
         return scoreEntries;
+    }
+    
+    public SortedMap<Participant, BigDecimal>  getRankedParticipants(Event model) {
+        Participant firstParticipant = model.getParticipants().iterator().next();
+        SortedMap<Participant, BigDecimal> ranking = new TreeMap<>();
+        if (firstParticipant instanceof Player){
+            ranking = getRanking(model.getGender(), model.getPlayers());
+        } else if (firstParticipant instanceof Team){
+            List<Team> teams = new ArrayList<>();
+            for (Participant p: model.getParticipants()){
+                Team team = (Team) p;
+                teams.add(teamDAO.findByIdFetchWithPlayers(team.getId()));
+            }
+            ranking = getTeamRanking(model.getGender(), teams);
+        }
+        return ranking;
     }
 
     private List<Game> getGamesInLastYear(Gender gender) {

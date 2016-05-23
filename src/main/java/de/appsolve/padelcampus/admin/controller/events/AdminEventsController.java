@@ -184,9 +184,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 //this is a new event
                 
                 //determine ranking
-                ArrayList<Participant> participants =  getRankedParticipants(model);
+                SortedMap<Participant, BigDecimal> ranking =  rankingUtil.getRankedParticipants(model);
                 
-                eventsUtil.createKnockoutGames(model, participants);
+                eventsUtil.createKnockoutGames(model, new ArrayList<>(ranking.keySet()));
                 
                 return redirectToDraws(model);
             default:
@@ -450,22 +450,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
 
     private ModelAndView redirectToDraws(Event model) {
         return new ModelAndView("redirect:/admin/events/edit/"+model.getId()+"/draws");
-    }
-
-    private ArrayList<Participant> getRankedParticipants(Event model) {
-        Participant firstParticipant = model.getParticipants().iterator().next();
-        SortedMap<Participant, BigDecimal> ranking = new TreeMap<>();
-        if (firstParticipant instanceof Player){
-            ranking = rankingUtil.getRanking(model.getGender(), model.getPlayers());
-        } else if (firstParticipant instanceof Team){
-            List<Team> teams = new ArrayList<>();
-            for (Participant p: model.getParticipants()){
-                Team team = (Team) p;
-                teams.add(teamDAO.findByIdFetchWithPlayers(team.getId()));
-            }
-            ranking = rankingUtil.getTeamRanking(model.getGender(), teams);
-        }
-        return new ArrayList<>(ranking.keySet());
     }
 
     private void removeGamesWithoutGameSets(Collection<Game> eventGames) {
