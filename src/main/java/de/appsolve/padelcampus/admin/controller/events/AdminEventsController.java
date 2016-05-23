@@ -373,8 +373,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
         }
         
         eventsUtil.createKnockoutGames(event, rankedParticipants);
-        
-        return new ModelAndView("redirect:/events/event/"+eventId+"/knockoutgames");
+        return redirectToDraws(event);
     }
     
     @Override

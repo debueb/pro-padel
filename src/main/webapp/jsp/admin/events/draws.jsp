@@ -72,8 +72,17 @@
 
 </div>
 <div class="row unit">
-    <div class="col-xs-4 col-xs-offset-4 text-center">
-        <a class="btn btn-primary btn-block" href="/admin/events"><fmt:message key="AllEvents"/></a>
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
+        <div class="list-group">
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="key" value="AllEvents"/>
+                <jsp:param name="href" value="/admin/events"/>
+            </jsp:include>
+            <jsp:include page="/jsp/include/list-group-item.jsp">
+                <jsp:param name="key" value="PlayerViewOfThisEvent"/>
+                <jsp:param name="href" value="/events/event/${Model.id}"/>
+            </jsp:include>
+        </div>
     </div>
 </div>
 
