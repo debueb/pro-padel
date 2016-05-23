@@ -15,6 +15,7 @@ import de.appsolve.padelcampus.db.model.Team;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.data.domain.Page;
@@ -22,8 +23,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -67,6 +70,23 @@ public class AdminTeamsController extends AdminBaseController<Team> {
         mav.addObject("TeamPlayers", teamPlayers);
         mav.addObject("AllPlayers", players);
         return mav;
+    }
+    
+    @Override
+    public ModelAndView postEditView(@ModelAttribute("Model") Team model, HttpServletRequest request, BindingResult result){
+        //derive team name from players if it is empty
+        if (StringUtils.isEmpty(model.getName())){
+            for (Player player: model.getPlayers()){
+                String name = model.getName();
+                if (StringUtils.isEmpty(name)){
+                    name = "";
+                } else {
+                    name += " / ";
+                }
+                model.setName(name + player.getLastName());
+            }
+        }
+        return super.postEditView(model, request, result);
     }
 
     @Override
