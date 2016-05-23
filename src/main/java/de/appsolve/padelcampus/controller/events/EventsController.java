@@ -12,12 +12,16 @@ import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Module;
+import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
+import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -90,7 +94,29 @@ public class EventsController extends BaseController{
         event = eventDAO.findByIdFetchWithGames(eventId);
         SortedMap<Integer, List<Game>> groupGameMap = eventsUtil.getGroupGames(event);
         SortedMap<Integer, List<Game>> roundGameMap = eventsUtil.getRoundGames(event);
-        mav.addObject("GroupGameMap", groupGameMap);
+        
+        //Group // Participant // Game // GameResult
+        SortedMap<Integer, Map<Participant, Map<Game, String>>> groupParticipantGameResultMap = new TreeMap<>();
+        
+        Iterator<Map.Entry<Integer, List<Game>>> iterator = groupGameMap.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry<Integer, List<Game>> entry = iterator.next();
+            Map<Participant, Map<Game, String>> participantGameResultMap = new HashMap<>();
+            for (Game game: entry.getValue()){
+                for (Participant p: game.getParticipants()){
+                    Map<Game, String> gameResultMap = participantGameResultMap.get(p);
+                    if (gameResultMap == null){
+                        gameResultMap = new HashMap<>();
+                    }
+                    String result = gameUtil.getGameResultMap(game, p);
+                    gameResultMap.put(game, result);
+                    participantGameResultMap.put(p, gameResultMap);
+                }
+            }
+            Integer group = entry.getKey();
+            groupParticipantGameResultMap.put(group, participantGameResultMap);
+        }
+        mav.addObject("GroupParticipantGameResultMap", groupParticipantGameResultMap);
         mav.addObject("RoundGameMap", roundGameMap);
         
         gameUtil.addGameResultMap(mav, event.getGames());

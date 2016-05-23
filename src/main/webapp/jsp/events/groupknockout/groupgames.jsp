@@ -7,21 +7,63 @@
         
         <jsp:include page="/jsp/events/include/info.jsp"/>
         
-        <c:forEach var="GroupMapEntry" items="${GroupGameMap}">
-            <c:set var="GroupNumber" value="${GroupMapEntry.key}"/>
-            <c:set var="GameList" value="${GroupMapEntry.value}"/>
+        <c:forEach var="GroupParticipantGameResultMapEntry" items="${GroupParticipantGameResultMap}">
+            <c:set var="GroupNumber" value="${GroupParticipantGameResultMapEntry.key}"/>
+            <c:set var="ParticipantGameResultMap" value="${GroupParticipantGameResultMapEntry.value}"/>
             <div class="panel panel-info unit">
                 <div class="panel-heading">
                     <h4><fmt:message key="Group"/> ${GroupNumber+1}</h4>
                 </div>
                 <div class="panel-body">
                     <div class="list-group">
-                        <c:forEach var="Game" items="${GameList}">
-                            <c:set var="Game" value="${Game}" scope="request"/>
-                            <a href="/games/game/${Game.id}/edit?redirectUrl=events/event/${Model.id}/groupgames" class="list-group-item ajaxify">
-                                <jsp:include page="/jsp/games/game-result.jsp"/>
-                            </a>
-                        </c:forEach>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-condensed">
+                                <thead>
+                                    <th></th>
+                                    <c:forEach var="ParticipantGameResultMapEntry" items="${ParticipantGameResultMap}">
+                                        <c:set var="Participant" value="${ParticipantGameResultMapEntry.key}"/>
+                                    <th class="text-center normal">${Participant}</th>
+                                    </c:forEach>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="ParticipantGameResultMapEntry" items="${ParticipantGameResultMap}">
+                                        <c:set var="Participant" value="${ParticipantGameResultMapEntry.key}"/>
+                                        <c:set var="GameResultMap" value="${ParticipantGameResultMapEntry.value}"/>
+                                        <tr>
+                                            <td class="vertical-align-middle">${Participant}</td>
+                                            <c:forEach var="ParticipantGameResultMapEntry" items="${ParticipantGameResultMap}">
+                                                <c:set var="Opponent" value="${ParticipantGameResultMapEntry.key}"/>
+                                                <td class="text-center vertical-align-middle">
+                                                    <c:choose>
+                                                        <c:when test="${Participant == Opponent}">
+                                                            -
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <c:forEach var="GameResultMapEntry" items="${GameResultMap}">
+                                                                <c:set var="Game" value="${GameResultMapEntry.key}"/>
+                                                                <c:set var="Result" value="${GameResultMapEntry.value}"/>
+                                                                <c:if test="${fn:contains(Game.participants, Participant) and fn:contains(Game.participants, Opponent)}">
+                                                                    <a href="/games/game/${Game.id}/edit?redirectUrl=events/event/${Model.id}/groupgames" class="ajaxify">
+                                                                    <c:choose>
+                                                                        <c:when test="${not empty Result}">
+                                                                            ${Result}
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            -:- -:-
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </c:if>
+                                                                </a>
+                                                            </c:forEach>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                            </c:forEach>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
