@@ -22,15 +22,13 @@
                         <c:if test="${fn:length(Game.participants) == 2}"><a class="ajaxify" href="${contextPath}/games/game/${Game.id}/edit?redirectUrl=events/event/${Model.id}${Model.eventType == 'GroupKnockout' ? '/knockoutgames' : ''}"></c:if>
                             <c:forEach var="Participant" items="${Game.participants}">
                                 <div class="team team-${Participant.id}" data-team="${Participant.id}">
-                                        <span class="team-name">${Participant}</span>
-                                        <span class="team-score">
-                                            <c:forEach var="GameSet" items="${Game.gameSets}">
-                                                <c:if test="${GameSet.participant == Participant}">
-                                                    ${GameSet.setGames}
-                                                </c:if>
-                                            </c:forEach>
-                                        </span>
-                                    </div>
+                                    <span class="team-name">${Participant}</span>
+                                    <span class="team-score">
+                                        <c:forEach var="GameSet" items="${ParticipantGameGameSetMap[Participant][Game]}">
+                                            ${GameSet.setGames}
+                                        </c:forEach>
+                                    </span>
+                                </div>
                             </c:forEach>
                             <c:choose>
                                 <c:when test="${RoundGameMapEntry.key == 0 and fn:length(Game.participants) == 1}">

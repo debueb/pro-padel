@@ -11,15 +11,19 @@ import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
+import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +82,7 @@ public class EventsController extends BaseController{
             case Knockout:
                 event = eventDAO.findByIdFetchWithGames(eventId);
                 SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGames(event);
-                mav.addObject("RoundGameMap", roundGames);
+                mav = getKnockoutView(event, roundGames);
                 break;
         }
         
@@ -126,15 +130,49 @@ public class EventsController extends BaseController{
     @RequestMapping("event/{eventId}/knockoutgames")
     public ModelAndView getEventKnockoutGames(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithGames(eventId);
-        ModelAndView mav = new ModelAndView("events/knockout", "Model", event);
         SortedMap<Integer, List<Game>> groupGameMap = eventsUtil.getGroupGames(event);
         SortedMap<Integer, List<Game>> roundGameMap = eventsUtil.getRoundGames(event);
         if (roundGameMap.isEmpty()){
             return new ModelAndView("events/groupknockout/knockoutgames", "Model", event);
         }
-        
+        ModelAndView mav = getKnockoutView(event, roundGameMap);
         mav.addObject("GroupGameMap", groupGameMap);
-        mav.addObject("RoundGameMap", roundGameMap);
         return mav;
     }
+
+    private ModelAndView getKnockoutView(Event event, SortedMap<Integer, List<Game>> roundGameMap) {
+        ModelAndView mav = new ModelAndView("events/knockout");
+        mav.addObject("Model", event);
+        mav.addObject("RoundGameMap", roundGameMap);
+        mav.addObject("ParticipantGameGameSetMap", getParticipantGameGameSetMap(roundGameMap));
+        return mav;
+    }
+    
+    private Map<Participant, Map<Game, List<GameSet>>> getParticipantGameGameSetMap(SortedMap<Integer, List<Game>> roundGameMap) {
+        Map<Participant, Map<Game, List<GameSet>>> participantGameGameSetMap = new HashMap<>();
+        Iterator<List<Game>> gameList = roundGameMap.values().iterator();
+        while(gameList.hasNext()){
+            List<Game> games = gameList.next();
+            for (Game game: games){
+                for (Participant p: game.getParticipants()){
+                    Map<Game, List<GameSet>> gameGameMap = participantGameGameSetMap.get(p);
+                    if (gameGameMap == null){
+                        gameGameMap = new HashMap<>();
+                    }
+                    Set<GameSet> gameSets = game.getGameSets();
+                    List<GameSet> participantGameSets = new ArrayList<>();
+                    for (GameSet gs: gameSets){
+                        if (gs.getParticipant().equals(p)){
+                            participantGameSets.add(gs);
+                        }
+                    }
+                    Collections.sort(participantGameSets);
+                    gameGameMap.put(game, participantGameSets);
+                    participantGameGameSetMap.put(p, gameGameMap);
+                }
+            }
+        }
+        return participantGameGameSetMap;
+    }
+
 }
