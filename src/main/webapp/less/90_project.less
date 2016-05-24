@@ -713,8 +713,9 @@ table.table-round > tbody > tr > td{
 .table > tbody > tr:last-child > td.booking-selected-date{
     background: @selectedBgColor;
 }
-.booking-offer a{
-    /*padding: 5px 0;*/
+.table > thead:first-child > tr:first-child > th.booking-selected-date a,
+.table > tbody > tr:last-child > td.booking-selected-date a{
+    color: white;
 }
 .booking-offer-container{
     display: table;
@@ -971,9 +972,13 @@ div.product-chooser div.product-chooser-item input{
 
 .ui-state-focus { outline: none; }
 @media (max-width: @screen-sm) {
-    .booking-time > span, .booking-offer > span {
-        display: block;
-        white-space: normal !important;
+    .booking-time{
+        transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
     }
 }
 @media (max-width: @screen-xs) {

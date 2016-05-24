@@ -81,7 +81,7 @@
                                     <joda:format value="${TimeRange.endTime}" pattern="HH:mm" var="endTime"/>
                                     <c:if test="${selectedTime == null or selectedTime == TimeRange.startTime}">
                                         <tr>
-                                            <td class="booking-time">${startTime}<span> - </span>${endTime}</td>
+                                            <td><div class="booking-time">${startTime}</div></td>
 
                                             <c:forEach var="WeekDay" items="${WeekDays}">
                                                 <c:set var="offerCount" value="0"/>
@@ -102,7 +102,7 @@
                                                                         <c:forEach var="Offer" items="${TimeSlot.availableOffers}">
                                                                             <c:if test="${as:contains(SelectedOffers, Offer)}">
                                                                                 <div class="booking-offer-row ${TimeSlot.date == Day ? 'booking-offer-row-selected' : ''}">
-                                                                                    <a class="ajaxify booking-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: #00FF00; height: ${100/offerCount}%;">
+                                                                                    <a class="ajaxify booking-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${Offer.hexColor}; height: ${100/offerCount}%;">
                                                                                         <span>${Offer.name}</span> 
                                                                                         <span>${TimeSlot.config.currency.symbol}${TimeSlot.config.basePrice}</span>
                                                                                     </a>
