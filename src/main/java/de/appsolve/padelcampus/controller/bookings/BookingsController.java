@@ -137,16 +137,6 @@ public class BookingsController extends BaseController {
         } 
         return getIndexView(date, time, offers);
     }
-
-//    @RequestMapping("{day}")
-//    public ModelAndView getDay(@PathVariable("day") String day) throws JsonProcessingException {
-//        return getIndexView(day, null);
-//    }
-//
-//    @RequestMapping("{day}/{time}")
-//    public ModelAndView getDayTime(@PathVariable("day") String day, @PathVariable("time") String time) throws JsonProcessingException {
-//        return getIndexView(day, time);
-//    }
     
     @RequestMapping("{day}/{time}/offer/{offerId}")
     public ModelAndView showBookingView(@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("offerId") Long offerId, HttpServletRequest request) throws ParseException, Exception {
@@ -426,12 +416,8 @@ public class BookingsController extends BaseController {
 
     private ModelAndView getIndexView(String day, String time, List<Facility> facilities) throws JsonProcessingException {
         LocalDate selectedDate = DATE_HUMAN_READABLE.parseLocalDate(day);
-        LocalTime selectedTime = null;
-        if (!StringUtils.isEmpty(time)){
-            selectedTime = TIME_HUMAN_READABLE.parseLocalTime(time);
-        }
         ModelAndView indexView = new ModelAndView("bookings/index");
-        bookingUtil.addWeekView(selectedDate, selectedTime, facilities, indexView, true);
+        bookingUtil.addWeekView(selectedDate, facilities, indexView, true);
         return indexView;
     }
 

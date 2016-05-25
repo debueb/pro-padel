@@ -228,7 +228,7 @@ public class BookingUtil {
         return UUID.randomUUID().toString();
     }
 
-    public void addWeekView(LocalDate selectedDate, LocalTime selectedTime, List<Facility> selectedFacilities, ModelAndView mav, Boolean preventOverlapping) throws JsonProcessingException {
+    public void addWeekView(LocalDate selectedDate, List<Facility> selectedFacilities, ModelAndView mav, Boolean preventOverlapping) throws JsonProcessingException {
         //calculate date configuration for datepicker
         LocalDate today = new LocalDate(DEFAULT_TIMEZONE);
         LocalDate firstDay = today.dayOfMonth().withMinimumValue();
@@ -287,7 +287,6 @@ public class BookingUtil {
             }
         }
         
-        mav.addObject("selectedTime", selectedTime);
         mav.addObject("dayConfigs", objectMapper.writeValueAsString(dayConfigs));
         mav.addObject("maxDate", lastDay.toString());
         mav.addObject("Day", selectedDate);

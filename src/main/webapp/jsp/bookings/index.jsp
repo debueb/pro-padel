@@ -20,20 +20,6 @@
                         <div class="datepicker" data-show-on-init="false" data-redirect-on-select="/bookings/{date}/{time}" data-day-config='${dayConfigs}' data-max-date='${maxDate}'></div>
                     </div>
                     <c:if test="${not empty RangeMap}">
-                        <div class="relative">
-                            <select name="time" class="select-simple form-control ${empty Facilities ? 'form-bottom-element' : 'form-center-element'}" data-container="body">
-                                <option value=""><fmt:message key="AllStartTimes"/></option>
-                                <c:forEach var="TimeRange" items="${RangeMap}">
-                                    <c:if test="${TimeRange.offersAvailable}">
-                                        <option ${selectedTime == TimeRange.startTime ? 'selected' : ''}>
-                                            <joda:format value="${TimeRange.startTime}" pattern="HH:mm"/>
-                                        </option>
-                                    </c:if>
-                                </c:forEach>
-                            </select>
-                            <span class="explanation-select"><fmt:message key="StartTime"/></span>
-                        </div>
-
                         <c:if test="${not empty Facilities}">
                             <div class="relative">
                                 <select name="facilities" class="select-multiple form-control form-bottom-element" multiple="true" data-container="body">
@@ -69,9 +55,7 @@
                 <div class="booking-gallery-time">
                     <c:forEach var="TimeRange" items="${RangeMap}">
                         <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
-                        <c:if test="${selectedTime == null or selectedTime == TimeRange.startTime}">
-                            <div>${startTime}</div>
-                        </c:if>
+                        <div>${startTime}</div>
                     </c:forEach>
                 </div>
                 <div class="booking-slick">
