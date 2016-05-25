@@ -74,7 +74,7 @@
                         </c:if>
                     </c:forEach>
                 </div>
-                <div class="booking-slick unit-2">
+                <div class="booking-slick">
 
                     <c:forEach var="WeekDay" items="${WeekDays}">
                         <div>
