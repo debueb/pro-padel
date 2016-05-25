@@ -86,9 +86,9 @@
                                     <tr>
                                         <c:forEach var="Offer" items="${Offers}">
                                             <c:if test="${fn:contains(SelectedOffers, Offer)}">
-                                                <th>${Offer.shortName}</th>
-                                                </c:if>
-                                            </c:forEach>
+                                                <th style="background-color: ${Offer.hexColor};">${Offer.shortName}</th>
+                                            </c:if>
+                                        </c:forEach>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -126,7 +126,7 @@
                                     <tr>
                                         <c:forEach var="Offer" items="${Offers}">
                                             <c:if test="${fn:contains(SelectedOffers, Offer)}">
-                                                <td>${Offer.shortName}</td>
+                                                <td style="background-color: ${Offer.hexColor};">${Offer.shortName}</td>
                                             </c:if>
                                         </c:forEach>
                                     </tr>
