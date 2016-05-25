@@ -55,126 +55,137 @@
     </div>
 </div>
 
-<div class="row">    
-    <div class="booking-gallery">
-        <div class="booking-gallery-time">
-            <c:forEach var="TimeRange" items="${RangeMap}">
-                <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
-                <c:if test="${selectedTime == null or selectedTime == TimeRange.startTime}">
-                    <div>${startTime}</div>
-                </c:if>
-            </c:forEach>
-        </div>
-        <div class="booking-slick unit-2">
-
-            <c:forEach var="WeekDay" items="${WeekDays}">
-                <div>
-                    <div class="booking-gallery-day">
-                        <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>, <joda:format value="${WeekDay}" pattern="dd.MM."/>
-                    </div>
-                    <table class="table table-booking table-fixed">
-                        <thead>
-                            <tr>
-                                <c:forEach var="Offer" items="${Offers}">
-                                    <c:if test="${fn:contains(SelectedOffers, Offer)}">
-                                        <th>${Offer}</th>
-                                        </c:if>
-                                    </c:forEach>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="TimeRange" items="${RangeMap}">
-                                <tr>
-                                    <c:forEach var="Offer" items="${Offers}">
-                                        <c:if test="${fn:contains(SelectedOffers, Offer)}">
-                                            <td>
-                                                <c:set var="containsTimeSlot" value="false"/>
-                                                <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
-                                                    <c:if test="${TimeSlot.date.dayOfWeek eq WeekDay.dayOfWeek}">
-                                                        <c:set var="containsTimeSlot" value="true"/>
-                                                        <c:choose>
-                                                            <c:when test="${fn:contains(TimeSlot.availableOffers, Offer)}">
-                                                                <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
-                                                                <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
-                                                                <a class="ajaxify booking-gallery-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${Offer.hexColor};">
-                                                                    ${TimeSlot.config.basePrice}
-                                                                </a>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <span class="booking-gallery-offer booking-disabled"></span>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </c:if>
-                                                </c:forEach>
-                                                <c:if test="${not containsTimeSlot}">
-                                                    <span class="booking-gallery-offer booking-disabled"></span>
-                                                </c:if>
-                                            </td>
-                                        </c:if>
-                                    </c:forEach>
-                                </tr>
-                            </c:forEach>
-                            <tr>
-                                <c:forEach var="Offer" items="${Offers}">
-                                    <c:if test="${fn:contains(SelectedOffers, Offer)}">
-                                        <td>${Offer}</td>
-                                    </c:if>
-                                </c:forEach>
-                            </tr>
-                        </tbody>
-                    </table>
+<div class="row">
+    <c:choose>
+        <c:when test="${empty RangeMap}">
+            <div class="col-xs-12">
+                <div class="alert alert-info">
+                    <fmt:message key="NoBookableTimeSlotsAvailable"/>
                 </div>
-            </c:forEach>
-        </div>
-    </div>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="booking-gallery">
+                <div class="booking-gallery-time">
+                    <c:forEach var="TimeRange" items="${RangeMap}">
+                        <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
+                        <c:if test="${selectedTime == null or selectedTime == TimeRange.startTime}">
+                            <div>${startTime}</div>
+                        </c:if>
+                    </c:forEach>
+                </div>
+                <div class="booking-slick unit-2">
+
+                    <c:forEach var="WeekDay" items="${WeekDays}">
+                        <div>
+                            <div class="booking-gallery-day">
+                                <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>, <joda:format value="${WeekDay}" pattern="dd.MM."/>
+                            </div>
+                            <table class="table table-booking table-fixed">
+                                <thead>
+                                    <tr>
+                                        <c:forEach var="Offer" items="${Offers}">
+                                            <c:if test="${fn:contains(SelectedOffers, Offer)}">
+                                                <th>${Offer}</th>
+                                                </c:if>
+                                            </c:forEach>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="TimeRange" items="${RangeMap}">
+                                        <tr>
+                                            <c:forEach var="Offer" items="${Offers}">
+                                                <c:if test="${fn:contains(SelectedOffers, Offer)}">
+                                                    <td>
+                                                        <c:set var="containsTimeSlot" value="false"/>
+                                                        <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
+                                                            <c:if test="${TimeSlot.date.dayOfWeek eq WeekDay.dayOfWeek}">
+                                                                <c:set var="containsTimeSlot" value="true"/>
+                                                                <c:choose>
+                                                                    <c:when test="${fn:contains(TimeSlot.availableOffers, Offer)}">
+                                                                        <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
+                                                                        <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
+                                                                        <a class="ajaxify booking-gallery-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${Offer.hexColor};">
+                                                                            ${TimeSlot.config.basePrice}
+                                                                        </a>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <span class="booking-gallery-offer booking-disabled"></span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                        <c:if test="${not containsTimeSlot}">
+                                                            <span class="booking-gallery-offer booking-disabled"></span>
+                                                        </c:if>
+                                                    </td>
+                                                </c:if>
+                                            </c:forEach>
+                                        </tr>
+                                    </c:forEach>
+                                    <tr>
+                                        <c:forEach var="Offer" items="${Offers}">
+                                            <c:if test="${fn:contains(SelectedOffers, Offer)}">
+                                                <td>${Offer}</td>
+                                            </c:if>
+                                        </c:forEach>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+            <joda:parseDateTime var="jodaDate" pattern="yyyy-MM-dd" value="${Day}"/>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('.booking-slick').slick({
+                        infinite: false,
+                        mobileFirst: true,
+                        arrows: true,
+                        adaptiveHeight: true,
+                        initialSlide: ${jodaDate.dayOfWeek-1},
+                        responsive: [
+                            {
+                                breakpoint: 2240,
+                                settings: {
+                                    slidesToShow: 7
+                                }
+                            }, {
+                                breakpoint: 1920,
+                                settings: {
+                                    slidesToShow: 6
+                                }
+                            }, {
+                                breakpoint: 1600,
+                                settings: {
+                                    slidesToShow: 5
+                                }
+                            }, {
+                                breakpoint: 1280,
+                                settings: {
+                                    slidesToShow: 4
+                                }
+                            }, {
+                                breakpoint: 960,
+                                settings: {
+                                    slidesToShow: 3
+                                }
+                            }, {
+                                breakpoint: 640,
+                                settings: {
+                                    slidesToShow: 2
+                                }
+                            }, {
+                                breakpoint: 320,
+                                settings: {
+                                    slidesToShow: 1
+                                }
+                            }]
+                    });
+                });
+            </script>
+        </c:otherwise>
+    </c:choose>
 </div>
-<joda:parseDateTime var="jodaDate" pattern="yyyy-MM-dd" value="${Day}"/>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.booking-slick').slick({
-            infinite: false,
-            mobileFirst: true,
-            arrows: true,
-            adaptiveHeight: true,
-            initialSlide: ${jodaDate.dayOfWeek-1},
-            responsive: [
-                {
-                    breakpoint: 2240,
-                    settings: {
-                        slidesToShow: 7
-                    }
-                },{
-                    breakpoint: 1920,
-                    settings: {
-                        slidesToShow: 6
-                    }
-                },{
-                    breakpoint: 1600,
-                    settings: {
-                        slidesToShow: 5
-                    }
-                },{
-                    breakpoint: 1280,
-                    settings: {
-                        slidesToShow: 4
-                    }
-                },{
-                    breakpoint: 960,
-                    settings: {
-                        slidesToShow: 3
-                    }
-                }, {
-                    breakpoint: 640,
-                    settings: {
-                        slidesToShow: 2
-                    }
-                }, {
-                    breakpoint: 320,
-                    settings: {
-                        slidesToShow: 1
-                    }
-                }]
-        });
-    });
-</script>
 <jsp:include page="/jsp/include/footer.jsp"/>
