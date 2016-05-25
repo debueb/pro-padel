@@ -86,7 +86,7 @@
                                     <tr>
                                         <c:forEach var="Offer" items="${Offers}">
                                             <c:if test="${fn:contains(SelectedOffers, Offer)}">
-                                                <th>${Offer}</th>
+                                                <th>${Offer.shortName}</th>
                                                 </c:if>
                                             </c:forEach>
                                     </tr>
@@ -126,7 +126,7 @@
                                     <tr>
                                         <c:forEach var="Offer" items="${Offers}">
                                             <c:if test="${fn:contains(SelectedOffers, Offer)}">
-                                                <td>${Offer}</td>
+                                                <td>${Offer.shortName}</td>
                                             </c:if>
                                         </c:forEach>
                                     </tr>
@@ -136,6 +136,11 @@
                     </c:forEach>
                 </div>
             </div>
+            
+            <div class="col-xs-12 unit-2">
+                <jsp:include page="/jsp/bookings/include/leyenda.jsp"/>
+            </div>
+            
             <joda:parseDateTime var="jodaDate" pattern="yyyy-MM-dd" value="${Day}"/>
             <script type="text/javascript">
                 $(document).ready(function () {

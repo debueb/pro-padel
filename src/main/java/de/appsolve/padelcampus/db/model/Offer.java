@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -25,6 +26,10 @@ public class Offer extends CustomerEntity{
     @Column
     @NotEmpty(message = "{NotEmpty.name}")
     private String name;
+    
+    @Column(length = 3)
+    @Pattern(regexp = "^.{1,3}", message = "{RegExp.ShortName}") 
+    private String shortName;
     
     @Column
     @NotNull(message = "{NotEmpty.maxConcurrentBookings}")
@@ -42,6 +47,14 @@ public class Offer extends CustomerEntity{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
     public Long getMaxConcurrentBookings() {

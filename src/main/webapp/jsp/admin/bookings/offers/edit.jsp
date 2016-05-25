@@ -19,6 +19,9 @@
                     <fmt:message var="Name" key="Name"/>
                     <spf:input path="name" type="text" class="form-control form-top-element" placeholder="${Name}"/>
 
+                    <fmt:message var="ShortName" key="ShortName"/>
+                    <spf:input path="shortName" type="text" class="form-control form-center-element" placeholder="${ShortName}" maxlength="3"/>
+
                     <div class="input-group color-picker">
                         <span class="input-group-addon form-center-element"><i></i></span>
                         <span class="relative">

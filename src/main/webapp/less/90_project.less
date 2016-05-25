@@ -669,11 +669,6 @@ span.error{
     text-align: center;
     vertical-align: middle;
 }
-.table.table-booking > thead > tr > th,
-.table.table-booking > tbody > tr > td,
-.table.table-round > tbody > tr > td{
-    word-wrap: break-word;
-}
 .table.table-booking > tbody > tr > td:not(:last-child),
 .table.table-round > tbody > tr > td:not(:last-child){
     border-right: 1px solid @gray;
@@ -728,6 +723,8 @@ table.table-round > tbody > tr > td{
 .table.table-booking > thead > tr > th{
     height: 40px;
     max-height: 40px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .table.table-booking > tbody > tr > td > a{
     display: inline-block;
@@ -1098,13 +1095,21 @@ textarea {
   -ms-flex: 1 0 auto;
   flex: 1 0 auto;
 }
+.col-leyenda-header{
+    background: white;
+    width: 100%;
+    border-top-left-radius: @border-radius-large;
+    border-top-right-radius: @border-radius-large;
+}
+.col-leyenda, {
+    text-align: center;
+    width: 100px;
+    flex: 1;
+    border-top: 1px solid @gray;
+}
 .col-leyenda, .col-leyenda-header{
     padding: 10px;
     text-align: center;
-    width: 100px;
-}
-.col-leyenda{
-    border-top: 1px solid @gray;
 }
 .col-leyenda:not(:last-child){
     border-right: 1px solid @gray;
