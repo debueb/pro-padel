@@ -659,7 +659,8 @@ span.error{
     padding: 10px;
 }
 .table.table-booking{
-    border: 1px solid @gray;
+    border-top: 1px solid @gray;
+    border-left: 1px solid @gray;
 }
 .table.table-booking > tbody > tr > td,
 .table.table-booking > thead:first-child > tr:first-child > th,
@@ -679,8 +680,10 @@ span.error{
 .table.table-booking > tbody > tr:not(:last-child) > td{
     border-bottom: 1px solid @gray;
 }
-.table.table-booking > thead:first-child > tr:first-child > th:not(:last-child){
+.table.table-booking > thead:first-child > tr:first-child > th{
     border-bottom: 1px solid @gray;
+}
+.table.table-booking > thead:first-child > tr:first-child > th:not(:last-child){
     border-right: 1px solid @gray
 }
 table.table-booking > thead > tr > th{
@@ -720,7 +723,8 @@ table.table-round > tbody > tr > td{
 .table.table-booking{
     background: #e7e7e7;
 }
-.table.table-booking > tbody > tr > td{
+.table.table-booking > tbody > tr > td,
+.table.table-booking > thead > tr > th{
     height: 40px;
     max-height: 40px;
 }
@@ -1224,14 +1228,17 @@ th.normal{
 }
 .booking-gallery-time{
     position: absolute;
-    top: 44px;
-    left: 15px;
+    top: 82px;
+    left: 10px;
+    width: 15px;
     z-index: 99;
 }
 .booking-gallery-time div{
+    display: block;
+    width: 40px;
     height: 40px;
-    max-height: 40px;
-    min-height: 40px;
+    line-height: 12px;
+    text-align: center;
     -moz-transform: rotate(-90deg);
     -ms-transform: rotate(-90deg);
     -o-transform: rotate(-90deg);
@@ -1241,18 +1248,22 @@ th.normal{
 }
 .booking-slick{
     background: white; 
-    border-radius: 5px;
-    border: 1px solid #EFEFEF;
+    border-radius: 10px;
     margin-left: 10px;
     margin-right: 10px;
     text-align: center;
-    padding-left: 20px;
+    padding-left: 12px;
 }
 .booking-gallery-day{
+    height: 40px;
+    line-height: 40px;
     display: inline-block;
     text-align: center;
     width: 100%;
     font-weight: bold;
+}
+.booking-gallery-day:not(:last-child){
+    border-left: 1px solid @gray;
 }
 .booking-gallery-offer, .booking-gallery-header{
     display: block; 
@@ -1268,6 +1279,20 @@ th.normal{
 }
 .booking-disabled{
     background: @white-gray;
+}
+.booking-gallery{
+    position: relative;
+}
+.booking-gallery .slick-next, .booking-gallery .slick-prev{
+    top: 20px;
+}
+
+.booking-gallery .slick-prev{
+    left: 10px;
+    z-index: 9999;
+}
+.booking-gallery .slick-next{
+    right: 0px;
 }
 @media (max-width: @screen-sm) {
     .booking-slick, .booking-gallery-time{

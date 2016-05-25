@@ -56,7 +56,7 @@
 </div>
 
 <div class="row">    
-    <div class="relative">
+    <div class="booking-gallery">
         <div class="booking-gallery-time">
             <c:forEach var="TimeRange" items="${RangeMap}">
                 <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
@@ -69,11 +69,10 @@
 
             <c:forEach var="WeekDay" items="${WeekDays}">
                 <div>
-
                     <div class="booking-gallery-day">
                         <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>, <joda:format value="${WeekDay}" pattern="dd.MM."/>
                     </div>
-                    <table class="table table-booking table-fixed" >
+                    <table class="table table-booking table-fixed">
                         <thead>
                             <tr>
                                 <c:forEach var="Offer" items="${Offers}">
@@ -85,10 +84,8 @@
                         </thead>
                         <tbody>
                             <c:forEach var="TimeRange" items="${RangeMap}">
-
                                 <tr>
                                     <c:forEach var="Offer" items="${Offers}">
-
                                         <c:if test="${fn:contains(SelectedOffers, Offer)}">
                                             <td>
                                                 <c:set var="containsTimeSlot" value="false"/>
@@ -109,17 +106,14 @@
                                                         </c:choose>
                                                     </c:if>
                                                 </c:forEach>
-
                                                 <c:if test="${not containsTimeSlot}">
                                                     <span class="booking-gallery-offer booking-disabled"></span>
                                                 </c:if>
-
                                             </td>
                                         </c:if>
                                     </c:forEach>
                                 </tr>
                             </c:forEach>
-
                             <tr>
                                 <c:forEach var="Offer" items="${Offers}">
                                     <c:if test="${fn:contains(SelectedOffers, Offer)}">
@@ -133,8 +127,6 @@
             </c:forEach>
         </div>
     </div>
-
-
 </div>
 <script type="text/javascript">
     $(document).ready(function () {

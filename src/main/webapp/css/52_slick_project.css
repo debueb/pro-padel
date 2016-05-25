@@ -29,10 +29,3 @@
 .slick-slide:focus { 
     outline: none !important;
 }
-.slick-prev{
-    left: 20px;
-    z-index: 99999;
-}
-.slick-next{
-    right: -5px;
-}
