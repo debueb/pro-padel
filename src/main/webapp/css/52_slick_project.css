@@ -1,0 +1,38 @@
+.slick-prev:before, .slick-next:before { 
+    font-family: FontAwesome; 
+    font-size: 20px; 
+    line-height: 1;
+    color: black;
+    opacity: 0.75; 
+    -webkit-font-smoothing: antialiased; 
+    -moz-osx-font-smoothing: grayscale; }   
+
+.slick-prev:before {
+    content: "\f053"; 
+}
+
+[dir="rtl"] .slick-prev:before { 
+    content: "\f054"; 
+}
+
+[dir="rtl"] .slick-next { 
+    left: -10px; 
+    top: 70px; 
+    right: auto; 
+}
+.slick-next:before { 
+    content: "\f054"; 
+}
+[dir="rtl"] .slick-next:before {
+    content: "\f053"; 
+}
+.slick-slide:focus { 
+    outline: none !important;
+}
+.slick-prev{
+    left: 20px;
+    z-index: 99999;
+}
+.slick-next{
+    right: -5px;
+}

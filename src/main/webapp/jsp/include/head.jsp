@@ -54,6 +54,8 @@
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/30_font-awesome.min.css.stylesheet">
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/40_jquery-ui.min.css.stylesheet">
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/50_slick.css.stylesheet">
+                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/51_slick-theme.css.stylesheet">
+                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/52_slick_project.css.stylesheet">
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/90_project.css.stylesheet">
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/96_tennisball.css.stylesheet">
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/99_addtohomescreen.css.stylesheet">
