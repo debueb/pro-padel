@@ -128,6 +128,7 @@
         </div>
     </div>
 </div>
+<joda:parseDateTime var="jodaDate" pattern="yyyy-MM-dd" value="${Day}"/>
 <script type="text/javascript">
     $(document).ready(function () {
         $('.booking-slick').slick({
@@ -135,6 +136,7 @@
             mobileFirst: true,
             arrows: true,
             adaptiveHeight: true,
+            initialSlide: ${jodaDate.dayOfWeek-1},
             responsive: [
                 {
                     breakpoint: 2240,
