@@ -1111,15 +1111,9 @@ textarea {
     padding: 10px;
     text-align: center;
 }
-.col-leyenda:not(:last-child){
+.col-leyenda{
     border-right: 1px solid @gray;
 }
-.border-leyenda{
-    border: 1px solid @gray;
-    border-top-left-radius: @border-radius-large;
-    border-top-right-radius: @border-radius-large;
-}
-
 /* tournament */
 .tournament-container{
     position: relative;
@@ -1254,7 +1248,7 @@ th.normal{
 }
 .booking-slick{
     background: white; 
-    border-radius: 10px;
+    border-radius: @border-radius-large;
     margin-left: 10px;
     margin-right: 10px;
     text-align: center;
