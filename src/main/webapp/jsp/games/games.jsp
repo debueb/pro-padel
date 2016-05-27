@@ -13,25 +13,25 @@
                     <h4>${subtitle}</h4>
                 </c:if>
             </div>
-        </div>
-
-        <div class="list-group">
-            <c:forEach var="Game" items="${Games}">
-                <a href="/games/game/${Game.id}" class="list-group-item ajaxify">
-                    <c:set var="Game" value="${Game}" scope="request"/>
-                    <jsp:include page="/jsp/games/game-result.jsp"/>  
-                </a>
-            </c:forEach>
-        </div>
-
-        <c:if test="${not empty Event}">
-            <div class="unit list-group">
-                <a href="/scores/event/${Event.id}" class="list-group-item ajaxify">
-                    <div class="list-item-text"><fmt:message key="ResultsIn"><fmt:param value="${Event.name}"/></fmt:message></div>
-                    </a>
+            <div class="panel-body">
+                <div class="list-group">
+                    <c:forEach var="Game" items="${Games}">
+                        <a href="/games/game/${Game.id}" class="list-group-item ajaxify">
+                            <c:set var="Game" value="${Game}" scope="request"/>
+                            <jsp:include page="/jsp/games/game-result.jsp"/>  
+                        </a>
+                    </c:forEach>
                 </div>
 
-        </c:if>
+                <c:if test="${not empty Event}">
+                    <div class="unit list-group">
+                        <a href="/scores/event/${Event.id}" class="list-group-item ajaxify">
+                            <div class="list-item-text"><fmt:message key="ResultsIn"><fmt:param value="${Event.name}"/></fmt:message></div>
+                            </a>
+                        </div>
+                </c:if>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -10,16 +10,17 @@
             <div class="panel-heading">
                 <h4>${Title}</h4>
             </div>
+            <div class="panel-body">
+                <div class="list-group">
+                    <c:forEach var="Participant" items="${Teams}">
+                        <a href="/teams/team/${Participant.id}" class="list-group-item ajaxify">
+                            <div class="list-item-text">${Participant}</div>
+                        </a>
+                    </c:forEach>
+                </div>
+            </div>
         </div>
 
-
-        <div class="list-group">
-            <c:forEach var="Participant" items="${Teams}">
-                <a href="/teams/team/${Participant.id}" class="list-group-item ajaxify">
-                    <div class="list-item-text">${Participant}</div>
-                </a>
-            </c:forEach>
-        </div>
     </div>
 </div>
 
