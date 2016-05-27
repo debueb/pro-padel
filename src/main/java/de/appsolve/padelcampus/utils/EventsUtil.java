@@ -28,7 +28,7 @@ public class EventsUtil {
     @Autowired
     GameDAOI gameDAO;
 
-    public SortedMap<Integer, List<Game>> getRoundGames(Event event) {
+    public SortedMap<Integer, List<Game>> getRoundGameMap(Event event) {
         SortedMap<Integer, List<Game>> roundGames= new TreeMap<>();
         
         for (Game game: event.getGames()){
@@ -44,7 +44,7 @@ public class EventsUtil {
         return roundGames;
     }
 
-    public SortedMap<Integer, List<Game>> getGroupGames(Event event) {
+    public SortedMap<Integer, List<Game>> getGroupGameMap(Event event) {
         SortedMap<Integer, List<Game>> groupGames= new TreeMap<>();
         
         for (Game game: event.getGames()){

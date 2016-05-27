@@ -10,6 +10,7 @@ import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.data.EventGroups;
+import de.appsolve.padelcampus.data.GameList;
 import de.appsolve.padelcampus.data.GameData;
 import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
@@ -242,7 +243,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
     @RequestMapping(value={"edit/{eventId}/groupdraws"}, method=GET)
     public ModelAndView getGroupDraws(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
-        
         return getGroupDrawsView(event, getDefaultEventGroups(event));
     }
     
@@ -255,6 +255,12 @@ public class AdminEventsController extends AdminBaseController<Event>{
             if (entry.getValue() == null){
                 bindingResult.reject("PleaseSelectParticipantsForEachGroup");
             }
+        }
+        
+        //prevent modification of group draws if knockout round games have already begun
+        SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGameMap(event);
+        if (!roundGames.isEmpty()){
+            bindingResult.reject("CannotModifyEventAfterGroupPhaseHasEnded");
         }
         
         if (bindingResult.hasErrors()){
@@ -284,6 +290,27 @@ public class AdminEventsController extends AdminBaseController<Event>{
             createMissingGames(event, event.getGames(), groupParticipants, groupNumber);
         }
         
+        return new ModelAndView("redirect:/admin/events/edit/"+eventId+"/gameschedule");
+    }
+    
+    @RequestMapping(value={"edit/{eventId}/gameschedule"}, method=GET)
+    public ModelAndView getGameSchedule(@PathVariable("eventId") Long eventId){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        return getGameScheduleView(event);
+    }
+    
+    @RequestMapping(value={"edit/{eventId}/gameschedule"}, method=POST)
+    public ModelAndView postGameSchedule(@PathVariable("eventId") Long eventId, @ModelAttribute("Model") GameList gameList, BindingResult bindingResult, HttpServletRequest request){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        if (bindingResult.hasErrors()){
+            return getGameScheduleView(event);
+        }
+        for (Game game: gameList.getList()){
+            Game existingGame = gameDAO.findById(game.getId());
+            existingGame.setStartTimeHour(game.getStartTimeHour());
+            existingGame.setStartTimeMinute(game.getStartTimeMinute());
+            gameDAO.saveOrUpdate(existingGame);
+        }
         return redirectToIndex(request);
     }
     
@@ -324,13 +351,13 @@ public class AdminEventsController extends AdminBaseController<Event>{
     public ModelAndView saveEventGroupGamesEnd(@PathVariable("eventId") Long eventId, @ModelAttribute("Model") Event dummy, BindingResult result){
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
         
-        SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGames(event);
+        SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGameMap(event);
         if (!roundGames.isEmpty()){
             result.reject("GroupGamesAlreadyEnded");
             return getGroupGamesEndView(dummy);
         }
         
-        SortedMap<Integer, List<Game>> groupGames = eventsUtil.getGroupGames(event);
+        SortedMap<Integer, List<Game>> groupGames = eventsUtil.getGroupGameMap(event);
         Iterator<Map.Entry<Integer, List<Game>>> iterator = groupGames.entrySet().iterator();
         
         //determine best participants of each group
@@ -400,29 +427,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
         return mav;
     }
     
-    private ModelAndView getDrawsView(Long eventId) {
-        Event event = eventDAO.findByIdFetchWithGames(eventId);
-        SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGames(event);
-        ModelAndView mav = new ModelAndView("admin/events/draws", "Model", event);
-        mav.addObject("RoundGameMap", roundGames);
-        return mav;
-    }
-    
-    private ModelAndView getDrawsGameView(Long eventId, GameData gameData) {
-        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
-        ModelAndView mav = new ModelAndView("admin/events/game");
-        mav.addObject("Event", event);
-        mav.addObject("Model", gameData);
-        return mav;
-    }
-    
-    private ModelAndView getGroupDrawsView(Event event, EventGroups eventGroups){
-        ModelAndView mav = new ModelAndView("admin/events/groupdraws");
-        mav.addObject("Event", event);
-        mav.addObject("Model", eventGroups);
-        return mav;
-    }
-    
     @Override
     public BaseEntityDAOI<Event> getDAO() {
         return eventDAO;
@@ -463,6 +467,49 @@ public class AdminEventsController extends AdminBaseController<Event>{
         }
     }
 
+    private ModelAndView getDrawsView(Long eventId) {
+        Event event = eventDAO.findByIdFetchWithGames(eventId);
+        SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGameMap(event);
+        ModelAndView mav = new ModelAndView("admin/events/draws", "Model", event);
+        mav.addObject("RoundGameMap", roundGames);
+        return mav;
+    }
+    
+    private ModelAndView getDrawsGameView(Long eventId, GameData gameData) {
+        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
+        ModelAndView mav = new ModelAndView("admin/events/game");
+        mav.addObject("Event", event);
+        mav.addObject("Model", gameData);
+        return mav;
+    }
+    
+    private ModelAndView getGroupDrawsView(Event event, EventGroups eventGroups){
+        ModelAndView mav = new ModelAndView("admin/events/groupdraws");
+        mav.addObject("Event", event);
+        mav.addObject("Model", eventGroups);
+        return mav;
+    }
+    
+    private ModelAndView getGroupGamesEndView(Event event) {
+        ModelAndView mav = new ModelAndView("events/groupknockout/groupgamesend", "Model", event);
+        return mav;
+    }
+
+    private ModelAndView getGameScheduleView(Event event) {
+        ModelAndView mav = new ModelAndView("admin/events/gameschedule");
+        mav.addObject("Event", event);
+        SortedMap<Integer, List<Game>> groupGameMap = eventsUtil.getGroupGameMap(event);
+        mav.addObject("GroupGameMap", groupGameMap);
+        List<Game> games = new ArrayList<>();
+        for (List<Game> list: groupGameMap.values()){
+            games.addAll(list);
+        }
+        GameList formList = new GameList();
+        formList.setList(games);
+        mav.addObject("Model", formList);
+        return mav;
+    }
+    
     private ModelAndView redirectToGroupDraws(Event model) {
         return new ModelAndView("redirect:/admin/events/edit/"+model.getId()+"/groupdraws");
     }
@@ -515,10 +562,5 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 }
             }
         }
-    }
-    
-    private ModelAndView getGroupGamesEndView(Event event) {
-        ModelAndView mav = new ModelAndView("events/groupknockout/groupgamesend", "Model", event);
-        return mav;
     }
 }

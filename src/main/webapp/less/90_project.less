@@ -1295,3 +1295,21 @@ th.normal{
         font-size: 12px;
     }
 }
+.bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn).stretch{
+    width: 100%;
+}
+.game-schedule{
+    display: flex;
+    align-items: center;
+}
+.game-schedule:not(:first-child){
+    padding-top: 5px;
+}
+.game-schedule-title{
+    flex: 1;
+}
+.game-schedule-hour, .game-schedule-minute{
+    flex: 0;
+    min-width: 60px;
+    text-align: center;
+}

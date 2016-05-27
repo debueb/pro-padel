@@ -82,7 +82,7 @@ public class EventsController extends BaseController{
         switch (event.getEventType()){
             case Knockout:
                 event = eventDAO.findByIdFetchWithGames(eventId);
-                SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGames(event);
+                SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGameMap(event);
                 mav = getKnockoutView(event, roundGames);
                 break;
         }
@@ -106,8 +106,8 @@ public class EventsController extends BaseController{
         
         
         event = eventDAO.findByIdFetchWithGames(eventId);
-        SortedMap<Integer, List<Game>> groupGameMap = eventsUtil.getGroupGames(event);
-        SortedMap<Integer, List<Game>> roundGameMap = eventsUtil.getRoundGames(event);
+        SortedMap<Integer, List<Game>> groupGameMap = eventsUtil.getGroupGameMap(event);
+        SortedMap<Integer, List<Game>> roundGameMap = eventsUtil.getRoundGameMap(event);
         
         //Group // Participant // Game // GameResult
         SortedMap<Integer, Map<Participant, Map<Game, String>>> groupParticipantGameResultMap = new TreeMap<>();
@@ -140,8 +140,8 @@ public class EventsController extends BaseController{
     @RequestMapping("event/{eventId}/knockoutgames")
     public ModelAndView getEventKnockoutGames(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithGames(eventId);
-        SortedMap<Integer, List<Game>> groupGameMap = eventsUtil.getGroupGames(event);
-        SortedMap<Integer, List<Game>> roundGameMap = eventsUtil.getRoundGames(event);
+        SortedMap<Integer, List<Game>> groupGameMap = eventsUtil.getGroupGameMap(event);
+        SortedMap<Integer, List<Game>> roundGameMap = eventsUtil.getRoundGameMap(event);
         if (roundGameMap.isEmpty()){
             return new ModelAndView("events/groupknockout/knockoutgames", "Model", event);
         }

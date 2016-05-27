@@ -57,7 +57,7 @@
                     </c:choose>
                     
                     <div class="select-toggle-GroupKnockout relative">
-                        <spf:input path="numberOfGroups" type="number" class="form-control form-center-element"/>
+                        <spf:input path="numberOfGroups" type="number" class="form-control form-center-element" min="1"/>
                         <div class="explanation-select"><fmt:message key="NumberOfGroups"/></div>
                     </div>
                     
@@ -141,6 +141,10 @@
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
                     <c:if test="${not empty Model.id and (Model.eventType eq 'Knockout')}">
                         <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/draws"><fmt:message key="ToDraws"/></a>
+                    </c:if>
+                    <c:if test="${not empty Model.id and (Model.eventType eq 'GroupKnockout')}">
+                        <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/groupdraws"><fmt:message key="ToGroupDraws"/></a>
+                        <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/gameschedule"><fmt:message key="ToGameSchedule"/></a>
                     </c:if>
                 </spf:form>
             </div>

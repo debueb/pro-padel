@@ -48,6 +48,9 @@
                                                                         <c:when test="${not empty Result}">
                                                                             ${Result}
                                                                         </c:when>
+                                                                        <c:when test="${Game.startTime ne null}">
+                                                                            <joda:format value="${Game.startTime}" pattern="HH:mm" /> <fmt:message key="oClock"/>
+                                                                        </c:when>
                                                                         <c:otherwise>
                                                                             -:- -:-
                                                                         </c:otherwise>

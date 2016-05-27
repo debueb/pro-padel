@@ -139,7 +139,10 @@ public class Game extends CustomerEntity{
     }
     
     public LocalTime getStartTime(){
-        return TIME_HUMAN_READABLE.parseLocalTime(getStartTimeHour()+":"+getStartTimeMinute());
+        if (getStartTimeHour() != null && getStartTimeMinute() != null){
+            return TIME_HUMAN_READABLE.parseLocalTime(getStartTimeHour()+":"+getStartTimeMinute());
+        }
+        return null;
     }
 
     public Game getNextGame() {
