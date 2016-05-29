@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus;
 
+import de.appsolve.padelcampus.listener.SessionEventListener;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
@@ -36,6 +37,8 @@ public class WebAppInitializer implements WebApplicationInitializer{
         ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", new DispatcherServlet(dispatcherContext));
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/");
+        
+        servletContext.addListener(SessionEventListener.class);
     }
     
 }
