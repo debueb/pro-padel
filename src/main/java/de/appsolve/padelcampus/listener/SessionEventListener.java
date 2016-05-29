@@ -12,19 +12,13 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDateTime;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
 
 /**
  * Delete all unpaid blocking bookings whose session timeout has expired
  * @author dominik
  */
-@Component
-public class SessionEventListener implements HttpSessionListener, ApplicationContextAware{
+public class SessionEventListener implements HttpSessionListener{
     
     Logger log = Logger.getLogger(SessionEventListener.class);
     
@@ -33,20 +27,6 @@ public class SessionEventListener implements HttpSessionListener, ApplicationCon
     
     @Autowired
     SessionUtil sessionUtil;
-    
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if (applicationContext instanceof WebApplicationContext) {
-            WebApplicationContext wac = (WebApplicationContext) applicationContext;
-            try {
-                wac.getServletContext().addListener(this);
-            } catch (UnsupportedOperationException e){
-                //MockServletContext throws this, which we can safely ignore
-            }
-        } else {
-            log.info("No web application context given. SessionEventListener will not work.");
-        }
-    }           
     
     @Override
     public void sessionCreated(HttpSessionEvent se) {
