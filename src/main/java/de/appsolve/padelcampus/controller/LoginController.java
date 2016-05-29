@@ -49,7 +49,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/login")
 public class LoginController extends BaseController{
     
-    private static final Logger log = Logger.getLogger(LoginController.class);
+    private static final Logger LOG = Logger.getLogger(LoginController.class);
     
     @Autowired
     PlayerDAOI playerDAO;
@@ -124,7 +124,7 @@ public class LoginController extends BaseController{
             }
             return getRegisterSuccessView();
         } catch(Exception e){
-            log.warn("Error while registering user", e);
+            LOG.warn("Error while registering user", e);
             bindingResult.addError(new ObjectError("id", e.getMessage()));
             return mav;
         }
@@ -181,7 +181,7 @@ public class LoginController extends BaseController{
         try {
             MailUtils.send(mail);
         } catch (MailException | IOException e) {
-            log.warn("Error while sending reset password instructions", e);
+            LOG.warn("Error while sending reset password instructions", e);
             bindingResult.addError(new ObjectError("email", e.toString()));
             return forgotPasswordView;
         }
@@ -221,7 +221,7 @@ public class LoginController extends BaseController{
             return mav;
         }
         
-        player.setPasswordHash(getHash(credentials.getPassword()));
+        player.setPasswordHash(DigestUtils.sha512Hex(credentials.getPassword()));
         playerDAO.saveOrUpdate(player);
         return new ModelAndView("login/reset-password-success");
     }
@@ -261,7 +261,7 @@ public class LoginController extends BaseController{
         }
         
         Player player = playerDAO.findByEmail(credentials.getEmail());
-        String hash = getHash(credentials.getPassword());
+        String hash = DigestUtils.sha512Hex(credentials.getPassword());
         if (player == null || StringUtils.isEmpty(player.getPasswordHash()) || !hash.equals(player.getPasswordHash())){
             throw new Exception(msg.get("UnknownEmailAddressOrPassword"));
         }
@@ -298,11 +298,11 @@ public class LoginController extends BaseController{
             mail.addRecipient(contact);
             mail.setSubject(msg.get("RegistrationMailSubject"));
             mail.setBody(StringEscapeUtils.unescapeJava(msg.get("RegistrationMailBody", new Object[]{player.toString(), confirmRegistrationURL, RequestUtil.getBaseURL(request)})));
-            MailUtils.send(mail);
-            
-            //make sure to save the password only after the email has been successfully sent
-            player.setPasswordHash(getHash(player.getPassword()));
-            playerDAO.saveOrUpdate(player);
+            try {
+                MailUtils.send(mail);
+            } catch (IOException | MailException e){
+                LOG.error(e.getMessage(), e);
+            }
             
             //set auto login cookie if user has requested so
             setLoginCookie(request, response, player);
@@ -325,10 +325,6 @@ public class LoginController extends BaseController{
             cookie.setMaxAge(0); //deletes cookie if it exists
         }
         response.addCookie(cookie);
-    }
-    
-    private String getHash(String input) {
-        return DigestUtils.sha512Hex(input);
     }
 
     private void checkForRedirectParam(HttpServletRequest request) {

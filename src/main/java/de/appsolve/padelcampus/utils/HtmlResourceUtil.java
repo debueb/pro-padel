@@ -75,12 +75,16 @@ public class HtmlResourceUtil {
             applyCustomerCss(context, cssAttributeBaseDAO.findAll(), "");
         } else {
             for (Customer customer: customers){
-                Map<String, Object> attributeMap = new HashMap<>();
-                attributeMap.put("customer", customer);
-                List<CssAttribute> cssAttributes = cssAttributeBaseDAO.findByAttributes(attributeMap);
-                applyCustomerCss(context, cssAttributes, customer.getName());
+                updateCss(context, customer);
             } 
         }
+    }
+    
+    public void updateCss(ServletContext context, Customer customer) throws Exception{
+        Map<String, Object> attributeMap = new HashMap<>();
+        attributeMap.put("customer", customer);
+        List<CssAttribute> cssAttributes = cssAttributeBaseDAO.findByAttributes(attributeMap);
+        applyCustomerCss(context, cssAttributes, customer.getName());
     }
     
     private void applyCustomerCss(ServletContext context, List<CssAttribute> cssAttributes, String customerName) throws Exception {

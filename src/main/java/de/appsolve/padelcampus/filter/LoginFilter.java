@@ -41,7 +41,7 @@ public class LoginFilter implements Filter {
     @Autowired
     ModuleUtil moduleUtil;
     
-    private static final String PATH_START_PAGE = "/start";
+    private static final String PATH_START_PAGE = "/pro";
 
     /**
      * @param config
@@ -86,8 +86,6 @@ public class LoginFilter implements Filter {
                 }
                 sessionUtil.setCustomer(httpRequest, customer);
             }
-            
-            
             
             Player user = sessionUtil.getUser(httpRequest);
             if (user == null) {

@@ -13,6 +13,11 @@ import org.springframework.stereotype.Component;
 public class CustomerDAO extends BaseEntityDAO<Customer> implements CustomerDAOI{
 
     @Override
+    public Customer findByName(String name) {
+        return super.findByAttribute("name", name);
+    }
+    
+    @Override
     public Customer findByDomainName(String domainName) {
         List<Customer> allCustomers = findAll();
         for (Customer customer: allCustomers){
@@ -24,5 +29,4 @@ public class CustomerDAO extends BaseEntityDAO<Customer> implements CustomerDAOI
         }
         return null;
     }
-
 }

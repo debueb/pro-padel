@@ -6,9 +6,12 @@
 package de.appsolve.padelcampus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.appsolve.padelcampus.external.cloudflare.CloudFlareApiRequestInterceptor;
+import de.appsolve.padelcampus.external.openshift.OpenshiftApiRequestInterceptor;
 import de.appsolve.padelcampus.filter.ResponseCachingFilter;
 import de.appsolve.padelcampus.listener.ContextInitializationListener;
 import de.appsolve.padelcampus.resolver.PutAwareCommonsMultipartResolver;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -25,12 +28,16 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.http.CacheControl;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
@@ -129,5 +136,39 @@ public class AppConfig {
     @Bean
     public ContextInitializationListener contextInitializationListener(){
         return new ContextInitializationListener();
+    }
+    
+    @Bean
+    public ClientHttpRequestFactory clientHttpRequestFactory() {
+        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+        factory.setReadTimeout(5000);
+        factory.setConnectTimeout(5000);
+        return factory;
+    }
+    
+    @Bean
+    public ClientHttpRequestFactory openshiftClientHttpRequestFactory() {
+        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+        factory.setReadTimeout(60000);
+        factory.setConnectTimeout(60000);
+        return factory;
+    }
+    
+    @Bean
+    public RestTemplate cloudFlareApiRestTemplate(){
+        RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory());
+        ArrayList<ClientHttpRequestInterceptor> arrayList = new ArrayList<>();
+        arrayList.add(new CloudFlareApiRequestInterceptor());
+        restTemplate.setInterceptors(arrayList);
+        return restTemplate;
+    }
+    
+    @Bean
+    public RestTemplate openshiftApiRestTemplate(){
+        RestTemplate restTemplate = new RestTemplate(openshiftClientHttpRequestFactory());
+        ArrayList<ClientHttpRequestInterceptor> arrayList = new ArrayList<>();
+        arrayList.add(new OpenshiftApiRequestInterceptor());
+        restTemplate.setInterceptors(arrayList);
+        return restTemplate;
     }
 }

@@ -15,5 +15,7 @@ import de.appsolve.padelcampus.db.model.Customer;
  */
 public interface CustomerDAOI extends BaseEntityDAOI<Customer>{
     
+    public Customer findByName(String name);
+    
     public Customer findByDomainName(String domainName);
 }
