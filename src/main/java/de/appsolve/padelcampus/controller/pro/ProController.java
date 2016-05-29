@@ -23,13 +23,18 @@ import de.appsolve.padelcampus.utils.HtmlResourceUtil;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.regex.Pattern;
+import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
 import javax.servlet.ServletContext;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,19 +118,20 @@ public class ProController {
         }
         
         try {
+            String projectName = customerAccount.getCustomer().getName().toLowerCase();
             //verify dns name requirements
-            if (!DNS_SUBDOMAIN_PATTERN.matcher(customerAccount.getCustomer().getName()).matches()){
+            if (!DNS_SUBDOMAIN_PATTERN.matcher(projectName).matches()){
                 throw new Exception(msg.get("ProjectNameFormatRequirements"));
             }
             
             //make sure customer does not exist yet
-            Customer customer = customerDAO.findByName(customerAccount.getCustomer().getName().toLowerCase());
+            Customer customer = customerDAO.findByName(projectName);
             if (customer != null){
                 throw new Exception(msg.get("ProjectAlreadyExists"));
             }
             
             //create DNS subdomain in cloudflare
-            String domainName = cloudFlareApiClient.addCnameRecord(customerAccount.getCustomer().getName(), CLOUDFLARE_URL, OPENSHIFT_URL);
+            String domainName = cloudFlareApiClient.addCnameRecord(projectName, CLOUDFLARE_URL, OPENSHIFT_URL);
             
             //create openshift alias
             openshiftApiClient.addAlias(domainName, OPENSHIFT_URL);
@@ -169,17 +175,15 @@ public class ProController {
         }
     }
     
-    @RequestMapping("newaccount/{domainName}")
-    public ModelAndView newAccountSuccess(@PathVariable("domainName") String domainName){
-        boolean dnsRecordExists = true;
-        try {
-            InetAddress.getByName(domainName);
-        } catch (UnknownHostException e){
-            dnsRecordExists = false;
-        }
+    @RequestMapping("newaccount/{customerId}")
+    public ModelAndView newAccountSuccess(@PathVariable("customerId") Long customerId) throws NamingException{
+        Customer customer = customerDAO.findById(customerId);
+        String domainName = customer.getDomainNames().iterator().next();
+        Attribute record = getDnsRecord(domainName);
+        
         ModelAndView mav =  new ModelAndView("pro/newaccount-success");
         mav.addObject("domainName", domainName);
-        mav.addObject("dnsRecordExists", dnsRecordExists);
+        mav.addObject("dnsRecordExists", record!=null);
         return mav;
     }
 
@@ -201,6 +205,24 @@ public class ProController {
             MailUtils.send(mail);
         } catch (MailException | IOException ex) {
             LOG.error(ex);
+        }
+    }
+
+    private Attribute getDnsRecord(String domainName) throws NamingException {
+        Hashtable<String, String> env = new Hashtable<>();
+
+        env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
+        env.put("com.sun.jndi.dns.timeout.initial", "5000");    /* quite short... too short? */
+        env.put("com.sun.jndi.dns.timeout.retries", "1");
+
+        DirContext ictx = new InitialDirContext(env);
+        String[] ids = new String[] {"A"};
+        try {
+            Attributes attrs = ictx.getAttributes(domainName, ids);
+            Attribute a = attrs.get("A");
+            return a;
+        } catch (NameNotFoundException e){
+            return null;
         }
     }
 }
