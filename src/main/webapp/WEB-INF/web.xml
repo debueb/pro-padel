@@ -34,6 +34,8 @@
         <url-pattern>*.woff2</url-pattern>
         <url-pattern>*.otf</url-pattern>
         <url-pattern>*.txt</url-pattern>
+        <url-pattern>*.mp4</url-pattern>
+        <url-pattern>*.webm</url-pattern>
     </servlet-mapping>
     
     <jsp-config>

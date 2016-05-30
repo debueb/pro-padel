@@ -1,6 +1,4 @@
 <%@include file="/jsp/include/include.jsp"%>
-<%@include file="/jsp/include/include.jsp"%>
-
 
 <fmt:message key="CustomerRegistrationSuccessful"/>
 <c:choose>

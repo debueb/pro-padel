@@ -68,7 +68,7 @@ public class LoginFilter implements Filter {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             
-            if (httpRequest.getRequestURI().contains(PATH_START_PAGE)){
+            if (httpRequest.getRequestURI().startsWith(PATH_START_PAGE)){
                 chain.doFilter(request, response);
                 return;
             }

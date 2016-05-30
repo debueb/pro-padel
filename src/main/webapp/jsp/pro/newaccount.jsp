@@ -1,60 +1,79 @@
 <%@include file="/jsp/include/include.jsp"%>
-<%@include file="/jsp/include/include.jsp"%>
+<jsp:include page="/jsp/pro/include/head.jsp"/>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
+            <h2 class="text-center"><fmt:message key="Register"/></h2>
+            <spf:form method="POST" class="form-horizontal" modelAttribute="Model">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <fmt:message key="Register"/>
+                    </div>
 
-<div class="row">
-    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
-        <jsp:include page="/jsp/include/back.jsp"/>
+                    <div class="panel-body">
+                        <div class="alert alert-info">Der Registrierungsprozess ist vollautomatisch, kann aber einige Minuten in Anspruch nehmen. Der Projektname darf nur alphanumerische Zeichen und Bindestriche enthalten.</div>
+                        <div class="alert alert-danger"><spf:errors path="*" cssClass="error"/></div>
 
-        <div class="page-header"></div>
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <fmt:message key="NewAccount" var="NewAccount"/>
-            </div>
-            <div class="panel-body">
-                <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
-                    <div class="alert alert-danger"><spf:errors path="*" cssClass="error"/></div>
-                    <%@include file="/jsp/include/include.jsp"%>
-                    <fmt:message key="ProjectName" var="ProjectName"/>
-                    <fmt:message key="FirstName" var="FirstName"/>
-                    <fmt:message key="LastName" var="LastName"/>
-                    <fmt:message key="EmailAddress" var="EmailAddress"/>
-                    <fmt:message key="PhoneNumber" var="PhoneNumber"/>
-                    <fmt:message key="Password" var="Password"/>
-                    <div class="relative">
-                        <spf:input path="customer.name" type="text" class="form-control form-top-element"/>
-                        <div class="explanation">${ProjectName}</div>
+
+                        <fmt:message key="EmailAddress" var="EmailAddress"/>
+                        <fmt:message key="PhoneNumber" var="PhoneNumber"/>
+                        <fmt:message key="Password" var="Password"/>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label"><fmt:message key="ProjectName"/></label>
+                            <div class="col-sm-10">
+                                <spf:input path="customer.name" type="text" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label"><fmt:message key="FirstName"/></label>
+                            <div class="col-sm-10">
+                                <spf:input path="player.firstName" type="text" class="form-control form-top-element"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label"><fmt:message key="LastName"/></label>
+                            <div class="col-sm-10">
+                                <spf:input path="player.lastName" type="text" class="form-control form-center-element"/>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label"><fmt:message key="EmailAddress"/></label>
+                            <div class="col-sm-10">
+                                <spf:input path="player.email" type="text" class="form-control form-center-element"/>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label"><fmt:message key="PhoneNumber"/></label>
+                            <div class="col-sm-10">
+                                <spf:input path="player.phone" type="text" class="form-control form-center-element"/>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label"><fmt:message key="Gender"/></label>
+                            <div class="col-sm-10">
+                                <spf:select path="player.gender" class="select-simple form-control" data-style="${not empty param.showPassword ? 'form-center-element' : 'form-bottom-element'}" data-container="body">
+                                    <spf:option value="male"><fmt:message key="male"/></spf:option>
+                                    <spf:option value="female"><fmt:message key="female"/></spf:option>
+                                </spf:select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label"><fmt:message key="Password"/></label>
+                            <div class="col-sm-10">
+                                <spf:input path="player.password" type="text" class="form-control form-center-element"/>
+
+                            </div>
+                        </div>
                     </div>
-                    <div class="relative">
-                        <spf:input path="player.firstName" type="text" class="form-control form-top-element"/>
-                        <div class="explanation">${FirstName}</div>
-                    </div>
-                    <div class="relative">
-                        <spf:input path="player.lastName" type="text" class="form-control form-center-element"/>
-                        <div class="explanation">${LastName}</div>
-                    </div>
-                    <div class="relative">
-                        <spf:input path="player.email" type="email"  class="form-control form-center-element"/>
-                        <div class="explanation">${EmailAddress}</div>
-                    </div>
-                    <div class="relative">
-                        <spf:input path="player.phone" type="tel"  class="form-control form-center-element"/>
-                        <div class="explanation">${PhoneNumber}</div>
-                    </div>
-                    <span class="relative block">
-                        <spf:select path="player.gender" class="select-simple form-control" data-style="${not empty param.showPassword ? 'form-center-element' : 'form-bottom-element'}" data-container="body">
-                            <spf:option value="male"><fmt:message key="male"/></spf:option>
-                            <spf:option value="female"><fmt:message key="female"/></spf:option>
-                        </spf:select>
-                        <span class="explanation-select"><fmt:message key="Gender"/></span>
-                    </span>
-                    <div class="relative">
-                        <spf:input path="player.password" type="password"  class="form-control form-bottom-element"/>
-                        <div class="explanation">${Password}</div>
-                    </div>
-                    
-                    <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Create"/></button>
-                </spf:form>
-            </div>
+                    <div class="panel-footer"><button class="btn btn-default btn-block btn-form-submit unit" type="submit"><fmt:message key="Register"/></button></div>
+                </div>
+            </spf:form>
         </div>
     </div>
 </div>
+<jsp:include page="/jsp/pro/include/footer.jsp"/>

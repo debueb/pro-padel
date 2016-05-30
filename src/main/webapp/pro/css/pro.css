@@ -1,0 +1,141 @@
+html, body{
+    width: 100%;
+    height: 100%;
+}
+body{
+    background-color: black;
+}
+.homepage-hero-module {
+  border-right: none;
+  border-left: none;
+  position: absolute;
+  width: 100%;
+}
+.no-video .video-container video,
+.touch .video-container video {
+  display: none;
+}
+.no-video .video-container .poster,
+.touch .video-container .poster {
+  display: block !important;
+}
+.video-container {
+  position: relative;
+  bottom: 0%;
+  left: 0%;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: #000;
+}
+.video-container .poster img {
+  width: 100%;
+  bottom: 0;
+  position: absolute;
+}
+.title-container {
+  z-index: 1000;
+  position: absolute;
+  top: 25%;
+  width: 100%;
+  text-align: center;
+}
+.description .inner {
+  font-size: 1em;
+  width: 45%;
+  margin: 0 auto;
+}
+.video-container video {
+  position: absolute;
+  z-index: 0;
+  bottom: 0;
+}
+.video-container video.fillWidth {
+  width: 100%;
+}
+.navbar-inverse{
+    background-color: #A7193A;
+}
+.navbar-inverse .navbar-brand{
+    color: #fff;
+}
+.navbar-inverse .navbar-nav > .active > a{
+    background-color: transparent;
+}
+.navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus{
+    color: #333;
+    background-color: white;
+}
+.headline, .description{
+    color: white;
+}
+.title-container .panel{
+    opacity: .9;
+}
+.title-container .panel-body{
+    min-height: 100px;
+    height: 100px;
+    max-height: 100px;
+}
+.content .panel-body{
+    color: #333;
+}
+.link-container{
+    margin-top: 80px;
+}
+.collapsing .pull-right, .in .pull-right{
+    float: left !important;
+}
+.collapsing .nav, .in .nav{
+    width: 100%;
+}
+.navbar-nav{
+    margin: 0;
+}
+.background-fixed{
+    width: 100%;
+    height: 100%;
+    background: url(/pro/images/bg.png) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    padding-top: 50px;
+    color: #fff;
+    display: table;
+    table-layout:fixed;
+}
+.wrapper {
+    display: table-row;
+    height: 100%;
+    padding-top: 50px;
+    color: white;
+}
+.background-fixed .panel{
+    color: #333;
+}
+.alert-danger:empty{
+    display: none;
+}
+.form-control{
+    color: #333;
+}
+.flex-container{
+   display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+.flex-item{
+    flex: 0 1 auto;
+    width: 320px;
+    min-width: 300px;
+    max-width: 320px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.no-padding{
+    padding: 0;
+}
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+}
