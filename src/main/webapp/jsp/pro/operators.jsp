@@ -83,6 +83,7 @@
             <div class="row">
                 <h2 class="text-center">Referenzen</h2>
                 <div class="flex-container">
+                    <c:set var="req" value="${pageContext.request}" />
                     <c:forEach var="Customer" items="${Customers}">
                         <div class="panel flex-item panel-default">
                             <div class="panel-heading">
@@ -90,8 +91,8 @@
                             </div>
                             <div class="panel-body no-padding">
                                 <c:forEach var="domainName" items="${Customer.domainNames}" end="0">
-                                    <iframe src="http://${domainName}" width="100%" height="568px" frameborder="0"></iframe>
-                                    </c:forEach>
+                                    <iframe src="${req.scheme}://${domainName}:${req.serverPort}" width="100%" height="568px" frameborder="0"></iframe>
+                                </c:forEach>
                             </div>
                         </div>
                     </c:forEach>
