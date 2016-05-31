@@ -27,35 +27,28 @@
 
             <div class="panel flex-item panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><fmt:message key="Tournaments"/></h3>
+                    <a href="/pro/tournaments"><h3 class="panel-title"><fmt:message key="Tournaments"/></h3></a>
                 </div>
                 <div class="panel-body">
-                    Wann findet das nächste Turnier statt? Wer ist in der Gruppephase raus geflogen? Wie ist das Finale ausgegangen? Hier findest Du alle Infos zu gelisteten Turnieren
-                </div>
-                <div class="panel-footer">
-                    <a class="btn btn-default" href="/pro/tournaments" role="button"><fmt:message key="AllTournaments"/></a>
+                    <a href="/pro/tournaments">Wann findet das nächste Turnier statt? Wer ist in der Gruppephase raus geflogen? Wie ist das Finale ausgegangen? Hier findest Du alle Infos zu gelisteten Turnieren</a>
                 </div>
             </div>
 
             <div class="panel flex-item panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><fmt:message key="Ranking"/></h3>
+                    <a href="/pro/ranking"><h3 class="panel-title"><fmt:message key="Ranking"/></h3></a>
                 </div>
                 <div class="panel-body">
-                    Schaue Dir das tagesaktuelle Ranking an.
+                    <a href="/pro/ranking">Schaue Dir das tagesaktuelle Ranking an.</a>
                 </div>
-                <div class="panel-footer"><a class="btn btn-default" href="/pro/ranking" role="button"><fmt:message key="CurrentRanking"/></a></div>
             </div>
 
             <div class="panel flex-item panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><fmt:message key="ForOperators"/></h3>
+                    <a href="/pro/operators"><h3 class="panel-title"><fmt:message key="ForOperators"/></h3></a>
                 </div>
                 <div class="panel-body">
-                    Veranstalte deinen eigenen Turniere. Oder verwalte deine eigene Liga. Oder biete deinen Spielern eine Spielbörse an.
-                </div>
-                <div class="panel-footer">
-                    <a class="btn btn-default" href="/pro/operators" role="button"><fmt:message key="OperatorInfos"/></a>
+                    <a href="/pro/operators">Veranstalte deinen eigenen Turniere. Oder verwalte deine eigene Liga. Oder biete deinen Spielern eine Spielbörse an.</a>
                 </div>
             </div>
         </div>

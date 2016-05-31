@@ -70,11 +70,6 @@ body{
 .title-container .panel{
     opacity: .9;
 }
-.title-container .panel-body{
-    min-height: 100px;
-    height: 100px;
-    max-height: 100px;
-}
 .content .panel-body{
     color: #333;
 }
