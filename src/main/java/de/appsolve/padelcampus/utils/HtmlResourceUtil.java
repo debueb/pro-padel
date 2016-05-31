@@ -7,6 +7,7 @@ package de.appsolve.padelcampus.utils;
 
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.dao.CssAttributeBaseDAOI;
+import de.appsolve.padelcampus.db.dao.CssAttributeDAOI;
 import de.appsolve.padelcampus.db.dao.CustomerDAOI;
 import de.appsolve.padelcampus.db.model.CssAttribute;
 import de.appsolve.padelcampus.db.model.Customer;
@@ -69,10 +70,9 @@ public class HtmlResourceUtil {
     private static final String ALL_MIN_CSS = "/css/all.min.css";
 
     public void updateCss(ServletContext context) throws Exception {
-        
         List<Customer> customers = customerDAO.findAll();
         if (customers.isEmpty()){
-            applyCustomerCss(context, cssAttributeBaseDAO.findAll(), "");
+            applyCustomerCss(context, getDefaultCssAttributes(), "");
         } else {
             for (Customer customer: customers){
                 updateCss(context, customer);
@@ -84,6 +84,9 @@ public class HtmlResourceUtil {
         Map<String, Object> attributeMap = new HashMap<>();
         attributeMap.put("customer", customer);
         List<CssAttribute> cssAttributes = cssAttributeBaseDAO.findByAttributes(attributeMap);
+        if (cssAttributes.isEmpty()){
+            cssAttributes = getDefaultCssAttributes();
+        }
         applyCustomerCss(context, cssAttributes, customer.getName());
     }
     
@@ -227,5 +230,23 @@ public class HtmlResourceUtil {
 
     private File getCustomerDir(String customerName) {
        return new File(DATA_DIR + File.separator + customerName);
+    }
+    
+    public List<CssAttribute> getDefaultCssAttributes() {
+        List<CssAttribute> atts = new ArrayList<>();
+        atts.add(getCssAttribute("bgColor", "#94cfea", "#94cfea"));
+        atts.add(getCssAttribute("primaryColor", "#613815", "#613815"));
+        atts.add(getCssAttribute("primaryLinkColor", "#31708f", "#31708f"));
+        atts.add(getCssAttribute("primaryLinkHoverColor", "#94cfeb", "#94cfeb"));
+        atts.add(getCssAttribute("backgroundImage", "url\\('\\/images\\/bg\\.jpg'\\)", "url('/images/bg.jpg')"));
+        return atts;
+    }
+
+    private CssAttribute getCssAttribute(String name, String cssDefaultValue, String cssValue) {
+        CssAttribute att = new CssAttribute();
+        att.setName(name);
+        att.setCssDefaultValue(cssDefaultValue);
+        att.setCssValue(cssValue);
+        return att;
     }
 }

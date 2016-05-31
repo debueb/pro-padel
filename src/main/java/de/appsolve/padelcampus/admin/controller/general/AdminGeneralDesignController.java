@@ -72,13 +72,22 @@ public class AdminGeneralDesignController extends BaseController{
     }
 
     private List<CssAttribute> getCssAttributes() {
-        List<CssAttribute> atts = cssAttributeDAO.findAll();
-        add(atts, "bgColor", "#94cfea", "#94cfea");
-        add(atts, "primaryColor", "#613815", "#613815");
-        add(atts, "primaryLinkColor", "#31708f", "#31708f");
-        add(atts, "primaryLinkHoverColor", "#94cfeb", "#94cfeb");
-        add(atts, "backgroundImage", "url\\('\\/images\\/bg\\.jpg'\\)", "url('/images/bg.jpg')");
-        Collections.sort(atts, new Comparator<CssAttribute>() {
+        List<CssAttribute> cssAttributes = cssAttributeDAO.findAll();
+        List<CssAttribute> defaultCssAttributes = htmlResourceUtil.getDefaultCssAttributes();
+        for (CssAttribute defaultAttribute: defaultCssAttributes){
+            boolean exists = false;
+            for (CssAttribute att: cssAttributes){
+                if (att.getName().equals(defaultAttribute.getName())){
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists){
+                cssAttributes.add(defaultAttribute);
+            }
+        }
+        
+        Collections.sort(cssAttributes, new Comparator<CssAttribute>() {
 
             @Override
             public int compare(CssAttribute o1, CssAttribute o2) {
@@ -87,28 +96,6 @@ public class AdminGeneralDesignController extends BaseController{
                 return endsWith2.compareTo(endsWith1);
             }
         });
-        return atts;
-    }
-
-    private CssAttribute getCssAttribute(String name, String cssDefaultValue, String cssValue) {
-        CssAttribute att = new CssAttribute();
-        att.setName(name);
-        att.setCssDefaultValue(cssDefaultValue);
-        att.setCssValue(cssValue);
-        att = cssAttributeDAO.saveOrUpdate(att);
-        return att;
-    }
-
-    private void add(List<CssAttribute> atts, String name, String defaultValue, String value) {
-        boolean exists = false;
-        for (CssAttribute att: atts){
-            if (att.getName().equals(name)){
-                exists = true;
-                break;
-            }
-        }
-        if (!exists){
-            atts.add(getCssAttribute(name, defaultValue, value));
-        }
+        return cssAttributes;
     }
 }
