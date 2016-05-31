@@ -154,7 +154,7 @@ public class ProOperatorsController {
             
             sendMail(customerAccount, "registration successful");
             
-            return new ModelAndView("redirect:/pro/newaccount/"+customer.getId());
+            return new ModelAndView("redirect:/pro/operators/newaccount/"+customer.getId());
         } catch (Exception e){
             LOG.error(e.getMessage(), e);
             sendMail(customerAccount, e.getMessage());
