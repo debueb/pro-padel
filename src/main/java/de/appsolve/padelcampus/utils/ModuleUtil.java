@@ -35,7 +35,7 @@ public class ModuleUtil {
         
         ServletContext context = request.getServletContext();
         Map<String, List<Module>> links = (Map<String, List<Module>>) context.getAttribute(Constants.APPLICATION_MENU_LINKS);
-        Map<String, List<Module>> footerLinks = (Map<String, List<Module>>) context.getAttribute(Constants.APPLICATION_MENU_LINKS);
+        Map<String, List<Module>> footerLinks = (Map<String, List<Module>>) context.getAttribute(Constants.APPLICATION_FOOTER_LINKS);
         if (links == null || footerLinks == null){
             links = new HashMap<>();
             footerLinks = new HashMap<>();
