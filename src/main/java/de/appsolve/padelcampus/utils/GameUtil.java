@@ -30,18 +30,20 @@ import org.springframework.web.servlet.ModelAndView;
 public class GameUtil {
 
     public void addGameResultMap(ModelAndView mav, Game game) {
-        mav.addObject("GameResultMap", getGameResultMap(game, null));
+        Map<Game, String> map = new HashMap<>();
+        map.put(game, getGameResult(game, null));
+        mav.addObject("GameResultMap", map);
     }
     
     public void addGameResultMap(ModelAndView mav, Collection<Game> games) {
         Map<Game, String> map = new HashMap<>();
         for (Game game : games) {
-            map.put(game, getGameResultMap(game, null));
+            map.put(game, getGameResult(game, null));
         }
         mav.addObject("GameResultMap", map);
     }
 
-    public String getGameResultMap(Game game, final Participant sortByParticipant) {
+    public String getGameResult(Game game, final Participant sortByParticipant) {
         StringBuilder result = new StringBuilder();
 
         List<GameSet> gameSets = new ArrayList<>(game.getGameSets());

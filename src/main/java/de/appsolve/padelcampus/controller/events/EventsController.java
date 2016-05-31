@@ -122,7 +122,7 @@ public class EventsController extends BaseController{
                     if (gameResultMap == null){
                         gameResultMap = new HashMap<>();
                     }
-                    String result = gameUtil.getGameResultMap(game, p);
+                    String result = gameUtil.getGameResult(game, p);
                     gameResultMap.put(game, result);
                     participantGameResultMap.put(p, gameResultMap);
                 }
