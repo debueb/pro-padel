@@ -3,12 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package de.appsolve.padelcampus.controller.pro;
 
-package de.appsolve.padelcampus.controller.contact;
-
-import de.appsolve.padelcampus.controller.BaseController;
+import de.appsolve.padelcampus.controller.contact.ContactController;
 import de.appsolve.padelcampus.data.Mail;
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,26 +18,19 @@ import org.springframework.web.servlet.ModelAndView;
  *
  * @author dominik
  */
-@Controller()
-@RequestMapping("/contact")
-public class ContactController extends BaseController{
+@Controller
+@RequestMapping("/pro/contact")
+public class ProContactController extends ContactController {
     
-    private static final Logger log = Logger.getLogger(ContactController.class);
-    
-    @RequestMapping()
-    public ModelAndView getIndex(){
-        return getIndexView(new Mail());
-    }
-    
-    @RequestMapping(method=POST)
+   @Override
+   public String getPath(){
+       return "pro/";
+   }
+   
+   @RequestMapping(method=POST)
     public ModelAndView postIndex(@ModelAttribute("Model") Mail mail, BindingResult bindingResult){
-        ModelAndView defaultView = getIndexView(mail);
+        ModelAndView defaultView = super.getIndexView(mail);
+        mail.addRecipient(getDefaultContact());
         return sendMail(defaultView, mail, bindingResult);
-    }
-
-    protected ModelAndView getIndexView(Mail mail) {
-        ModelAndView mav = new ModelAndView("contact/index", "Model", mail);
-        mav.addObject("path", getPath());
-        return mav;
     }
 }

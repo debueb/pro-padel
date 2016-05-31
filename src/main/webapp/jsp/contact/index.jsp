@@ -1,5 +1,5 @@
 <%@include file="/jsp/include/include.jsp"%>
-<jsp:include page="/jsp/include/head.jsp"/>
+<jsp:include page="/jsp/${path}include/head.jsp"/>
 
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
@@ -10,7 +10,7 @@
             <div class="panel-body"><fmt:message key="ContactDescription"/>
 
                 <spf:form method="POST" class="form-signin unit" modelAttribute="Model">
-                    <spf:errors path="*" cssClass="error"/>
+                    <div class="alert alert-danger"><spf:errors path="*" cssClass="error"/></div>
                     <fmt:message key="EmailAddress" var="EmailAddress"/>
                     <fmt:message key="Subject" var="Subject"/>
                     <fmt:message key="Message" var="Message"/>
@@ -24,4 +24,4 @@
     </div>
 </div>
 
-<jsp:include page="/jsp/include/footer.jsp"/>
+<jsp:include page="/jsp/${path}include/footer.jsp"/>

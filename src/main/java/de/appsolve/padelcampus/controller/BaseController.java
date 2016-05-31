@@ -68,23 +68,34 @@ public abstract class BaseController {
         if (bindingResult.hasErrors()){
             return defaultView;
         }
-        ModelAndView indexView = new ModelAndView("contact/index", "Model", mail);
         try {
-            List<Contact> contacts = contactDAO.findAll();
-            if (contacts.isEmpty()){
-                Contact contact = new Contact();
-                contact.setEmailAddress(CONTACT_FORM_RECIPIENT_MAIL);
-                contact.setEmailDisplayName(CONTACT_FORM_RECIPIENT_NAME);
-                contacts.add(contact);
+            if (mail.getRecipients().isEmpty()){
+                List<Contact> contacts = contactDAO.findAll();
+                if (contacts.isEmpty()){
+                    contacts.add(getDefaultContact());
+                }
+                mail.setRecipients(new ArrayList<EmailContact>(contacts));
             }
-            mail.setRecipients(new ArrayList<EmailContact>(contacts));
             mail.setSubject("[Feedback] "+mail.getSubject());
             MailUtils.send(mail);
-            return new ModelAndView("contact/success");  
+            ModelAndView mav = new ModelAndView("contact/success");
+            mav.addObject("path", getPath());
+            return mav;
         } catch (MailException | IOException e){
             log.error("Error while sending contact email", e);
             bindingResult.addError(new ObjectError("from", e.toString()));
-            return indexView;
+            return defaultView;
         }
+    }
+    
+    public String getPath() {
+        return "";
+    }
+
+    protected Contact getDefaultContact() {
+        Contact contact = new Contact();
+        contact.setEmailAddress(CONTACT_FORM_RECIPIENT_MAIL);
+        contact.setEmailDisplayName(CONTACT_FORM_RECIPIENT_NAME);
+        return contact;
     }
 }

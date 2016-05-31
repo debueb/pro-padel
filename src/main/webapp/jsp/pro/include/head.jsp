@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="/pro/css/pro.css">
     </head>
     <body>
-        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -38,7 +38,7 @@
                         </li>
                         <li class="active"><a href="/pro/operators">Für Betreiber</a>
                         </li>
-                        <li class="active"><a href="#">Kontakt</a>
+                        <li class="active"><a href="/pro/contact">Kontakt</a>
                         </li>
                     </ul>
                 </div>

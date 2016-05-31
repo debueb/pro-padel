@@ -41,6 +41,14 @@ public class Customer extends BaseEntity implements CustomerI{
     public void setName(String name) {
         this.name = name;
     }
+    
+    @Transient
+    public String getDomainName(){
+        if (domainNames != null){
+            return domainNames.iterator().next();
+        }
+        return null;
+    }
 
     public Set<String> getDomainNames() {
         return domainNames;

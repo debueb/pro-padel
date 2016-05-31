@@ -1,9 +1,8 @@
 <%@include file="/jsp/include/include.jsp"%>
 <jsp:include page="/jsp/pro/include/head.jsp"/>
-<div class="container-fluid">
+<div class="container-fluid" style="margin-top: 20px;">
     <div class="row">
         <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
-            <h2 class="text-center"><fmt:message key="Register"/></h2>
             <spf:form method="POST" class="form-horizontal" modelAttribute="Model">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -11,7 +10,7 @@
                     </div>
 
                     <div class="panel-body">
-                        <div class="alert alert-info">Der Registrierungsprozess ist vollautomatisch, kann aber einige Minuten in Anspruch nehmen. Der Projektname darf nur alphanumerische Zeichen und Bindestriche enthalten.</div>
+                        <div class="alert alert-info">Der Registrierungsprozess ist vollautomatisch, kann aber einige Minuten in Anspruch nehmen. Der Projektname darf nur alphanumerische Zeichen enthalten und nimmt den ersten Teil deiner eigenen URL ein: z.B. <i>projektname</i>.pro-padel.de</div>
                         <div class="alert alert-danger"><spf:errors path="*" cssClass="error"/></div>
 
 

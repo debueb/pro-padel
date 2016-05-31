@@ -16,9 +16,7 @@
         <tbody>
             <c:forEach var="Event" items="${Models}">
                 
-                <c:forEach var="domainName" items="${Event.customer.domainNames}" end="0">
-                    <c:set var="url" value="http://${domainName}/events/event/${Event.id}"/>
-                </c:forEach>
+                <c:set var="url" value="http://${Event.customer.domainName}/events/event/${Event.id}"/>
                 <tr>
                     <td><a href="${url}"><joda:format value="${Event.startDate}" pattern="EEEE, dd. MMMM yyyy"/></a></td>
                     <td><a href="${url}"><fmt:message key="Mode_${Event.gender}"/></a></td>

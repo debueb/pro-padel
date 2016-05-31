@@ -35,7 +35,9 @@ public class RankingController extends BaseController {
     
     @RequestMapping
     public ModelAndView getIndex(){
-        return new ModelAndView("ranking/index");
+        ModelAndView mav = new ModelAndView("ranking/index");
+        mav.addObject("path", getPath());
+        return mav;
     }
     
     @RequestMapping("{gender}/{category}")
@@ -53,6 +55,7 @@ public class RankingController extends BaseController {
                 break;
         }
         mav.addObject("Rankings", rankings);
+        mav.addObject("path", getPath());
         return mav;
     }
 }
