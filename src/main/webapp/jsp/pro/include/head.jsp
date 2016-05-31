@@ -32,9 +32,9 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav pull-right">
-                        <li class="active"><a href="#">Turniere</a>
+                        <li class="active"><a href="/pro/tournaments">Turniere</a>
                         </li>
-                        <li class="active"><a href="#">Ranking</a>
+                        <li class="active"><a href="/pro/ranking">Ranking</a>
                         </li>
                         <li class="active"><a href="/pro/operators">Für Betreiber</a>
                         </li>
