@@ -83,7 +83,7 @@ public class ProOperatorsController {
     
     private final static Pattern DNS_SUBDOMAIN_PATTERN = Pattern.compile("(?:[A-Za-z0-9][A-Za-z0-9\\-]{0,61}[A-Za-z0-9]|[A-Za-z0-9])");
     
-    private final static String OPENSHIFT_URL   = "padelcampus-appsolve.rhcloud.com";
+    private final static String OPENSHIFT_URL   = "padelkoeln-appsolve.rhcloud.com";
     private final static String CLOUDFLARE_URL  = "pro-padel.de";
     
     @RequestMapping()
