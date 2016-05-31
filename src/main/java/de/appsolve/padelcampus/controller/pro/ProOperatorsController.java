@@ -5,7 +5,6 @@
  */
 package de.appsolve.padelcampus.controller.pro;
 
-import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.Privilege;
 import de.appsolve.padelcampus.data.CustomerRegistrationModel;
 import de.appsolve.padelcampus.data.Mail;
@@ -24,7 +23,6 @@ import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -36,6 +34,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.servlet.ServletContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -118,7 +117,10 @@ public class ProOperatorsController {
         }
         
         try {
-            String projectName = customerAccount.getCustomer().getName().toLowerCase();
+            if (StringUtils.isEmpty(customerAccount.getCustomer().getName())){
+                throw new Exception(msg.get("ProjectNameFormatRequirements"));
+            }
+            String projectName = customerAccount.getCustomer().getName().toLowerCase().replace(" ", "-");
             //verify dns name requirements
             if (!DNS_SUBDOMAIN_PATTERN.matcher(projectName).matches()){
                 throw new Exception(msg.get("ProjectNameFormatRequirements"));
