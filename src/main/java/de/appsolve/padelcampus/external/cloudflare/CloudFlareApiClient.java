@@ -35,6 +35,7 @@ public class CloudFlareApiClient {
         dnsRecord.setType("CNAME");
         dnsRecord.setName(subDomainEntry);
         dnsRecord.setContent(originalDomainName);
+        dnsRecord.setProxied(true);
         
         ZonesResponse zonesResponse = getZones(cloudFlareDomainName);
         List<Zone> result = zonesResponse.getResult();

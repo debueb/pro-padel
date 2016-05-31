@@ -14,6 +14,7 @@ public class DnsRecord {
     private String type;
     private String name;
     private String content;
+    private boolean proxied;
 
     public String getType() {
         return type;
@@ -37,5 +38,13 @@ public class DnsRecord {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public boolean isProxied() {
+        return proxied;
+    }
+
+    public void setProxied(boolean proxied) {
+        this.proxied = proxied;
     }
 }
