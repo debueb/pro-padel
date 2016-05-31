@@ -33,7 +33,7 @@
                     Wann findet das nächste Turnier statt? Wer ist in der Gruppephase raus geflogen? Wie ist das Finale ausgegangen? Hier findest Du alle Infos zu gelisteten Turnieren
                 </div>
                 <div class="panel-footer">
-                    <a class="btn btn-default" href="/pro/touraments" role="button"><fmt:message key="AllTournaments"/></a>
+                    <a class="btn btn-default" href="/pro/tournaments" role="button"><fmt:message key="AllTournaments"/></a>
                 </div>
             </div>
 
