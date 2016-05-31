@@ -93,20 +93,6 @@ public class ProOperatorsController {
     
     @RequestMapping(method=GET, value="newaccount")
     public ModelAndView newAccount(){
-//        CustomerRegistrationModel customerAccount = new CustomerRegistrationModel();
-//        Customer customer = new Customer();
-//        customer.setName("Test");
-//        customer.setDomainNames(Collections.singleton("test"));
-//        customerAccount.setCustomer(customer);
-//        Player player = new Player();
-//        player.setEmail("test@appsolve.de");
-//        player.setFirstName("CustomerRegistration");
-//        player.setLastName("Test");
-//        player.setGender(Gender.male);
-//        player.setPhone("00491772731231");
-//        player.setPassword("test");
-//        customerAccount.setPlayer(player);
-//        return new ModelAndView("pro/newaccount", "Model", customerAccount);
         return new ModelAndView("pro/newaccount", "Model", new CustomerRegistrationModel());
     }
     
