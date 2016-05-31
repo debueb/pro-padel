@@ -37,14 +37,6 @@
                 </div>
                 <div class="panel flex-item panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title text-center">Spielbörse</h3>
-                    </div>
-                    <div class="panel-body">
-                        Spielervermittlung
-                    </div>
-                </div>
-                <div class="panel flex-item panel-default">
-                    <div class="panel-heading">
                         <h3 class="panel-title text-center">Spieler und Team Daten</h3>
                     </div>
                     <div class="panel-body">
@@ -57,6 +49,14 @@
                     </div>
                     <div class="panel-body">
                         Das Portal passt sich automatisch an alle Endgeräte an und Du kannst es farblich nach deinen Wünschen konfigurieren.
+                    </div>
+                </div>
+                <div class="panel flex-item panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-center">Spielbörse</h3>
+                    </div>
+                    <div class="panel-body">
+                        Spielervermittlung
                     </div>
                 </div>
                 <div class="panel flex-item panel-default">
