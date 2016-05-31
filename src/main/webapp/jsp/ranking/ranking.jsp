@@ -24,14 +24,15 @@
                                 <th class="text-center"><fmt:message key="Points"/></th>
                                 </thead>
                                 <tbody>
+                                    <c:set var="req" value="${pageContext.request}" />
                                     <c:forEach var="Ranking" items="${Rankings}" varStatus="status">
                                         <c:set var="Participant" value="${Ranking.key}"/>
                                         <c:choose>
                                             <c:when test="${Participant.discriminatorValue == 'Player'}">
-                                                <c:set var="urlParticipant" value="/players/player/${Participant.id}"/>
+                                                <c:set var="urlParticipant" value="${req.scheme}://${Participant.customer.domainName}:${req.serverPort}/players/player/${Participant.id}"/>
                                             </c:when>
                                             <c:otherwise>
-                                                <c:set var="urlParticipant" value="/teams/team/${Participant.id}"/>
+                                                <c:set var="urlParticipant" value="http://${Participant.customer.domainName}/teams/team/${Participant.id}"/>
                                             </c:otherwise>
                                         </c:choose>
                                         <tr>
