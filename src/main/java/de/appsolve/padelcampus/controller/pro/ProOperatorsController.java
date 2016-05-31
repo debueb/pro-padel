@@ -25,14 +25,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.regex.Pattern;
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
 import javax.servlet.ServletContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -167,11 +160,9 @@ public class ProOperatorsController {
     public ModelAndView newAccountSuccess(@PathVariable("customerId") Long customerId) {
         Customer customer = customerDAO.findById(customerId);
         String domainName = customer.getDomainNames().iterator().next();
-        Attribute record = getDnsRecord(domainName);
         
         ModelAndView mav =  new ModelAndView("pro/newaccount-success");
         mav.addObject("domainName", domainName);
-        mav.addObject("dnsRecordExists", record!=null);
         return mav;
     }
 
@@ -196,22 +187,23 @@ public class ProOperatorsController {
         }
     }
 
-    private Attribute getDnsRecord(String domainName) {
-        Hashtable<String, String> env = new Hashtable<>();
-
-        env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
-        env.put("com.sun.jndi.dns.timeout.initial", "5000");    /* quite short... too short? */
-        env.put("com.sun.jndi.dns.timeout.retries", "1");
-
-        try {
-            DirContext ictx = new InitialDirContext(env);
-            String[] ids = new String[] {"A"};
-            Attributes attrs = ictx.getAttributes(domainName, ids);
-            Attribute a = attrs.get("A");
-            return a;
-        } catch (NamingException e){
-            LOG.warn(e);
-        }
-        return null;
-    }
+    //does not work on openshift: permission denied
+//    private Attribute getDnsRecord(String domainName) {
+//        Hashtable<String, String> env = new Hashtable<>();
+//
+//        env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
+//        env.put("com.sun.jndi.dns.timeout.initial", "5000");    /* quite short... too short? */
+//        env.put("com.sun.jndi.dns.timeout.retries", "1");
+//
+//        try {
+//            DirContext ictx = new InitialDirContext(env);
+//            String[] ids = new String[] {"A"};
+//            Attributes attrs = ictx.getAttributes(domainName, ids);
+//            Attribute a = attrs.get("A");
+//            return a;
+//        } catch (NamingException e){
+//            LOG.warn(e);
+//        }
+//        return null;
+//    }
 }
