@@ -164,7 +164,7 @@ public class ProOperatorsController {
     }
     
     @RequestMapping("newaccount/{customerId}")
-    public ModelAndView newAccountSuccess(@PathVariable("customerId") Long customerId) throws NamingException{
+    public ModelAndView newAccountSuccess(@PathVariable("customerId") Long customerId) {
         Customer customer = customerDAO.findById(customerId);
         String domainName = customer.getDomainNames().iterator().next();
         Attribute record = getDnsRecord(domainName);
@@ -196,21 +196,22 @@ public class ProOperatorsController {
         }
     }
 
-    private Attribute getDnsRecord(String domainName) throws NamingException {
+    private Attribute getDnsRecord(String domainName) {
         Hashtable<String, String> env = new Hashtable<>();
 
         env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
         env.put("com.sun.jndi.dns.timeout.initial", "5000");    /* quite short... too short? */
         env.put("com.sun.jndi.dns.timeout.retries", "1");
 
-        DirContext ictx = new InitialDirContext(env);
-        String[] ids = new String[] {"A"};
         try {
+            DirContext ictx = new InitialDirContext(env);
+            String[] ids = new String[] {"A"};
             Attributes attrs = ictx.getAttributes(domainName, ids);
             Attribute a = attrs.get("A");
             return a;
-        } catch (NameNotFoundException e){
-            return null;
+        } catch (NamingException e){
+            LOG.warn(e);
         }
+        return null;
     }
 }
