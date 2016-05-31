@@ -1,6 +1,6 @@
 <%@include file="/jsp/include/include.jsp"%>
 <jsp:include page="/jsp/pro/include/head.jsp"/>
-<div class="container-fluid" style="margin-top: 20px;">
+<div class="container-fluid unit-2">
     <div class="row">
         <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
             <spf:form method="POST" class="form-horizontal" modelAttribute="Model">
