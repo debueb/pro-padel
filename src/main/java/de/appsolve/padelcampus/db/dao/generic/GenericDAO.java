@@ -35,7 +35,9 @@ public abstract class GenericDAO<T extends CustomerEntity> extends BaseEntityDAO
     }
     
     protected void setCustomer(T entity) {
-        Customer customer = getCustomer();
-        entity.setCustomer(customer);
+        if (entity.getCustomer() == null){
+            Customer customer = getCustomer();
+            entity.setCustomer(customer);
+        }
     }
 }
