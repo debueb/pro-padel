@@ -64,7 +64,7 @@
                         <div class="form-group">
                             <label for="inputEmail3" class="col-sm-2 control-label"><fmt:message key="Password"/></label>
                             <div class="col-sm-10">
-                                <spf:input path="player.password" type="text" class="form-control form-center-element"/>
+                                <spf:input path="player.password" type="password" class="form-control form-center-element"/>
 
                             </div>
                         </div>
