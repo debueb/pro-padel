@@ -4,75 +4,75 @@
     <div class="row row-margin-bottom" style="background: #dff0d8; padding-bottom: 10px;">
         <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
             <h2 class="text-center"><fmt:message key="ForOperators"/></h2>
-            <div class="text-center">Du veranstaltest Padel Turniere oder betreibst eine eigene Padel Anlage? Dann bist Du hier genau richtig. Unsere Software... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</div>
+            <div class="text-center"><fmt:message key="ForOperatorsDesc"/></div>
         </div>
     </div>
     <div class="row row-margin-bottom" style="background: #D9EDF7;">
         <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2">
-            <h2 class="text-center">Features</h2>
+            <h2 class="text-center"><fmt:message key="Features"/></h2>
             <div class="flex-container">
                 <div class="panel flex-item panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title text-center">Turnierverwaltung</h3>
+                        <h3 class="panel-title text-center"><fmt:message key="TournamentManagement"/></h3>
                     </div>
                     <div class="panel-body">
-                        Verwalte deine Turniere, egal ob Jeder-gegen-Jeden, Rundenturnier oder KO-System mit Vorrunde. Veröffentliche deine Turniere optional auf pro-padel.de
+                        <fmt:message key="TournamentManagementDesc"/>
                     </div>
                 </div>
                 <div class="panel flex-item panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title text-center">Ligaverwaltung</h3>
+                        <h3 class="panel-title text-center"><fmt:message key="LeagueManagement"/></h3>
                     </div>
                     <div class="panel-body">
-                        Verwalte deine Liga, damit du weniger mit Excel rumfummeln must. Teilnehmer können sich gegenseitig finden und Spiele verabreden, das Ergebnis eintragen und die immer aktuelle Tabelle einsehen.
+                        <fmt:message key="LeagueManagementDesc"/>
                     </div>
                 </div>
                 <div class="panel flex-item panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title text-center">Ranking</h3>
+                        <h3 class="panel-title text-center"><fmt:message key="Ranking"/></h3>
                     </div>
                     <div class="panel-body">
-                        Nutze die Vorteile des Elo Ranking, dass sich auf Grundlage aller veranstaltenten Spiele immer selbst aktualisiert.
+                        <fmt:message key="RankingDesc"/>
                     </div>
                 </div>
                 <div class="panel flex-item panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title text-center">Spieler und Team Daten</h3>
+                        <h3 class="panel-title text-center"><fmt:message key="PlayersAndTeams"/></h3>
                     </div>
                     <div class="panel-body">
-                        Greife auf eine umfangreiche Liste von Padel Spielern und Teams zurück. Erstelle neue Spieler und Teams und teile so mit anderen Betreibern.
+                        <fmt:message key="PlayersAndTeamsDesc"/>
                     </div>
                 </div>
                 <div class="panel flex-item panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title text-center">Adaptive Design</h3>
+                        <h3 class="panel-title text-center"><fmt:message key="AdaptiveDesign"/></h3>
                     </div>
                     <div class="panel-body">
-                        Das Portal passt sich automatisch an alle Endgeräte an und Du kannst es farblich nach deinen Wünschen konfigurieren.
+                        <fmt:message key="AdaptiveDesignDesc"/>
                     </div>
                 </div>
                 <div class="panel flex-item panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title text-center">Spielbörse</h3>
+                        <h3 class="panel-title text-center"><fmt:message key="MatchOffers"/></h3>
                     </div>
                     <div class="panel-body">
-                        Spielervermittlung
+                        <fmt:message key="MatchOffersDesc"/>
                     </div>
                 </div>
                 <div class="panel flex-item panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title text-center">Buchungssystem</h3>
+                        <h3 class="panel-title text-center"><fmt:message key="BookingSystem"/></h3>
                     </div>
                     <div class="panel-body">
-                        Nutze unser flexibles und mobil optimiertes Buchungssystem. Erlaube deinen Spieler die Buchung via PayPal, Lastschrift, Kreditkarte oder Gutschein. Erstelle Reservierungen für bereits geblockte Spielzeiten.
+                        <fmt:message key="BookingSystemDesc"/>
                     </div>
                 </div>
                 <div class="panel flex-item panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title text-center">Content Management System</h3>
+                        <h3 class="panel-title text-center"><fmt:message key="ContentManagementSystem"/></h3>
                     </div>
                     <div class="panel-body">
-                        Erstelle eigene Inhalte mit unserem einfachen WYSIWYG Edtitor.
+                        <fmt:message key="ContentManagementSystemDesc"/>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
     <div class="row row-margin-bottom" style="background: #dff0d8;">
         <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2">
             <div class="row">
-                <h2 class="text-center">Referenzen</h2>
+                <h2 class="text-center"><fmt:message key="References"/></h2>
                 <div class="flex-container">
                     <c:set var="req" value="${pageContext.request}" />
                     <c:forEach var="Customer" items="${Customers}">
@@ -102,10 +102,10 @@
     </div>
     <div class="row row-margin-bottom" style="background: #D9EDF7;">
         <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2">
-            <h2 class="text-center">Preise</h2>
+            <h2 class="text-center"><fmt:message key="Pricing"/></h2>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title text-center">Preistabelle</h3>
+                    <h3 class="panel-title text-center"><fmt:message key="PricingTable"/></h3>
                 </div>
                 <div class="panel-body">
                     <table class="table table-striped">
@@ -116,44 +116,44 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Turnierverwaltung</td>
+                                <td><fmt:message key="TournamentManagement"/></td>
                                 <td class="text-center">&#10003;</td>
                                 <td class="text-center">&#10003;</td>
                             </tr>
                             <tr>
-                                <td>Ligaverwaltung</td>
+                                <td><fmt:message key="LeagueManagement"/></td>
                                 <td class="text-center">&#10003;</td>
                                 <td class="text-center">&#10003;</td>
                             </tr>
                             <tr>
-                                <td>Ranking</td>
+                                <td><fmt:message key="Ranking"/></td>
                                 <td class="text-center">&#10003;</td>
                                 <td class="text-center">&#10003;</td>
                             </tr>
                             <tr>
-                                <td>Spieler und Team Daten</td>
+                                <td><fmt:message key="PlayersAndTeams"/></td>
                                 <td class="text-center">&#10003;</td>
                                 <td class="text-center">&#10003;</td>
                             </tr>
                             <tr>
-                                <td>Spielbörse</td>
+                                <td><fmt:message key="MatchOffers"/></td>
                                 <td class="text-center">&#x2717;</td>
                                 <td class="text-center">&#10003;</td>
                             </tr>
                             <tr>
-                                <td>Buchungssystem</td>
+                                <td><fmt:message key="BookingSystem"/></td>
                                 <td class="text-center">&#x2717;</td>
                                 <td class="text-center">&#10003;</td>
                             </tr>
                             <tr>
-                                <td>Content Management System</td>
+                                <td><fmt:message key="ContentManagementSystem"/></td>
                                 <td class="text-center">&#x2717;</td>
                                 <td class="text-center">&#10003;</td>
                             </tr>
                             <tr>
                                 <td></td>
-                                <td class="text-center">0,00 EUR mtl.</td>
-                                <td class="text-center">40,00 EUR mtl.</td>
+                                <td class="text-center"><fmt:message key="EURmtl"><fmt:param value="0"/></fmt:message></td>
+                                <td class="text-center"><fmt:message key="EURmtl"><fmt:param value="40"/></fmt:message></td>
                             </tr>
                         </tbody>
                     </table>
@@ -164,16 +164,16 @@
     </div>
     <div class="row" style="background: #dff0d8;">
         <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2">
-            <h2 class="text-center">Anmelden</h2>
+            <h2 class="text-center"><fmt:message key="Register"/></h2>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title text-center">Jetzt registrieren</h3>
+                    <h3 class="panel-title text-center"><fmt:message key="RegisterAsOperator"/></h3>
                 </div>
                 <div class="panel-body">
-                    Registriere dich jetzt als Betreiber und starte in wenigen Minuten.
+                    <fmt:message key="RegisterAsOperatorDesc"/>
                 </div>
                 <div class="panel-footer">
-                    <a class="btn btn-default btn-block" href="/pro/operators/newaccount">Jetzt anmelden</a>
+                    <a class="btn btn-default btn-block" href="/pro/operators/newaccount"><fmt:message key="Register"/></a>
                 </div>
             </div>
         </div>

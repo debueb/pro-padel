@@ -23,22 +23,21 @@
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/pro">pro-padel.de</a>
+                    <a class="navbar-brand" href="/pro">${pageContext.request.serverName}</a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav pull-right">
-                        <li class="active"><a href="/pro/tournaments">Turniere</a>
+                        <li class="active"><a href="/pro/tournaments"><fmt:message key="Tournaments"/></a>
                         </li>
-                        <li class="active"><a href="/pro/ranking">Ranking</a>
+                        <li class="active"><a href="/pro/ranking"><fmt:message key="Ranking"/></a>
                         </li>
-                        <li class="active"><a href="/pro/operators">Für Betreiber</a>
+                        <li class="active"><a href="/pro/operators"><fmt:message key="ForOperators"/></a>
                         </li>
-                        <li class="active"><a href="/pro/contact">Kontakt</a>
+                        <li class="active"><a href="/pro/contact"><fmt:message key="Contact"/></a>
                         </li>
                     </ul>
                 </div>

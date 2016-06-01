@@ -10,7 +10,7 @@
                     </div>
 
                     <div class="panel-body">
-                        <div class="alert alert-info">Der Registrierungsprozess ist vollautomatisch, kann aber einige Minuten in Anspruch nehmen. Der Projektname darf nur alphanumerische Zeichen enthalten und nimmt den ersten Teil deiner eigenen URL ein: z.B. <i>projektname</i>.pro-padel.de</div>
+                        <div class="alert alert-info"><fmt:message key="RegisterAsOperatorInfo"/></div>
                         <div class="alert alert-danger"><spf:errors path="*" cssClass="error"/></div>
 
 
