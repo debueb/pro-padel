@@ -1224,23 +1224,17 @@ th.normal{
 }
 .booking-gallery-time{
     position: absolute;
-    top: 82px;
+    top: 80px;
     left: 10px;
-    width: 15px;
+    width: 40px;
     z-index: 99;
 }
 .booking-gallery-time div{
     display: block;
     width: 40px;
     height: 40px;
-    line-height: 12px;
+    line-height: 40px;
     text-align: center;
-    -moz-transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    -webkit-transform: rotate(-90deg);
-
-    transform: rotate(-90deg);
 }
 .booking-slick{
     background: white; 
@@ -1248,8 +1242,25 @@ th.normal{
     margin-left: 10px;
     margin-right: 10px;
     text-align: center;
-    padding-left: 12px;
+    padding-left: 40px;
 }
+@media (max-width: @screen-sm) {
+    .booking-gallery-time{
+        width: 12px;
+    }
+    .booking-gallery-time div{
+        line-height: 12px;
+        -moz-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+    }
+    .booking-slick{
+        padding-left: 12px;
+    }
+}
+
 .booking-gallery-day{
     height: 40px;
     line-height: 40px;
