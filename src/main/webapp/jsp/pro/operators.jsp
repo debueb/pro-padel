@@ -32,7 +32,7 @@
                         <h3 class="panel-title text-center"><fmt:message key="Ranking"/></h3>
                     </div>
                     <div class="panel-body">
-                        <fmt:message key="RankingDesc"/>
+                        <fmt:message key="RankingInfo"/>
                     </div>
                 </div>
                 <div class="panel flex-item panel-default">
