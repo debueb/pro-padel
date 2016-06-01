@@ -9,7 +9,7 @@ mysqldump -h $OPENSHIFT_MYSQL_DB_HOST -P $OPENSHIFT_MYSQL_DB_PORT -u $OPENSHIFT_
 gzip -f ${OPENSHIFT_TMP_DIR}/backup.sql
 
 ${OPENSHIFT_REPO_DIR}/dropbox_uploader.sh -f ${OPENSHIFT_REPO_DIR}/dropbox_uploader.config mkdir ${TODAY}
-${OPENSHIFT_REPO_DIR}/dropbox_uploader.sh upload ${OPENSHIFT_TMP_DIR}/backup.sql.gz ${TODAY}/${OPENSHIFT_APP_NAME}_mysql_${TODAY}.sql.gz
+${OPENSHIFT_REPO_DIR}/dropbox_uploader.sh -f ${OPENSHIFT_REPO_DIR}/dropbox_uploader.config upload ${OPENSHIFT_TMP_DIR}/backup.sql.gz ${TODAY}/${OPENSHIFT_APP_NAME}_mysql_${TODAY}.sql.gz
 rm ${OPENSHIFT_TMP_DIR}/backup.sql.gz
 
 mkdir ${OPENSHIFT_TMP_DIR}/data
