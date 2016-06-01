@@ -4,7 +4,7 @@
     <div class="row row-margin-bottom" style="background: #dff0d8; padding-bottom: 10px;">
         <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
             <h2 class="text-center"><fmt:message key="ForOperators"/></h2>
-            <div class="text-center"><fmt:message key="ForOperatorsDesc"/></div>
+            <div class="text-center"><fmt:message key="ForOperatorsInfo"/></div>
         </div>
     </div>
     <div class="row row-margin-bottom" style="background: #D9EDF7;">
