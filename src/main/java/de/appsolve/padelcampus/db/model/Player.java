@@ -81,6 +81,10 @@ public class Player extends Participant implements EmailContact{
     
     @Column
     @JsonIgnore
+    private Boolean salted;
+    
+    @Column
+    @JsonIgnore
     private String passwordResetUUID;
     
     @Column
@@ -173,6 +177,14 @@ public class Player extends Participant implements EmailContact{
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public Boolean getSalted() {
+        return salted == null ? Boolean.FALSE : salted;
+    }
+
+    public void setSalted(Boolean salted) {
+        this.salted = salted;
     }
 
     public String getPasswordResetUUID() {

@@ -12,7 +12,7 @@ import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.test.TestBase;
-import org.apache.commons.codec.digest.DigestUtils;
+import de.appsolve.padelcampus.utils.PlayerUtil;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,9 @@ public class TestBookingDirectDebitLogin extends TestBase {
 
     @Autowired
     private PlayerDAOI playerDAO;
+    
+    @Autowired
+    PlayerUtil playerUtil;
 
     @Test
     public void testBookingWorkflowDirectDebitLogin() throws Exception {
@@ -36,9 +39,9 @@ public class TestBookingDirectDebitLogin extends TestBase {
         
         Player player = new Player();
         player.setEmail("padelcampus-unittest-2@appsolve.de");
-        player.setPasswordHash(DigestUtils.sha512Hex("test"));
         player.setFirstName("dummy");
         player.setLastName("dummy");
+        player.setPasswordHash(playerUtil.generatePasswordHash("test"));
         player.setPhone("004917497568349");
         playerDAO.saveOrUpdate(player);
         

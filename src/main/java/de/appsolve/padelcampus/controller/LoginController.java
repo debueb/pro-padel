@@ -17,6 +17,7 @@ import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
+import de.appsolve.padelcampus.utils.PlayerUtil;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
@@ -62,6 +64,9 @@ public class LoginController extends BaseController{
     
     @Autowired
     SessionUtil sessionUtil;
+    
+    @Autowired
+    PlayerUtil playerUtil;
     
     @RequestMapping(value={"", "pre-register"})
     public ModelAndView showLogin(HttpServletRequest request){
@@ -261,9 +266,14 @@ public class LoginController extends BaseController{
         }
         
         Player player = playerDAO.findByEmail(credentials.getEmail());
-        String hash = DigestUtils.sha512Hex(credentials.getPassword());
-        if (player == null || StringUtils.isEmpty(player.getPasswordHash()) || !hash.equals(player.getPasswordHash())){
+        
+        if (!playerUtil.isPasswordValid(player, credentials.getPassword())){
             throw new Exception(msg.get("UnknownEmailAddressOrPassword"));
+        }
+        if (!player.getSalted()){
+            player.setPasswordHash(playerUtil.generatePasswordHash(credentials.getPassword()));
+            player.setSalted(true);
+            playerDAO.saveOrUpdate(player);
         }
         
         setLoginCookie(request, response, player);
@@ -287,6 +297,7 @@ public class LoginController extends BaseController{
             }
             
             //create player object which also generates a UUID
+            player.setPasswordHash(playerUtil.generatePasswordHash(player.getPassword()));
             player = playerDAO.saveOrUpdate(player);
             
             String confirmRegistrationURL = RequestUtil.getBaseURL(request)+"/login/confirm/"+player.getUUID();

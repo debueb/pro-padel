@@ -9,6 +9,7 @@ import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.Msg;
+import de.appsolve.padelcampus.utils.PlayerUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -38,6 +39,9 @@ public class AccountPasswordController extends BaseController {
 
     @Autowired
     Msg msg;
+    
+    @Autowired
+    PlayerUtil playerUtil;
 
     @RequestMapping()
     public ModelAndView getIndex(HttpServletRequest request) {
@@ -51,10 +55,11 @@ public class AccountPasswordController extends BaseController {
             return mav;
         }
         Player user = sessionUtil.getUser(request);
-        String hash = DigestUtils.sha512Hex(changePasswordRequest.getOldPass());
-        if (user.getPasswordHash().equals(hash)){
+        
+        if (playerUtil.isPasswordValid(user, changePasswordRequest.getOldPass())){
             if (changePasswordRequest.getNewPass().equals(changePasswordRequest.getNewPassRepeat())){
-                user.setPasswordHash(DigestUtils.sha512Hex(changePasswordRequest.getNewPass()));
+                user.setPasswordHash(playerUtil.generatePasswordHash(changePasswordRequest.getNewPass()));
+                user.setSalted(true);
                 playerDAO.saveOrUpdate(user);
                 bindingResult.addError(new ObjectError("*", msg.get("PasswordWasChanged")));
             } else {

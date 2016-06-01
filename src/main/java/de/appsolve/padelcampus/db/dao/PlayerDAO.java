@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -46,9 +45,6 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
         if (StringUtils.isEmpty(player.getUUID())){
             UUID randomUUID = UUID.randomUUID();
             player.setUUID(randomUUID.toString());
-        }
-        if (!StringUtils.isEmpty(player.getPassword())){
-            player.setPasswordHash(DigestUtils.sha512Hex(player.getPassword()));
         }
         player.setCustomer(getCustomer());
         return super.saveOrUpdate(player);
