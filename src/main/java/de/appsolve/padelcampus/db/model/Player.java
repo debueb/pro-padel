@@ -58,6 +58,9 @@ public class Player extends Participant implements EmailContact{
     private String email;
     
     @Column
+    private Boolean allowEmailContact;
+    
+    @Column
     private Boolean verified;
     
     @Column
@@ -130,6 +133,14 @@ public class Player extends Participant implements EmailContact{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getAllowEmailContact() {
+        return allowEmailContact == null ? Boolean.FALSE : allowEmailContact;
+    }
+
+    public void setAllowEmailContact(Boolean allowEmailContact) {
+        this.allowEmailContact = allowEmailContact;
     }
 
     public Boolean getVerified() {

@@ -86,6 +86,7 @@ public class AccountProfileController extends BaseController {
             persistedPlayer.setSkillLevel(player.getSkillLevel());
             persistedPlayer.setEnableMatchNotifications(player.getEnableMatchNotifications());
             persistedPlayer.setNotificationSkillLevels(player.getNotificationSkillLevels());
+            persistedPlayer.setAllowEmailContact(player.getAllowEmailContact());
 
             //resize Image
             BufferedImage originalImage = null;
