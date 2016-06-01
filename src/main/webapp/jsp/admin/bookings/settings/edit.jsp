@@ -129,7 +129,10 @@
                     <%-- Zahlungsmethoden --%>
                     <div class="relative">
                         <spf:select path="paymentMethods" class="select-multiple form-control" data-style="form-center-element" data-container="body">
-                            <spf:options items="${PaymentMethods}"/>
+                            <c:forEach var="PaymentMethod" items="${PaymentMethods}">
+                                <fmt:message key="${PaymentMethod}" var="Label"/>
+                                <spf:option value="${PaymentMethod}" label="${Label}"/>
+                            </c:forEach>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="PaymentMethods"/></span>
                     </div>
