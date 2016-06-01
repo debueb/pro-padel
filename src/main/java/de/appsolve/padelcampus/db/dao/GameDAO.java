@@ -20,6 +20,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Component;
 
 /**
@@ -78,14 +79,15 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
 
     @Override
     public List<Game> findByParticipant(Participant participant) {
-        List<Game> games = findAll();
-        return filterByParticipant(games, participant);
+        Criteria criteria = getFindByParticipantCriteria(participant);
+        return criteria.list();
     }
 
     @Override
     public List<Game> findByParticipantAndEvent(Participant participant, Event event) {
-        List<Game> games = findByEvent(event);
-        return filterByParticipant(games, participant);
+        Criteria criteria = getFindByParticipantCriteria(participant);
+        criteria.add(Restrictions.eq("event", event));
+        return criteria.list();
     }
 
     private List<Game> filterByParticipant(List<Game> games, Participant participant) {
@@ -123,5 +125,13 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
             games.add(gameSet.getGame());
         }
         return filterByParticipant(new ArrayList<>(games), participant);
+    }
+
+    private Criteria getFindByParticipantCriteria(Participant participant) {
+        Criteria criteria = getCriteria();
+        criteria.createAlias("participants", "p");
+        criteria.add(Restrictions.like("p.id", participant.getId()));
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return criteria;
     }
 }
