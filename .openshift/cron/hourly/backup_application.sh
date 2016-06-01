@@ -1,8 +1,8 @@
 #!/bin/bash 
 
 HOUR=$(TZ="Europe/Berlin" date +"%H")
-#if [ $HOUR == 11 ]
-#then
+if [ $HOUR == 23 ]
+then
 TODAY=$(date +"%Y_%m_%d");
 
 mysqldump -h $OPENSHIFT_MYSQL_DB_HOST -P $OPENSHIFT_MYSQL_DB_PORT -u $OPENSHIFT_MYSQL_DB_USERNAME --password=$OPENSHIFT_MYSQL_DB_PASSWORD $OPENSHIFT_APP_NAME > ${OPENSHIFT_TMP_DIR}/backup.sql
@@ -20,4 +20,4 @@ ${OPENSHIFT_REPO_DIR}/dropbox_uploader.sh -f ${OPENSHIFT_REPO_DIR}/dropbox_uploa
 rm ${OPENSHIFT_TMP_DIR}/data_${TODAY}.tar.gz
 rm -rf ${OPENSHIFT_TMP_DIR}/data
 
-#fi
+fi
