@@ -10,6 +10,7 @@ import de.appsolve.padelcampus.external.cloudflare.CloudFlareApiRequestIntercept
 import de.appsolve.padelcampus.external.openshift.OpenshiftApiRequestInterceptor;
 import de.appsolve.padelcampus.filter.ResponseCachingFilter;
 import de.appsolve.padelcampus.listener.ContextInitializationListener;
+import de.appsolve.padelcampus.listener.SessionEventListener;
 import de.appsolve.padelcampus.resolver.PutAwareCommonsMultipartResolver;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -170,5 +171,10 @@ public class AppConfig {
         arrayList.add(new OpenshiftApiRequestInterceptor());
         restTemplate.setInterceptors(arrayList);
         return restTemplate;
+    }
+    
+    @Bean
+    public SessionEventListener sessionEventListener(){
+        return new SessionEventListener();
     }
 }
