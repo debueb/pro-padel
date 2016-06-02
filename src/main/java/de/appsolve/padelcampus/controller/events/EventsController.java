@@ -104,7 +104,6 @@ public class EventsController extends BaseController{
         Event event = eventDAO.findByIdFetchWithGames(eventId);
         ModelAndView mav = new ModelAndView("events/groupknockout/groupgames", "Model", event);
         
-        
         event = eventDAO.findByIdFetchWithGames(eventId);
         SortedMap<Integer, List<Game>> groupGameMap = eventsUtil.getGroupGameMap(event);
         SortedMap<Integer, List<Game>> roundGameMap = eventsUtil.getRoundGameMap(event);

@@ -23,6 +23,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
 /**
@@ -56,6 +58,10 @@ public class Game extends CustomerEntity{
     
     @Column
     private Integer groupNumber;
+    
+    @Column
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    private LocalDate startDate;
     
     @Column
     private Integer startTimeHour;
@@ -120,6 +126,14 @@ public class Game extends CustomerEntity{
 
     public void setGroupNumber(Integer groupNumber) {
         this.groupNumber = groupNumber;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
     public Integer getStartTimeMinute() {

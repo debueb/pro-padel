@@ -12,7 +12,10 @@
                 <fmt:message key="Date"/>:
             </div>
             <div class="col-xs-8">
-                <joda:format value="${Model.startDate}" pattern="EEEE, dd. MMMM yyyy"/> - <joda:format value="${Model.endDate}" pattern="EEEE, dd. MMMM yyyy"/>
+                <joda:format value="${Model.startDate}" pattern="EEE, dd. MMM yyyy"/>
+                <c:if test="${Model.startDate ne Model.endDate}">
+                     - <joda:format value="${Model.endDate}" pattern="EEE, dd. MMM yyyy"/>
+                </c:if>
             </div>
             <div class="col-xs-4 text-right">
                 <fmt:message key="Category"/>:
