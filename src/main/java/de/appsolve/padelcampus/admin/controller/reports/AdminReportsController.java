@@ -17,14 +17,18 @@ import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATT
 import java.math.BigDecimal;
 import java.util.List;
 import javax.validation.Valid;
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,6 +39,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller()
 @RequestMapping("/admin/reports")
 public class AdminReportsController extends BaseController{
+    
+    private static final Logger LOG = Logger.getLogger(AdminReportsController.class);
     
     @Autowired
     BookingDAOI bookingDAO;
@@ -72,6 +78,30 @@ public class AdminReportsController extends BaseController{
     public ModelAndView getBookingListForDateRange(@Valid @ModelAttribute("DateRange") DateRange dateRange){
         return getBookingListView(dateRange); 
     }
+    
+    @RequestMapping(method = GET, value="booking/{bookingId}")
+    public ModelAndView getBooking(@PathVariable("bookingId") Long bookingId){
+        Booking booking = bookingDAO.findById(bookingId);
+        return getBookingEditView(booking, booking);
+    }
+    
+    @RequestMapping(method = POST, value="booking/{bookingId}")
+    public ModelAndView postBooking(@PathVariable("bookingId") Long bookingId, @Valid @ModelAttribute("Model") Booking model, BindingResult bindingResult){
+        Booking booking = bookingDAO.findById(bookingId);
+        if (bindingResult.hasErrors()){
+            return getBookingEditView(model, booking);
+        }
+        try {
+            booking.setComment(model.getComment());
+            booking.setPaymentConfirmed(model.getPaymentConfirmed());
+            bookingDAO.saveOrUpdate(booking);
+            return new ModelAndView("redirect:/admin/reports/bookinglist");
+        }catch (Exception e){
+            LOG.error(e);
+            bindingResult.addError(new ObjectError("id", e.getMessage()));
+            return getBookingEditView(model, booking);
+        }
+    }
 
     private ModelAndView getBookingListView(DateRange dateRange) {
         List<Booking> bookings = bookingDAO.findActiveBookingsBetween(dateRange.getStartDate(), dateRange.getEndDate());
@@ -85,5 +115,12 @@ public class AdminReportsController extends BaseController{
         listView.addObject("Bookings", bookings);
         listView.addObject("DateRange", dateRange);
         return listView;
+    }
+
+    private ModelAndView getBookingEditView(Booking model, Booking booking) {
+        ModelAndView mav = new ModelAndView("admin/reports/booking");
+        mav.addObject("Model", model);
+        mav.addObject("Booking", booking);
+        return mav;
     }
 }

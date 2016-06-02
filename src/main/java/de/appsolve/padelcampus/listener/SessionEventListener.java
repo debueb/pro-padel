@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.listener;
 
+import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.db.dao.BookingBaseDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.utils.SessionUtil;
@@ -54,8 +55,8 @@ public class SessionEventListener implements HttpSessionListener{
     }
 
     private void cancelBooking(Booking booking, LocalDateTime maxAge) {
-        //if the payment has not been done
-        if (!booking.getPaymentConfirmed()){
+        //cancel if the payment method is not cash and the payment has not been done
+        if (!booking.getPaymentMethod().equals(PaymentMethod.Cash) && !booking.getPaymentConfirmed()){
             LocalDateTime blockingTime = booking.getBlockingTime();
             if (blockingTime!=null && blockingTime.isBefore(maxAge)){
                 LOG.info("Cancelling booking [user="+booking.getPlayer().toString()+", date="+booking.getBookingDate()+", time="+booking.getBookingTime()+"] due to session timeout");

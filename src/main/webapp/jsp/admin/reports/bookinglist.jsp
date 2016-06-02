@@ -25,20 +25,23 @@
                         <th><fmt:message key="Player"/></th>
                         <th><fmt:message key="Comment"/></th>
                         <th><fmt:message key="PaymentMethod"/></th>
+                        <th><fmt:message key="Paid"/></th>
                         <th><fmt:message key="Price"/></th>
                         </thead>
                         <tbody>
                             <c:forEach items="${Bookings}" var="Booking">
+                                <c:set var="url" value="/admin/reports/booking/${Booking.id}"/>
                                 <tr>
-                                    <td><joda:format value="${Booking.bookingDate}" pattern="yyyy-MM-dd"/></td>
-                                    <td><joda:format value="${Booking.bookingDate}" pattern="EE"/></td>
-                                    <td><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></td>
-                                    <td><joda:format value="${Booking.blockingTime}" pattern="yyyy-MM-dd"/></td>
-                                    <td>${Booking.offer}</td>
-                                    <td>${Booking.player}</td>
-                                    <td>${Booking.comment}</td>
-                                    <td>${Booking.paymentMethod}</td>
-                                    <td>${Booking.amount} ${Booking.currency.symbol}</td>
+                                    <td><a href="${url}"><joda:format value="${Booking.bookingDate}" pattern="yyyy-MM-dd"/></a></td>
+                                    <td><a href="${url}"><joda:format value="${Booking.bookingDate}" pattern="EE"/></a></td>
+                                    <td><a href="${url}"><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></a></td>
+                                    <td><a href="${url}"><joda:format value="${Booking.blockingTime}" pattern="yyyy-MM-dd"/></a></td>
+                                    <td><a href="${url}">${Booking.offer}</a></td>
+                                    <td><a href="${url}">${Booking.player}</a></td>
+                                    <td><a href="${url}">${Booking.comment}</a></td>
+                                    <td><a href="${url}"><fmt:message key="${Booking.paymentMethod}"/></a></td>
+                                    <td><a href="${url}"><i class="fa fa-${Booking.paymentConfirmed ? 'check' : 'close'}"></i></a></td>
+                                    <td><a href="${url}">${Booking.amount} ${Booking.currency.symbol}</a></td>
                                 </tr>
                             </c:forEach>
                         </tbody>

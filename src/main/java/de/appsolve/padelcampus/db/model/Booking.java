@@ -21,6 +21,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.Length;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
@@ -68,6 +69,7 @@ public class Booking extends CustomerEntity{
     private Voucher voucher;
     
     @Column
+    @Length(max = 8000, message = "{Length.Booking.comment}")
     private String comment;
     
     /**

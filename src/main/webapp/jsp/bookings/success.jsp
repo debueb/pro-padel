@@ -15,6 +15,7 @@
                     </c:when>
                     <c:otherwise>
                         <div class="alert alert-success" role="alert"><fmt:message key="BookingSuccessMessage"><fmt:param value="${sessionScope.booking.player.email}"/></fmt:message></div>
+                        <c:if test="${sessionScope.booking.paymentMethod == 'Cash'}"><div class="alert alert-success" role="alert"><fmt:message key="BookingCashMessage"/></div></c:if>
                     </c:otherwise>
                 </c:choose>
             </div>

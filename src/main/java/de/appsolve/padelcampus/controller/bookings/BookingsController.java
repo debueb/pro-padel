@@ -10,6 +10,7 @@ import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.CANCELLATION_POLICY_DEADLINE;
 import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
+import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.data.OfferDurationPrice;
@@ -261,6 +262,11 @@ public class BookingsController extends BaseController {
             bookingDAO.saveOrUpdate(booking);
 
             switch (booking.getPaymentMethod()) {
+                case Cash:
+                    if (booking.getConfirmed()){
+                        throw new Exception(msg.get("BookingAlreadyConfirmed"));
+                    }
+                    return getRedirectToSuccessView(booking);
                 case PayPal:
                     return bookingsPayPalController.redirectToPaypal(booking, request);
                 case DirectDebit:
@@ -285,7 +291,7 @@ public class BookingsController extends BaseController {
         ModelAndView mav = getBookingSuccessView();
         Booking booking = bookingDAO.findByUUID(UUID);
         try {
-            if (!booking.getPaymentConfirmed()){
+            if (!booking.getPaymentMethod().equals(PaymentMethod.Cash) && !booking.getPaymentConfirmed()){
                 throw new Exception(msg.get("PaymentHasNotBeenConfirmed"));
             }
 

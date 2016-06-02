@@ -7,7 +7,7 @@
         <div class="page-header"></div>
 
         <div class="panel panel-info unit">
-            <div class="panel-heading"><h4><fmt:message key="BookCourt"/></h4></div>
+            <div class="panel-heading"><h4><fmt:message key="BookingData"/></h4></div>
             <div class="panel-body">
 
                 <c:choose>
@@ -17,8 +17,7 @@
                     <c:otherwise>
                         <spf:form method="POST" class="form-signin" role="form" modelAttribute="Booking">
                             <spf:input type="hidden" path="bookingType"/>
-                            <h4><fmt:message key="BookingData"/></h4>
-
+                            
                             <div class="row">
                                 <div class="col-xs-4 booking-cell"><fmt:message key="GameDate"/>:</div>
                                 <div class="col-xs-8 booking-cell"><joda:format value="${Booking.bookingDate}" pattern="EEEE, dd. MMMM yyyy"/></div>

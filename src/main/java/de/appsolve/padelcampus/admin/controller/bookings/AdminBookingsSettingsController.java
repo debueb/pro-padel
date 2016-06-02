@@ -130,6 +130,7 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
         ModelAndView editView = new ModelAndView("/"+getModuleName()+"/edit", "Model", model);
         //determine valid payment methods
         List<PaymentMethod> paymentMethods = new ArrayList<>();
+        paymentMethods.add(PaymentMethod.Cash);
         
         //check if PayPal config exists and is active
         PayPalConfig paypalConfig = payPalConfigDAO.findFirst();
