@@ -14,6 +14,11 @@
             <div class="panel-body">
                 <div class="list-group">
                     <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/general/masterdata"/>
+                        <jsp:param name="key" value="MasterData"/>
+                        <jsp:param name="icon" value="home"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/general/admingroups"/>
                         <jsp:param name="key" value="AdminGroups"/>
                         <jsp:param name="icon" value="fire"/>

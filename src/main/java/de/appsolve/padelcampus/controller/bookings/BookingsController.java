@@ -314,6 +314,7 @@ public class BookingsController extends BaseController {
                 booking.getCurrency(),
                 CANCELLATION_POLICY_DEADLINE,
                 RequestUtil.getBaseURL(request) + "/bookings/booking/" + booking.getUUID() + "/cancel",
+                RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
                 RequestUtil.getBaseURL(request)}));
             Contact contact = new Contact();
             contact.setEmailAddress(booking.getPlayer().getEmail());

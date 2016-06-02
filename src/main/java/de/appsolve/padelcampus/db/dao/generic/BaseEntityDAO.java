@@ -87,7 +87,9 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         for (String association: associations){
             objectCriteria.setFetchMode(association, FetchMode.JOIN);
         }
-        objectCriteria.add(Restrictions.in("id", list));
+        if (!list.isEmpty()){
+            objectCriteria.add(Restrictions.in("id", list));
+        }
         objectCriteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         addOrderBy(objectCriteria, pageable);
         List<T> objects = objectCriteria.list();
