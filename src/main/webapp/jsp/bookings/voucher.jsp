@@ -18,7 +18,6 @@
                     </div>
 
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Book"/></button>
-                    <a class="btn btn-primary btn-block unit ajaxify" href="/bookings/booking/${Booking.UUID}/abort?redirect=/bookings/${Booking.bookingDate}"><fmt:message key="ChangeBooking"/></a>
                     <a class="btn btn-primary btn-block unit ajaxify" href="/bookings/booking/${Booking.UUID}/abort"><fmt:message key="Cancel"/></a>
                 </form>
             </div>
