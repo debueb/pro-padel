@@ -7,6 +7,7 @@ package de.appsolve.padelcampus.data;
 
 import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.db.model.Player;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -16,9 +17,11 @@ import javax.validation.constraints.NotNull;
 public class CustomerRegistrationModel {
     
     @NotNull
+    @Valid
     private Player player;
     
     @NotNull
+    @Valid
     private Customer customer;
 
     public Player getPlayer() {

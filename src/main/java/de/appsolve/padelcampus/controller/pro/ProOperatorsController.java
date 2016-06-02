@@ -25,15 +25,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.regex.Pattern;
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
 import javax.servlet.ServletContext;
+import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,11 +91,10 @@ public class ProOperatorsController {
     }
     
     @RequestMapping(method=POST, value="newaccount")
-    public ModelAndView postNewAccount(@ModelAttribute("Model") CustomerRegistrationModel customerAccount, BindingResult bindingResult){
+    public ModelAndView postNewAccount(@ModelAttribute("Model") @Valid CustomerRegistrationModel customerAccount, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             return new ModelAndView("pro/newaccount", "Model", customerAccount);
         }
-        
         try {
             if (StringUtils.isEmpty(customerAccount.getCustomer().getName())){
                 throw new Exception(msg.get("ProjectNameFormatRequirements"));
