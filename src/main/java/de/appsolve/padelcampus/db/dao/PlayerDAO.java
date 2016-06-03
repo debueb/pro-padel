@@ -16,6 +16,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.jadira.usertype.spi.utils.lang.StringUtils;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
 /**
@@ -45,6 +46,10 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
         if (StringUtils.isEmpty(player.getUUID())){
             UUID randomUUID = UUID.randomUUID();
             player.setUUID(randomUUID.toString());
+        }
+        if (!StringUtils.isEmpty(player.getPassword())){
+            player.setPasswordHash(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt()));
+            player.setSalted(true);
         }
         player.setCustomer(getCustomer());
         return super.saveOrUpdate(player);

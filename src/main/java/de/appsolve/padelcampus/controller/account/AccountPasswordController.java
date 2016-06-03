@@ -13,7 +13,6 @@ import de.appsolve.padelcampus.utils.PlayerUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -58,8 +57,9 @@ public class AccountPasswordController extends BaseController {
         
         if (playerUtil.isPasswordValid(user, changePasswordRequest.getOldPass())){
             if (changePasswordRequest.getNewPass().equals(changePasswordRequest.getNewPassRepeat())){
-                user.setPasswordHash(playerUtil.generatePasswordHash(changePasswordRequest.getNewPass()));
-                user.setSalted(true);
+                //load latest data from db in case user has updated his account in current session
+                user = playerDAO.findById(user.getId());
+                user.setPassword(changePasswordRequest.getNewPass());
                 playerDAO.saveOrUpdate(user);
                 bindingResult.addError(new ObjectError("*", msg.get("PasswordWasChanged")));
             } else {

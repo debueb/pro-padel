@@ -225,8 +225,7 @@ public class LoginController extends BaseController{
             bindingResult.addError(new ObjectError("email", msg.get("PasswordMayNotBeEmpty")));
             return mav;
         }
-        
-        player.setPasswordHash(DigestUtils.sha512Hex(credentials.getPassword()));
+        player.setPassword(credentials.getPassword());
         playerDAO.saveOrUpdate(player);
         return new ModelAndView("login/reset-password-success");
     }
@@ -271,8 +270,7 @@ public class LoginController extends BaseController{
             throw new Exception(msg.get("UnknownEmailAddressOrPassword"));
         }
         if (!player.getSalted()){
-            player.setPasswordHash(playerUtil.generatePasswordHash(credentials.getPassword()));
-            player.setSalted(true);
+            player.setPassword(credentials.getPassword());
             playerDAO.saveOrUpdate(player);
         }
         
@@ -297,7 +295,6 @@ public class LoginController extends BaseController{
             }
             
             //create player object which also generates a UUID
-            player.setPasswordHash(playerUtil.generatePasswordHash(player.getPassword()));
             player = playerDAO.saveOrUpdate(player);
             
             String confirmRegistrationURL = RequestUtil.getBaseURL(request)+"/login/confirm/"+player.getUUID();

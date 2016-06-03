@@ -26,12 +26,6 @@ import org.springframework.util.Assert;
  */
 public class TestBookingDirectDebitLogin extends TestBase {
 
-    @Autowired
-    private PlayerDAOI playerDAO;
-    
-    @Autowired
-    PlayerUtil playerUtil;
-
     @Test
     public void testBookingWorkflowDirectDebitLogin() throws Exception {
         log.info("Test booking workflow [paymentMethod: DirectDebit, bookingType: login]");
@@ -41,7 +35,7 @@ public class TestBookingDirectDebitLogin extends TestBase {
         player.setEmail("padelcampus-unittest-2@appsolve.de");
         player.setFirstName("dummy");
         player.setLastName("dummy");
-        player.setPasswordHash(playerUtil.generatePasswordHash("test"));
+        player.setPassword("test");
         player.setPhone("004917497568349");
         playerDAO.saveOrUpdate(player);
         

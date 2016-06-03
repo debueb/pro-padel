@@ -37,8 +37,4 @@ public class PlayerUtil {
             return BCrypt.checkpw(password, player.getPasswordHash());
         }
     }
-
-    public String generatePasswordHash(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
-    }
 }
