@@ -24,9 +24,9 @@
                         <jsp:param name="icon" value="gears"/>
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
-                        <jsp:param name="href" value="/admin/events"/>
-                        <jsp:param name="key" value="Events"/>
-                        <jsp:param name="icon" value="sitemap"/>
+                        <jsp:param name="href" value="/admin/bookings"/>
+                        <jsp:param name="key" value="Bookings"/>
+                        <jsp:param name="icon" value="calendar"/>
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/players"/>
@@ -39,9 +39,9 @@
                         <jsp:param name="icon" value="users"/>
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
-                        <jsp:param name="href" value="/admin/bookings"/>
-                        <jsp:param name="key" value="Bookings"/>
-                        <jsp:param name="icon" value="calendar"/>
+                        <jsp:param name="href" value="/admin/events"/>
+                        <jsp:param name="key" value="Events"/>
+                        <jsp:param name="icon" value="sitemap"/>
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/contact"/>
