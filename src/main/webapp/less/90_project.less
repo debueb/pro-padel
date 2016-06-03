@@ -195,8 +195,8 @@ input[type="checkbox"]:checked ~ label:before{
     opacity: .9;
 }
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-state-hover,.ui-widget-content .ui-state-hover,.ui-widget-header .ui-state-hover,.ui-state-focus,.ui-widget-content .ui-state-focus,.ui-widget-header .ui-state-focus{
-    #gradient > .vertical(lighten(@primaryLinkHoverColor, 10%), lighten(@primaryLinkHoverColor, 20%));
-    color: @primaryLinkColor;
+    #gradient > .vertical(lighten(@primaryColor, 10%), lighten(@primaryColor, 20%));
+    color: @white;
 }
 .panel-info{
     border-color: @white;
@@ -624,11 +624,12 @@ span.error{
     font-weight: normal;
 }
 .accordion .ui-state-default{
-    background: lighten(@primaryLinkHoverColor, 20%);
+    background: lighten(@primaryColor, 20%);
 }
 .accordion .ui-state-active{
-    background: @primaryLinkHoverColor;
+    background: @primaryColor;
 }
+
 /* accordion end */
 
 .alert:empty{
