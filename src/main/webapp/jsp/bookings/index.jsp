@@ -68,18 +68,15 @@
                             <table class="table table-booking table-fixed">
                                 <thead>
                                     <tr>
-                                        <c:forEach var="Offer" items="${Offers}">
-                                            <c:if test="${fn:contains(SelectedOffers, Offer)}">
-                                                <th style="background-color: ${Offer.hexColor};">${Offer.shortName}</th>
-                                            </c:if>
+                                        <c:forEach var="Offer" items="${SelectedOffers}">
+                                            <th style="background-color: ${Offer.hexColor};">${Offer.shortName}</th>
                                         </c:forEach>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <c:forEach var="TimeRange" items="${RangeMap}">
                                         <tr>
-                                            <c:forEach var="Offer" items="${Offers}">
-                                                <c:if test="${fn:contains(SelectedOffers, Offer)}">
+                                            <c:forEach var="Offer" items="${SelectedOffers}">
                                                     <td>
                                                         <c:set var="containsTimeSlot" value="false"/>
                                                         <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
@@ -93,25 +90,16 @@
                                                                             ${TimeSlot.config.basePrice}
                                                                         </a>
                                                                     </c:when>
-                                                                    <c:otherwise>
-                                                                        <span class="booking-gallery-offer booking-disabled"></span>
-                                                                    </c:otherwise>
                                                                 </c:choose>
                                                             </c:if>
                                                         </c:forEach>
-                                                        <c:if test="${not containsTimeSlot}">
-                                                            <span class="booking-gallery-offer booking-disabled"></span>
-                                                        </c:if>
                                                     </td>
-                                                </c:if>
                                             </c:forEach>
                                         </tr>
                                     </c:forEach>
                                     <tr>
-                                        <c:forEach var="Offer" items="${Offers}">
-                                            <c:if test="${fn:contains(SelectedOffers, Offer)}">
-                                                <td style="background-color: ${Offer.hexColor};">${Offer.shortName}</td>
-                                            </c:if>
+                                        <c:forEach var="Offer" items="${SelectedOffers}">
+                                            <td style="background-color: ${Offer.hexColor};">${Offer.shortName}</td>
                                         </c:forEach>
                                     </tr>
                                 </tbody>
