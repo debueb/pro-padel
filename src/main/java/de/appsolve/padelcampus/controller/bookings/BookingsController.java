@@ -130,13 +130,13 @@ public class BookingsController extends BaseController {
         if (StringUtils.isEmpty(date)){
             date = DATE_HUMAN_READABLE.print(new DateTime());
         }
-        List<Facility> offers;
+        List<Facility> facilities;
         if (facilityIds == null){
-            offers = facilityDAO.findAll();
+            facilities = facilityDAO.findAll();
         } else {
-            offers = facilityDAO.findAll(facilityIds);
+            facilities = facilityDAO.findAll(facilityIds);
         } 
-        return getIndexView(date, time, offers);
+        return getIndexView(date, time, facilities);
     }
     
     @RequestMapping("{day}/{time}/offer/{offerId}")
