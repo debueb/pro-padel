@@ -350,16 +350,6 @@
                                 <include>*.js</include>
                             </includes>
                         </aggregation>
-					
-                        <aggregation>
-                            <!-- insert new line after each concatenation (default: false) -->
-                            <insertNewLine>true</insertNewLine>
-                            <output>${project.build.directory}/${project.build.finalName}/css/all.min.css</output>
-                            <!-- files to include, path relative to output's directory or absolute path -->
-                            <includes>
-                                <include>*.css</include>
-                            </includes>
-                        </aggregation>
                     </aggregations>
                 </configuration>
             </plugin>
