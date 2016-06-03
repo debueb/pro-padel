@@ -124,7 +124,6 @@ public class BookingsController extends BaseController {
     @RequestMapping()
     public ModelAndView getToday(
             @RequestParam(value="date", required = false) String date,
-            @RequestParam(value="time", required = false) String time,
             @RequestParam(value="facilities", required = false) List<Long> facilityIds
     ) throws JsonProcessingException {
         if (StringUtils.isEmpty(date)){
@@ -136,7 +135,7 @@ public class BookingsController extends BaseController {
         } else {
             facilities = facilityDAO.findAll(facilityIds);
         } 
-        return getIndexView(date, time, facilities);
+        return getIndexView(date, facilities);
     }
     
     @RequestMapping("{day}/{time}/offer/{offerId}")
@@ -421,7 +420,7 @@ public class BookingsController extends BaseController {
         return getCancellationSuccessView(booking);
     }
 
-    private ModelAndView getIndexView(String day, String time, List<Facility> facilities) throws JsonProcessingException {
+    private ModelAndView getIndexView(String day, List<Facility> facilities) throws JsonProcessingException {
         LocalDate selectedDate = DATE_HUMAN_READABLE.parseLocalDate(day);
         ModelAndView indexView = new ModelAndView("bookings/index");
         bookingUtil.addWeekView(selectedDate, facilities, indexView, true);
