@@ -45,7 +45,7 @@
 
         <c:set var="compressCSS" value="${compress.css}"/>
         <c:choose>
-            <c:when test="${compressCSS or empty param.debug}">
+            <c:when test="${compressCSS and empty param.debug}">
                 <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet">
             </c:when>
             <c:otherwise>
