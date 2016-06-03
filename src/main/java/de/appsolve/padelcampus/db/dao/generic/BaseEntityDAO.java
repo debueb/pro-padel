@@ -66,7 +66,9 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     public List<T> findAll() {
         Criteria criteria = getCriteria();
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-        return (List<T>) criteria.list();
+        List<T> list = (List<T>) criteria.list();
+        sort(list);
+        return list;
     }
     
     @SuppressWarnings("unchecked")
@@ -93,6 +95,7 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         objectCriteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         addOrderBy(objectCriteria, pageable);
         List<T> objects = objectCriteria.list();
+        sort(objects);
         
         //we also need the total number of rows
         Criteria rowCountCritieria = getCriteria();
@@ -122,7 +125,9 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         Criteria criteria = getCriteria();
         criteria.add(or);
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-        return (List<T>) criteria.list();
+        List<T> list = (List<T>) criteria.list();
+        sort(list);
+        return list;
     }
 
     @Override
@@ -141,6 +146,7 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         @SuppressWarnings("unchecked")
         List<T> objects = criteria.list();
+        sort(objects);
         PageImpl<T> page = new PageImpl<>(objects);
         return page;
     }
@@ -191,7 +197,10 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
             criteria.add(Restrictions.eq(entry.getKey(), entry.getValue()));
         }
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-        return (List<T>) criteria.list();
+        @SuppressWarnings("unchecked")
+        List<T> list = criteria.list();
+        sort(list);
+        return list;
     }
     
     @Override
@@ -227,7 +236,9 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         //we only want unique results
         //see http://stackoverflow.com/questions/18753245/one-to-many-relationship-gets-duplicate-objects-whithout-using-distinct-why
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        return crit.list();
+        List<T> list = (List<T>) crit.list();
+        sort(list);
+        return list;
     }
     
     @Override
@@ -239,7 +250,9 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         //we only want unique results
         //see http://stackoverflow.com/questions/18753245/one-to-many-relationship-gets-duplicate-objects-whithout-using-distinct-why
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        return crit.list();
+        List<T> list = (List<T>) crit.list();
+        sort(list);
+        return list;
     }
     
     protected Criteria getCriteria() {
@@ -294,5 +307,10 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     
     protected Set<String> getIndexedProperties(){
         return new HashSet<>();
+    }
+
+    
+    protected void sort(List<T> list) {
+        //allow subclasses to sort
     }
 }
