@@ -8,11 +8,11 @@ package de.appsolve.padelcampus.admin.controller.bookings;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
-import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Offer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  *
@@ -23,10 +23,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminBookingsOffersController extends AdminBaseController<Offer> {
     
     @Autowired
-    PlayerDAOI playerDAO;
-    
-    @Autowired
     BaseEntityDAOI<Offer> offerDAO;
+    
+    @Override
+    public ModelAndView showAddView(){
+        Offer newOffer = createNewInstance();
+        Long position = 0L;
+        for (Offer offer: offerDAO.findAll()){
+            position = Math.max(position, offer.getPosition()+1);
+        }
+        newOffer.setPosition(position);
+        return getEditView(newOffer);
+    }
    
     @Override
     public BaseEntityDAOI getDAO() {

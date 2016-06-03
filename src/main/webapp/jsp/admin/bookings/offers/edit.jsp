@@ -54,7 +54,7 @@
                             </button>
                         </span>
                         <span class="relative">
-                            <spf:input type="text" path="position" class="form-control text-center input-plus-minus form-bottom-element" min="1" max="10"/>
+                            <spf:input type="number" path="position" class="form-control text-center input-plus-minus form-bottom-element" min="1" max="100"/>
                             <span class="explanation"><fmt:message key="Position"/></span>
                         </span>
                         <span class="input-group-btn">
