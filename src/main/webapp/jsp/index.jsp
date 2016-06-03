@@ -18,20 +18,6 @@
                     <jsp:param name="href" value="${Module.url}"/>
                 </jsp:include>
             </c:forEach>
-            <c:if test="${client == 'iOS'}">
-                <jsp:include page="/jsp/include/list-group-item.jsp">
-                    <jsp:param name="href" value="/app/ios"/>
-                    <jsp:param name="key" value="iOSApp"/>
-                    <jsp:param name="icon" value="apple"/>
-                </jsp:include>
-            </c:if>
-            <c:if test="${client == 'Android'}">
-                <jsp:include page="/jsp/include/list-group-item.jsp">
-                    <jsp:param name="href" value="/app/android"/>
-                    <jsp:param name="key" value="AndroidApp"/>
-                    <jsp:param name="icon" value="android"/>
-                </jsp:include>
-            </c:if>
             <c:if test="${not empty user}">
                 <jsp:include page="/jsp/include/list-group-item.jsp">
                     <jsp:param name="href" value="/account"/>

@@ -101,31 +101,6 @@ public class LoginFilter implements Filter {
                 }
             }
             
-            //apps send the x-client-identifier identifier
-            String identifier = null;
-            Cookie[] cookies = httpRequest.getCookies();
-            if (cookies!=null){
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("client-identifier")){
-                        identifier = cookie.getValue();
-                    }
-                }
-            }
-            if (StringUtils.isEmpty(identifier)) {
-                String userAgent = httpRequest.getHeader("user-agent");
-                if (!StringUtils.isEmpty(userAgent)) {
-                    if (userAgent.matches(".*Android.*")) {
-                        httpRequest.setAttribute("client", "Android");
-                    } else if (userAgent.matches(".*Mac.*AppleWebKit.*Mobile.*")) {
-                        httpRequest.setAttribute("client", "iOS");
-                    }
-                }
-            } else {
-                httpRequest.setAttribute("clientIdentifier", identifier);
-            }
-            
-            
-            
             moduleUtil.initModules(httpRequest);
         } 
         chain.doFilter(request, response);
