@@ -32,6 +32,7 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.lesscss.LessCompiler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,7 +202,9 @@ public class HtmlResourceUtil {
         Path outputPath = new File(destDir, FILE_NAME).toPath();
         String content = IOUtils.toString(lessIs, Constants.UTF8);
         for (CssAttribute attribute : cssAttributes) {
-            content = content.replaceAll(attribute.getCssDefaultValue(), attribute.getCssValue());
+            if (!StringUtils.isEmpty(attribute.getCssValue())){
+                content = content.replaceAll(attribute.getCssDefaultValue(), attribute.getCssValue());
+            }
         }
 
         //overwrite variables.less in data directory
