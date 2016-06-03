@@ -56,7 +56,7 @@ public class SessionEventListener implements HttpSessionListener{
 
     private void cancelBooking(Booking booking, LocalDateTime maxAge) {
         //cancel if the payment method is not cash and the payment has not been done
-        if (!booking.getPaymentMethod().equals(PaymentMethod.Cash) && !booking.getPaymentConfirmed()){
+        if (booking.getPaymentMethod() == null || (!booking.getPaymentMethod().equals(PaymentMethod.Cash) && !booking.getPaymentConfirmed())){
             LocalDateTime blockingTime = booking.getBlockingTime();
             if (blockingTime!=null && blockingTime.isBefore(maxAge)){
                 LOG.info("Cancelling booking [user="+booking.getPlayer().toString()+", date="+booking.getBookingDate()+", time="+booking.getBookingTime()+"] due to session timeout");
