@@ -33,7 +33,6 @@ import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
-import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.RequestUtil;
