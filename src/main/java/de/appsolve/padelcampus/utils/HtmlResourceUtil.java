@@ -6,8 +6,8 @@
 package de.appsolve.padelcampus.utils;
 
 import de.appsolve.padelcampus.constants.Constants;
+import de.appsolve.padelcampus.data.CustomerI;
 import de.appsolve.padelcampus.db.dao.CssAttributeBaseDAOI;
-import de.appsolve.padelcampus.db.dao.CssAttributeDAOI;
 import de.appsolve.padelcampus.db.dao.CustomerDAOI;
 import de.appsolve.padelcampus.db.model.CssAttribute;
 import de.appsolve.padelcampus.db.model.Customer;
@@ -81,7 +81,7 @@ public class HtmlResourceUtil {
         }
     }
     
-    public void updateCss(ServletContext context, Customer customer) throws Exception{
+    public void updateCss(ServletContext context, CustomerI customer) throws Exception{
         Map<String, Object> attributeMap = new HashMap<>();
         attributeMap.put("customer", customer);
         List<CssAttribute> cssAttributes = cssAttributeBaseDAO.findByAttributes(attributeMap);
