@@ -26,6 +26,7 @@
                         <th><fmt:message key="Comment"/></th>
                         <th><fmt:message key="PaymentMethod"/></th>
                         <th><fmt:message key="Paid"/></th>
+                        <th><fmt:message key="Invoice"/></th>
                         <th><fmt:message key="Price"/></th>
                         </thead>
                         <tbody>
@@ -41,6 +42,7 @@
                                     <td><a href="${url}">${Booking.comment}</a></td>
                                     <td><a href="${url}"><fmt:message key="${Booking.paymentMethod}"/></a></td>
                                     <td><a href="${url}"><i class="fa fa-${Booking.paymentConfirmed ? 'check' : 'close'}"></i></a></td>
+                                    <td><a href="/invoices/booking/${Booking.UUID}"><i class="fa fa-file-text"></i></a></td>
                                     <td><a href="${url}">${Booking.amount} ${Booking.currency.symbol}</a></td>
                                 </tr>
                             </c:forEach>
