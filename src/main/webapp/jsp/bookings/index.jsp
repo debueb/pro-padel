@@ -11,7 +11,7 @@
 
                 <form method="GET" class="ajaxify" action="${contextPath}/bookings">
                     <div class="datepicker-container ">
-                        <div class="datepicker-text-container ${empty RangeMap ? '' : 'form-top-element'}">
+                        <div class="datepicker-text-container ${empty RangeMap or empty Facilities ? '' : 'form-top-element'}">
                             <div class="datepicker-label"><fmt:message key="Date"/></div>
                             <span class="fa fa-calendar datepicker-icon"></span>
                             <div class="datepicker-text"></div>
