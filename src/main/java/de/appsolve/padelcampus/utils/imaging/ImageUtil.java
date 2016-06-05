@@ -3,19 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.appsolve.padelcampus.utils;
+package de.appsolve.padelcampus.utils.imaging;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import de.appsolve.padelcampus.db.model.Image;
+import de.appsolve.padelcampus.utils.FileUtil;
+import de.appsolve.padelcampus.utils.Msg;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,17 +26,36 @@ import org.springframework.stereotype.Component;
  * @author dominik
  */
 @Component
-public class ImageUtil {
+@Qualifier("ImageUtil")
+public class ImageUtil implements ImageUtilI {
     
     @Autowired
     FileUtil fileUtil;
     
+    @Autowired
+    Msg msg;
+    
+    private BufferedImage readImage(byte[] bytes) throws IOException{
+        BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
+        if (image == null) {
+            throw new IOException(msg.get("FileIsNotAValidImage"));
+        }
+        return image;
+    }
+    
+    @Override
+    public Image saveImage(byte[] bytes, String folderName) throws IOException, ImageProcessingException{
+         readImage(bytes); //throws Exception if invalid image
+         return fileUtil.save(bytes, folderName);
+    }
+    
+    @Override
     public Image saveImage(byte[] bytes, int width, int height, String folderName) throws IOException, ImageProcessingException{
         BufferedImage originalImage = null;
         BufferedImage resizedImage = null;
                     
         try {
-            originalImage = ImageIO.read(new ByteArrayInputStream(bytes));
+            originalImage = readImage(bytes);
             //https://github.com/thebuzzmedia/imgscalr/issues/82
             //when resizing with alpha the resulting image gets a tint
             //also, on OpenJDK 7 on openshift does not support the alpha channel
@@ -69,6 +91,11 @@ public class ImageUtil {
                 resizedImage.flush();
             }
         }
+    }
+    
+    @Override
+    public Image saveImage(byte[] bytes, int maxHeight, String folderName) throws IOException, ImageProcessingException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private BufferedImage dropAlphaChannel(BufferedImage originalImage) {

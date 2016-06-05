@@ -37,34 +37,38 @@ public class FileUtil {
     @Autowired
     ImageDAOI imageDAO;
   
+    public Image save(byte[] byteArray, String folderName) throws IOException, ImageProcessingException{
+        //generate file path based on checksum of byte array
+        String checksum = DigestUtils.sha256Hex(byteArray);
+
+        Image existingImage = imageDAO.findBySha256(checksum);
+        String filePath = DATA_DIR + File.separator + folderName + File.separator + checksum;
+
+        File file = new File(filePath);
+        if (existingImage != null && file.exists()){
+            return existingImage;
+        }
+
+        //save file to generated file name
+        FileUtils.writeByteArrayToFile(file, byteArray);
+
+        //create Image
+        Image image = new Image();
+        image.setFilePath(filePath);
+        image.setSha256(checksum);
+        imageDAO.saveOrUpdate(image);
+        return image;
+    }
+    
     public Image save(BufferedImage bufferedImage, String folderName) throws IOException, ImageProcessingException{
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             
             //convert buffered image to byte array
-            ImageIO.write(bufferedImage, "jpg", baos);
+            ImageIO.write(bufferedImage, "png", baos);
             baos.flush();
             byte[] byteArray = baos.toByteArray();
             
-            //generate file path based on checksum of byte array
-            String checksum = DigestUtils.sha256Hex(byteArray);
-            
-            Image existingImage = imageDAO.findBySha256(checksum);
-            if (existingImage != null){
-                return existingImage;
-            }
-            
-            String filePath = DATA_DIR + File.separator + folderName + File.separator + checksum;
-
-            //save file to generated file name
-            File file = new File(filePath);
-            FileUtils.writeByteArrayToFile(file, byteArray);
-
-            //create Image
-            Image image = new Image();
-            image.setFilePath(filePath);
-            image.setSha256(checksum);
-            imageDAO.saveOrUpdate(image);
-            return image;
+            return save(byteArray, folderName);
         }
     }
     

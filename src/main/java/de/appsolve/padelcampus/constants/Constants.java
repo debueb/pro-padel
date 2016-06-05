@@ -44,6 +44,7 @@ public class Constants {
     public static final String SESSION_BOOKING              = "booking";
     public static final String SESSION_ACCESS_LEVEL         = "accessLevel";
     
+    public static final String APPLICATION_COMPANY_LOGO_PATH= "companyLogoPath";
     public static final String APPLICATION_MENU_LINKS       = "menuLinks";
     public static final String APPLICATION_FOOTER_LINKS     = "footerLinks";
     
@@ -72,4 +73,7 @@ public class Constants {
     public static final Integer SUMMERNOTE_IMAGE_WIDTH       = 800;
     public static final Integer SUMMERNOTE_IMAGE_HEIGHT      = 800;
     
+    public static final String DATA_DIR_COMPANY_LOGO_IMAGES  = "companyLogoImages";
+    public static final Integer COMPANY_LOGO_WIDTH           = 160;
+    public static final Integer COMPANY_LOGO_HEIGHT          = 80;
 }

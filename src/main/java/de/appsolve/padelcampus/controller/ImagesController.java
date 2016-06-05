@@ -11,12 +11,13 @@ import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.dao.ImageDAOI;
 import de.appsolve.padelcampus.db.model.Image;
 import de.appsolve.padelcampus.utils.FileUtil;
-import de.appsolve.padelcampus.utils.ImageUtil;
+import de.appsolve.padelcampus.utils.imaging.ImageUtilI;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +41,8 @@ public class ImagesController extends BaseController{
     FileUtil fileUtil;
     
     @Autowired
-    ImageUtil imageUtil;
+    @Qualifier("TinifyImageUtil")
+    ImageUtilI imageUtil;
 
     @Autowired
     ImageDAOI imageDAO;

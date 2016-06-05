@@ -48,7 +48,7 @@
 
 <body>
     <div class="letter">
-        <img class="logo margin-bottom" src="/images/logo.png" alt="logo"></img>
+        <img class="logo margin-bottom" src="${companyLogoPath[sessionScope.customer.name]}" alt="logo"></img>
         <div class="clearfix"></div>
         <div class="small">${MasterData.companyName}, ${MasterData.street}, ${MasterData.zip} ${MasterData.city}</div>
         <div class="recipient margin-bottom">

@@ -5,17 +5,24 @@
  */
 package de.appsolve.padelcampus.filter;
 
+import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.COOKIE_LOGIN_TOKEN;
 import de.appsolve.padelcampus.data.CustomerI;
 import de.appsolve.padelcampus.db.dao.CustomerDAOI;
+import de.appsolve.padelcampus.db.dao.MasterDataDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
+import de.appsolve.padelcampus.db.model.MasterData;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.utils.CompanyLogoUtil;
 import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -37,6 +44,9 @@ public class LoginFilter implements Filter {
 
     @Autowired
     SessionUtil sessionUtil;
+    
+    @Autowired
+    CompanyLogoUtil companyLogoUtil;
     
     @Autowired
     ModuleUtil moduleUtil;
@@ -100,6 +110,8 @@ public class LoginFilter implements Filter {
                     }
                 }
             }
+            
+            companyLogoUtil.initModules(httpRequest);
             
             moduleUtil.initModules(httpRequest);
         } 

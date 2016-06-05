@@ -14,15 +14,16 @@ import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Image;
 import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.utils.ImageUtil;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.SessionUtil;
+import de.appsolve.padelcampus.utils.imaging.ImageUtilI;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -53,7 +54,8 @@ public class AccountProfileController extends BaseController {
     Msg msg;
 
     @Autowired
-    ImageUtil imageUtil;
+    @Qualifier("TinifyImageUtil")
+    ImageUtilI imageUtil;
 
     @RequestMapping()
     public ModelAndView getIndex(HttpServletRequest request) {
