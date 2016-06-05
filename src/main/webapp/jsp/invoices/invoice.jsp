@@ -43,6 +43,9 @@
         .centered{
             text-align: center;
         }
+        .right{
+            text-align: right;
+        }
     </style>
 </head>
 
@@ -84,6 +87,8 @@
                     </tr>
                 </tbody>
             </table>
+            <hr/>
+            <div class="right"><fmt:message key="Total"/>: ${Booking.currency} ${Booking.amount}</div>
         </div>
         <div class="margin-bottom-2">
             <fmt:message key="InvoiceText2"/>
