@@ -102,10 +102,12 @@ public class LoginFilter implements Filter {
                 Cookie[] cookies = httpRequest.getCookies();
                 if (cookies != null) {
                     for (Cookie cookie : cookies) {
-                        if (cookie.getName().equals(COOKIE_LOGIN_TOKEN)) {
-                            Player player = playerDAO.findByUUID(cookie.getValue());
-                            sessionUtil.setUser(httpRequest, player);
-                            break;
+                        if (cookie.getDomain() != null && cookie.getDomain().equalsIgnoreCase(httpRequest.getServerName())){
+                            if (cookie.getName().equals(COOKIE_LOGIN_TOKEN)) {
+                                Player player = playerDAO.findByUUID(cookie.getValue());
+                                sessionUtil.setUser(httpRequest, player);
+                                break;
+                            }
                         }
                     }
                 }

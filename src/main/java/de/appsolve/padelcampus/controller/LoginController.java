@@ -322,9 +322,7 @@ public class LoginController extends BaseController{
         
         String stayLoggedIn = request.getParameter("stay-logged-in");
         Cookie cookie = new Cookie(COOKIE_LOGIN_TOKEN, player.getUUID());
-        if (!request.getServerName().equals("localhost")){
-            cookie.setDomain(request.getServerName());
-        }
+        cookie.setDomain(request.getServerName());
         if (!StringUtils.isEmpty(stayLoggedIn) && stayLoggedIn.equals("on")){
             cookie.setMaxAge(Integer.MAX_VALUE);
         } else {
