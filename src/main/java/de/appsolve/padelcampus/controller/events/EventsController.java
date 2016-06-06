@@ -77,16 +77,7 @@ public class EventsController extends BaseController{
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findById(eventId);
         String eventType = event.getEventType().toString().toLowerCase();
-        ModelAndView mav = new ModelAndView("events/"+eventType, "Model", event);
-        
-        switch (event.getEventType()){
-            case Knockout:
-                event = eventDAO.findByIdFetchWithGames(eventId);
-                SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGameMap(event);
-                mav = getKnockoutView(event, roundGames);
-                break;
-        }
-        
+        ModelAndView mav = new ModelAndView("events/event", "Model", event);
         return mav;
     }
     
@@ -142,7 +133,7 @@ public class EventsController extends BaseController{
         SortedMap<Integer, List<Game>> groupGameMap = eventsUtil.getGroupGameMap(event);
         SortedMap<Integer, List<Game>> roundGameMap = eventsUtil.getRoundGameMap(event);
         if (roundGameMap.isEmpty()){
-            return new ModelAndView("events/groupknockout/knockoutgames", "Model", event);
+            return new ModelAndView("events/groupknockout/knockoutgamesend", "Model", event);
         }
         ModelAndView mav = getKnockoutView(event, roundGameMap);
         mav.addObject("GroupGameMap", groupGameMap);
@@ -150,7 +141,7 @@ public class EventsController extends BaseController{
     }
 
     private ModelAndView getKnockoutView(Event event, SortedMap<Integer, List<Game>> roundGameMap) {
-        ModelAndView mav = new ModelAndView("events/knockout");
+        ModelAndView mav = new ModelAndView("events/knockout/knockoutgames");
         mav.addObject("Model", event);
         mav.addObject("RoundGameMap", roundGameMap);
         mav.addObject("ParticipantGameGameSetMap", getParticipantGameGameSetMap(roundGameMap));

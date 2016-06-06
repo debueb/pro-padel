@@ -5,6 +5,8 @@
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <div class="page-header"></div>
 
+        <jsp:include page="/jsp/events/include/info.jsp"/>
+        
         <div class="panel panel-info">
             
             <div class="panel-heading">
@@ -18,7 +20,7 @@
                     <div class="alert alert-warning unit">
                         <fmt:message key="ConfirmGroupPhaseEnd"><fmt:param value="${Model.name}"/></fmt:message>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block"><fmt:message key="Confirm"/></button>
+                    <button type="submit" class="btn btn-primary btn-block unit-2"><fmt:message key="Confirm"/></button>
                     <a class="btn btn-primary btn-block ajaxify" href="${contextPath}/events/event/${Model.id}"><fmt:message key="Cancel"/></a>
                 </spf:form>
             </div>

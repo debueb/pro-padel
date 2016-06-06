@@ -75,14 +75,9 @@
             </div>
         </c:forEach>
         
-        <c:choose>
-            <c:when test="${empty RoundGameMap}">
-                <a class="btn btn-primary btn-block unit ajaxify" href="/admin/events/event/${Model.id}/groupgamesend"><fmt:message key="EndGroupGames"/></a>
-            </c:when>
-            <c:otherwise>
-                <jsp:include page="/jsp/events/include/links.jsp"/>
-            </c:otherwise>
-        </c:choose>
+        <c:if test="${empty RoundGameMap}">
+            <a class="btn btn-primary btn-block unit ajaxify" href="/admin/events/event/${Model.id}/groupgamesend"><fmt:message key="EndGroupGames"/></a>
+        </c:if>
     </div>
 </div>
 

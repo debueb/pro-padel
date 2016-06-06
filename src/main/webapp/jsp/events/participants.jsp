@@ -23,8 +23,6 @@
                 </div>
             </div>
         </div>
-            
-        <jsp:include page="/jsp/events/include/links.jsp"/>
     </div>
 </div>
 <jsp:include page="/jsp/include/footer.jsp"/>

@@ -59,20 +59,8 @@
                 </c:forEach>
             </section>
         </c:forEach>    
-
     </div>
-
-</div>     
-
-<c:if test="${not empty GroupGameMap}">
-    <div class="row unit-2">
-        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
-            
-        <jsp:include page="/jsp/events/include/links.jsp"/>
-        </div>
-    </div>
-</c:if>
-
+</div>
 
 <jsp:include page="/jsp/include/footer.jsp"/>     
 
