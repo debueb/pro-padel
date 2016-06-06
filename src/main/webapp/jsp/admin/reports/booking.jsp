@@ -29,7 +29,14 @@
                                 <fmt:message key="Paid"/>:
                             </div>
                             <div class="col-xs-8 booking-cell">
-                                <spf:checkbox path="paymentConfirmed"/><label for="paymentConfirmed1"></label>
+                                <c:choose>
+                                    <c:when test="${Booking.paymentMethod == 'Cash'}">
+                                        <spf:checkbox path="paymentConfirmed"/><label for="paymentConfirmed1"></label>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <i class="fa fa-${Booking.paymentConfirmed ? 'check' : 'close'}"></i>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                         <div class="row">
