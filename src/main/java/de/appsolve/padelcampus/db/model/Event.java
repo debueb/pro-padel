@@ -19,6 +19,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
@@ -86,6 +87,9 @@ public class Event extends ComparableEntity{
     
     @Column(length=8000)
     private String description;
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    private CalendarConfig calendarConfig;
 
     public String getName() {
         return name;
@@ -205,6 +209,14 @@ public class Event extends ComparableEntity{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public CalendarConfig getCalendarConfig() {
+        return calendarConfig;
+    }
+
+    public void setCalendarConfig(CalendarConfig calendarConfig) {
+        this.calendarConfig = calendarConfig;
     }
     
     public Set<Team> getTeams(){

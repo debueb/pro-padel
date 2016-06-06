@@ -13,7 +13,10 @@
                 <h4>${empty Model.id ? NewEvent : EditEvent}</h4>
             </div>
             <div class="panel-body">
-                <spf:form method="POST" class="form-signin summernote-form" role="form" modelAttribute="Model">
+                <c:if test="${empty Model.id}">
+                    <div class="alert alert-info"><fmt:message key="NewEventDesc"/></div>
+                </c:if>
+                <spf:form method="POST" class="form-signin summernote-form unit" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
                     
@@ -112,7 +115,7 @@
                         <fmt:message key="Participants" var="Participants"/>
                         <spf:select path="participants" 
                                     class="select-multiple show-tick form-control" 
-                                    data-style="form-bottom-element" 
+                                    data-style="form-center-element" 
                                     title="${Participants}" 
                                     multiple="true" 
                                     data-selected-text-format="values"
@@ -134,6 +137,12 @@
                         <span class="explanation-select"><fmt:message key="Participants"/></span>
                     </div>
                     
+                    <div class="relative">
+                        <spf:select path="calendarConfig" class="select-simple form-control" data-style="form-bottom-element" data-container="body">
+                            <spf:options itemValue="id" items="${CalendarConfigs}"/>
+                        </spf:select>
+                        <span class="explanation-select"><fmt:message key="CalendarConfigOffer"/></span>
+                    </div>
 
                     <div class="unit">
                         <spf:checkbox path="active" id="active"/><label for="active"><fmt:message key="Active"/>&nbsp;(<fmt:message key="PubliclyAvailable"/>)</label>

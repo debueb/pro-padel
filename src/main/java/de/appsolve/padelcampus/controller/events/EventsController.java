@@ -75,8 +75,7 @@ public class EventsController extends BaseController{
     
     @RequestMapping("event/{eventId}")
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
-        Event event = eventDAO.findById(eventId);
-        String eventType = event.getEventType().toString().toLowerCase();
+        Event event = eventDAO.findByIdFetchWithCalendarConfig(eventId);
         ModelAndView mav = new ModelAndView("events/event", "Model", event);
         return mav;
     }

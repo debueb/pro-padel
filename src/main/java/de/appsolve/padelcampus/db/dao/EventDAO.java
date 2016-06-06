@@ -66,6 +66,16 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI{
     }
     
     @Override
+    public Event findByIdFetchWithCalendarConfig(Long id) {
+        return super.findByIdFetchEagerly(id, "calendarConfig");
+    }
+    
+    @Override
+    public Event findByIdFetchWithParticipantsAndCalendarConfig(Long id) {
+        return super.findByIdFetchEagerly(id, "participants", "calendarConfig");
+    }
+    
+    @Override
     public Event findByIdFetchWithParticipantsAndGames(Long id) {
         return super.findByIdFetchEagerly(id, "participants", "games");
     }

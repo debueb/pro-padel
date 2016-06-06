@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.admin.controller.events;
 
+import de.appsolve.padelcampus.spring.CalendarConfigPropertyEditor;
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
@@ -13,11 +14,13 @@ import de.appsolve.padelcampus.data.EventGroups;
 import de.appsolve.padelcampus.data.GameList;
 import de.appsolve.padelcampus.data.GameData;
 import de.appsolve.padelcampus.data.ScoreEntry;
+import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
+import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
@@ -86,10 +89,16 @@ public class AdminEventsController extends AdminBaseController<Event>{
     PlayerDAOI playerDAO;
     
     @Autowired
+    CalendarConfigDAOI calendarConfigDAO;
+    
+    @Autowired
     RankingUtil rankingUtil;
     
     @Autowired
     EventsUtil eventsUtil;
+    
+    @Autowired
+    CalendarConfigPropertyEditor calendarConfigPropertyEditor;
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -102,6 +111,8 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 return participantDAO.findById(id);
             }
         });
+        
+        binder.registerCustomEditor(CalendarConfig.class, calendarConfigPropertyEditor);
     }
     
     @Override
@@ -152,6 +163,8 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 createMissingGames(model, eventGames, model.getParticipants(), null);
                 
                 break;
+                
+            //ToDo for GroupKnockout and Knocout: check that either participants or calendarconfig is set    
                 
             case GroupKnockout:
                 return redirectToGroupDraws(model);
@@ -425,6 +438,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
         mav.addObject("AllPlayers", allPlayers);
         mav.addObject("EventTypes", EventType.values());
         mav.addObject("Genders", Gender.values());
+        mav.addObject("CalendarConfigs", calendarConfigDAO.findAll());
         return mav;
     }
     
@@ -450,7 +464,8 @@ public class AdminEventsController extends AdminBaseController<Event>{
     
     @Override
     public Event findById(Long id){
-        return eventDAO.findByIdFetchWithParticipants(id);
+        Event bla = eventDAO.findByIdFetchWithParticipantsAndCalendarConfig(id);
+        return bla;
     }
 
     private ModelAndView redirectToDraws(Event model) {
