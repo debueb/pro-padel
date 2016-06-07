@@ -19,15 +19,7 @@
                         <th></th>
                             <c:forEach var="Participant" items="${Game.participants}">
                             <th class="text-center">
-                                <c:choose>
-                                    <c:when test="${Participant.discriminatorValue == 'Player'}">
-                                        <c:set var="url_participant" value="/players/player/${Participant.UUID}"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:set var="url_participant" value="/teams/team/${Participant.id}"/>
-                                    </c:otherwise>
-                                </c:choose>
-                                <a href="${url_participant}">${Participant}</a>
+                                <a href="${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}">${Participant}</a>
                             </th>
                             </c:forEach>
                         </thead>

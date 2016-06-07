@@ -92,8 +92,6 @@ public class Player extends Participant implements EmailContact{
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime passwordResetExpiryDate;
     
-    private String UUID;
-    
     @Transient
     private MultipartFile profileImageMultipartFile;
     
@@ -204,14 +202,6 @@ public class Player extends Participant implements EmailContact{
 
     public void setPasswordResetExpiryDate(DateTime passwordResetExpiryDate) {
         this.passwordResetExpiryDate = passwordResetExpiryDate;
-    }
-
-    public String getUUID() {
-        return UUID;
-    }
-
-    public void setUUID(String UUID) {
-        this.UUID = UUID;
     }
 
     public MultipartFile getProfileImageMultipartFile() {

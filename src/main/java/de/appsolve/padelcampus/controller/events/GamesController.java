@@ -204,10 +204,10 @@ public class GamesController extends BaseController{
         return mav;
     }
  
-    @RequestMapping("/event/{eventId}/team/{teamId}")
-    public ModelAndView getTeamEvents(@PathVariable("teamId") Long teamId, @PathVariable("eventId") Long eventId){
+    @RequestMapping("/event/{eventId}/team/{teamUUID}")
+    public ModelAndView getTeamEvents(@PathVariable("teamUUID") String teamUUID, @PathVariable("eventId") Long eventId){
         Event event = eventDAO.findById(eventId);
-        Team team = teamDAO.findById(teamId);
+        Team team = teamDAO.findByUUID(teamUUID);
         List<Game> games = gameDAO.findByParticipantAndEvent(team, event);
         ModelAndView mav = new ModelAndView("games/games", "Games", games);
         mav.addObject("title", event.getName());
@@ -216,9 +216,9 @@ public class GamesController extends BaseController{
         return mav;
     }
     
-    @RequestMapping("/team/{teamId}")
-    public ModelAndView getTeamGames(@PathVariable("teamId") Long teamId){
-        Team team = teamDAO.findById(teamId);
+    @RequestMapping("/team/{teamUUID}")
+    public ModelAndView getTeamGames(@PathVariable("teamUUID") String teamUUID){
+        Team team = teamDAO.findByUUID(teamUUID);
         List<Game> games = gameDAO.findByParticipant(team);
         ModelAndView mav = new ModelAndView("games/games", "Games", games);
         String title = msg.get("AllGamesWith", new Object[]{team.getName()});
@@ -227,10 +227,10 @@ public class GamesController extends BaseController{
         return mav;
     }
 
-    @RequestMapping("/team/{teamId}/event/{eventId}")
-    public ModelAndView getTeamGamesByEvent(@PathVariable("teamId") Long teamId, @PathVariable("eventId") Long eventId){
+    @RequestMapping("/team/{teamUUID}/event/{eventId}")
+    public ModelAndView getTeamGamesByEvent(@PathVariable("teamUUID") String teamUUID, @PathVariable("eventId") Long eventId){
         Event event = eventDAO.findById(eventId);
-        Team team = teamDAO.findById(teamId);
+        Team team = teamDAO.findByUUID(teamUUID);
         List<Game> games = gameDAO.findByParticipantAndEvent(team, event);
         ModelAndView mav = new ModelAndView("games/games", "Games", games);
         String title = msg.get("AllGamesWithTeamInEvent", new Object[]{team.getName(), event.getName()});

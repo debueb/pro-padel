@@ -19,7 +19,11 @@ import org.springframework.data.domain.Pageable;
  */
 public interface TeamDAOI extends BaseEntityDAOI<Team>{
     
+    public Team findByUUID(String UUID);
+    
     Team findByIdFetchWithPlayers(Long id);
+    
+    Team findByUUIDFetchWithPlayers(String uuid);
     
     List<Team> findByPlayer(Player player);
     

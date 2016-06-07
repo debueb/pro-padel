@@ -18,12 +18,12 @@
                         <div class="list-item-text"><fmt:message key="EditResult"/></div>
                     </a>
                     <c:forEach var="Team" items="${Game.participants}">
-                        <a class="list-group-item ajaxify" href="/teams/team/${Team.id}">
+                        <a class="list-group-item ajaxify" href="/teams/team/${Team.UUID}">
                             <div class="list-item-text"><fmt:message key="AllInfosAbout"><fmt:param value="${Team}"/></fmt:message></div>
                             </a>
                     </c:forEach>
                     <c:forEach var="Participant" items="${Game.participants}">
-                        <a class="list-group-item ajaxify" href="/games/team/${Participant.id}/event/${Game.event.id}">
+                        <a class="list-group-item ajaxify" href="/games/team/${Participant.UUID}/event/${Game.event.id}">
                             <div class="list-item-text"><fmt:message key="AllGamesWithTeamInEvent"><fmt:param value="${Participant}"/><fmt:param value="${Game.event.name}"/></fmt:message></div>
                             </a>
                     </c:forEach>

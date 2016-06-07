@@ -22,8 +22,8 @@
                         </thead>
                         <tbody>
                             <c:forEach var="ScoreEntry" items="${ScoreEntries}" varStatus="status">
-                                <c:set var="UrlTeam" value="/teams/team/${ScoreEntry.participant.id}"/>
-                                <c:set var="UrlTeamGames" value="/games/team/${ScoreEntry.participant.id}"/>
+                                <c:set var="UrlTeam" value="/teams/team/${ScoreEntry.participant.UUID}"/>
+                                <c:set var="UrlTeamGames" value="/games/team/${ScoreEntry.participant.UUID}"/>
                                 <tr>
                                     <td class="text-center">${status.index+1}</td>
                                     <td><a href="${UrlTeam}" class="ajaxify">${ScoreEntry.participant}</a></td>
