@@ -218,6 +218,16 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     }
     
     @Override
+    public T findByUUIDFetchEagerly(final String uuid, String... associations) {
+        Criteria criteria = getCriteria();
+        for (String association: associations){
+            criteria.setFetchMode(association, FetchMode.JOIN);
+        }
+        criteria.add(Property.forName("UUID").eq(uuid));
+        return (T) criteria.uniqueResult();
+    }
+    
+    @Override
     public T findByIdFetchEagerly(final long id, String... associations) {
         Criteria criteria = getCriteria();
         for (String association: associations){

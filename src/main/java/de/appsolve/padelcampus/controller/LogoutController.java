@@ -7,6 +7,7 @@
 package de.appsolve.padelcampus.controller;
 
 import static de.appsolve.padelcampus.constants.Constants.COOKIE_LOGIN_TOKEN;
+import de.appsolve.padelcampus.utils.LoginUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -27,15 +28,13 @@ public class LogoutController extends BaseController{
     @Autowired
     SessionUtil sessionUtil;
     
+    @Autowired
+    LoginUtil loginUtil;
+    
     @RequestMapping()
-    public ModelAndView showLogin(HttpServletRequest request, HttpServletResponse response){
+    public ModelAndView doLogout(HttpServletRequest request, HttpServletResponse response){
+        loginUtil.deleteLoginCookie(request, response);
         sessionUtil.invalidate(request);
-        Cookie cookie = new Cookie(COOKIE_LOGIN_TOKEN, null);
-        if (!request.getServerName().equals("localhost")){
-            cookie.setDomain(request.getServerName());
-        }
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
         return new ModelAndView("redirect:/");
     }
 }

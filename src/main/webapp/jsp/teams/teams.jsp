@@ -13,7 +13,7 @@
             <div class="panel-body">
                 <div class="list-group">
                     <c:forEach var="Participant" items="${Teams}">
-                        <a href="/teams/team/${Participant.id}" class="list-group-item ajaxify">
+                        <a href="/teams/team/${Participant.UUID}" class="list-group-item ajaxify">
                             <div class="list-item-text">${Participant}</div>
                         </a>
                     </c:forEach>

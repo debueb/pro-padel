@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
@@ -26,10 +27,20 @@ import javax.persistence.Transient;
 )
 public abstract class Participant extends ComparableEntity implements ParticipantI{
     
+    @Column
+    private String UUID;
+    
     @Transient
     public String getDiscriminatorValue(){
     DiscriminatorValue val = this.getClass().getAnnotation( DiscriminatorValue.class );
         return val == null ? null : val.value();
     }
     
+    public String getUUID() {
+        return UUID;
+    }
+
+    public void setUUID(String UUID) {
+        this.UUID = UUID;
+    }
 }

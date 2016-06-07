@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -19,6 +21,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class TeamDAO extends SortedBaseDAO<Team> implements TeamDAOI{
 
+    @Override
+    public Team findByUUID(String UUID){
+        return super.findByAttribute("UUID", UUID);
+    }
+    
     @Override
     public List<Team> findByPlayer(Player player) {
         List<Team> teams = new ArrayList<>();
@@ -37,6 +44,11 @@ public class TeamDAO extends SortedBaseDAO<Team> implements TeamDAOI{
     public Team findByIdFetchWithPlayers(Long id) {
         return super.findByIdFetchEagerly(id, "players");
     }
+    
+    @Override
+    public Team findByUUIDFetchWithPlayers(String uuid) {
+        return super.findByUUIDFetchEagerly(uuid, "players");
+    }
 
     @Override
     public Page<Team> findAllFetchWithPlayers(Pageable pageable) {
@@ -47,6 +59,9 @@ public class TeamDAO extends SortedBaseDAO<Team> implements TeamDAOI{
     @Override
     public Team saveOrUpdate(Team team){
         team.setCustomer(getCustomer());
+        if (StringUtils.isEmpty(team.getUUID())){
+            team.setUUID(UUID.randomUUID().toString());
+        }
         return super.saveOrUpdate(team);
     }
     

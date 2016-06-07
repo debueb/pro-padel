@@ -7,7 +7,6 @@
 package de.appsolve.padelcampus.controller;
 
 import de.appsolve.padelcampus.constants.Constants;
-import static de.appsolve.padelcampus.constants.Constants.COOKIE_LOGIN_TOKEN;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.data.Credentials;
 import de.appsolve.padelcampus.data.Mail;
@@ -15,6 +14,7 @@ import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.model.Contact;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.exceptions.MailException;
+import de.appsolve.padelcampus.utils.LoginUtil;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.PlayerUtil;
@@ -22,7 +22,6 @@ import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
 import java.util.UUID;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -65,6 +64,9 @@ public class LoginController extends BaseController{
     
     @Autowired
     PlayerUtil playerUtil;
+    
+    @Autowired
+    LoginUtil loginUtil;
     
     @RequestMapping(value={"", "pre-register"})
     public ModelAndView showLogin(HttpServletRequest request){
@@ -318,17 +320,12 @@ public class LoginController extends BaseController{
     }
     
     private void setLoginCookie(HttpServletRequest request, HttpServletResponse response, Player player) {
-        //set login cookie
-        
         String stayLoggedIn = request.getParameter("stay-logged-in");
-        Cookie cookie = new Cookie(COOKIE_LOGIN_TOKEN, player.getUUID());
-        cookie.setDomain(request.getServerName());
         if (!StringUtils.isEmpty(stayLoggedIn) && stayLoggedIn.equals("on")){
-            cookie.setMaxAge(Integer.MAX_VALUE);
+            loginUtil.updateLoginCookie(player, request, response);
         } else {
-            cookie.setMaxAge(0); //deletes cookie if it exists
+            loginUtil.deleteLoginCookie(request, response);
         }
-        response.addCookie(cookie);
     }
 
     private void checkForRedirectParam(HttpServletRequest request) {

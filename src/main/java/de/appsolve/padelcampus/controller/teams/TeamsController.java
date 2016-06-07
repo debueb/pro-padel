@@ -72,9 +72,9 @@ public class TeamsController extends BaseController{
         return getTeamsView("Alle Teams", teams);
     }
     
-     @RequestMapping("/team/{teamId}")
-    public ModelAndView getTeam(@PathVariable("teamId") Long teamId){
-        return getTeamView(teamDAO.findByIdFetchWithPlayers(teamId));
+     @RequestMapping("/team/{teamUUID}")
+    public ModelAndView getTeam(@PathVariable("teamUUID") String teamUUID){
+        return getTeamView(teamDAO.findByUUIDFetchWithPlayers(teamUUID));
     }
     
     @RequestMapping("/event/{id}")
@@ -84,9 +84,9 @@ public class TeamsController extends BaseController{
         return getTeamsView(msg.get("TeamsIn", new Object[]{event.getName()}), participants);
     }
        
-    @RequestMapping("/player/{playerId}")
-    public ModelAndView getTeamsForPlayer(@PathVariable("playerId") Long playerId){
-        Player player = playerDAO.findById(playerId);
+    @RequestMapping("/player/{playerUUID}")
+    public ModelAndView getTeamsForPlayer(@PathVariable("playerUUID") String playerUUID){
+        Player player = playerDAO.findByUUID(playerUUID);
         List<Team> participants = teamDAO.findByPlayer(player);
         return getTeamsView(msg.get("TeamsWith", new Object[]{player.toString()}), participants);
     }

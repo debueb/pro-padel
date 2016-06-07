@@ -92,8 +92,6 @@ public class Player extends Participant implements EmailContact{
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime passwordResetExpiryDate;
     
-    private String UUID;
-    
     @Transient
     private MultipartFile profileImageMultipartFile;
     
@@ -114,6 +112,9 @@ public class Player extends Participant implements EmailContact{
     @Column
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    
+    @Column
+    private String loginCookieHash;
     
     public String getFirstName() {
         return firstName;
@@ -203,14 +204,6 @@ public class Player extends Participant implements EmailContact{
         this.passwordResetExpiryDate = passwordResetExpiryDate;
     }
 
-    public String getUUID() {
-        return UUID;
-    }
-
-    public void setUUID(String UUID) {
-        this.UUID = UUID;
-    }
-
     public MultipartFile getProfileImageMultipartFile() {
         return profileImageMultipartFile;
     }
@@ -280,5 +273,13 @@ public class Player extends Participant implements EmailContact{
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public String getLoginCookieHash() {
+        return loginCookieHash;
+    }
+
+    public void setLoginCookieHash(String loginCookieHash) {
+        this.loginCookieHash = loginCookieHash;
     }
 }

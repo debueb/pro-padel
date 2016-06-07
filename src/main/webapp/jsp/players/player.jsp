@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="list-group unit">
-                    <a href="/teams/player/${Player.id}" class="list-group-item ajaxify">
+                    <a href="/teams/player/${Player.UUID}" class="list-group-item ajaxify">
                         <div class="list-item-text"><fmt:message key="TeamsWith"><fmt:param>${Player}</fmt:param></fmt:message>
                                     <div class="list-group-item-icon"><div class="fa fa-lg fa-group"></div></div>
                                 </div>
@@ -40,7 +40,7 @@
                                 <div class="list-group-item-icon"><div class="fa fa-lg fa-at"></div></div>
                             </div>
                         </a>
-                        <a href="/players/player/${Player.id}/vcard.vcf" class="list-group-item" download>
+                        <a href="/players/player/${Player.UUID}/vcard.vcf" class="list-group-item" download>
                             <div class="list-item-text"><fmt:message key="AddToContacts"/>
                                 <div class="list-group-item-icon"><div class="fa fa-lg fa-phone-square"></div></div>
                             </div>
@@ -52,7 +52,7 @@
                     <div class="alert alert-info unit">
                         <fmt:message key="LogInToContact"><fmt:param value="${Player}"/></fmt:message>
                         </div>
-                    <c:url value="/players/player/${Player.id}" var="playerURL"/>
+                    <c:url value="/players/player/${Player.UUID}" var="playerURL"/>
                     <a class="btn btn-primary btn-block unit" href="/login?redirect=${playerURL}"><fmt:message key="Login"/></a>
                     <a class="btn btn-primary btn-block" href="/login/register?redirect=${playerURL}"><fmt:message key="Register"/></a>
                 </c:if>

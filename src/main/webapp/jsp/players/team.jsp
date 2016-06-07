@@ -16,7 +16,7 @@
 
         <div class="list-group">
             <c:forEach var="Player" items="${Teams.player}">
-                <a href="/players/player/${Player.id}" class="list-group-item ajaxify">
+                <a href="/players/player/${Player.UUID}" class="list-group-item ajaxify">
                     <div class="list-item-text">${Player.fullName}</div>
                 </a>
             </c:forEach>

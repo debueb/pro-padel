@@ -48,6 +48,8 @@ public interface BaseEntityDAOI<T extends BaseEntityI> {
    
    T findByIdFetchEagerly(final long id, String... associations);
    
+   public T findByUUIDFetchEagerly(final String uuid, String... associations);
+   
    public List<T> findAllFetchEagerlyWithAttributes(Map<String,Object> attributeMap, String... associations);
    
    public List<T> findAllFetchEagerly(String... associations);
