@@ -82,8 +82,14 @@ public class AdminGeneralMasterDataController extends BaseController {
             if (result.hasErrors()) {
                 return editView;
             }
-            //delete old picture from FS if it exists. will be removed from DB automatically due to orphanRemoval=true
-            if (!companyLogoFile.isEmpty()) {
+            if (companyLogoFile.isEmpty()) {
+                //transfer old logo if it exists
+                if (masterModelId != null){
+                    MasterData existing = masterDataDAO.findById(masterModelId);
+                    model.setCompanyLogo(existing.getCompanyLogo());
+                }
+            } else {
+                //delete old picture from FS if it exists. will be removed from DB automatically due to orphanRemoval=true
                 if (masterModelId != null) {
                     MasterData masterData = masterDataDAO.findById(masterModelId);
                     if (masterData != null) {

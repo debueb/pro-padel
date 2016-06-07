@@ -194,7 +194,7 @@ app.main = {};
                     $('#site-canvas, #site-shadow, #site-menu, .footer').removeClass('show-nav');
                 }
                 // reenable scrolling of content
-                $('#site-canvas, .footer').css('position', 'relative');
+                $('#site-canvas').css('position', 'relative');
             } else {
                 // open side menu
                 if (navigator.userAgent.match(/iemobile/i)) {
@@ -204,7 +204,7 @@ app.main = {};
                     $('#site-canvas, #site-shadow, #site-menu, .footer').addClass('show-nav');
                 }
                 // prevent scrolling of content when interacting with site menu
-                $('#site-canvas, .footer').css('position', 'fixed');
+                $('#site-canvas').css('position', 'fixed');
             }
         };
 
