@@ -11,6 +11,7 @@ import de.appsolve.padelcampus.db.dao.CustomerDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.CompanyLogoUtil;
+import de.appsolve.padelcampus.utils.LoginUtil;
 import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
@@ -24,15 +25,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
 @Component("loginFilter")
 public class LoginFilter implements Filter {
     
-    private static final Logger LOG = Logger.getLogger(LoginFilter.class);
-
     @Autowired
     CustomerDAOI customerDAO;
     
@@ -47,6 +46,9 @@ public class LoginFilter implements Filter {
     
     @Autowired
     ModuleUtil moduleUtil;
+    
+    @Autowired
+    LoginUtil loginUtil;
     
     private static final String PATH_START_PAGE = "/pro";
 
@@ -94,17 +96,37 @@ public class LoginFilter implements Filter {
                 sessionUtil.setCustomer(httpRequest, customer);
             }
             
+            //login user in case of valid login cookie
             Player user = sessionUtil.getUser(httpRequest);
             if (user == null) {
                 Cookie[] cookies = httpRequest.getCookies();
                 if (cookies != null) {
                     for (Cookie cookie : cookies) {
-                        if (cookie.getDomain()!=null){
-                            LOG.info(cookie.getDomain()+"=="+httpRequest.getServerName()+"="+cookie.getDomain() != null && cookie.getDomain().equalsIgnoreCase(httpRequest.getServerName()));
-                            if (cookie.getDomain() != null && cookie.getDomain().equalsIgnoreCase(httpRequest.getServerName())){
-                                if (cookie.getName().equals(COOKIE_LOGIN_TOKEN)) {
-                                    Player player = playerDAO.findByUUID(cookie.getValue());
-                                    sessionUtil.setUser(httpRequest, player);
+                        if (cookie.getName()!=null && cookie.getName().equals(COOKIE_LOGIN_TOKEN)) {
+                            String cookieValue = cookie.getValue();
+                            if (StringUtils.isEmpty(cookieValue)){
+                                loginUtil.deleteLoginCookie(httpRequest, httpResponse);
+                            } else {
+                                String[] cookieValueSplit = cookieValue.split(":");
+                                if (cookieValueSplit.length != 2){
+                                    loginUtil.deleteLoginCookie(httpRequest, httpResponse);
+                                } else {
+                                    String uuid = cookieValueSplit[0];
+                                    Player player = playerDAO.findByUUID(uuid);
+                                    if (player == null){
+                                        loginUtil.deleteLoginCookie(httpRequest, httpResponse);
+                                    } else {
+                                        String loginCookieRandomValue = cookieValueSplit[1];
+                                        if (!BCrypt.checkpw(loginCookieRandomValue, player.getLoginCookieHash())){
+                                            loginUtil.deleteLoginCookie(httpRequest, httpResponse);
+                                        } else {
+                                            //update loginCookieHash
+                                            loginUtil.updateLoginCookie(player, httpRequest, httpResponse);
+                                            
+                                            //log user in
+                                            sessionUtil.setUser(httpRequest, player);
+                                        }
+                                    }
                                     break;
                                 }
                             }
