@@ -18,7 +18,7 @@
                     <c:forEach var="Player" items="${Team.players}">
                         <jsp:include page="/jsp/include/list-badge-item.jsp">
                             <jsp:param name="msg" value="${Player}"/>
-                            <jsp:param name="url" value="/players/player/${Player.id}"/>
+                            <jsp:param name="url" value="/players/player/${Player.UUID}"/>
                         </jsp:include>
                     </c:forEach>
                 </div>

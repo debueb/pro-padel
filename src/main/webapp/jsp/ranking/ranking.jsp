@@ -29,7 +29,7 @@
                                         <c:set var="Participant" value="${Ranking.key}"/>
                                         <c:choose>
                                             <c:when test="${Participant.discriminatorValue == 'Player'}">
-                                                <c:set var="urlParticipant" value="${req.scheme}://${Participant.customer.domainName}:${req.serverPort}/players/player/${Participant.id}"/>
+                                                <c:set var="urlParticipant" value="${req.scheme}://${Participant.customer.domainName}:${req.serverPort}/players/player/${Participant.UUID}"/>
                                             </c:when>
                                             <c:otherwise>
                                                 <c:set var="urlParticipant" value="http://${Participant.customer.domainName}/teams/team/${Participant.id}"/>

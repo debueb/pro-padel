@@ -21,7 +21,7 @@
                             <th class="text-center">
                                 <c:choose>
                                     <c:when test="${Participant.discriminatorValue == 'Player'}">
-                                        <c:set var="url_participant" value="/players/player/${Participant.id}"/>
+                                        <c:set var="url_participant" value="/players/player/${Participant.UUID}"/>
                                     </c:when>
                                     <c:otherwise>
                                         <c:set var="url_participant" value="/teams/team/${Participant.id}"/>

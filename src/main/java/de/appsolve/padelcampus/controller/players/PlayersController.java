@@ -80,17 +80,17 @@ public class PlayersController extends BaseController {
         return getPlayersView(setToList(players), msg.get("AllPlayers"));
     }
     
-    @RequestMapping("/player/{id}")
-    public ModelAndView addToContacts(@PathVariable("id") Long playerId, HttpServletRequest request){
-        return getPlayerView(playerDAO.findById(playerId));
+    @RequestMapping("/player/{UUID}")
+    public ModelAndView getPlayer(@PathVariable("UUID") String UUID, HttpServletRequest request){
+        return getPlayerView(playerDAO.findByUUID(UUID));
     }
     
-    @RequestMapping(value = "/player/{id}/vcard.vcf")
-    public void getPlayer(@PathVariable("id") Long playerId, HttpServletRequest request, HttpServletResponse response) throws IOException{
+    @RequestMapping(value = "/player/{UUID}/vcard.vcf")
+    public void addToContacts(@PathVariable("UUID") String UUID, HttpServletRequest request, HttpServletResponse response) throws IOException{
         // Alternatively: application/octet-stream
         // Depending on the desired browser behaviour
         // Be sure to test thoroughly cross-browser
-        Player player = playerDAO.findById(playerId);
+        Player player = playerDAO.findByUUID(UUID);
         StringBuilder sb = new StringBuilder();
         response.setHeader("Content-type", "text/x-vcard; charset=utf-8");
         response.setHeader("Content-Disposition", "attachment; filename=\""+player.toString()+".vcf\";");
@@ -101,7 +101,7 @@ public class PlayersController extends BaseController {
         sb.append("EMAIL;type=INTERNET;type=WORK;type=pref:").append(player.getEmail()).append("\n");
         sb.append("TEL;type=CELL;type=VOICE;type=pref:").append(player.getPhone()).append("\n");
         sb.append("NOTE:Added by ").append(sessionUtil.getCustomer(request)).append("\n");
-        sb.append("URL:").append(RequestUtil.getBaseURL(request)).append("/players/player/").append(player.getId()).append("\n");
+        sb.append("URL:").append(RequestUtil.getBaseURL(request)).append("/players/player/").append(player.getUUID()).append("\n");
         sb.append("END:VCARD");
         response.getOutputStream().write(sb.toString().getBytes(Charset.forName("UTF-8")));
         response.getOutputStream().flush();

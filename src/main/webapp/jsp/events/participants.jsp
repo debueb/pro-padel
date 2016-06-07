@@ -14,8 +14,16 @@
                 <div class="list-group">
                     <c:forEach var="RankedParticipant" items="${RankedParticipants}">
                         <c:set var="Participant" value="${RankedParticipant.key}"/>
+                        <c:choose>
+                            <c:when test="${Participant.discriminatorValue == 'Player'}">
+                                <c:set var="url_participant" value="/players/player/${Participant.UUID}"/>
+                            </c:when>
+                            <c:otherwise>
+                                <c:set var="url_participant" value="/teams/team/${Participant.id}"/>
+                            </c:otherwise>
+                        </c:choose>
                         <jsp:include page="/jsp/include/list-badge-item.jsp">
-                            <jsp:param name="url" value="${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.id}"/>
+                            <jsp:param name="url" value="${url_participant}"/>
                             <jsp:param name="msg" value="${Participant}"/>
                             <jsp:param name="badge" value="${RankedParticipant.value}"/>
                         </jsp:include>

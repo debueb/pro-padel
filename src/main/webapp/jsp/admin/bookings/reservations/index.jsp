@@ -29,7 +29,7 @@
                                     <td><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></td>
                                     <td>${Booking.offer}</td>
                                     <td>${Booking.comment}</td>
-                                    <td><a href="${contextPath}/players/player/${Booking.player.id}" class="ajaxify">${Booking.player}</a></td>
+                                    <td><a href="${contextPath}/players/player/${Booking.player.UUID}" class="ajaxify">${Booking.player}</a></td>
                                     <td class="text-center"><a class="ajaxify fa fa-minus-circle" href="/admin/bookings/reservations/${Booking.id}/delete"></a></td>
                                 </tr>
                             </c:forEach>
