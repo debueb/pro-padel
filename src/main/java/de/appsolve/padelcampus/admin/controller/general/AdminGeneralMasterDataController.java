@@ -88,6 +88,7 @@ public class AdminGeneralMasterDataController extends BaseController {
                     MasterData existing = masterDataDAO.findById(masterModelId);
                     model.setCompanyLogo(existing.getCompanyLogo());
                 }
+                masterDataDAO.saveOrUpdate(model);
             } else {
                 //delete old picture from FS if it exists. will be removed from DB automatically due to orphanRemoval=true
                 if (masterModelId != null) {
@@ -115,9 +116,9 @@ public class AdminGeneralMasterDataController extends BaseController {
                 //when using TinifyImageUtil, we can resize the image
                 Image image = imageUtil.saveImage(bytes, Constants.COMPANY_LOGO_HEIGHT, Constants.DATA_DIR_COMPANY_LOGO_IMAGES);
                 model.setCompanyLogo(image);
+                masterDataDAO.saveOrUpdate(model);
                 companyLogoUtil.reloadModules(request);
             }
-            masterDataDAO.saveOrUpdate(model);
             return new ModelAndView("redirect:/admin/general/masterdata");
         } catch (IOException | ImageProcessingException | com.tinify.Exception e) {
             result.addError(new ObjectError("*", e.getMessage()));
