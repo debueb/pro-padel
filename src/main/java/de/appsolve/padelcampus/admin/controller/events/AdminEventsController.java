@@ -464,8 +464,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
     
     @Override
     public Event findById(Long id){
-        Event bla = eventDAO.findByIdFetchWithParticipantsAndCalendarConfig(id);
-        return bla;
+        return eventDAO.findByIdFetchWithParticipantsAndCalendarConfig(id);
     }
 
     private ModelAndView redirectToDraws(Event model) {
