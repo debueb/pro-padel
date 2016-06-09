@@ -36,6 +36,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartResolver;
@@ -50,6 +51,7 @@ import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 @ComponentScan(useDefaultFilters = true, basePackages = "de.appsolve", excludeFilters={@Filter(org.springframework.stereotype.Controller.class)})
 @PropertySource(value="classpath:settings.properties")
 @EnableTransactionManagement
+@EnableScheduling
 public class AppConfig {
     
     @Autowired
