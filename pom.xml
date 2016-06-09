@@ -423,7 +423,7 @@
                 <!-- log4j log level -->
                 <log4j.loglevel>DEBUG</log4j.loglevel>
                 <log4j.logger.org.hibernate.type>INFO</log4j.logger.org.hibernate.type>
-                <log4j.logger.org.hibernate.SQL>TRACE</log4j.logger.org.hibernate.SQL>
+                <log4j.logger.org.hibernate.SQL>INFO</log4j.logger.org.hibernate.SQL>
                 
                 <OPENSHIFT_MYSQL_DB_HOST>localhost</OPENSHIFT_MYSQL_DB_HOST>
                 <OPENSHIFT_MYSQL_DB_PORT>3306</OPENSHIFT_MYSQL_DB_PORT>
