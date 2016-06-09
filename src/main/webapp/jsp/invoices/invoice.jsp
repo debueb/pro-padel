@@ -51,7 +51,7 @@
 
 <body>
     <div class="letter">
-        <img class="logo margin-bottom" src="${companyLogoPath[sessionScope.customer.name]}" alt="logo"></img>
+        <a href="/"><img class="logo margin-bottom" src="${companyLogoPath[sessionScope.customer.name]}" alt="logo"></img></a>
         <div class="clearfix"></div>
         <div class="small">${MasterData.companyName}, ${MasterData.street}, ${MasterData.zip} ${MasterData.city}</div>
         <div class="recipient margin-bottom">
@@ -103,7 +103,7 @@
             <div><fmt:message key="IBAN"/>: ${MasterData.iban}, <fmt:message key="BIC"/>: ${MasterData.bic}, <fmt:message key="Institute"/>: ${MasterData.institute}</div>
             <div><fmt:message key="CompanyCity"/>: ${MasterData.companyCity}, <fmt:message key="TaxNumber"/>: ${MasterData.taxNumber}, <fmt:message key="TradeId"/>: ${MasterData.tradeId}</div>
             <div><fmt:message key="CEO"/>: ${MasterData.ceo}, <fmt:message key="EmailAddress"/>: <a href="mailto:${MasterData.email}">${MasterData.email}</a></div>
-            <div>powererd by <a href="http://pro-padel.de">pro-padel.de</a><div>
+            <div>powered by <a href="http://pro-padel.de">pro-padel.de</a><div>
         </div>
     </div>
 </body>
