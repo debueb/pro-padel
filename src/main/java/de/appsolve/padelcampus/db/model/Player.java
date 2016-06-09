@@ -113,9 +113,6 @@ public class Player extends Participant implements EmailContact{
     @Enumerated(EnumType.STRING)
     private Gender gender;
     
-    @Column
-    private String loginCookieHash;
-    
     public String getFirstName() {
         return firstName;
     }
@@ -273,13 +270,5 @@ public class Player extends Participant implements EmailContact{
 
     public void setGender(Gender gender) {
         this.gender = gender;
-    }
-
-    public String getLoginCookieHash() {
-        return loginCookieHash;
-    }
-
-    public void setLoginCookieHash(String loginCookieHash) {
-        this.loginCookieHash = loginCookieHash;
     }
 }

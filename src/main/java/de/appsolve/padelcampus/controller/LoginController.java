@@ -274,8 +274,8 @@ public class LoginController extends BaseController{
             playerDAO.saveOrUpdate(player);
         }
         
-        setLoginCookie(request, response, player);
         sessionUtil.setUser(request, player);
+        setLoginCookie(request, response);
         return player;
     }
     
@@ -312,17 +312,17 @@ public class LoginController extends BaseController{
                 LOG.error(e.getMessage(), e);
             }
             
-            //set auto login cookie if user has requested so
-            setLoginCookie(request, response, player);
-            
             //login user
             sessionUtil.setUser(request, player);
+            
+            //set auto login cookie if user has requested so
+            setLoginCookie(request, response);
     }
     
-    private void setLoginCookie(HttpServletRequest request, HttpServletResponse response, Player player) {
+    private void setLoginCookie(HttpServletRequest request, HttpServletResponse response) {
         String stayLoggedIn = request.getParameter("stay-logged-in");
         if (!StringUtils.isEmpty(stayLoggedIn) && stayLoggedIn.equals("on")){
-            loginUtil.updateLoginCookie(player, request, response);
+            loginUtil.updateLoginCookie(request, response);
         } else {
             loginUtil.deleteLoginCookie(request, response);
         }

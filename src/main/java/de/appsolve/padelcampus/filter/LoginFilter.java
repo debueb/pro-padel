@@ -9,6 +9,7 @@ import static de.appsolve.padelcampus.constants.Constants.COOKIE_LOGIN_TOKEN;
 import de.appsolve.padelcampus.data.CustomerI;
 import de.appsolve.padelcampus.db.dao.CustomerDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
+import de.appsolve.padelcampus.db.model.LoginCookie;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.CompanyLogoUtil;
 import de.appsolve.padelcampus.utils.LoginUtil;
@@ -26,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
 @Component("loginFilter")
@@ -112,20 +112,20 @@ public class LoginFilter implements Filter {
                                     loginUtil.deleteLoginCookie(httpRequest, httpResponse);
                                 } else {
                                     String uuid = cookieValueSplit[0];
-                                    Player player = playerDAO.findByUUID(uuid);
-                                    if (player == null){
+                                    String loginCookieRandomValue = cookieValueSplit[1];
+                                    LoginCookie loginCookie = loginUtil.isValidLoginCookie(uuid, loginCookieRandomValue);
+                                    if (loginCookie == null){
                                         loginUtil.deleteLoginCookie(httpRequest, httpResponse);
                                     } else {
-                                        String loginCookieRandomValue = cookieValueSplit[1];
-                                        if (!BCrypt.checkpw(loginCookieRandomValue, player.getLoginCookieHash())){
+                                        Player player = playerDAO.findByUUID(loginCookie.getPlayerUUID());
+                                        if (player == null){
                                             loginUtil.deleteLoginCookie(httpRequest, httpResponse);
-                                        } else {
-                                            //update loginCookieHash
-                                            loginUtil.updateLoginCookie(player, httpRequest, httpResponse);
-                                            
-                                            //log user in
-                                            sessionUtil.setUser(httpRequest, player);
                                         }
+                                        //log user in
+                                        sessionUtil.setUser(httpRequest, player);
+
+                                        //update loginCookieHash
+                                        loginUtil.updateLoginCookie(httpRequest, httpResponse);
                                     }
                                     break;
                                 }
