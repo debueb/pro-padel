@@ -46,7 +46,7 @@
                                     data-abs-locale-status-initialized='${StatusInitialized}'
                                     data-abs-locale-search-no-results='${SearchNoResults}'
                                     data-abs-locale-status-searching='${StatusSearching}'
-                                    data-url="/api/players/options">
+                                    data-abs-ajax-url="/api/players/options">
                                     <fmt:message key="ChoosePartner" var="ChoosePartner"/>
                                 </spf:select>
                                 <span class="explanation-select"><fmt:message key="Partner"/></span>

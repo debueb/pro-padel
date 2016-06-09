@@ -107,8 +107,10 @@ public class AdminEventsController extends AdminBaseController<Event>{
         binder.registerCustomEditor(Set.class, new CustomCollectionEditor(Set.class) {
             @Override
             protected Object convertElement(Object element) {
-                Long id = Long.parseLong((String) element);
-                return participantDAO.findById(id);
+                if (element == null || !(element instanceof String)){
+                    return null;
+                }
+                return teamDAO.findByUUID((String) element);
             }
         });
         
@@ -436,13 +438,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
     @Override
     protected ModelAndView getEditView(Event event) {
         ModelAndView mav = new ModelAndView("admin/events/edit", "Model", event);
-        mav.addObject("EventParticipants", event.getParticipants());
-        List<Team> allTeams = teamDAO.findAll();
-        allTeams.removeAll(event.getParticipants());
-        mav.addObject("AllTeams", allTeams);
-        List<Player> allPlayers = playerDAO.findAll();
-        allPlayers.removeAll(event.getParticipants());
-        mav.addObject("AllPlayers", allPlayers);
         mav.addObject("EventTypes", EventType.values());
         mav.addObject("Genders", Gender.values());
         mav.addObject("CalendarConfigs", calendarConfigDAO.findAll());

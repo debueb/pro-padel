@@ -109,27 +109,29 @@
                     </div>
 
                     <div class="relative">
-                        <fmt:message key="Participants" var="Participants"/>
-                        <spf:select path="participants" 
-                                    class="select-multiple show-tick form-control" 
-                                    data-style="form-center-element" 
-                                    title="${Participants}" 
-                                    multiple="true" 
-                                    data-selected-text-format="values"
-                                    data-live-search="true" 
-                                    data-container="body">
-                            <fmt:message key="Participants" var="Label"/>
-                            <optgroup label="${Label}">
-                                <spf:options items="${EventParticipants}" itemValue="id"/>
-                            </optgroup>
-                            <fmt:message key="Teams" var="Label"/>
-                            <optgroup label="${Label}">
-                                <spf:options items="${AllTeams}" itemValue="id"/>
-                            </optgroup>
-                            <fmt:message key="Players" var="Label"/>
-                            <optgroup label="${Label}" disabled>
-                                <spf:options items="${AllPlayers}" itemValue="id"/>
-                            </optgroup>
+                        <fmt:message key="CurrentlySelected" var="CurrentlySelected"/>
+                        <fmt:message key="PleaseChoose" var="EmptyTitle"/>
+                        <fmt:message key="ErrorText" var="ErrorText"/>
+                        <fmt:message key="Search" var="SearchPlaceholder"/>
+                        <fmt:message key="StatusInitialized" var="StatusInitialized"/>
+                        <fmt:message key="SearchNoResults" var="SearchNoResults"/>
+                        <fmt:message key="StatusSearching" var="StatusSearching"/>
+                        <spf:select 
+                            path="participants" 
+                            class="form-control form-center-element select-ajax-search"
+                            multiple="multiple"
+                            data-container="body" 
+                            data-live-search="true"
+                            data-abs-locale-currently-selected='${CurrentlySelected}'
+                            data-abs-locale-empty-title='${EmptyTitle}'
+                            data-abs-locale-error-text='${ErrorText}'
+                            data-abs-locale-search-placeholder='${SearchPlaceholder}'
+                            data-abs-locale-status-initialized='${StatusInitialized}'
+                            data-abs-locale-search-no-results='${SearchNoResults}'
+                            data-abs-locale-status-searching='${StatusSearching}'
+                            data-abs-ajax-url="/api/teams/options">
+                            <fmt:message key="PleaseChoose" var="PleaseChoose"/>
+                            <spf:options items="${Model.participants}" itemValue="UUID"/>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Participants"/></span>
                     </div>

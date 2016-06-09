@@ -253,21 +253,24 @@ app.main = {};
         $('.select-ajax-search').livequery(function(){
             $(this).selectpicker({
                 liveSearch: true
-            }).ajaxSelectPicker({
-                ajax: {
-                    method: 'GET',
-                    url: $(this).attr('data-url'),
-                    data: function () {
-                        var params = {
-                            q: '{{{q}}}'
-                        };
-                        return params;
-                    }
-                },
-                clearOnEmpty: true,
-                preserveSelected: true,
-                preserveSelectedPosition: 'before'
             });
+            if($(this).data('selectpicker')){
+                $(this).ajaxSelectPicker({
+                    ajax: {
+                        method: 'GET',
+                        data: function () {
+                            var params = {
+                                q: '{{{q}}}'
+                            };
+                            return params;
+                        }
+                    },
+                    cache: false,
+                    clearOnEmpty: true,
+                    preserveSelected: true,
+                    preserveSelectedPosition: 'before'
+                });
+            }
         });
     };
 

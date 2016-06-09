@@ -34,7 +34,7 @@
                             <fmt:message key="StatusSearching" var="StatusSearching"/>
                             <spf:select 
                                 path="players" 
-                                class="form-control show-tick form-bottom-element select-ajax-search"
+                                class="form-control form-bottom-element select-ajax-search"
                                 multiple="multiple"
                                 data-container="body" 
                                 data-live-search="true"
@@ -45,7 +45,7 @@
                                 data-abs-locale-status-initialized='${StatusInitialized}'
                                 data-abs-locale-search-no-results='${SearchNoResults}'
                                 data-abs-locale-status-searching='${StatusSearching}'
-                                data-url="/api/players/options">
+                                data-abs-ajax-url="/api/players/options">
                                 <fmt:message key="PleaseChoose" var="PleaseChoose"/>
                                 <spf:options items="${Model.players}" itemValue="UUID"/>
                             </spf:select>
