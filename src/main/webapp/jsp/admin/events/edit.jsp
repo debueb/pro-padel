@@ -13,9 +13,6 @@
                 <h4>${empty Model.id ? NewEvent : EditEvent}</h4>
             </div>
             <div class="panel-body">
-                <c:if test="${empty Model.id}">
-                    <div class="alert alert-info"><fmt:message key="NewEventDesc"/></div>
-                </c:if>
                 <spf:form method="POST" class="form-signin summernote-form unit" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
@@ -139,11 +136,14 @@
                     
                     <div class="relative">
                         <spf:select path="calendarConfig" class="select-simple form-control" data-style="form-bottom-element" data-container="body">
+                            <option value=""><fmt:message key="PleaseChoose"/></option>
                             <spf:options itemValue="id" items="${CalendarConfigs}"/>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="CalendarConfigOffer"/></span>
                     </div>
-
+                    
+                    <div class="alert alert-info unit"><fmt:message key="NewEventDesc"/></div>
+                    
                     <div class="unit">
                         <spf:checkbox path="active" id="active"/><label for="active"><fmt:message key="Active"/>&nbsp;(<fmt:message key="PubliclyAvailable"/>)</label>
                     </div>

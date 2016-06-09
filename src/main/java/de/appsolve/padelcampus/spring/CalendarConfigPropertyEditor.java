@@ -24,7 +24,12 @@ public class CalendarConfigPropertyEditor extends PropertyEditorSupport {
     @Override
     public void setAsText(String text)
     {
-       CalendarConfig config = calendarConfigDAO.findById(Long.parseLong(text));
-        setValue(config);
+        try {
+            Long id = Long.parseLong(text);
+            CalendarConfig config = calendarConfigDAO.findById(id);
+            setValue(config);
+        } catch (NumberFormatException e){
+            setValue(null);
+        }
     }
 }

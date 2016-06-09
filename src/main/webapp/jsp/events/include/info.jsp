@@ -75,18 +75,11 @@
                 <c:otherwise>
                     <div class="list-group">
                         <c:if test="${Model.calendarConfig ne null}">
-                            <c:forEach var="Offer" items="${Model.calendarConfig.offers}" end="0">
-                                <joda:format var="booking_date" value="${Model.calendarConfig.startDate}" pattern="yyyy-MM-dd"/>
-                                <joda:format var="booking_time" value="${Model.calendarConfig.startTime}" pattern="HH:mm"/>
-                                <c:set var="booking_url" value="/bookings/${booking_date}/${booking_time}/offer/${Offer.id}"/>
-                            </c:forEach>
-                            <c:if test="${not empty booking_url}">
-                                <jsp:include page="/jsp/include/list-group-item.jsp">
-                                    <jsp:param name="href" value="${booking_url}"/>
-                                    <jsp:param name="key" value="Participate"/>
-                                    <jsp:param name="icon" value="user-plus"/>
-                                </jsp:include>
-                            </c:if>
+                            <jsp:include page="/jsp/include/list-group-item.jsp">
+                                <jsp:param name="href" value="/events/event/${Model.id}/participate"/>
+                                <jsp:param name="key" value="Participate"/>
+                                <jsp:param name="icon" value="user-plus"/>
+                            </jsp:include>
                         </c:if>
                         <jsp:include page="/jsp/include/list-group-item.jsp">
                             <jsp:param name="href" value="/events/event/${Model.id}/participants"/>

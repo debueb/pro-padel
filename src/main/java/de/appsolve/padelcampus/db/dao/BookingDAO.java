@@ -27,6 +27,16 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
     }    
 
     @Override
+    public Booking findByUUIDWithEvent(String UUID) {
+        return findByUUIDFetchEagerly(UUID, "event");
+    }
+    
+    @Override
+    public Booking findByUUIDWithEventAndPlayers(String UUID) {
+        return findByUUIDFetchEagerly(UUID, "event", "players");
+    }    
+
+    @Override
     public List<Booking> findBlockedBookingsForDate(LocalDate date) {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.eq("bookingDate", date));

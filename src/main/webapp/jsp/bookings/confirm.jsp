@@ -39,8 +39,15 @@
                     <label class="checkbox" for="accept-cancellation-policy"><small><fmt:message key="BookingCancellationPolicy"><fmt:param value="${CancellationPolicyDeadline}"/></fmt:message></small></label>
 
                     <button class="btn btn-primary btn-block unit" type="submit"><fmt:message key="Confirm"/></button>
-                    <a class="btn btn-primary btn-block unit ajaxify" href="/bookings/?date=${Booking.bookingDate}"><fmt:message key="ChangeBooking"/></a>
-                    <a class="btn btn-primary btn-block unit ajaxify" href="/bookings"><fmt:message key="Cancel"/></a>
+                    <c:choose>
+                        <c:when test="${empty Booking.event}">
+                            <a class="btn btn-primary btn-block unit ajaxify" href="/bookings"><fmt:message key="Cancel"/></a>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="btn btn-primary btn-block unit ajaxify" href="/events/event/${Booking.event.id}"><fmt:message key="Cancel"/></a> 
+                        </c:otherwise>
+                    </c:choose>
+                    
                 </spf:form>
             </div>
         </div>

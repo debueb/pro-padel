@@ -19,6 +19,8 @@ import org.joda.time.LocalDate;
 public interface BookingDAOI extends BaseEntityDAOI<Booking>{
     
     public Booking findByUUID(String UUID);
+    public Booking findByUUIDWithEvent(String UUID);
+    public Booking findByUUIDWithEventAndPlayers(String UUID);
     
     public List<Booking> findBlockedBookingsForDate(LocalDate date);
     public List<Booking> findBlockedBookingsBetween(LocalDate startDate, LocalDate endDate);

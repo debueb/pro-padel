@@ -30,7 +30,7 @@ public class LoginUtil {
         UUID random = UUID.randomUUID();
         String randomHash = BCrypt.hashpw(random.toString(), BCrypt.gensalt());
         player.setLoginCookieHash(randomHash);
-        playerDAO.saveOrUpdate(player);
+        player = playerDAO.saveOrUpdate(player);
         Cookie cookie = new Cookie(COOKIE_LOGIN_TOKEN, player.getUUID()+":"+random.toString());
         cookie.setMaxAge(Integer.MAX_VALUE);
         response.addCookie(cookie);

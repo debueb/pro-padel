@@ -152,57 +152,27 @@ public class AdminEventsController extends AdminBaseController<Event>{
         }
         model = getDAO().saveOrUpdate(model);
         
-        //generate games
-        List<Game> eventGames = gameDAO.findByEvent(model);
         switch (model.getEventType()){
             case SingleRoundRobin:
+                List<Game> eventGames = gameDAO.findByEvent(model);
                 
                 //remove games that have not been played yet
                 removeGamesWithoutGameSets(eventGames);
                 
                 createMissingGames(model, eventGames, model.getParticipants(), null);
-                
                 break;
-                
-            //ToDo for GroupKnockout and Knocout: check that either participants or calendarconfig is set    
-                
             case GroupKnockout:
-                return redirectToGroupDraws(model);
+                if (model.getCalendarConfig() == null && !model.getParticipants().isEmpty()){
+                    return redirectToGroupDraws(model);
+                } else {
+                    return redirectToIndex(request);
+                }
             case Knockout:
-                //check min number of participants
-                if (model.getParticipants().size()<3){
-                    result.addError(new ObjectError("participants", msg.get("PleaseSelectAtLeast3Participants")));
-                    return getEditView(model);
+                if (model.getCalendarConfig() == null && !model.getParticipants().isEmpty()){
+                    return redirectToDraws(model);
+                } else {
+                    return redirectToIndex(request);
                 }
-                
-                //determine number of games per round
-                int numGamesPerRound = Integer.highestOneBit(model.getParticipants().size()-1);
-                
-                //handle udpate operations for existing events
-                int numExistingGamesPerRound = 0;
-                if (!eventGames.isEmpty()){
-                    for (Game game: eventGames){
-                        Integer round = game.getRound();
-                        if (round!=null && round==0){
-                            numExistingGamesPerRound++;
-                        }
-                    }
-                    if (numExistingGamesPerRound!=numGamesPerRound){
-                        result.addError(new ObjectError("id", msg.get("CannotChangeNumberOfGames")));
-                        return getEditView(model);
-                    } else {
-                        return redirectToDraws(model);
-                    }
-                }
-                
-                //this is a new event
-                
-                //determine ranking
-                SortedMap<Participant, BigDecimal> ranking =  rankingUtil.getRankedParticipants(model);
-                
-                eventsUtil.createKnockoutGames(model, new ArrayList<>(ranking.keySet()));
-                
-                return redirectToDraws(model);
             default:
                 result.addError(new ObjectError("id", "Unsupported event type "+model.getEventType()));
                 return getEditView(model);
@@ -215,6 +185,43 @@ public class AdminEventsController extends AdminBaseController<Event>{
     @RequestMapping(value={"edit/{eventId}/draws"}, method=GET)
     public ModelAndView getDraws(@PathVariable("eventId") Long eventId, HttpServletRequest request){
         ModelAndView mav = getDrawsView(eventId);
+        return mav;
+    }
+    
+    @RequestMapping(value={"edit/{eventId}/draws"}, method=POST)
+    public ModelAndView postDraws(@PathVariable("eventId") Long eventId){
+        Event model = eventDAO.findByIdFetchWithParticipants(eventId);
+        ModelAndView mav = getDrawsView(eventId);
+        
+        //check min number of participants
+        if (model.getParticipants().size()<3){
+            mav.addObject("error", msg.get("PleaseSelectAtLeast3Participants"));
+            return mav;
+        }
+        //determine number of games per round
+        int numGamesPerRound = Integer.highestOneBit(model.getParticipants().size()-1);
+
+        //handle udpate operations for existing events
+        List<Game> eventGames = gameDAO.findByEvent(model);
+        int numExistingGamesPerRound = 0;
+        if (!eventGames.isEmpty()){
+            for (Game game: eventGames){
+                Integer round = game.getRound();
+                if (round!=null && round==0){
+                    numExistingGamesPerRound++;
+                }
+            }
+            if (numExistingGamesPerRound!=numGamesPerRound){
+                mav.addObject("error", msg.get("CannotChangeNumberOfGames"));
+                return mav;
+            }
+        }
+
+        //determine ranking
+        SortedMap<Participant, BigDecimal> ranking =  rankingUtil.getRankedParticipants(model);
+
+        eventsUtil.createKnockoutGames(model, new ArrayList<>(ranking.keySet()));
+
         return mav;
     }
     

@@ -13,10 +13,13 @@ import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.TWO_FRACTIONAL_DIGITS_FORMAT;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
@@ -116,6 +119,12 @@ public class Booking extends CustomerEntity{
     
     @ManyToOne
     private Offer offer;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Event event;
+    
+    @ManyToMany(fetch = FetchType.LAZY)
+    Set<Player> players;
     
     public Player getPlayer() {
         return player;
@@ -275,6 +284,22 @@ public class Booking extends CustomerEntity{
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public Set<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(Set<Player> players) {
+        this.players = players;
     }
     
     @Override

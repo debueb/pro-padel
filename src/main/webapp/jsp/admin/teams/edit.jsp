@@ -17,15 +17,18 @@
                 <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
+                    <div class="alert alert-info" role="alert"><fmt:message key="LeaveTeamNameEmptyForGeneratedTeamName"/></div>
+                    
+                    <div class="unit">
+                        <fmt:message key="TeamName" var="TeamName"/>
+                        <spf:input path="name" type="text" class="form-control form-top-element" placeholder="${TeamName}" />
 
-                    <fmt:message key="TeamName" var="TeamName"/>
-                    <spf:input path="name" type="text" class="form-control form-top-element" placeholder="${TeamName}" />
-
-                    <fmt:message key="Players" var="Players"/>
-                    <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${Players}" multiple="true" data-live-search="true" data-container="body">
-                        <spf:options items="${TeamPlayers}" itemValue="id"/>
-                        <spf:options items="${AllPlayers}" itemValue="id"/>
-                    </spf:select>
+                        <fmt:message key="Players" var="Players"/>
+                        <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${Players}" multiple="true" data-live-search="true" data-container="body">
+                            <spf:options items="${TeamPlayers}" itemValue="id"/>
+                            <spf:options items="${AllPlayers}" itemValue="id"/>
+                        </spf:select>
+                    </div>
 
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
                 </spf:form>

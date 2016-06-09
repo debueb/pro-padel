@@ -12,6 +12,7 @@ import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.utils.TeamUtil;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -76,16 +78,21 @@ public class AdminTeamsController extends AdminBaseController<Team> {
     public ModelAndView postEditView(@ModelAttribute("Model") Team model, HttpServletRequest request, BindingResult result){
         //derive team name from players if it is empty
         if (StringUtils.isEmpty(model.getName())){
-            for (Player player: model.getPlayers()){
-                String name = model.getName();
-                if (StringUtils.isEmpty(name)){
-                    name = "";
-                } else {
-                    name += " / ";
-                }
-                model.setName(name + player.getLastName());
-            }
+            model.setName(TeamUtil.getTeamName(model));
         }
+        
+        validator.validate(model, result);
+        if (result.hasErrors()){
+            return getEditView(model);
+        }
+        
+        //make sure team does not already exist
+        Team existingTeam = teamDAO.findByPlayers(model.getPlayers());
+        if (existingTeam != null){
+            result.addError(new ObjectError("*", msg.get("TeamAlreadyExistsWithName", new Object[]{existingTeam})));
+            return getEditView(model);
+        }
+        
         return super.postEditView(model, request, result);
     }
 

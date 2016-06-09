@@ -67,7 +67,6 @@ public class Event extends ComparableEntity{
     private Boolean active;
     
     @ManyToMany(fetch=FetchType.LAZY)
-    @NotEmpty(message = "{NotEmpty.participants}")
     private Set<Participant> participants;
     
     @Column

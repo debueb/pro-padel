@@ -87,7 +87,7 @@ public class BookingsPayPalController extends BookingsPaymentController{
         payment.setTransactions(transactions);
 
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl(RequestUtil.getBaseURL(request) + "/bookings/booking/"+booking.getUUID()+"/paypal/cancel");
+        redirectUrls.setCancelUrl(RequestUtil.getBaseURL(request) + "/bookings/booking/"+booking.getUUID()+"/abort");
         redirectUrls.setReturnUrl(RequestUtil.getBaseURL(request) + "/bookings/booking/"+booking.getUUID()+"/paypal/return");
         payment.setRedirectUrls(redirectUrls);
         
@@ -134,16 +134,6 @@ public class BookingsPayPalController extends BookingsPaymentController{
             bookingConfirmView.addObject("error", e.getMessage());
             return bookingConfirmView;
         }
-    }
-    
-    @RequestMapping("booking/{UUID}/paypal/cancel")
-    public ModelAndView onPaymentCancel(@PathVariable("UUID") String UUID){
-        Booking booking = bookingDAO.findByUUID(UUID);
-        booking.setBlockingTime(null);
-        booking.setCancelled(true);
-        booking.setCancelReason("PayPal payment cancelled");
-        bookingDAO.saveOrUpdate(booking);
-        return new ModelAndView("redirect:/bookings");
     }
     
     private APIContext getApiContext() throws PayPalRESTException{
