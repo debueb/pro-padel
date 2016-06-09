@@ -51,6 +51,7 @@
             <c:otherwise>
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/10_bootstrap.css.stylesheet">
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/20_bootstrap-select.css.stylesheet">
+                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/21_ajax-bootstrap-select.css.stylesheet">
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/30_font-awesome.min.css.stylesheet">
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/40_jquery-ui.min.css.stylesheet">
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/50_slick.css.stylesheet">
@@ -75,6 +76,7 @@
                 <script src="/js/noconcat/10_jquery-1.11.1.min.js"></script>
                 <script src="/js/20_bootstrap.min.js"></script>
                 <script src="/js/25_bootstrap-select.js"></script>
+                <script src="/js/26_ajax-bootstrap-select.js"></script>
                 <script src="/js/30_jquery-ui.min.js"></script>
                 <script src="/js/noconcat/31_datepicker-de.js"></script>
                 <script src="/js/50_slick.min.js"></script>

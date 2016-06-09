@@ -6,31 +6,51 @@
 
 package de.appsolve.padelcampus.controller.events;
 
+import de.appsolve.padelcampus.constants.BookingType;
+import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
+import de.appsolve.padelcampus.db.dao.PlayerDAOI;
+import de.appsolve.padelcampus.db.model.Booking;
+import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Module;
+import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Participant;
+import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.utils.EventsUtil;
+import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
+import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
+import de.appsolve.padelcampus.utils.SessionUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import javax.servlet.http.HttpServletRequest;
+import org.joda.time.Minutes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -56,6 +76,15 @@ public class EventsController extends BaseController{
     @Autowired
     RankingUtil rankingUtil;
     
+    @Autowired
+    SessionUtil sessionUtil;
+    
+    @Autowired
+    PlayerDAOI playerDAO;
+    
+    @Autowired
+    Validator validator;
+    
     @RequestMapping("{moduleTitle}")
     public ModelAndView getEvent(@PathVariable("moduleTitle") String moduleTitle){
         Module module = moduleDAO.findByTitle(moduleTitle);
@@ -75,8 +104,7 @@ public class EventsController extends BaseController{
     
     @RequestMapping("event/{eventId}")
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
-        Event event = eventDAO.findById(eventId);
-        String eventType = event.getEventType().toString().toLowerCase();
+        Event event = eventDAO.findByIdFetchWithCalendarConfig(eventId);
         ModelAndView mav = new ModelAndView("events/event", "Model", event);
         return mav;
     }
@@ -139,7 +167,75 @@ public class EventsController extends BaseController{
         mav.addObject("GroupGameMap", groupGameMap);
         return mav;
     }
+    
+    @RequestMapping(method=GET, value="event/{eventId}/participate")
+    public ModelAndView participate(@PathVariable("eventId") Long eventId, HttpServletRequest request){
+        Player user = sessionUtil.getUser(request);
+        if (user == null){
+            return getLoginRequiredView(request, msg.get("Participate"));
+        }
+        return participateView(eventId, new Player());
+    }
+    
+    @RequestMapping(method=POST, value="event/{eventId}/participate")
+    public ModelAndView postParticipate(@PathVariable("eventId") Long eventId, HttpServletRequest request, final @ModelAttribute("Player") Player player, BindingResult bindingResult){
+        ModelAndView participateView = participateView(eventId, player);
+        try {
+            Player user = sessionUtil.getUser(request);
+            if (user == null){
+                return getLoginRequiredView(request, msg.get("Participate"));
+            }
+            Player partner;
+            if (player.getUUID()==null){
+                validator.validate(player, bindingResult);
+                if (bindingResult.hasErrors()){
+                    return participateView;
+                }
+                if (playerDAO.findByEmail(player.getEmail()) != null){
+                    throw new Exception(msg.get("EmailAlreadyRegistered"));
+                }
+                partner = playerDAO.saveOrUpdate(player);
+            } else {
+                partner = playerDAO.findByUUID(player.getUUID());
+                if (partner == null){
+                    throw new Exception(msg.get("ChoosePartner"));
+                }
+            }
 
+            Event event = eventDAO.findByIdFetchWithParticipantsAndCalendarConfig(eventId);
+            
+            checkPlayerNotParticipating(event, user);
+            checkPlayerNotParticipating(event, partner);
+
+            CalendarConfig calendarConfig = event.getCalendarConfig();
+            Offer offer = calendarConfig.getOffers().iterator().next();
+            Set<Player> participants = new HashSet<>();
+            //do not add user as this would cause duplicate key (player and players go into the same table)
+            participants.add(partner);
+
+            Booking booking = new Booking();
+            booking.setPlayer(user);
+            booking.setOffer(offer);
+            booking.setBookingDate(calendarConfig.getStartDate());
+            booking.setBookingTime(calendarConfig.getStartTime());
+            booking.setAmount(calendarConfig.getBasePrice());
+            booking.setCurrency(calendarConfig.getCurrency());
+            booking.setDuration(0L+Minutes.minutesBetween(calendarConfig.getStartTime(), calendarConfig.getEndTime()).getMinutes());
+            booking.setPaymentMethod(PaymentMethod.valueOf(request.getParameter("paymentMethod")));
+            booking.setBookingType(BookingType.loggedIn);
+
+            //extra fields
+            booking.setEvent(event);
+            booking.setPlayers(participants);
+
+            sessionUtil.setBooking(request, booking);
+            return new ModelAndView("redirect:/bookings/"+DATE_HUMAN_READABLE.print(calendarConfig.getStartDate())+"/"+TIME_HUMAN_READABLE.print(calendarConfig.getStartTime())+"/confirm");
+        } catch (Exception e){
+            bindingResult.addError(new ObjectError("*", e.getMessage()));
+            return participateView;
+        }
+    }
+    
     private ModelAndView getKnockoutView(Event event, SortedMap<Integer, List<Game>> roundGameMap) {
         ModelAndView mav = new ModelAndView("events/knockout/knockoutgames");
         mav.addObject("Model", event);
@@ -173,6 +269,21 @@ public class EventsController extends BaseController{
             }
         }
         return participantGameGameSetMap;
+    }
+
+    private ModelAndView participateView(Long eventId, Player player) {
+        ModelAndView mav = new ModelAndView("events/participate/index");
+        mav.addObject("Model", eventDAO.findByIdFetchWithCalendarConfig(eventId));
+        mav.addObject("Player", player);
+        return mav;
+    }
+
+    private void checkPlayerNotParticipating(Event event, Player user) throws Exception {
+        for (Team team: event.getTeams()){
+            if (team.getPlayers().contains(user)){
+                throw new Exception(msg.get("AlreadyParticipatesInThisEvent", new Object[]{user}));
+            }
+        }
     }
 
 }

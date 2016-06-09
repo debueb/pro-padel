@@ -221,14 +221,11 @@ public class CalendarConfig extends CustomerEntity{
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(startDate.toString(DATE_MEDIUM)).append(" - ").append(endDate.toString(DATE_MEDIUM)).append(": ");
-        for (CalendarWeekDay weekDay: getCalendarWeekDays()){
-            sb.append(weekDay.name()).append(" ");
-        }
-        sb.append(getStartTime().toString(TIME_HUMAN_READABLE)).append(" - ").append(getEndTime().toString(TIME_HUMAN_READABLE));
         for (Offer offer: getOffers()){
             sb.append(offer).append(", ");
         }
+        sb.append(startDate.toString(DATE_MEDIUM)).append(" - ").append(endDate.toString(DATE_MEDIUM)).append(": ");
+        sb.append(getStartTime().toString(TIME_HUMAN_READABLE)).append(" - ").append(getEndTime().toString(TIME_HUMAN_READABLE));
         return sb.toString();
     }
 

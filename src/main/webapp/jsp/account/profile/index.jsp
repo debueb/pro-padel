@@ -38,7 +38,7 @@
                         <div>
                             <spf:checkbox path="enableMatchNotifications" id="active"/><label for="active"><fmt:message key="NotifyMeAboutNewMatchOffers"/></label>
 
-                            <span class="relative block">
+                            <div class="relative">
                                 <fmt:message key="SkillLevel" var="SkillLevelMsg"/>
                                 <spf:select path="notificationSkillLevels" class="select-multiple show-tick form-control" title="${SkillLevelMsg}" multiple="true" data-container="body">
                                     <c:forEach var="SkillLevel" items="${SkillLevels}">
@@ -47,7 +47,7 @@
                                     </c:forEach>
                                 </spf:select>
                                 <span class="explanation-select"><fmt:message key="SkillLevel"/></span>
-                            </span>
+                            </div>
                         </div>
                         <div><fmt:message key="MySkillLevel"/></div>
                         <div class="row form-group product-chooser">

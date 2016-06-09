@@ -237,8 +237,7 @@ app.main = {};
     };
 
     self.enableSelectPicker = function () {
-        var selector = '.select-simple, .select-multiple';
-        $(selector).livequery(function(){
+        $('.select-simple, .select-multiple').livequery(function(){
             var options = {
                 iconBase: 'fa',
                 tickIcon: 'fa-check',
@@ -249,6 +248,29 @@ app.main = {};
                 options.selectedTextFormat = 'count > 2';
             }
             $(this).selectpicker(options);
+        });
+        
+        $('.select-ajax-search').livequery(function(){
+            $(this).selectpicker({
+                liveSearch: true
+            });
+            if($(this).data('selectpicker')){
+                $(this).ajaxSelectPicker({
+                    ajax: {
+                        method: 'GET',
+                        data: function () {
+                            var params = {
+                                q: '{{{q}}}'
+                            };
+                            return params;
+                        }
+                    },
+                    cache: false,
+                    clearOnEmpty: true,
+                    preserveSelected: true,
+                    preserveSelectedPosition: 'before'
+                });
+            }
         });
     };
 

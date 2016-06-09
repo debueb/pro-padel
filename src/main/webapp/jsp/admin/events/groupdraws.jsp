@@ -19,7 +19,7 @@
                         <c:set var="ParticipantList" value="${GroupParticipant.value}"/>
                         <fmt:message key="ParticipantsInGroupNumber" var="Participants"><fmt:param value="${GroupNumber+1}"/></fmt:message>
                         <div class="relative">
-                            <spf:select path="groupParticipants[${GroupNumber}]" class="select-multiple show-tick form-control" data-style="${status.first ? 'form-top-element' : status.last ?  'form-bottom-element': 'form-center-element'}" title="${Participants}" multiple="true" data-live-search="true" data-container="body">
+                            <spf:select path="groupParticipants[${GroupNumber}]" class="select-multiple show-tick form-control" data-style="${fn:length(Model.groupParticipants) eq 1 ? '' : status.first ? 'form-top-element' : status.last ?  'form-bottom-element': 'form-center-element'}" title="${Participants}" multiple="true" data-live-search="true" data-container="body">
                                 <spf:options items="${Event.participants}" itemValue="id"/>
                             </spf:select>
                             <div class="explanation-select">${Participants}</div>

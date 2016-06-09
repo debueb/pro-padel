@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.admin.controller.events;
 
+import de.appsolve.padelcampus.spring.CalendarConfigPropertyEditor;
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
@@ -13,17 +14,20 @@ import de.appsolve.padelcampus.data.EventGroups;
 import de.appsolve.padelcampus.data.GameList;
 import de.appsolve.padelcampus.data.GameData;
 import de.appsolve.padelcampus.data.ScoreEntry;
+import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
+import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
+import de.appsolve.padelcampus.spring.TeamCollectionEditor;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.RankingUtil;
@@ -86,22 +90,25 @@ public class AdminEventsController extends AdminBaseController<Event>{
     PlayerDAOI playerDAO;
     
     @Autowired
+    CalendarConfigDAOI calendarConfigDAO;
+    
+    @Autowired
     RankingUtil rankingUtil;
     
     @Autowired
     EventsUtil eventsUtil;
     
+    @Autowired
+    TeamCollectionEditor teamCollectionEditor;
+    
+    @Autowired
+    CalendarConfigPropertyEditor calendarConfigPropertyEditor;
+    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
-    
-        binder.registerCustomEditor(Set.class, new CustomCollectionEditor(Set.class) {
-            @Override
-            protected Object convertElement(Object element) {
-                Long id = Long.parseLong((String) element);
-                return participantDAO.findById(id);
-            }
-        });
+        binder.registerCustomEditor(Set.class, teamCollectionEditor);
+        binder.registerCustomEditor(CalendarConfig.class, calendarConfigPropertyEditor);
     }
     
     @Override
@@ -141,55 +148,27 @@ public class AdminEventsController extends AdminBaseController<Event>{
         }
         model = getDAO().saveOrUpdate(model);
         
-        //generate games
-        List<Game> eventGames = gameDAO.findByEvent(model);
         switch (model.getEventType()){
             case SingleRoundRobin:
+                List<Game> eventGames = gameDAO.findByEvent(model);
                 
                 //remove games that have not been played yet
                 removeGamesWithoutGameSets(eventGames);
                 
                 createMissingGames(model, eventGames, model.getParticipants(), null);
-                
                 break;
-                
             case GroupKnockout:
-                return redirectToGroupDraws(model);
+                if (model.getCalendarConfig() == null && !model.getParticipants().isEmpty()){
+                    return redirectToGroupDraws(model);
+                } else {
+                    return redirectToIndex(request);
+                }
             case Knockout:
-                //check min number of participants
-                if (model.getParticipants().size()<3){
-                    result.addError(new ObjectError("participants", msg.get("PleaseSelectAtLeast3Participants")));
-                    return getEditView(model);
+                if (model.getCalendarConfig() == null && !model.getParticipants().isEmpty()){
+                    return redirectToDraws(model);
+                } else {
+                    return redirectToIndex(request);
                 }
-                
-                //determine number of games per round
-                int numGamesPerRound = Integer.highestOneBit(model.getParticipants().size()-1);
-                
-                //handle udpate operations for existing events
-                int numExistingGamesPerRound = 0;
-                if (!eventGames.isEmpty()){
-                    for (Game game: eventGames){
-                        Integer round = game.getRound();
-                        if (round!=null && round==0){
-                            numExistingGamesPerRound++;
-                        }
-                    }
-                    if (numExistingGamesPerRound!=numGamesPerRound){
-                        result.addError(new ObjectError("id", msg.get("CannotChangeNumberOfGames")));
-                        return getEditView(model);
-                    } else {
-                        return redirectToDraws(model);
-                    }
-                }
-                
-                //this is a new event
-                
-                //determine ranking
-                SortedMap<Participant, BigDecimal> ranking =  rankingUtil.getRankedParticipants(model);
-                
-                eventsUtil.createKnockoutGames(model, new ArrayList<>(ranking.keySet()));
-                
-                return redirectToDraws(model);
             default:
                 result.addError(new ObjectError("id", "Unsupported event type "+model.getEventType()));
                 return getEditView(model);
@@ -202,6 +181,43 @@ public class AdminEventsController extends AdminBaseController<Event>{
     @RequestMapping(value={"edit/{eventId}/draws"}, method=GET)
     public ModelAndView getDraws(@PathVariable("eventId") Long eventId, HttpServletRequest request){
         ModelAndView mav = getDrawsView(eventId);
+        return mav;
+    }
+    
+    @RequestMapping(value={"edit/{eventId}/draws"}, method=POST)
+    public ModelAndView postDraws(@PathVariable("eventId") Long eventId){
+        Event model = eventDAO.findByIdFetchWithParticipants(eventId);
+        ModelAndView mav = getDrawsView(eventId);
+        
+        //check min number of participants
+        if (model.getParticipants().size()<3){
+            mav.addObject("error", msg.get("PleaseSelectAtLeast3Participants"));
+            return mav;
+        }
+        //determine number of games per round
+        int numGamesPerRound = Integer.highestOneBit(model.getParticipants().size()-1);
+
+        //handle udpate operations for existing events
+        List<Game> eventGames = gameDAO.findByEvent(model);
+        int numExistingGamesPerRound = 0;
+        if (!eventGames.isEmpty()){
+            for (Game game: eventGames){
+                Integer round = game.getRound();
+                if (round!=null && round==0){
+                    numExistingGamesPerRound++;
+                }
+            }
+            if (numExistingGamesPerRound!=numGamesPerRound){
+                mav.addObject("error", msg.get("CannotChangeNumberOfGames"));
+                return mav;
+            }
+        }
+
+        //determine ranking
+        SortedMap<Participant, BigDecimal> ranking =  rankingUtil.getRankedParticipants(model);
+
+        eventsUtil.createKnockoutGames(model, new ArrayList<>(ranking.keySet()));
+
         return mav;
     }
     
@@ -416,15 +432,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
     @Override
     protected ModelAndView getEditView(Event event) {
         ModelAndView mav = new ModelAndView("admin/events/edit", "Model", event);
-        mav.addObject("EventParticipants", event.getParticipants());
-        List<Team> allTeams = teamDAO.findAll();
-        allTeams.removeAll(event.getParticipants());
-        mav.addObject("AllTeams", allTeams);
-        List<Player> allPlayers = playerDAO.findAll();
-        allPlayers.removeAll(event.getParticipants());
-        mav.addObject("AllPlayers", allPlayers);
         mav.addObject("EventTypes", EventType.values());
         mav.addObject("Genders", Gender.values());
+        mav.addObject("CalendarConfigs", calendarConfigDAO.findAll());
         return mav;
     }
     
@@ -450,7 +460,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
     
     @Override
     public Event findById(Long id){
-        return eventDAO.findByIdFetchWithParticipants(id);
+        return eventDAO.findByIdFetchWithParticipantsAndCalendarConfig(id);
     }
 
     private ModelAndView redirectToDraws(Event model) {

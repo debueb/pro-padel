@@ -17,16 +17,20 @@ import de.appsolve.padelcampus.data.OfferDurationPrice;
 import de.appsolve.padelcampus.data.TimeSlot;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
+import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.FacilityDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
+import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.dao.VoucherDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Contact;
+import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Facility;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.db.model.Voucher;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.appsolve.padelcampus.exceptions.MailException;
@@ -37,6 +41,7 @@ import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
+import de.appsolve.padelcampus.utils.TeamUtil;
 import de.appsolve.padelcampus.utils.VoucherUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -104,6 +109,12 @@ public class BookingsController extends BaseController {
 
     @Autowired
     OfferDAOI offerDAO;
+    
+    @Autowired
+    EventDAOI eventDAO;
+    
+    @Autowired
+    TeamDAOI teamDAO;
     
     @Autowired
     BookingsPayPalController bookingsPayPalController;
@@ -287,7 +298,7 @@ public class BookingsController extends BaseController {
     @RequestMapping(value = "booking/{UUID}/success")
     public ModelAndView showSuccessView(@PathVariable("UUID") String UUID, HttpServletRequest request) {
         ModelAndView mav = getBookingSuccessView();
-        Booking booking = bookingDAO.findByUUID(UUID);
+        Booking booking = bookingDAO.findByUUIDWithEventAndPlayers(UUID);
         try {
             if (!booking.getPaymentMethod().equals(PaymentMethod.Cash) && !booking.getPaymentConfirmed()){
                 throw new Exception(msg.get("PaymentHasNotBeenConfirmed"));
@@ -296,9 +307,32 @@ public class BookingsController extends BaseController {
             if (booking.getConfirmed()) {
                 throw new Exception(msg.get("BookingAlreadyConfirmed"));
             }
+            
+            //in case the booking was for an event, add the participants to the event
+            if (booking.getEvent() != null && !booking.getPlayers().isEmpty()){
+                Event event = eventDAO.findByIdFetchWithParticipants(booking.getEvent().getId());
+                
+                Set<Player> players = new HashSet<>();
+                players.add(booking.getPlayer());
+                players.addAll(booking.getPlayers());
+                //figure out if team already exists
+                Team team = teamDAO.findByPlayers(players);
+                
+                //create team if it does not exist
+                if (team == null){
+                    team = new Team();
+                    team.setPlayers(booking.getPlayers());
+                    team.setName(TeamUtil.getTeamName(team));
+                }
+                
+                //add team to participant list
+                event.getParticipants().add(team);
+                eventDAO.saveOrUpdate(event);
+            }
+            
             booking.setConfirmed(true);
             bookingDAO.saveOrUpdate(booking);
-
+            
             Mail mail = new Mail(request);
             mail.setSubject(msg.get("BookingSuccessfulMailSubject"));
             mail.setBody(msg.get("BookingSuccessfulMailBody", new Object[]{
@@ -344,14 +378,13 @@ public class BookingsController extends BaseController {
     
     @RequestMapping(value = "booking/{UUID}/abort")
     public ModelAndView abortBooking(@PathVariable("UUID") String UUID, HttpServletRequest request) {
-        Booking booking = bookingDAO.findByUUID(UUID);
+        Booking booking = bookingDAO.findByUUIDWithEvent(UUID);
         booking.setBlockingTime(null);
         booking.setCancelled(Boolean.TRUE);
         booking.setCancelReason("User cancelled during payment process");
         bookingDAO.saveOrUpdate(booking);
-        String redirectURL = request.getParameter("redirect");
-        if (!StringUtils.isEmpty(redirectURL)){
-            return new ModelAndView("redirect:"+redirectURL);
+        if (booking.getEvent() != null){
+            return new ModelAndView("redirect:/events/event/"+booking.getEvent().getId());
         }
         return new ModelAndView("redirect:/bookings");
     }

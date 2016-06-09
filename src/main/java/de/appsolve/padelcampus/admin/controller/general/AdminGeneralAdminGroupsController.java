@@ -13,6 +13,7 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.AdminGroup;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,15 +40,12 @@ public class AdminGeneralAdminGroupsController extends AdminBaseController<Admin
     @Autowired
     AdminGroupDAOI adminGroupDAO;
     
+    @Autowired
+    PlayerCollectionEditor playerCollectionEditor;
+    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(Set.class, "players", new CustomCollectionEditor(Set.class) {
-            @Override
-            protected Object convertElement(Object element) {
-                Long id = Long.parseLong((String) element);
-                return playerDAO.findById(id);
-            }
-        });
+        binder.registerCustomEditor(Set.class, "players", playerCollectionEditor);
         
         binder.registerCustomEditor(Set.class, "privileges", new CustomCollectionEditor(Set.class) {
             @Override

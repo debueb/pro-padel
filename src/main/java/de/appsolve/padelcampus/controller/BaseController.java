@@ -44,7 +44,7 @@ public abstract class BaseController {
     ContactDAOI contactDAO;
     
     @Autowired
-    Msg msg;
+    public Msg msg;
     
     @ExceptionHandler(value=Exception.class)
     public ModelAndView handleException(Exception ex){

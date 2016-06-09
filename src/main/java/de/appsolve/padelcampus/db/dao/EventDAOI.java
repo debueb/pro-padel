@@ -23,6 +23,10 @@ public interface EventDAOI extends BaseEntityDAOI<Event>{
     
     Event findByIdFetchWithParticipants(Long id);
     
+    Event findByIdFetchWithCalendarConfig(Long id);
+    
+    Event findByIdFetchWithParticipantsAndCalendarConfig(Long id);
+    
     Event findByIdFetchWithParticipantsAndGames(Long id);
     
     Event findByIdFetchWithParticipantsAndPlayers(Long id);

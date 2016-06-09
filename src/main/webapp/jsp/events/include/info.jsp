@@ -74,6 +74,13 @@
                 </c:when>
                 <c:otherwise>
                     <div class="list-group">
+                        <c:if test="${Model.calendarConfig ne null}">
+                            <jsp:include page="/jsp/include/list-group-item.jsp">
+                                <jsp:param name="href" value="/events/event/${Model.id}/participate"/>
+                                <jsp:param name="key" value="Participate"/>
+                                <jsp:param name="icon" value="user-plus"/>
+                            </jsp:include>
+                        </c:if>
                         <jsp:include page="/jsp/include/list-group-item.jsp">
                             <jsp:param name="href" value="/events/event/${Model.id}/participants"/>
                             <jsp:param name="key" value="Participants"/>
