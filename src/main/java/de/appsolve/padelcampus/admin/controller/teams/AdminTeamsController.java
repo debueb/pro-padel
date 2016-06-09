@@ -12,6 +12,7 @@ import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
 import de.appsolve.padelcampus.utils.TeamUtil;
 import java.util.List;
 import java.util.Set;
@@ -47,6 +48,9 @@ public class AdminTeamsController extends AdminBaseController<Team> {
     @Autowired
     TeamDAOI teamDAO;
     
+    @Autowired
+    PlayerCollectionEditor playerCollectionEditor;
+    
     @Override
     public ModelAndView showIndex(HttpServletRequest request, @PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable, @RequestParam(required = false, name = "search") String search){
         return super.showIndex(request, pageable, search);
@@ -54,15 +58,7 @@ public class AdminTeamsController extends AdminBaseController<Team> {
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(Set.class, "players", new CustomCollectionEditor(Set.class) {
-            @Override
-            protected Object convertElement(Object element) {
-                if (element == null || !(element instanceof String)){
-                    return null;
-                }
-                return playerDAO.findByUUID((String)element);
-            }
-        });
+        binder.registerCustomEditor(Set.class, "players", playerCollectionEditor);
     }
     
     @Override

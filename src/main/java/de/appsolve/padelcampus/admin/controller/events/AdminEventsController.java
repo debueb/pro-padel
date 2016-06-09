@@ -27,6 +27,7 @@ import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
+import de.appsolve.padelcampus.spring.TeamCollectionEditor;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.RankingUtil;
@@ -98,22 +99,15 @@ public class AdminEventsController extends AdminBaseController<Event>{
     EventsUtil eventsUtil;
     
     @Autowired
+    TeamCollectionEditor teamCollectionEditor;
+    
+    @Autowired
     CalendarConfigPropertyEditor calendarConfigPropertyEditor;
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
-    
-        binder.registerCustomEditor(Set.class, new CustomCollectionEditor(Set.class) {
-            @Override
-            protected Object convertElement(Object element) {
-                if (element == null || !(element instanceof String)){
-                    return null;
-                }
-                return teamDAO.findByUUID((String) element);
-            }
-        });
-        
+        binder.registerCustomEditor(Set.class, teamCollectionEditor);
         binder.registerCustomEditor(CalendarConfig.class, calendarConfigPropertyEditor);
     }
     
