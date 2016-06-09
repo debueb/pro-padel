@@ -44,8 +44,10 @@ public class AdminGeneralAdminGroupsController extends AdminBaseController<Admin
         binder.registerCustomEditor(Set.class, "players", new CustomCollectionEditor(Set.class) {
             @Override
             protected Object convertElement(Object element) {
-                Long id = Long.parseLong((String) element);
-                return playerDAO.findById(id);
+                if (element == null || !(element instanceof String)){
+                    return null;
+                }
+                return playerDAO.findByUUID((String)element);
             }
         });
         
