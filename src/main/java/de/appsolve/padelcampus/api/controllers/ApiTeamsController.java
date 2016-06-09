@@ -6,7 +6,7 @@
 package de.appsolve.padelcampus.api.controllers;
 
 import de.appsolve.padelcampus.api.data.Option;
-import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.db.model.Team;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author dominik
  */
 @Controller
-@RequestMapping("/api/players")
-public class ApiPlayersController extends ApiBaseController<Player>{
+@RequestMapping("/api/teams")
+public class ApiTeamsController extends ApiBaseController<Team>{
 
     @Override
-    Option getOption(Player model) {
+    Option getOption(Team model) {
         Option option = new Option();
         option.setValue(model.getUUID());
         option.setText(model.toString());

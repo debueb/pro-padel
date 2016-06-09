@@ -57,21 +57,12 @@ public class AdminTeamsController extends AdminBaseController<Team> {
         binder.registerCustomEditor(Set.class, "players", new CustomCollectionEditor(Set.class) {
             @Override
             protected Object convertElement(Object element) {
-                Long id = Long.parseLong((String) element);
-                return playerDAO.findById(id);
+                if (element == null || !(element instanceof String)){
+                    return null;
+                }
+                return playerDAO.findByUUID((String)element);
             }
         });
-    }
-    
-    @Override
-    public ModelAndView getEditView(Team team) {
-        ModelAndView mav = new ModelAndView("admin/teams/edit", "Model", team);
-        Set<Player> teamPlayers = team.getPlayers();
-        List<Player> players = playerDAO.findAll();
-        players.removeAll(teamPlayers);
-        mav.addObject("TeamPlayers", teamPlayers);
-        mav.addObject("AllPlayers", players);
-        return mav;
     }
     
     @Override
@@ -87,10 +78,12 @@ public class AdminTeamsController extends AdminBaseController<Team> {
         }
         
         //make sure team does not already exist
-        Team existingTeam = teamDAO.findByPlayers(model.getPlayers());
-        if (existingTeam != null){
-            result.addError(new ObjectError("*", msg.get("TeamAlreadyExistsWithName", new Object[]{existingTeam})));
-            return getEditView(model);
+        if (model.getId()==null){
+            Team existingTeam = teamDAO.findByPlayers(model.getPlayers());
+            if (existingTeam != null){
+                result.addError(new ObjectError("*", msg.get("TeamAlreadyExistsWithName", new Object[]{existingTeam})));
+                return getEditView(model);
+            }
         }
         
         return super.postEditView(model, request, result);
