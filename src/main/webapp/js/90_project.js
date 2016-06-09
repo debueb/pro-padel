@@ -267,8 +267,7 @@ app.main = {};
                     },
                     cache: false,
                     clearOnEmpty: true,
-                    preserveSelected: true,
-                    preserveSelectedPosition: 'before'
+                    preserveSelected: true
                 });
             }
         });
