@@ -32,21 +32,21 @@
                         </span>
                     </div>
 
-                    <span class="relative block">
+                    <div class="relative">
                         <spf:select path="offers" class="select-multiple form-control" data-style="form-center-element" multiple="true" data-container="body">
                             <spf:options items="${Offers}" itemValue="id"/>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Offers"/></span>
-                    </span>
+                    </div>
 
-                    <span class="relative block">
+                    <div class="relative">
                         <spf:select path="duration" class="select-simple form-control" data-style="form-center-element" data-container="body">
                             <c:forEach var="Duration" items="${Durations}">
                                 <option value="${Duration}" ${Duration == duration ? 'selected' : ''}>${Duration} <fmt:message key="Minutes"/></option>
                             </c:forEach>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Duration"/></span>
-                    </span>
+                    </div>
 
                     <div class="datepicker-container">
                         <div class="datepicker-text-container form-center-element">

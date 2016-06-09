@@ -64,7 +64,7 @@
                     </div>
 
                     <%-- Spielstärken --%>
-                    <span class="relative block">
+                    <div class="relative">
                         <fmt:message key="SkillLevel" var="SkillLevel"/>
                         <spf:select path="skillLevels" class="select-multiple show-tick form-control" data-style="form-center-element" title="${SkillLevel}" multiple="true" data-container="body">
                             <c:forEach var="SkillLevel" items="${SkillLevels}">
@@ -73,7 +73,7 @@
                             </c:forEach>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="SkillLevel"/></span>
-                    </span>
+                    </div>
 
                     <%-- Min. Teilnehmer --%>
                     <div class="input-group">
@@ -112,13 +112,13 @@
                     </div>
 
                     <%-- Teilnehmer --%>
-                    <span class="relative block">
+                    <div class="relative">
                         <fmt:message key="Participants" var="Participants"/>
                         <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${Participants}" multiple="true" data-live-search="true" data-container="body">
                             <spf:options items="${Players}" itemValue="id"/>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Participants"/></span>
-                    </span>
+                    </div>
 
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
                     <a class="btn btn-primary btn-block unit" href="/matchoffers"><fmt:message key="Cancel"/></a>
