@@ -33,21 +33,24 @@
                             <fmt:message key="StatusInitialized" var="StatusInitialized"/>
                             <fmt:message key="SearchNoResults" var="SearchNoResults"/>
                             <fmt:message key="StatusSearching" var="StatusSearching"/>
-                            <spf:select 
-                                path="UUID" 
-                                class="form-control select-ajax-search" 
-                                data-container="body" 
-                                data-live-search="true"
-                                data-abs-locale-currently-selected='${CurrentlySelected}'
-                                data-abs-locale-empty-title='${EmptyTitle}'
-                                data-abs-locale-error-text='${ErrorText}'
-                                data-abs-locale-search-placeholder='${SearchPlaceholder}'
-                                data-abs-locale-status-initialized='${StatusInitialized}'
-                                data-abs-locale-search-no-results='${SearchNoResults}'
-                                data-abs-locale-status-searching='${StatusSearching}'
-                                data-url="/api/players/options">
-                                <fmt:message key="ChoosePartner" var="ChoosePartner"/>
-                            </spf:select>
+                            <div class="relative">
+                                <spf:select 
+                                    path="UUID" 
+                                    class="form-control select-ajax-search" 
+                                    data-container="body" 
+                                    data-live-search="true"
+                                    data-abs-locale-currently-selected='${CurrentlySelected}'
+                                    data-abs-locale-empty-title='${EmptyTitle}'
+                                    data-abs-locale-error-text='${ErrorText}'
+                                    data-abs-locale-search-placeholder='${SearchPlaceholder}'
+                                    data-abs-locale-status-initialized='${StatusInitialized}'
+                                    data-abs-locale-search-no-results='${SearchNoResults}'
+                                    data-abs-locale-status-searching='${StatusSearching}'
+                                    data-url="/api/players/options">
+                                    <fmt:message key="ChoosePartner" var="ChoosePartner"/>
+                                </spf:select>
+                                <span class="explanation-select"><fmt:message key="Partner"/></span>
+                            </div>
                         </div>
 
                         <div><fmt:message key="CreateNewPlayer"/></div>
