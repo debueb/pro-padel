@@ -34,10 +34,8 @@
                                         <th class="text-center"><fmt:message key="TimeShort"/></th>
                                             <c:forEach var="WeekDay" items="${WeekDays}">
                                             <th class="text-center ${Day == WeekDay ? 'booking-selected-date' : ''}">
-                                                <a href="/bookings/${WeekDay}" class="ajaxify">
-                                                    <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>
-                                                    <br /><joda:format value="${WeekDay}" pattern="dd.MM."/>
-                                                </a>
+                                                <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>
+                                                <br /><joda:format value="${WeekDay}" pattern="dd.MM."/>
                                             </th>
                                         </c:forEach>
                                     </tr>
