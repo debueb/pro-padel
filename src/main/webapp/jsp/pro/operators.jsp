@@ -1,14 +1,14 @@
 <%@include file="/jsp/include/include.jsp"%>
 <jsp:include page="/jsp/pro/include/head.jsp"/>
 <div class="container-fluid">
-    <div class="row row-margin-bottom" style="background: #dff0d8; padding-bottom: 10px;">
-        <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+    <div class="row row-margin-bottom" style="background: #D9EDF7; padding-bottom: 10px;">
+        <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 operator-info">
             <h2 class="text-center"><fmt:message key="ForOperators"/></h2>
             <div class="text-center"><fmt:message key="ForOperatorsInfo"/></div>
         </div>
     </div>
     <div class="row row-margin-bottom" style="background: #D9EDF7;">
-        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2">
+        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2 operator-info">
             <h2 class="text-center"><fmt:message key="Features"/></h2>
             <div class="flex-container">
                 <div class="panel flex-item panel-default">
@@ -78,8 +78,8 @@
             </div>
         </div>
     </div>
-    <div class="row row-margin-bottom" style="background: #dff0d8;">
-        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2">
+    <div class="row row-margin-bottom" style="background: #D9EDF7;">
+        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2 operator-info">
             <div class="row">
                 <h2 class="text-center"><fmt:message key="References"/></h2>
                 <div class="flex-container">
@@ -101,7 +101,7 @@
         </div>
     </div>
     <div class="row row-margin-bottom" style="background: #D9EDF7;">
-        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2">
+        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2 operator-info">
             <h2 class="text-center"><fmt:message key="Pricing"/></h2>
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -162,8 +162,8 @@
             <hr/>
         </div>
     </div>
-    <div class="row" style="background: #dff0d8;">
-        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2">
+    <div class="row" style="background: #D9EDF7;">
+        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2 operator-info">
             <h2 class="text-center"><fmt:message key="Register"/></h2>
             <div class="panel panel-default">
                 <div class="panel-heading">

@@ -156,3 +156,7 @@ h1, .h1, h2, .h2, h3, .h3{
 .unit-2{
     margin-top: 20px;
 }
+.operator-info{
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
