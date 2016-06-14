@@ -157,7 +157,7 @@
                     $window.trigger(completedEventName);
 
                     // Complete the change
-                    $('html, body').animate({ scrollTop: 0}, 'slow');
+                    $(window).scrollTop(0);
 
                     // Inform Google Analytics of the change
                     if (typeof window._gaq !== 'undefined') {
