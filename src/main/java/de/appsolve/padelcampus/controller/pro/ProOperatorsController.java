@@ -27,6 +27,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -91,7 +92,7 @@ public class ProOperatorsController {
     }
     
     @RequestMapping(method=POST, value="newaccount")
-    public ModelAndView postNewAccount(@ModelAttribute("Model") @Valid CustomerRegistrationModel customerAccount, BindingResult bindingResult){
+    public ModelAndView postNewAccount(HttpServletRequest request, @ModelAttribute("Model") @Valid CustomerRegistrationModel customerAccount, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             return new ModelAndView("pro/newaccount", "Model", customerAccount);
         }
@@ -145,12 +146,12 @@ public class ProOperatorsController {
             //create all.min.css.stylesheet for new customer
             htmlResourceUtil.updateCss(servletContext, customer);
             
-            sendMail(customerAccount, "registration successful");
+            sendMail(request, customerAccount, "registration successful");
             
             return new ModelAndView("redirect:/pro/operators/newaccount/"+customer.getId());
         } catch (Exception e){
             LOG.error(e.getMessage(), e);
-            sendMail(customerAccount, e.getMessage());
+            sendMail(request, customerAccount, e.getMessage());
             bindingResult.addError(new ObjectError("id", e.getMessage()));
             return new ModelAndView("pro/newaccount", "Model", customerAccount);
         }
@@ -166,13 +167,12 @@ public class ProOperatorsController {
         return mav;
     }
 
-    private void sendMail(CustomerRegistrationModel customerAccount, String message) {
+    private void sendMail(HttpServletRequest request, CustomerRegistrationModel customerAccount, String message) {
         try {
             Contact contact = new Contact();
             contact.setEmailAddress("d.wisskirchen@gmail.com");
-            Mail mail = new Mail();
+            Mail mail = new Mail(request);
             mail.addRecipient(contact);
-            mail.setFrom("customer-registration@"+CLOUDFLARE_URL);
             mail.setReplyTo("noreply@"+CLOUDFLARE_URL);
             mail.setSubject("Customer Registration");
             StringBuilder body = new StringBuilder();

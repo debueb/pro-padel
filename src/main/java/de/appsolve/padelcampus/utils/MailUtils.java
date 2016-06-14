@@ -7,6 +7,12 @@ package de.appsolve.padelcampus.utils;
 
 import com.sparkpost.Client;
 import com.sparkpost.exception.SparkPostException;
+import com.sparkpost.model.AddressAttributes;
+import com.sparkpost.model.RecipientAttributes;
+import com.sparkpost.model.TemplateContentAttributes;
+import com.sparkpost.model.TransmissionWithRecipientArray;
+import com.sparkpost.resources.ResourceTransmissions;
+import com.sparkpost.transport.RestConnection;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.exceptions.MailException;
@@ -21,67 +27,42 @@ import org.apache.log4j.Logger;
  */
 public class MailUtils {
     
-    private static final Logger LOG = Logger.getLogger(MailUtils.class);
-    private final static String API_KEY = "3def953e23ed9c354a77cb6465c65cb34b32f2b4";
+    private static final Logger LOG                 = Logger.getLogger(MailUtils.class);
+    private static final String API_KEY             = "3def953e23ed9c354a77cb6465c65cb34b32f2b4";
+    private static final String DEFAULT_FROM_EMAIL  = "noreply@pro-padel.de";
         
     public static void send(Mail mail) throws MailException, IOException {
         
         Client client = new Client(API_KEY);
 
         try {
-            client.sendMessage(
-                mail.getFrom(),
-                getRecipients(mail),
-                mail.getSubject(),
-                mail.getBody(),
-                getHTML(mail.getBody()));
+            TransmissionWithRecipientArray transmission = new TransmissionWithRecipientArray();
+
+            List<RecipientAttributes> recipientArray = new ArrayList<>();
+            for (String recpient : getRecipients(mail)) {
+                RecipientAttributes recipientAttribs = new RecipientAttributes();
+                recipientAttribs.setAddress(new AddressAttributes(recpient));
+                recipientArray.add(recipientAttribs);
+            }
+            transmission.setRecipientArray(recipientArray);
+
+            TemplateContentAttributes contentAttributes = new TemplateContentAttributes();
+
+            contentAttributes.setFrom(new AddressAttributes(DEFAULT_FROM_EMAIL));
+            contentAttributes.setReplyTo(mail.getFrom());
+            contentAttributes.setSubject(mail.getSubject());
+            contentAttributes.setHtml(getHTML(mail.getBody()));
+            contentAttributes.setText(mail.getBody());
+            transmission.setContentAttributes(contentAttributes);
+
+            RestConnection connection = new RestConnection(client);
+            ResourceTransmissions.create(connection, 0, transmission);
+
+        
         } catch (SparkPostException e){
             throw new MailException(e.getMessage(), e);
         }
     }
-    
-//    public static void send(Mail mail) throws MailException, IOException {
-//        Mailin http = new Mailin("https://api.sendinblue.com/v2.0", "MHfRnvT7Vd2BEaCP");
-//
-//	Map <String, String> to = new HashMap<>();
-//        for (EmailContact contact: mail.getRecipients()){
-//            to.put(contact.getEmailAddress(), contact.getEmailDisplayName());
-//        }
-//        
-//        Map <String, String> cc = new HashMap<>();
-//        cc.put(mail.getFrom(), mail.getFrom());
-//        
-//        Map <String, String> headers = new HashMap<>();
-//        //headers.put("Content-Type", "text/html; charset=UTF-8");
-//        headers.put("Content-Type", "text/plain; charset=UTF-8");
-//        
-//        Map<String,Object > data = new HashMap<>();
-//        data.put("to", to);
-//        data.put("cc", cc);
-//        data.put("replyto", new String [] {mail.getReplyTo(), mail.getReplyTo()});
-//        data.put("from", new String [] {mail.getFrom(), mail.getFrom()});
-//        data.put("subject", mail.getSubject());
-//        data.put("html", getHTML(mail.getBody()));
-//        data.put("text", mail.getBody());
-//        data.put("headers", headers);
-////        data.put("inline_image", new String [] {});
-//
-//        String response = http.send_email(data);
-//        if (StringUtils.isEmpty(response)){
-//            throw new MailException("SMTP backend did not return a response for mail: "+mail);
-//        }
-//        try {
-//            Gson gson = new Gson();
-//            MailinResponse mailinResponse = gson.fromJson(response, MailinResponse.class);
-//            if (mailinResponse.isSuccessful()){
-//                LOG.info("Successfully relayed mail: "+mail);
-//            } else {
-//                throw new MailException("SMTP backend returned "+response);
-//            }
-//        } catch (JsonSyntaxException e){
-//            throw new MailException("SMTP backend returned invalid response: "+response);
-//        }
-//    }
     
     private static String getHTML(String string) {
         string = string.replaceAll("(\r\n|\n)", "<br />");

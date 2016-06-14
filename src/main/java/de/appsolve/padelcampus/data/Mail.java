@@ -31,7 +31,7 @@ public class Mail {
      * @param request
      */
     public Mail(HttpServletRequest request){
-        this.from = MAIL_NOREPLY_SENDER_NAME + "@" + RequestUtil.getMailHostName(request);
+        this.from = MAIL_NOREPLY_SENDER_NAME + "@" + request.getServerName();
     }
     
     @NotEmpty(message = "{NotEmpty.email}")

@@ -174,9 +174,7 @@ public class LoginController extends BaseController{
         player.setPasswordResetExpiryDate(expiryDate);
         playerDAO.saveOrUpdate(player);
 
-        Mail mail = new Mail();
-        String hostname = (request.getServerName().equals("localhost") ? "padelcampus-appsolve.rhcloud.com" : request.getServerName());
-        mail.setFrom("noreply@"+hostname);
+        Mail mail = new Mail(request);
         Contact contact = new Contact();
         contact.setEmailAddress(player.getEmail());
         contact.setEmailDisplayName(player.toString());
