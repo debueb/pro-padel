@@ -112,48 +112,75 @@
                         <thead>
                         <th></th>
                         <th class="text-center">Basic</th>
+                        <th class="text-center">Premium</th>
                         <th class="text-center">Pro</th>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><fmt:message key="TournamentManagement"/></td>
-                                <td class="text-center">&#10003;</td>
-                                <td class="text-center">&#10003;</td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
                             </tr>
                             <tr>
                                 <td><fmt:message key="LeagueManagement"/></td>
-                                <td class="text-center">&#10003;</td>
-                                <td class="text-center">&#10003;</td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
                             </tr>
                             <tr>
                                 <td><fmt:message key="Ranking"/></td>
-                                <td class="text-center">&#10003;</td>
-                                <td class="text-center">&#10003;</td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
                             </tr>
                             <tr>
                                 <td><fmt:message key="PlayersAndTeams"/></td>
-                                <td class="text-center">&#10003;</td>
-                                <td class="text-center">&#10003;</td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
                             </tr>
                             <tr>
                                 <td><fmt:message key="MatchOffers"/></td>
-                                <td class="text-center">&#x2717;</td>
-                                <td class="text-center">&#10003;</td>
+                                <td class="text-center cross"></td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
                             </tr>
                             <tr>
                                 <td><fmt:message key="BookingSystem"/></td>
-                                <td class="text-center">&#x2717;</td>
-                                <td class="text-center">&#10003;</td>
+                                <td class="text-center cross"></td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
                             </tr>
                             <tr>
                                 <td><fmt:message key="ContentManagementSystem"/></td>
-                                <td class="text-center">&#x2717;</td>
-                                <td class="text-center">&#10003;</td>
+                                <td class="text-center cross"></td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
+                            </tr>
+                            <tr>
+                                <td><fmt:message key="WebApp"/></td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
+                            </tr>
+                            <tr>
+                                <td><fmt:message key="iOSApp"/></td>
+                                <td class="text-center cross"></td>
+                                <td class="text-center cross"></td>
+                                <td class="text-center check"></td>
+                            </tr>
+                            <tr>
+                                <td><fmt:message key="AndroidApp"/></td>
+                                <td class="text-center cross"></td>
+                                <td class="text-center cross"></td>
+                                <td class="text-center check"></td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td class="text-center"><fmt:message key="EURmtl"><fmt:param value="0"/></fmt:message></td>
                                 <td class="text-center"><fmt:message key="EURmtl"><fmt:param value="40"/></fmt:message></td>
+                                <td class="text-center"><fmt:message key="EURmtl"><fmt:param value="70"/></fmt:message></td>
                             </tr>
                         </tbody>
                     </table>

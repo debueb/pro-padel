@@ -160,3 +160,15 @@ h1, .h1, h2, .h2, h3, .h3{
     padding-top: 30px;
     padding-bottom: 30px;
 }
+.check{
+    color: green;
+}
+.check:after{
+    content: "\2714";
+}
+.cross{
+    color: #cd0a0a;
+}
+.cross:after{
+    content: "\2718";
+}
