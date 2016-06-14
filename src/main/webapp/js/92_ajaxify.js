@@ -165,6 +165,9 @@
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR);
+                    console.log(textStatus);
+                    console.log(errorThrown);
                     document.location.href = url;
                     return false;
                 },
