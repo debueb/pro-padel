@@ -11,12 +11,10 @@
             <div class="panel-heading">
                 <h4><fmt:message key="ForgotPasswordSuccessfulTitle"/></h4>
             </div>
-        </div>
-
-
-        <spf:form class="form-signin" role="form" modelAttribute="Model">
-            <div class="alert alert-success"><fmt:message key="ForgotPasswordSuccessfulMessage"><fmt:param value="${Email}"/></fmt:message></div>
-        </spf:form>
+            <div class="panel-body">
+                <div class="alert alert-success"><fmt:message key="ForgotPasswordSuccessfulMessage"><fmt:param value="${Email}"/></fmt:message></div>
+            </div>
+        </div> 
     </div>
 </div>
 

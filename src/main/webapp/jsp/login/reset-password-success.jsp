@@ -11,12 +11,10 @@
             <div class="panel-heading">
                 <h4><fmt:message key="ResetPasswordSuccessfulTitle"/></h4>
             </div>
+            <div class="panel-body">
+                <div class="alert alert-success"><fmt:message key="ResetPasswordSuccessfulMessage"/></div>
+            </div>
         </div>
-
-
-        <spf:form class="form-signin" role="form" modelAttribute="Model">
-            <div class="alert alert-success"><fmt:message key="ResetPasswordSuccessfulMessage"/></div>
-        </spf:form>
     </div>
 </div>
 

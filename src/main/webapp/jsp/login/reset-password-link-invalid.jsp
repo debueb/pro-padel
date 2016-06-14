@@ -11,12 +11,10 @@
             <div class="panel-heading">
                 <h4><fmt:message key="ResetPasswordLinkInvalidTitle"/></h4>
             </div>
+            <div class="panel-body">
+                <div class="alert alert-danger"><fmt:message key="ResetPasswordLinkInvalidMessage"/></div>
+            </div>
         </div>
-
-
-        <spf:form class="form-signin" role="form" modelAttribute="Model">
-            <div class="alert alert-danger"><fmt:message key="ResetPasswordLinkInvalidMessage"/></div>
-        </spf:form>
     </div>
 </div>
 
