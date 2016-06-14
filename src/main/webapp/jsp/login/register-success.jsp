@@ -11,12 +11,10 @@
             <div class="panel-heading">
                 <h4><fmt:message key="RegistrationSuccessfulTitle"/></h4>
             </div>
+            <div class="panel-body">
+                <div class="alert alert-success"><fmt:message key="RegistrationSuccessfulMessage"/></div>
+            </div>
         </div>
-
-
-        <spf:form class="form-signin" role="form" modelAttribute="Model">
-            <div class="alert alert-success"><fmt:message key="RegistrationSuccessfulMessage"/></div>
-        </spf:form>
     </div>
 </div>
 
