@@ -24,9 +24,14 @@
             </div>
         </div>
     </div>
-    
 </div><!-- background -->
 </c:if>
 <a id="dummy-link" class="ajaxify" href="#"></a>
+<div id="offline-msg">
+    <fmt:message key="Offline"/>
+    <div>
+        <a id="offline-msg-btn" class="btn btn-default unit" href="#">OK</i></a>
+    </div>
+</div>
 </body>
 </html>

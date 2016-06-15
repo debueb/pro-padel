@@ -49,8 +49,19 @@
             // Prepare
             var $this = $(this);
 
+            $('#offline-msg-btn').on('click', function(){
+                $('#shadow').hide();
+                $('#offline-msg').hide();
+            });
+            
             // Ajaxify
             $this.find('a.ajaxify').click(function (event) {
+                if (!window.navigator.onLine){
+                    $('#shadow').show();
+                    $('#offline-msg').show();
+                    return false;
+                }
+                
                 // Prepare
                 var
                     $this = $(this),
@@ -69,6 +80,12 @@
             });
             
             $this.find('form.ajaxify').on('submit', function (event) {
+                if (!window.navigator.onLine){
+                    $('#shadow').show();
+                    $('#offline-msg').show();
+                    return false;
+                }
+
                 var data = $(this).serialize(),
                     method = $(this).attr('method'),
                     url = $(this).attr('action') || "";

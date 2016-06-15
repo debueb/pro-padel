@@ -118,7 +118,7 @@
                     </div>
                 </c:if>
                 <jsp:include page="/jsp/include/spinner.jsp"/>
-                <div id="shadow"><progress></progress></div>
+                <div id="shadow"></div>
                 <div id="site-menu">
                     <jsp:include page="/jsp/include/navigation.jsp"/>
                 </div>
