@@ -52,6 +52,7 @@
             $('#offline-msg-btn').on('click', function(){
                 $('#shadow').hide();
                 $('#offline-msg').hide();
+                return false;
             });
             
             // Ajaxify
