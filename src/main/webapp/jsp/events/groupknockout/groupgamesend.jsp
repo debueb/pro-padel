@@ -16,6 +16,11 @@
                 <spf:form method="POST" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>
                     <spf:input type="hidden" path="name"/>
+                    <spf:input type="hidden" path="startDate"/>
+                    <spf:input type="hidden" path="endDate"/>
+                    <spf:input type="hidden" path="eventType"/>
+                    <spf:input type="hidden" path="gender"/>
+                    <spf:input type="hidden" path="description"/>
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
                     <div class="alert alert-warning unit">
                         <fmt:message key="ConfirmGroupPhaseEnd"><fmt:param value="${Model.name}"/></fmt:message>

@@ -12,6 +12,9 @@
             </div>
             <div class="panel-body">
                 <div class="list-group">
+                <c:if test="${empty RankedParticipants}">
+                    <div class="alert alert-info"><fmt:message key="NoParticipants"/></div>
+                </c:if>
                     <c:forEach var="RankedParticipant" items="${RankedParticipants}">
                         <c:set var="Participant" value="${RankedParticipant.key}"/>
                         <jsp:include page="/jsp/include/list-badge-item.jsp">

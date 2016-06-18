@@ -59,14 +59,11 @@
                         </div>
                     </div>
                     <div>
-                        <button class="btn btn-primary btn-block unit" type="submit"><fmt:message key="Save"/></button>
+                        <button class="btn btn-primary btn-block unit" type="submit"><fmt:message key="Participate"/></button>
                     </div>
                 </spf:form>         
             </div>
         </div>
     </div>
 </div>
-
-
-
 <jsp:include page="/jsp/include/footer.jsp"/>

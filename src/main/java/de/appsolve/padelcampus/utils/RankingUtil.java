@@ -325,17 +325,19 @@ public class RankingUtil {
     }
     
     public SortedMap<Participant, BigDecimal>  getRankedParticipants(Event model) {
-        Participant firstParticipant = model.getParticipants().iterator().next();
         SortedMap<Participant, BigDecimal> ranking = new TreeMap<>();
-        if (firstParticipant instanceof Player){
-            ranking = getRanking(model.getGender(), model.getPlayers());
-        } else if (firstParticipant instanceof Team){
-            List<Team> teams = new ArrayList<>();
-            for (Participant p: model.getParticipants()){
-                Team team = (Team) p;
-                teams.add(teamDAO.findByIdFetchWithPlayers(team.getId()));
+        if (!model.getParticipants().isEmpty()){
+            Participant firstParticipant = model.getParticipants().iterator().next();
+            if (firstParticipant instanceof Player){
+                ranking = getRanking(model.getGender(), model.getPlayers());
+            } else if (firstParticipant instanceof Team){
+                List<Team> teams = new ArrayList<>();
+                for (Participant p: model.getParticipants()){
+                    Team team = (Team) p;
+                    teams.add(teamDAO.findByIdFetchWithPlayers(team.getId()));
+                }
+                ranking = getTeamRanking(model.getGender(), teams);
             }
-            ranking = getTeamRanking(model.getGender(), teams);
         }
         return ranking;
     }

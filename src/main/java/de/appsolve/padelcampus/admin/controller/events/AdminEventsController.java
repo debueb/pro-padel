@@ -375,6 +375,10 @@ public class AdminEventsController extends AdminBaseController<Event>{
         }
         
         SortedMap<Integer, List<Game>> groupGames = eventsUtil.getGroupGameMap(event);
+        if (groupGames.isEmpty()){
+            result.reject("NoGroupGames");
+            return getGroupGamesEndView(dummy);
+        }
         Iterator<Map.Entry<Integer, List<Game>>> iterator = groupGames.entrySet().iterator();
         
         //determine best participants of each group

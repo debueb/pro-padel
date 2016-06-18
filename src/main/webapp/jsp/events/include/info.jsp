@@ -47,9 +47,16 @@
             </c:if>
         </div>
         <div class="unit-2">
-            <c:choose>
-                <c:when test="${Model.eventType eq 'SingleRoundRobin'}">
-                    <div class="list-group">
+            <div class="list-group">
+                <c:if test="${Model.calendarConfig ne null}">
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/events/event/${Model.id}/participate"/>
+                        <jsp:param name="key" value="Participate"/>
+                        <jsp:param name="icon" value="user-plus"/>
+                    </jsp:include>
+                </c:if>
+                <c:choose>
+                    <c:when test="${Model.eventType eq 'SingleRoundRobin'}">
                         <jsp:include page="/jsp/include/list-group-item.jsp">
                             <jsp:param name="href" value="/players/event/${Model.id}"/>
                             <jsp:param name="key" value="Players"/>
@@ -70,17 +77,8 @@
                             <jsp:param name="key" value="Score"/>
                             <jsp:param name="icon" value="list-ol"/>
                         </jsp:include>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <div class="list-group">
-                        <c:if test="${Model.calendarConfig ne null}">
-                            <jsp:include page="/jsp/include/list-group-item.jsp">
-                                <jsp:param name="href" value="/events/event/${Model.id}/participate"/>
-                                <jsp:param name="key" value="Participate"/>
-                                <jsp:param name="icon" value="user-plus"/>
-                            </jsp:include>
-                        </c:if>
+                    </c:when>
+                    <c:otherwise>
                         <jsp:include page="/jsp/include/list-group-item.jsp">
                             <jsp:param name="href" value="/events/event/${Model.id}/participants"/>
                             <jsp:param name="key" value="Participants"/>
@@ -98,9 +96,9 @@
                             <jsp:param name="key" value="KnockoutGames"/>
                             <jsp:param name="icon" value="trophy"/>
                         </jsp:include>
-                    </div> 
-                </c:otherwise>
-            </c:choose>
+                    </c:otherwise>
+                </c:choose>
+            </div>
         </div>
     </div>
 </div>
