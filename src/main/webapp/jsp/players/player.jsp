@@ -53,8 +53,8 @@
                         <fmt:message key="LogInToContact"><fmt:param value="${Player}"/></fmt:message>
                         </div>
                     <c:url value="/players/player/${Player.UUID}" var="playerURL"/>
-                    <a class="btn btn-primary btn-block unit" href="/login?redirect=${playerURL}"><fmt:message key="Login"/></a>
-                    <a class="btn btn-primary btn-block" href="/login/register?redirect=${playerURL}"><fmt:message key="Register"/></a>
+                    <a class="btn btn-primary btn-block unit ajaxify" href="/login?redirect=${playerURL}"><fmt:message key="Login"/></a>
+                    <a class="btn btn-primary btn-block ajaxify" href="/login/register?redirect=${playerURL}"><fmt:message key="Register"/></a>
                 </c:if>
 
                 <c:if test="${sessionScope.accessLevel == 'loggedIn'}">

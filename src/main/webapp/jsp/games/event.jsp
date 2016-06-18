@@ -10,25 +10,25 @@
             <div class="panel-heading">
                 <h4><fmt:message key="Games"/> ${Event.name}</h4>
             </div>
-        </div>
-
-
-        <div class="list-group">
-            <fmt:message key="AllGames" var="msg"/>
-            <jsp:include page="/jsp/include/list-badge-item.jsp">
-                <jsp:param name="msg" value="${msg}"/>
-                <jsp:param name="url" value="/games/event/${Event.id}/all"/>
-                <jsp:param name="badge" value=""/>
-            </jsp:include>
-            <c:set var="TeamCount" value="${fn:length(Event.teams)}"/>
-            <c:forEach var="Team" items="${Event.teams}">
-                <fmt:message key="GamesWith" var="msg"><fmt:param>${Team}</fmt:param></fmt:message>
-                <jsp:include page="/jsp/include/list-badge-item.jsp">
-                    <jsp:param name="msg" value="${msg}"/>
-                    <jsp:param name="url" value="/games/event/${Event.id}/team/${Team.UUID}"/>
-                    <jsp:param name="badge" value=""/>
-                </jsp:include>
-            </c:forEach>
+            <div class="panel-body">
+                <div class="list-group">
+                    <fmt:message key="AllGames" var="msg"/>
+                    <jsp:include page="/jsp/include/list-badge-item.jsp">
+                        <jsp:param name="msg" value="${msg}"/>
+                        <jsp:param name="url" value="/games/event/${Event.id}/all"/>
+                        <jsp:param name="badge" value=""/>
+                    </jsp:include>
+                    <c:set var="TeamCount" value="${fn:length(Event.teams)}"/>
+                    <c:forEach var="Team" items="${Event.teams}">
+                        <fmt:message key="GamesWith" var="msg"><fmt:param>${Team}</fmt:param></fmt:message>
+                        <jsp:include page="/jsp/include/list-badge-item.jsp">
+                            <jsp:param name="msg" value="${msg}"/>
+                            <jsp:param name="url" value="/games/event/${Event.id}/team/${Team.UUID}"/>
+                            <jsp:param name="badge" value=""/>
+                        </jsp:include>
+                    </c:forEach>
+                </div>  
+            </div>
         </div>
     </div>
 </div>
