@@ -326,7 +326,7 @@ table.table-scores tbody tr td{
 .navbar-header{
     position:relative;
 }
-.navbar-header a.navbar-brand{
+.navbar-header navbar-brand{
     max-width: 280px;
     padding: 5px 15px;
     text-overflow: ellipsis;
@@ -342,11 +342,9 @@ table.table-scores tbody tr td{
     margin: 0;
 }
 
-.navbar-default .navbar-brand{
+.navbar-default .navbar-brand, .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus{
     color: @white;
-}
-.navbar-default .navbar-brand:hover{
-    color: @primaryLinkHoverColor;
+    outline: none;
 }
 a.navbar-icon{
     color: @white;

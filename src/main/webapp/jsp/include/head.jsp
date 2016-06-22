@@ -98,11 +98,11 @@
                         <div class="navbar-header">
                             <c:choose>
                                 <c:when test="${pageContext.request.requestURI == '/jsp/index.jsp'}">
-                                    <a class="navbar-brand ajaxify" href="/"><img src="${companyLogoPath[sessionScope.customer.name]}" class="customerLogo"/>${pageContext.request.serverName}</a>
-                                    </c:when>
-                                    <c:otherwise>
+                                    <div class="navbar-brand"><img src="${companyLogoPath[sessionScope.customer.name]}" class="customerLogo"/>${pageContext.request.serverName}</div>
+                                </c:when>
+                                <c:otherwise>
                                     <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a><a class="navbar-icon home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>
-                                    </c:otherwise>
+                                </c:otherwise>
                                 </c:choose>
                             <a class="navbar-icon navbar-toggle">
                                 <div class="menu-line menu-line-1"></div>
