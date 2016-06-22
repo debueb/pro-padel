@@ -24,19 +24,17 @@ import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
-import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.spring.TeamCollectionEditor;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
+import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,7 +45,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -97,6 +94,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
     
     @Autowired
     EventsUtil eventsUtil;
+    
+    @Autowired
+    GameUtil gameUtil;
     
     @Autowired
     TeamCollectionEditor teamCollectionEditor;
@@ -155,7 +155,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 //remove games that have not been played yet
                 removeGamesWithoutGameSets(eventGames);
                 
-                createMissingGames(model, eventGames, model.getParticipants(), null);
+                gameUtil.createMissingGames(model, eventGames, model.getParticipants());
                 break;
             case GroupKnockout:
                 if (model.getCalendarConfig() == null && !model.getParticipants().isEmpty()){
@@ -303,7 +303,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
         //create missing games
         for (int groupNumber=0; groupNumber<event.getNumberOfGroups(); groupNumber++){
             Set<Participant> groupParticipants = eventGroups.getGroupParticipants().get(groupNumber);
-            createMissingGames(event, event.getGames(), groupParticipants, groupNumber);
+            gameUtil.createMissingGames(event, event.getGames(), groupParticipants, groupNumber);
         }
         
         return new ModelAndView("redirect:/admin/events/edit/"+eventId+"/gameschedule");
@@ -548,34 +548,5 @@ public class AdminEventsController extends AdminBaseController<Event>{
         EventGroups eventGroups = new EventGroups();
         eventGroups.setGroupParticipants(participantMap);
         return eventGroups;
-    }
-
-    private void createMissingGames(Event event, Collection<Game> existingGames, Set<Participant> participants, Integer groupNumber) {
-        for (Participant firstParticipant: participants){
-            for (Participant secondParticipant: participants){
-                if (!firstParticipant.equals(secondParticipant)){
-                    boolean gameExists = false;
-                    for (Game game: existingGames){
-                        if (game.getParticipants().contains(firstParticipant) && game.getParticipants().contains(secondParticipant)){
-                            gameExists = true;
-                            break;
-                        }
-                    }
-                    if (!gameExists){
-                        Game game = new Game();
-                        game.setEvent(event);
-                        if (groupNumber != null){
-                            game.setGroupNumber(groupNumber);
-                        }
-                        Set<Participant> gameParticipants = new LinkedHashSet<>();
-                        gameParticipants.add(firstParticipant);
-                        gameParticipants.add(secondParticipant);
-                        game.setParticipants(gameParticipants);
-                        gameDAO.saveOrUpdate(game);
-                        existingGames.add(game);
-                    }
-                }
-            }
-        }
     }
 }

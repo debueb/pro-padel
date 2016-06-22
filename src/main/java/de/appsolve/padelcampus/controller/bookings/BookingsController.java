@@ -10,6 +10,7 @@ import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.CANCELLATION_POLICY_DEADLINE;
 import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
+import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.Mail;
@@ -37,6 +38,7 @@ import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
+import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.RequestUtil;
@@ -127,6 +129,9 @@ public class BookingsController extends BaseController {
 
     @Autowired
     BookingUtil bookingUtil;
+    
+    @Autowired
+    GameUtil gameUtil;
     
     @Autowired
     Msg msg;
@@ -310,7 +315,7 @@ public class BookingsController extends BaseController {
             
             //in case the booking was for an event, add the participants to the event
             if (booking.getEvent() != null && !booking.getPlayers().isEmpty()){
-                Event event = eventDAO.findByIdFetchWithParticipants(booking.getEvent().getId());
+                Event event = eventDAO.findByIdFetchWithParticipantsAndGames(booking.getEvent().getId());
                 
                 Set<Player> players = new HashSet<>();
                 players.add(booking.getPlayer());
@@ -327,7 +332,11 @@ public class BookingsController extends BaseController {
                 
                 //add team to participant list
                 event.getParticipants().add(team);
-                eventDAO.saveOrUpdate(event);
+                event = eventDAO.saveOrUpdate(event);
+                
+                if (event.getEventType().equals(EventType.SingleRoundRobin)){
+                    gameUtil.createMissingGames(event, event.getGames(), event.getParticipants());
+                }
             }
             
             booking.setConfirmed(true);
