@@ -1,10 +1,13 @@
+500px
 adjust
 adn
 align-center
 align-justify
 align-left
 align-right
+amazon
 ambulance
+american-sign-language-interpreting
 anchor
 android
 angellist
@@ -35,16 +38,22 @@ arrows
 arrows-alt
 arrows-h
 arrows-v
+assistive-listening-systems
 asterisk
 at
-automobile (alias)
+audio-description
 backward
+balance-scale
 ban
-bank (alias)
 bar-chart
-bar-chart-o (alias)
 barcode
 bars
+battery-empty
+battery-full
+battery-half
+battery-quarter
+battery-three-quarters
+bed
 beer
 behance
 behance-square
@@ -57,13 +66,17 @@ binoculars
 birthday-cake
 bitbucket
 bitbucket-square
-bitcoin (alias)
+black-tie
+blind
+bluetooth
+bluetooth-b
 bold
 bolt
 bomb
 book
 bookmark
 bookmark-o
+braille
 briefcase
 btc
 bug
@@ -72,10 +85,14 @@ building-o
 bullhorn
 bullseye
 bus
-cab (alias)
+buysellads
 calculator
 calendar
+calendar-check-o
+calendar-minus-o
 calendar-o
+calendar-plus-o
+calendar-times-o
 camera
 camera-retro
 car
@@ -87,15 +104,18 @@ caret-square-o-left
 caret-square-o-right
 caret-square-o-up
 caret-up
+cart-arrow-down
+cart-plus
 cc
 cc-amex
+cc-diners-club
 cc-discover
+cc-jcb
 cc-mastercard
 cc-paypal
 cc-stripe
 cc-visa
 certificate
-chain (alias)
 chain-broken
 check
 check-circle
@@ -111,54 +131,59 @@ chevron-left
 chevron-right
 chevron-up
 child
+chrome
 circle
 circle-o
 circle-o-notch
 circle-thin
 clipboard
 clock-o
-close (alias)
+clone
 cloud
 cloud-download
 cloud-upload
-cny (alias)
 code
 code-fork
 codepen
+codiepie
 coffee
 cog
 cogs
 columns
 comment
 comment-o
+commenting
+commenting-o
 comments
 comments-o
 compass
 compress
-copy (alias)
+connectdevelop
+contao
 copyright
+creative-commons
 credit-card
+credit-card-alt
 crop
 crosshairs
 css3
 cube
 cubes
-cut (alias)
 cutlery
-dashboard (alias)
+dashcube
 database
-dedent (alias)
+deaf
 delicious
 desktop
 deviantart
+diamond
 digg
-dollar (alias)
 dot-circle-o
 download
 dribbble
 dropbox
 drupal
-edit (alias)
+edge
 eject
 ellipsis-h
 ellipsis-v
@@ -166,20 +191,22 @@ empire
 envelope
 envelope-o
 envelope-square
+envira
 eraser
 eur
-euro (alias)
 exchange
 exclamation
 exclamation-circle
 exclamation-triangle
 expand
+expeditedssl
 external-link
 external-link-square
 eye
 eye-slash
 eyedropper
 facebook
+facebook-official
 facebook-square
 fast-backward
 fast-forward
@@ -192,27 +219,23 @@ file-audio-o
 file-code-o
 file-excel-o
 file-image-o
-file-movie-o (alias)
 file-o
 file-pdf-o
-file-photo-o (alias)
-file-picture-o (alias)
 file-powerpoint-o
-file-sound-o (alias)
 file-text
 file-text-o
 file-video-o
 file-word-o
-file-zip-o (alias)
 files-o
 film
 filter
 fire
 fire-extinguisher
+firefox
+first-order
 flag
 flag-checkered
 flag-o
-flash (alias)
 flask
 flickr
 floppy-o
@@ -221,6 +244,10 @@ folder-o
 folder-open
 folder-open-o
 font
+font-awesome
+fonticons
+fort-awesome
+forumbee
 forward
 foursquare
 frown-o
@@ -228,48 +255,68 @@ futbol-o
 gamepad
 gavel
 gbp
-ge (alias)
-gear (alias)
-gears (alias)
+genderless
+get-pocket
+gg
+gg-circle
 gift
 git
 git-square
 github
 github-alt
 github-square
-gittip
+gitlab
 glass
+glide
+glide-g
 globe
 google
 google-plus
+google-plus-official
 google-plus-square
 google-wallet
 graduation-cap
-group (alias)
+gratipay
 h-square
 hacker-news
+hand-lizard-o
 hand-o-down
 hand-o-left
 hand-o-right
 hand-o-up
+hand-paper-o
+hand-peace-o
+hand-pointer-o
+hand-rock-o
+hand-scissors-o
+hand-spock-o
+hashtag
 hdd-o
 header
 headphones
 heart
 heart-o
+heartbeat
 history
 home
 hospital-o
+hourglass
+hourglass-end
+hourglass-half
+hourglass-o
+hourglass-start
+houzz
 html5
+i-cursor
 ils
-image (alias)
 inbox
 indent
+industry
 info
 info-circle
 inr
 instagram
-institution (alias)
+internet-explorer
 ioxhost
 italic
 joomla
@@ -283,14 +330,11 @@ laptop
 lastfm
 lastfm-square
 leaf
-legal (alias)
+leanpub
 lemon-o
 level-down
 level-up
-life-bouy (alias)
-life-buoy (alias)
 life-ring
-life-saver (alias)
 lightbulb-o
 line-chart
 link
@@ -307,32 +351,50 @@ long-arrow-down
 long-arrow-left
 long-arrow-right
 long-arrow-up
+low-vision
 magic
 magnet
-mail-forward (alias)
-mail-reply (alias)
-mail-reply-all (alias)
 male
+map
 map-marker
+map-o
+map-pin
+map-signs
+mars
+mars-double
+mars-stroke
+mars-stroke-h
+mars-stroke-v
 maxcdn
 meanpath
+medium
 medkit
 meh-o
+mercury
 microphone
 microphone-slash
 minus
 minus-circle
 minus-square
 minus-square-o
+mixcloud
 mobile
-mobile-phone (alias)
+modx
 money
 moon-o
-mortar-board (alias)
+motorcycle
+mouse-pointer
 music
-navicon (alias)
+neuter
 newspaper-o
+object-group
+object-ungroup
+odnoklassniki
+odnoklassniki-square
+opencart
 openid
+opera
+optin-monster
 outdent
 pagelines
 paint-brush
@@ -340,21 +402,24 @@ paper-plane
 paper-plane-o
 paperclip
 paragraph
-paste (alias)
 pause
+pause-circle
+pause-circle-o
 paw
 paypal
 pencil
 pencil-square
 pencil-square-o
+percent
 phone
 phone-square
-photo (alias)
 picture-o
 pie-chart
 pied-piper
 pied-piper-alt
+pied-piper-pp
 pinterest
+pinterest-p
 pinterest-square
 plane
 play
@@ -367,64 +432,67 @@ plus-square
 plus-square-o
 power-off
 print
+product-hunt
 puzzle-piece
 qq
 qrcode
 question
 question-circle
+question-circle-o
 quote-left
 quote-right
-ra (alias)
 random
 rebel
 recycle
 reddit
+reddit-alien
 reddit-square
 refresh
-remove (alias)
+registered
 renren
-reorder (alias)
 repeat
 reply
 reply-all
 retweet
-rmb (alias)
 road
 rocket
-rotate-left (alias)
-rotate-right (alias)
-rouble (alias)
 rss
 rss-square
 rub
-ruble (alias)
-rupee (alias)
-save (alias)
+safari
 scissors
+scribd
 search
 search-minus
 search-plus
-send (alias)
-send-o (alias)
+sellsy
+server
 share
 share-alt
 share-alt-square
 share-square
 share-square-o
-shekel (alias)
-sheqel (alias)
 shield
+ship
+shirtsinbulk
+shopping-bag
+shopping-basket
 shopping-cart
 sign-in
+sign-language
 sign-out
 signal
+simplybuilt
 sitemap
+skyatlas
 skype
 slack
 sliders
 slideshare
 smile-o
-soccer-ball-o (alias)
+snapchat
+snapchat-ghost
+snapchat-square
 sort
 sort-alpha-asc
 sort-alpha-desc
@@ -432,10 +500,8 @@ sort-amount-asc
 sort-amount-desc
 sort-asc
 sort-desc
-sort-down (alias)
 sort-numeric-asc
 sort-numeric-desc
-sort-up (alias)
 soundcloud
 space-shuttle
 spinner
@@ -447,8 +513,6 @@ stack-exchange
 stack-overflow
 star
 star-half
-star-half-empty (alias)
-star-half-full (alias)
 star-half-o
 star-o
 steam
@@ -456,15 +520,20 @@ steam-square
 step-backward
 step-forward
 stethoscope
+sticky-note
+sticky-note-o
 stop
+stop-circle
+stop-circle-o
+street-view
 strikethrough
 stumbleupon
 stumbleupon-circle
 subscript
+subway
 suitcase
 sun-o
 superscript
-support (alias)
 table
 tablet
 tachometer
@@ -472,6 +541,7 @@ tag
 tags
 tasks
 taxi
+television
 tencent-weibo
 terminal
 text-height
@@ -479,6 +549,7 @@ text-width
 th
 th-large
 th-list
+themeisle
 thumb-tack
 thumbs-down
 thumbs-o-down
@@ -489,60 +560,75 @@ times
 times-circle
 times-circle-o
 tint
-toggle-down (alias)
-toggle-left (alias)
 toggle-off
 toggle-on
-toggle-right (alias)
-toggle-up (alias)
+trademark
+train
+transgender
+transgender-alt
 trash
 trash-o
 tree
 trello
+tripadvisor
 trophy
 truck
 try
 tty
 tumblr
 tumblr-square
-turkish-lira (alias)
 twitch
 twitter
 twitter-square
 umbrella
 underline
 undo
+universal-access
 university
-unlink (alias)
 unlock
 unlock-alt
-unsorted (alias)
 upload
+usb
 usd
 user
 user-md
+user-plus
+user-secret
+user-times
 users
+venus
+venus-double
+venus-mars
+viacoin
+viadeo
+viadeo-square
 video-camera
+vimeo
 vimeo-square
 vine
 vk
+volume-control-phone
 volume-down
 volume-off
 volume-up
-warning (alias)
-wechat (alias)
 weibo
 weixin
+whatsapp
 wheelchair
+wheelchair-alt
 wifi
+wikipedia-w
 windows
-won (alias)
 wordpress
+wpbeginner
+wpforms
 wrench
 xing
 xing-square
+y-combinator
 yahoo
 yelp
-yen (alias)
+yoast
 youtube
 youtube-play
+youtube-square
