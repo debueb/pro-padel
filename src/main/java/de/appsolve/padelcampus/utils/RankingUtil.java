@@ -315,7 +315,7 @@ public class RankingUtil {
         return setMap;
     }
 
-    public List<ScoreEntry> getScores(Collection<Participant> participants, List<Game> eventGames) {
+    public List<ScoreEntry> getScores(Collection<Participant> participants, Collection<Game> eventGames) {
         List<ScoreEntry> scoreEntries = new ArrayList<>();
         for (Participant p : participants) {
             scoreEntries.add(getScore(p, eventGames));

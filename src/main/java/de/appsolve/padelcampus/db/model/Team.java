@@ -13,6 +13,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -36,6 +37,9 @@ public class Team extends Participant{
     @NotEmpty(message = "{NotEmpty.teamPlayers}")
     @OrderBy("firstName, lastName")
     private Set<Player> players;
+    
+    @ManyToOne
+    private Community community;
 
     public String getName() {
         return name;
@@ -51,6 +55,14 @@ public class Team extends Participant{
 
     public void setPlayers(Set<Player> players) {
         this.players = players;
+    }
+
+    public Community getCommunity() {
+        return community;
+    }
+
+    public void setCommunity(Community community) {
+        this.community = community;
     }
 
     @Override

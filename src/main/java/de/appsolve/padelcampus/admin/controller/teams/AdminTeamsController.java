@@ -7,19 +7,19 @@
 package de.appsolve.padelcampus.admin.controller.teams;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
+import de.appsolve.padelcampus.db.dao.CommunityDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
-import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.db.model.Community;
 import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.spring.CommunityPropertyEditor;
 import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
 import de.appsolve.padelcampus.utils.TeamUtil;
-import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -49,7 +49,13 @@ public class AdminTeamsController extends AdminBaseController<Team> {
     TeamDAOI teamDAO;
     
     @Autowired
+    CommunityDAOI communityDAO;
+    
+    @Autowired
     PlayerCollectionEditor playerCollectionEditor;
+    
+    @Autowired
+    CommunityPropertyEditor communityPropertyEditor;
     
     @Override
     public ModelAndView showIndex(HttpServletRequest request, @PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable, @RequestParam(required = false, name = "search") String search){
@@ -59,6 +65,14 @@ public class AdminTeamsController extends AdminBaseController<Team> {
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Set.class, "players", playerCollectionEditor);
+        binder.registerCustomEditor(Community.class, communityPropertyEditor);
+    }
+    
+    @Override
+    protected ModelAndView getEditView(Team model){
+        ModelAndView mav =  super.getEditView(model);
+        mav.addObject("Communities", communityDAO.findAll());
+        return mav;
     }
     
     @Override

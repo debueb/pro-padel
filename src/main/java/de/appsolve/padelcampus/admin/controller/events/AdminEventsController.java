@@ -21,9 +21,11 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
+import de.appsolve.padelcampus.db.model.Community;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
+import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.spring.TeamCollectionEditor;
 import de.appsolve.padelcampus.utils.EventsUtil;
@@ -33,6 +35,7 @@ import de.appsolve.padelcampus.utils.RankingUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -120,6 +123,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
     @RequestMapping(value={"add", "edit/{modelId}"}, method=POST)
     public ModelAndView postEditView(@ModelAttribute("Model") Event model, HttpServletRequest request, BindingResult result){
         validator.validate(model, result);
+        ModelAndView editView = getEditView(model);
         
         if (model.getId()!=null){
             
@@ -144,26 +148,87 @@ public class AdminEventsController extends AdminBaseController<Event>{
         }
         
         if (result.hasErrors()){
-            return getEditView(model);
+            return editView;
         }
-        model = getDAO().saveOrUpdate(model);
         
         switch (model.getEventType()){
+            
             case SingleRoundRobin:
+                model = getDAO().saveOrUpdate(model);
                 List<Game> eventGames = gameDAO.findByEvent(model);
                 
                 //remove games that have not been played yet
                 removeGamesWithoutGameSets(eventGames);
                 
                 gameUtil.createMissingGames(model, eventGames, model.getParticipants());
-                break;
+                return redirectToIndex(request);
+            
+            case CommunityRoundRobin:
+                if (model.getCalendarConfig() != null) {
+                    result.reject("CalendarConfigNotSupportedForCommunityRoundRobin");
+                    return editView;
+                }
+                
+                if (!model.getParticipants().isEmpty()){
+                    Map<Community, Set<Team>> communityTeamMap = new HashMap<>();
+                    List<Team> teamsWithoutCommunity = new ArrayList<>();
+                    for (Team team: model.getTeams()){
+                        if (team.getCommunity() == null){
+                            teamsWithoutCommunity.add(team);
+                        } else {
+                            Set<Team> teams = communityTeamMap.get(team.getCommunity());
+                            if (teams == null){
+                                teams = new HashSet<>();
+                            }
+                            teams.add(team);
+                            communityTeamMap.put(team.getCommunity(), teams);
+                        }
+                    }
+                    if (!teamsWithoutCommunity.isEmpty()){
+                        result.addError(new ObjectError("id", msg.get("TheFollowingTeamsMustBePartOfACommunity", new Object[]{teamsWithoutCommunity})));
+                        return editView;
+                    }
+                    if (communityTeamMap.keySet().size()!=2){
+                        result.reject("ChooseTeamsFromTwoDifferentCommunities");
+                        return editView;
+                    }
+                    model = getDAO().saveOrUpdate(model);
+                    
+                    List<Game> existingGames = gameDAO.findByEvent(model);
+                    
+                    //clean
+                    removeGamesWithoutGameSets(existingGames);
+                    
+                    //generate games
+                    Collection<Set<Team>> teamSets = communityTeamMap.values();
+                    for (Set<Team> teamSet: teamSets){ //one community
+                        for (Team team: teamSet){
+                            for (Set<Team> teamSet2: teamSets){ //other community
+                                if (!teamSet2.contains(team)){
+                                    for (Team team2: teamSet2){
+                                        Set<Participant> participants = new HashSet<>();
+                                        participants.add(team);
+                                        participants.add(team2);
+                                        gameUtil.createMissingGames(model, existingGames, participants);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                getDAO().saveOrUpdate(model);
+                return redirectToIndex(request);
+            
             case GroupKnockout:
+                model = getDAO().saveOrUpdate(model);
                 if (model.getCalendarConfig() == null && !model.getParticipants().isEmpty()){
                     return redirectToGroupDraws(model);
                 } else {
                     return redirectToIndex(request);
                 }
+            
             case Knockout:
+                model = getDAO().saveOrUpdate(model);
                 if (model.getCalendarConfig() == null && !model.getParticipants().isEmpty()){
                     return redirectToDraws(model);
                 } else {
@@ -171,11 +236,8 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 }
             default:
                 result.addError(new ObjectError("id", "Unsupported event type "+model.getEventType()));
-                return getEditView(model);
+                return editView;
         }
-        
-        
-        return redirectToIndex(request);
     }
     
     @RequestMapping(value={"edit/{eventId}/draws"}, method=GET)

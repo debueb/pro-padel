@@ -9,11 +9,13 @@ package de.appsolve.padelcampus.controller.events;
 import de.appsolve.padelcampus.constants.BookingType;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.controller.BaseController;
+import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
+import de.appsolve.padelcampus.db.model.Community;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.GameSet;
@@ -28,8 +30,10 @@ import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
+import de.appsolve.padelcampus.utils.SortUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -118,6 +122,57 @@ public class EventsController extends BaseController{
         return mav;
     }
     
+    @RequestMapping("event/{eventId}/communities")
+    public ModelAndView getEventCommunities(@PathVariable("eventId") Long eventId){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        SortedMap<Participant, BigDecimal> rankedParticipants = rankingUtil.getRankedParticipants(event);
+        Map<Community, SortedMap<Participant, BigDecimal>> communityMap = new HashMap<>();
+        for (Participant participant: rankedParticipants.keySet()){
+            if (participant instanceof Team){
+                Team team = (Team) participant;
+                if (team.getCommunity() != null){
+                    SortedMap<Participant, BigDecimal> communityParticipantMap = communityMap.get(team.getCommunity());
+                    if (communityParticipantMap == null){
+                        communityParticipantMap = new TreeMap<>();
+                    }
+                    communityParticipantMap.put(team, rankedParticipants.get(team));
+                    SortedMap<Participant, BigDecimal> sortedMap = SortUtil.sortMap(communityParticipantMap);
+                    communityMap.put(team.getCommunity(), sortedMap);
+                }
+            }
+        }
+        ModelAndView mav = new ModelAndView("events/communityroundrobin/communities", "Model", event);
+        mav.addObject("CommunityMap", communityMap);
+        return mav;
+    }
+    
+    @RequestMapping("event/{eventId}/communitygames")
+    public ModelAndView getEventCommunityGames(@PathVariable("eventId") Long eventId){
+        Event event = eventDAO.findByIdFetchWithGames(eventId);
+        ModelAndView mav = new ModelAndView("events/communityroundrobin/communitygames", "Model", event);
+        
+        event = eventDAO.findByIdFetchWithGames(eventId);
+        
+        //Community // Participant // Game // GameResult
+        SortedMap<Community, Map<Participant, Map<Game, String>>> communityParticipantGameResultMap = new TreeMap<>();
+        
+        Map<Participant, Map<Game, String>> participantGameResultMap = getParticipantGameResultMap(event.getGames());
+        for (Participant p: participantGameResultMap.keySet()){
+            if (p instanceof Team){
+                Team team = (Team) p;
+                Map<Participant, Map<Game, String>> participantMap = communityParticipantGameResultMap.get(team.getCommunity());
+                if (participantMap == null){
+                    participantMap = new HashMap<>();
+                }
+                participantMap.put(p, participantGameResultMap.get(p));
+                communityParticipantGameResultMap.put(team.getCommunity(), participantMap);
+            }
+        }
+        mav.addObject("GroupParticipantGameResultMap", communityParticipantGameResultMap);
+        gameUtil.addGameResultMap(mav, event.getGames());
+        return mav;
+    }
+    
     @RequestMapping("event/{eventId}/groupgames")
     public ModelAndView getEventGroupGames(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithGames(eventId);
@@ -133,24 +188,12 @@ public class EventsController extends BaseController{
         Iterator<Map.Entry<Integer, List<Game>>> iterator = groupGameMap.entrySet().iterator();
         while (iterator.hasNext()){
             Map.Entry<Integer, List<Game>> entry = iterator.next();
-            Map<Participant, Map<Game, String>> participantGameResultMap = new HashMap<>();
-            for (Game game: entry.getValue()){
-                for (Participant p: game.getParticipants()){
-                    Map<Game, String> gameResultMap = participantGameResultMap.get(p);
-                    if (gameResultMap == null){
-                        gameResultMap = new HashMap<>();
-                    }
-                    String result = gameUtil.getGameResult(game, p);
-                    gameResultMap.put(game, result);
-                    participantGameResultMap.put(p, gameResultMap);
-                }
-            }
+            Map<Participant, Map<Game, String>> participantGameResultMap = getParticipantGameResultMap(entry.getValue());
             Integer group = entry.getKey();
             groupParticipantGameResultMap.put(group, participantGameResultMap);
         }
         mav.addObject("GroupParticipantGameResultMap", groupParticipantGameResultMap);
         mav.addObject("RoundGameMap", roundGameMap);
-        
         gameUtil.addGameResultMap(mav, event.getGames());
         return mav;
     }
@@ -236,6 +279,30 @@ public class EventsController extends BaseController{
         }
     }
     
+    @RequestMapping(method=GET, value="event/{eventId}/score")
+    public ModelAndView getScore(@PathVariable("eventId") Long eventId, HttpServletRequest request){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        SortedMap<Community, ScoreEntry> communityScoreMap = new TreeMap<>();
+        List<ScoreEntry> scores = rankingUtil.getScores(event.getParticipants(), event.getGames());
+        for (ScoreEntry scoreEntry: scores){
+            Participant p = scoreEntry.getParticipant();
+            if (p instanceof Team){
+                Team team = (Team) p;
+                ScoreEntry communityScore = communityScoreMap.get(team.getCommunity());
+                if (communityScore == null){
+                    communityScore = new ScoreEntry();
+                }
+                communityScore.add(scoreEntry);
+                communityScoreMap.put(team.getCommunity(), communityScore);
+            }
+        }
+        
+        ModelAndView scoreView = new ModelAndView("events/communityroundrobin/score");
+        scoreView.addObject("Model", event);
+        scoreView.addObject("CommunityScoreMap", communityScoreMap);
+        return scoreView;
+    }
+    
     private ModelAndView getKnockoutView(Event event, SortedMap<Integer, List<Game>> roundGameMap) {
         ModelAndView mav = new ModelAndView("events/knockout/knockoutgames");
         mav.addObject("Model", event);
@@ -284,6 +351,22 @@ public class EventsController extends BaseController{
                 throw new Exception(msg.get("AlreadyParticipatesInThisEvent", new Object[]{user}));
             }
         }
+    }
+
+    private Map<Participant, Map<Game, String>> getParticipantGameResultMap(Collection<Game> games) {
+        Map<Participant, Map<Game, String>> participantGameResultMap = new HashMap<>();
+        for (Game game: games){
+            for (Participant p: game.getParticipants()){
+                Map<Game, String> gameResultMap = participantGameResultMap.get(p);
+                if (gameResultMap == null){
+                    gameResultMap = new HashMap<>();
+                }
+                String result = gameUtil.getGameResult(game, p);
+                gameResultMap.put(game, result);
+                participantGameResultMap.put(p, gameResultMap);
+            }
+        }
+        return participantGameResultMap;
     }
 
 }

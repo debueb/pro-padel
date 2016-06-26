@@ -20,9 +20,26 @@
                     <div class="alert alert-info" role="alert"><fmt:message key="LeaveTeamNameEmptyForGeneratedTeamName"/></div>
                     
                     <div class="unit">
-                        <fmt:message key="TeamName" var="TeamName"/>
-                        <spf:input path="name" type="text" class="form-control form-top-element" placeholder="${TeamName}" />
+                        <div class="relative">
+                            <spf:input path="name" type="text" class="form-control form-top-element"/>
+                            <div class="explanation"><fmt:message key="TeamName"/></div>
+                        </div>
 
+                        <c:if test="${not empty Communities}">
+                            <div class="relative">
+                                <spf:select 
+                                    path="community" 
+                                    class="form-control select-simple form-center-element"
+                                    data-container="body" 
+                                    >
+                                    <fmt:message key="None" var="None"/>
+                                    <spf:option value="" label="${None}"/>
+                                    <spf:options items="${Communities}" itemValue="id"/>
+                                </spf:select>
+                                <span class="explanation-select"><fmt:message key="Community"/></span>
+                            </div>
+                        </c:if>
+                        
                         <fmt:message key="Players" var="Players"/>
                         <div class="relative">
                             <fmt:message key="CurrentlySelected" var="CurrentlySelected"/>

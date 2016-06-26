@@ -14,7 +14,7 @@
                             <table class="table table-bordered table-scores">
                                 <thead>
                                 <th class="text-center">#</th>
-                                <th>Team</th>
+                                <th><fmt:message key="Team"/></th>
                                 <th class="text-center"><fmt:message key="Points"/></th>
                         <th class="text-center"><fmt:message key="Matches"/></th>
                         <th class="text-center"><fmt:message key="Sets"/></th>

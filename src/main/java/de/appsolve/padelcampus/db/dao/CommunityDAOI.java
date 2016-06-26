@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.appsolve.padelcampus.constants;
+
+package de.appsolve.padelcampus.db.dao;
+
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
+import de.appsolve.padelcampus.db.model.Community;
 
 /**
  *
  * @author dominik
  */
-public enum EventType {
+public interface CommunityDAOI extends BaseEntityDAOI<Community>{
     
-    SingleRoundRobin,
-    CommunityRoundRobin,
-    Knockout,
-    GroupKnockout
 }

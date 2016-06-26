@@ -128,4 +128,14 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
         int oDiff = oWon - oLost;
         return oDiff - diff;
     }
+
+    public void add(ScoreEntry scoreEntry) {
+        this.totalPoints    += scoreEntry.getTotalPoints();
+        this.gamesPlayed    += scoreEntry.getGamesPlayed();
+        this.gamesWon       += scoreEntry.getGamesWon();
+        this.matchesPlayed  += scoreEntry.getMatchesPlayed();
+        this.matchesWon     += scoreEntry.getMatchesWon();
+        this.setsPlayed     += scoreEntry.getSetsPlayed();
+        this.setsWon        += scoreEntry.getSetsWon();
+    }
 }

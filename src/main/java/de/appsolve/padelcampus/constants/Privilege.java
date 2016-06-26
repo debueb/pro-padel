@@ -18,6 +18,7 @@ public enum Privilege {
     ManageGeneral("/admin/general.*"),
     ManageNews("/admin/news.*"),
     ManageEvents("/admin/events.*"),
+    ManageCommunities("/admin/communities.*"),
     ManagePlayers("/admin/players.*"),
     ManageTeams("/admin/teams.*"),
     ManageBookings("/admin/bookings.*"),

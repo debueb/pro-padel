@@ -32,7 +32,7 @@
                     </div>
                     
                     <div class="relative">
-                        <spf:select path="gender" class="select-simple form-control" data-style="form-center-element" data-container="body">
+                        <spf:select path="gender" class="select-simple form-control select-toggle" data-style="form-center-element" data-container="body">
                             <c:forEach var="Gender" items="${Genders}">
                                 <spf:option value="${Gender}"><fmt:message key="Mode_${Gender}"/></spf:option>
                             </c:forEach>
@@ -108,6 +108,16 @@
                         <div class="explanation-select"><fmt:message key="MaxNumberOfGamesInFinalSet"/></div>
                     </div>
 
+                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-Knockout relative">
+                        <spf:select path="calendarConfig" class="select-simple form-control" data-style="form-center-element" data-container="body">
+                            <option value=""><fmt:message key="None"/></option>
+                            <spf:options itemValue="id" items="${CalendarConfigs}"/>
+                        </spf:select>
+                        <span class="explanation-select"><fmt:message key="CalendarConfigOffer"/></span>
+                    
+                        <div class="alert alert-info" style="border-radius: 0"><fmt:message key="NewEventDesc"/></div>
+                    </div>
+                    
                     <div class="relative">
                         <fmt:message key="CurrentlySelected" var="CurrentlySelected"/>
                         <fmt:message key="PleaseChoose" var="EmptyTitle"/>
@@ -118,7 +128,7 @@
                         <fmt:message key="StatusSearching" var="StatusSearching"/>
                         <spf:select 
                             path="participants" 
-                            class="form-control form-center-element select-ajax-search"
+                            class="form-control form-bottom-element select-ajax-search"
                             multiple="multiple"
                             data-container="body" 
                             data-live-search="true"
@@ -135,16 +145,6 @@
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Participants"/></span>
                     </div>
-                    
-                    <div class="relative">
-                        <spf:select path="calendarConfig" class="select-simple form-control" data-style="form-bottom-element" data-container="body">
-                            <option value=""><fmt:message key="PleaseChoose"/></option>
-                            <spf:options itemValue="id" items="${CalendarConfigs}"/>
-                        </spf:select>
-                        <span class="explanation-select"><fmt:message key="CalendarConfigOffer"/></span>
-                    </div>
-                    
-                    <div class="alert alert-info unit"><fmt:message key="NewEventDesc"/></div>
                     
                     <div class="unit">
                         <spf:checkbox path="active" id="active"/><label for="active"><fmt:message key="Active"/>&nbsp;(<fmt:message key="PubliclyAvailable"/>)</label>

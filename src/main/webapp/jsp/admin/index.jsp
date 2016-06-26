@@ -16,7 +16,7 @@
                     <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/customers"/>
                         <jsp:param name="key" value="Customers"/>
-                        <jsp:param name="icon" value="building-o"/>
+                        <jsp:param name="icon" value="building"/>
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/general"/>
@@ -27,6 +27,16 @@
                         <jsp:param name="href" value="/admin/bookings"/>
                         <jsp:param name="key" value="Bookings"/>
                         <jsp:param name="icon" value="calendar"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/reports"/>
+                        <jsp:param name="key" value="Reports"/>
+                        <jsp:param name="icon" value="pie-chart"/>
+                    </jsp:include>
+                     <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/communities"/>
+                        <jsp:param name="key" value="Communities"/>
+                        <jsp:param name="icon" value="signing"/>
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/players"/>
@@ -47,11 +57,6 @@
                         <jsp:param name="href" value="/admin/contact"/>
                         <jsp:param name="key" value="Contact"/>
                         <jsp:param name="icon" value="envelope"/>
-                    </jsp:include>
-                    <jsp:include page="/jsp/include/list-group-item.jsp">
-                        <jsp:param name="href" value="/admin/reports"/>
-                        <jsp:param name="key" value="Reports"/>
-                        <jsp:param name="icon" value="pie-chart"/>
                     </jsp:include>
                 </div>
             </div>

@@ -7,22 +7,14 @@
 package de.appsolve.padelcampus.controller.events;
 
 import de.appsolve.padelcampus.controller.BaseController;
-import static de.appsolve.padelcampus.constants.Constants.MATCH_PLAY_FACTOR;
-import static de.appsolve.padelcampus.constants.Constants.MATCH_WIN_FACTOR;
 import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.GameSetDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
-import de.appsolve.padelcampus.db.model.GameSet;
-import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.utils.RankingUtil;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
