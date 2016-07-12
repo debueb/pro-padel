@@ -68,16 +68,19 @@ body {
     height: 100%;
 }
 .footer{
-    display: table-row;
-}
-.footer-container{
-    background-color: white;
-    margin-top: 2*@spacing;
-    margin-bottom: 2*@spacing;
-    padding: 5px;
-    border-radius: @border-radius-base;
-    overflow: hidden;
+    height: 50px;
+    display: table-cell;
+    vertical-align: middle;
     text-align: center;
+    color: @white-gray;
+    background-color: @navBarColor2;
+    #gradient > .vertical(@navBarColor2, @navBarColor);
+    opacity: .9;
+    border-top: 1px solid white;
+    font-size: 11px;
+}
+.footer a{
+    color: @white;
 }
 textarea, input[type="text"], input[type="email"], input[type="submit"], input[type="password"], input[type="tel"], input[type="number"]{
     -webkit-appearance: none;
@@ -709,6 +712,9 @@ table.table-round > tbody > tr > td{
     display: table;
     width: 100%;
     height: 100%;
+}
+#content{
+    margin-bottom: 20px;
 }
 #content, #spinner{
     transition: opacity .25s ease-in-out;
