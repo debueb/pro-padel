@@ -9,30 +9,31 @@
             <div class="panel-heading">
                 <h4><fmt:message key="Entries"/></h4>
             </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <th></th>
+                    <th><fmt:message key="Title"/></th>
+                    <th><fmt:message key="Date"/></th>
+                    <th class="delete"><fmt:message key="Delete"/></th>
+                    </thead>
+                    <tbody class="table-sortable">
+                        <c:forEach var="Model" items="${Models}">
+                            <c:set var="editUrl" value="/admin/general/modules/page/${Module.id}/edit/${Model.id}"/>
+                            <tr data-id="${Model.id}">
+                                <td class="sortable-handle"><i class="fa fa-arrows-v"></i></td>
+                                <td><a class="ajaxify" href="${editUrl}">${Model.title}</a></td>
+                                <td><a class="ajaxify" href="${editUrl}">${Model.lastModified}</a></td>
+                                <td class="delete"><a href="/admin/general/modules/page/${Module.id}/${Model.id}/delete" class="fa fa-minus-circle ajaxify"></a></td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+                </div>
+                <a href="/admin/general/modules/page/${Module.id}/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="AddEntry"/></a>
+            </div>
         </div>
-
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-                <thead>
-                <th></th>
-                <th><fmt:message key="Title"/></th>
-                <th><fmt:message key="Date"/></th>
-                <th class="delete"><fmt:message key="Delete"/></th>
-                </thead>
-                <tbody class="table-sortable">
-                    <c:forEach var="Model" items="${Models}">
-                        <c:set var="editUrl" value="/admin/general/modules/page/${Module.id}/edit/${Model.id}"/>
-                        <tr data-id="${Model.id}">
-                            <td class="sortable-handle"><i class="fa fa-arrows-v"></i></td>
-                            <td><a class="ajaxify" href="${editUrl}">${Model.title}</a></td>
-                            <td><a class="ajaxify" href="${editUrl}">${Model.lastModified}</a></td>
-                            <td class="delete"><a href="/admin/general/modules/page/${Module.id}/${Model.id}/delete" class="fa fa-minus-circle ajaxify"></a></td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
-        <a href="/admin/general/modules/page/${Module.id}/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="AddEntry"/></a>
     </div>
 </div>
 
