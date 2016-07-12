@@ -11,13 +11,12 @@
             </div>
         </div>
 
-
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>
                 <th></th>
-                <th><fmt:message key="Date"/></th>
                 <th><fmt:message key="Title"/></th>
+                <th><fmt:message key="Date"/></th>
                 <th class="delete"><fmt:message key="Delete"/></th>
                 </thead>
                 <tbody class="table-sortable">
@@ -25,8 +24,8 @@
                         <c:set var="editUrl" value="/admin/general/modules/page/${Module.id}/edit/${Model.id}"/>
                         <tr data-id="${Model.id}">
                             <td class="sortable-handle"><i class="fa fa-arrows-v"></i></td>
-                            <td><a class="ajaxify" href="${editUrl}">${Model.lastModified}</a></td>
                             <td><a class="ajaxify" href="${editUrl}">${Model.title}</a></td>
+                            <td><a class="ajaxify" href="${editUrl}">${Model.lastModified}</a></td>
                             <td class="delete"><a href="/admin/general/modules/page/${Module.id}/${Model.id}/delete" class="fa fa-minus-circle ajaxify"></a></td>
                         </tr>
                     </c:forEach>
