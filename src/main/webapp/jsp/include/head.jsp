@@ -100,15 +100,14 @@
                                 <div class="navbar-brand"><img src="${companyLogoPath[sessionScope.customer.name]}" class="customerLogo"/>${pageContext.request.serverName}</div>
                             </c:when>
                             <c:otherwise>
-                                <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a><a class="navbar-icon home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>
+                                <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a>
+                                <a class="navbar-icon navbar-hover home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>
                             </c:otherwise>
                             </c:choose>
                         <a class="navbar-icon navbar-toggle">
                             <div class="menu-line menu-line-1"></div>
                             <div class="menu-line menu-line-2"></div>
                             <div class="menu-line menu-line-3"></div>
-
-                            <!--<span class="fa fa-lg fa-bars"></span>-->
                         </a>        
                     </div>
                     <div class="collapse navbar-collapse">
