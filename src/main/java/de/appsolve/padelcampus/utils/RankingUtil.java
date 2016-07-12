@@ -234,7 +234,7 @@ public class RankingUtil {
         if (setsWon > (setsPlayed - setsWon)) {
             return new BigDecimal(1);
         } else if (setsWon < (setsPlayed - setsWon)) {
-            return new BigDecimal(-1);
+            return new BigDecimal(0);
         }
         return new BigDecimal(0.5);
     }
