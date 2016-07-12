@@ -24,6 +24,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,7 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,7 +128,14 @@ public class RankingUtil {
     
     private SortedMap<Participant, BigDecimal> getRanking(List<Game> games) {
         rankingMap = new TreeMap<>();
-        for (Game game : games) {
+        SortedSet<Game> sortedGames = new TreeSet<>(new Comparator<Game>() {
+            @Override
+            public int compare(Game o1, Game o2) {
+                return o1.getId().compareTo(o2.getId());
+            }
+        });
+        sortedGames.addAll(games);
+        for (Game game : sortedGames) {
             Set<Participant> participants = game.getParticipants();
             if (participants.size() != 2) {
                 LOG.warn("Skipping game " + game + " as it does not have 2 participants");
