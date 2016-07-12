@@ -10,10 +10,8 @@
                 <h4><fmt:message key="AllPlayers"/></h4>
             </div>
             <div class="panel-body">
-
-                <div class="">
-                    <jsp:include page="/jsp/admin/include/search.jsp"/>
-                    
+                <jsp:include page="/jsp/admin/include/search.jsp"/>
+                <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead>
                         <th><fmt:message key="FirstName"/></th>
@@ -37,12 +35,8 @@
                             </c:forEach>
                         </tbody>
                     </table>
-                        
-                    <jsp:include page="/jsp/admin/include/pagination.jsp"/>
                 </div>
-                
-                
-                        
+                <jsp:include page="/jsp/admin/include/pagination.jsp"/>
                 <a href="/admin/players/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewPlayer"/></a>
             </div>
         </div>
