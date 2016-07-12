@@ -8,8 +8,6 @@ package de.appsolve.padelcampus.db.model;
 
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.ModuleType;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -52,6 +50,10 @@ public class Module extends SortableEntity{
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<EventType> eventTypes;
+    
+    @NotEmpty(message = "{NotEmpty.description}")
+    @Column(length = 8000)
+    private String description;
     
     public ModuleType getModuleType() {
         return moduleType;
@@ -111,6 +113,14 @@ public class Module extends SortableEntity{
         }
         moduleName = moduleName.replace(" ", "-");
         return moduleName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

@@ -10,44 +10,44 @@
             </div>
             <hr>
         </c:forEach>
-        <div class="list-group">
-            <c:forEach var="Module" items="${menuLinks[sessionScope.customer.name]}" varStatus="status">      
-                <jsp:include page="/jsp/include/list-group-item.jsp">
-                    <jsp:param name="icon" value="${Module.iconName}"/>
+            
+            
+        <div class="container-flex flex-wrap stretch" id="container-home">
+            <c:forEach var="Module" items="${menuLinks[sessionScope.customer.name]}" varStatus="status">   
+                <jsp:include page="/jsp/include/flip-item.jsp">
+                    <jsp:param name="url" value="${Module.url}"/>
                     <jsp:param name="title" value="${Module.title}"/>
-                    <jsp:param name="href" value="${Module.url}"/>
+                    <jsp:param name="iconName" value="${Module.iconName}"/>
+                    <jsp:param name="desc" value="${Module.description}"/>
                 </jsp:include>
             </c:forEach>
             <c:if test="${not empty user}">
-                <jsp:include page="/jsp/include/list-group-item.jsp">
-                    <jsp:param name="href" value="/account"/>
-                    <jsp:param name="key" value="Account"/>
-                    <jsp:param name="icon" value="child"/>
+                <fmt:message key="AccountDesc" var="desc"/>
+                <jsp:include page="/jsp/include/flip-item.jsp">
+                    <jsp:param name="url" value="/account"/>
+                    <jsp:param name="title" value="Account"/>
+                    <jsp:param name="iconName" value="child"/>
+                    <jsp:param name="desc" value="${desc}"/>
                 </jsp:include>
             </c:if>
             <c:if test="${not empty privileges}">
-                <jsp:include page="/jsp/include/list-group-item.jsp">
-                    <jsp:param name="href" value="/admin"/>
-                    <jsp:param name="key" value="Administration"/>
-                    <jsp:param name="icon" value="gear"/>
+                <fmt:message key="AdminDesc" var="desc"/>
+                <jsp:include page="/jsp/include/flip-item.jsp">
+                    <jsp:param name="url" value="/admin"/>
+                    <jsp:param name="title" value="Administration"/>
+                    <jsp:param name="iconName" value="gear"/>
+                    <jsp:param name="desc" value="${desc}"/>
                 </jsp:include>
             </c:if>
-            <c:choose>
-                <c:when test="${not empty user}">
-                    <jsp:include page="/jsp/include/list-group-item.jsp">
-                        <jsp:param name="href" value="/logout"/>
-                        <jsp:param name="key" value="Logout"/>
-                        <jsp:param name="icon" value="sign-out"/>
-                    </jsp:include>
-                </c:when>
-                <c:otherwise>
-                    <jsp:include page="/jsp/include/list-group-item.jsp">
-                        <jsp:param name="href" value="/login"/>
-                        <jsp:param name="key" value="Login"/>
-                        <jsp:param name="icon" value="sign-in"/>
-                    </jsp:include>
-                </c:otherwise>
-            </c:choose>
+            <c:if test="${empty user}">
+                <fmt:message key="LoginDesc" var="desc"/>
+                <jsp:include page="/jsp/include/flip-item.jsp">
+                    <jsp:param name="url" value="/login"/>
+                    <jsp:param name="title" value="Login"/>
+                    <jsp:param name="iconName" value="sign-in"/>
+                    <jsp:param name="desc" value="${desc}"/>
+                </jsp:include>
+            </c:if>
         </div>
     </div>
 </div>

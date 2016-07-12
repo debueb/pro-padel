@@ -93,30 +93,30 @@
     <body ontouchstart="">
         <div class="background">
             <div class="wrapper">
-                <c:if test="${empty param.embed}">
-                    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-                        <div class="navbar-header">
-                            <c:choose>
-                                <c:when test="${pageContext.request.requestURI == '/jsp/index.jsp'}">
-                                    <div class="navbar-brand"><img src="${companyLogoPath[sessionScope.customer.name]}" class="customerLogo"/>${pageContext.request.serverName}</div>
-                                </c:when>
-                                <c:otherwise>
-                                    <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a><a class="navbar-icon home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>
-                                </c:otherwise>
-                                </c:choose>
-                            <a class="navbar-icon navbar-toggle">
-                                <div class="menu-line menu-line-1"></div>
-                                <div class="menu-line menu-line-2"></div>
-                                <div class="menu-line menu-line-3"></div>
+                <div class="navbar navbar-default navbar-fixed-top">
+                    <div class="navbar-header">
+                        <c:choose>
+                            <c:when test="${pageContext.request.requestURI == '/jsp/index.jsp'}">
+                                <div class="navbar-brand"><img src="${companyLogoPath[sessionScope.customer.name]}" class="customerLogo"/>${pageContext.request.serverName}</div>
+                            </c:when>
+                            <c:otherwise>
+                                <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a><a class="navbar-icon home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>
+                            </c:otherwise>
+                            </c:choose>
+                        <a class="navbar-icon navbar-toggle">
+                            <div class="menu-line menu-line-1"></div>
+                            <div class="menu-line menu-line-2"></div>
+                            <div class="menu-line menu-line-3"></div>
 
-                                <!--<span class="fa fa-lg fa-bars"></span>-->
-                            </a>        
-                        </div>
-                        <div class="collapse navbar-collapse">
+                            <!--<span class="fa fa-lg fa-bars"></span>-->
+                        </a>        
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <div class="nav navbar-nav stretch">
                             <jsp:include page="/jsp/include/navigation.jsp"/>
                         </div>
                     </div>
-                </c:if>
+                </div>
                 <jsp:include page="/jsp/include/spinner.jsp"/>
                 <div id="shadow"></div>
                 <div id="site-menu">

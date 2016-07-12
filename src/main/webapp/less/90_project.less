@@ -117,31 +117,16 @@ textarea, input[type="text"], input[type="email"], input[type="submit"], input[t
     overflow-y: hidden !important;
     max-height: 50px;
 }
-.nav > li > a{
-    padding: 15px 10px;
-}
 #site-menu {
     overflow-y: auto;
     width: 200px;
     height: 100%;
     position: fixed;
     right: -200px;
-    padding: 0px 15px;
+    opacity: .9;
+    padding-bottom: 50px;
     background-color: @navBarColor2;
     #gradient > .vertical(@navBarColor2, @navBarColor);
-}
-#site-menu .nav{
-    position: absolute;
-    width: 100%;
-    overflow-y: auto;
-    padding-bottom: @navbar-height;
-}
-#site-menu .navbar-nav{
-    margin: 0 -15px;
-}
-#site-menu .nav li{
-    border-bottom: 1px solid @white-gray;
-    float: none;
 }
 #site-shadow{
     width: 100%;
@@ -154,15 +139,6 @@ textarea, input[type="text"], input[type="email"], input[type="submit"], input[t
 #site-canvas.show-nav,  #site-shadow.show-nav, #site-menu.show-nav, .footer.show-nav{
     -webkit-transform: translateX(-200px);
     transform: translateX(-200px);
-}
-#site-menu a{
-    color: white;
-}
-#site-menu a:hover{
-    background: @primaryLinkHoverColor;
-}
-a:active, a:hover{
-    color: @primaryColor;
 }
 /* end off canvas side menu */
 .form-control, .form-control:focus{
@@ -182,12 +158,16 @@ input[type="checkbox"] ~ label{
     font-size: 16px;
 }
 input[type="checkbox"] ~ label:before{
-    content: "\f204";
+    content: "\f096";
     margin-right: 5px;
+    width: 13px;
+    display: inline-block;
 }
 input[type="checkbox"]:checked ~ label:before{
-    content: "\f205";
+    content: "\f046";
     margin-right: 5px;
+    width: 13px;
+    display: inline-block;
 }
 .navbar-default, .panel-info > .panel-heading, .ui-widget-header{
     background-color: @navBarColor2;
@@ -313,9 +293,6 @@ table.table-scores tbody tr td{
     text-decoration: none;
     padding: 15px;
     cursor: pointer;
-}
-.home-icon{
-    margin-right: 15px;
 }
 .navbar-toggle .icon-bar{
     width: 15px;
@@ -984,11 +961,6 @@ div.product-chooser div.product-chooser-item input{
         font-size: 11px;
     }
 }
-@media (min-width: @grid-float-breakpoint){
-    .navbar-toggle, .list-menu-item-icon{
-        display: none;
-    }
-}
 
 /*http://www.bluthemes.com/blog/3/clearing-bootstrap-3-columns*/
 /*  Tablet  */
@@ -1088,6 +1060,7 @@ textarea {
   -moz-flex-flow: row wrap;
   -ms-flex-flow: row wrap;
   flex-flow: row wrap;
+  justify-content: center;
 }
 
 .col-flex {
@@ -1356,4 +1329,205 @@ th.normal{
     z-index: 100;
     margin-top: -50px;
     font-weight: bold;
+}
+/* jquery-ui fixes */
+.ui-state-default .ui-icon{
+    background-image: none !important;
+}
+.ui-state-active .ui-icon {
+    background-image: none !important;
+}
+
+@media (max-width: 767px){
+    .container-flex{
+            display: block;
+        }
+    .flip-container{
+        width: 100%;
+    }
+    .flip-col a{
+        display: table;
+        width: 100%;
+        padding: 10px 15px;
+        background: #fff;
+        text-decoration: none;
+        font-size: 18px;
+        color: @primaryColor;
+        font-weight: 500;
+    }
+    .flip-col a .title{
+        display: table-cell;
+    }
+    .flip-col a .icon {
+        display: table-cell;
+        text-align: center;
+        width: 24px;
+    }
+    .flip-col:not(:last-child) a{
+        border-bottom: 1px solid @white-gray;
+    }
+    .flip-col:first-child a{
+        border-top-left-radius: @border-radius-base;
+        border-top-right-radius: @border-radius-base;
+    }
+    .flip-col:last-child a{
+        border-bottom-left-radius: @border-radius-base;
+        border-bottom-right-radius: @border-radius-base;
+    }
+    .back {
+        display: none;
+    }
+}
+
+
+/* entire container, keeps perspective */
+@media (min-width: @screen-sm){
+    .flip-col{
+        padding: 20px;
+        width: 206px;
+        max-width: 206px;
+        height: 206px;
+        max-height: 206px;
+    }
+    .flip-container {
+        perspective: 500px;
+        width: 100%;
+        height: 100%;
+    }
+    /* flip the pane when hovered */
+    .flip-container:hover .flipper, .flip-container.hover .flipper {
+        transform: rotateY(180deg);
+    }
+
+    .flip-container, .front, .back {
+        border-radius: @border-radius-large;
+    }
+
+    /* flip speed goes here */
+    .flipper {
+        width: 100%;
+        height: 100%;
+        transition: 0.6s;
+        transform-style: preserve-3d;
+        position: relative;
+    }
+
+    /* hide back of pane during swap */
+    .front, .back {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: white;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        padding: 10px;
+    }
+
+    /* front pane, placed above back */
+    .front {
+        z-index: 2;
+        /* for firefox 31 */
+        transform: rotateY(0deg);
+    }
+    .front a, .back a{
+        color: @primaryColor;
+        height: 100%;
+        width: 100%;
+        text-align: center;
+    }
+    .front a:hover, .back a:hover{
+        text-decoration: none;
+    }
+    .front a .title {
+        font-size: 20px;
+    }
+    .front a .icon{
+        font-size: 80px;
+    }
+    .front a .title{
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+    }
+    .back a{
+        display: table;
+    }
+    .back a .title {
+        display: table-cell;
+        vertical-align: middle;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        word-break: break-all;
+        word-wrap: break-word;
+        text-overflow: ellipsis;
+    }
+
+    .front a .icon, .back a .icon{
+        margin-top: -20px;
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+
+    /* back, initially hidden pane */
+    .back {
+        transform: rotateY(-180deg);
+    }
+}
+.nav .menu-item-container{
+    -ms-box-orient: horizontal;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    -moz-flex-flow: row wrap;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    height: 50px;
+    align-items: center;
+}
+.nav a.menu-item{
+    -webkit-flex: 1 0 auto;
+    -moz-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
+}
+.nav .list-menu-item-icon{
+    display: none;
+}
+@media (min-width: @grid-float-breakpoint){
+    .navbar-toggle{
+        display: none;
+    }
+}
+a.menu-item{
+    color: white;
+    display: block;
+    text-decoration: none;
+}
+a.menu-item:hover{
+    color: @primaryColor;
+    background-color: white;
+    text-decoration: none;
+}
+.nav a.menu-item{
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+#site-menu a.menu-item{
+    padding: 10px;
+    text-align: left;
+}
+#site-menu .menu-item:not(:last-child){
+    border-bottom: 1px solid #fff;
 }

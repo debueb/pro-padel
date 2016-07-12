@@ -17,15 +17,24 @@
                     <spf:input type="hidden" path="position"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
 
-                    <fmt:message var="Title" key="Title"/>
-                    <spf:input path="title" type="text" class="form-control form-top-element" placeholder="${Title}"/>
                     <div class="relative">
-                        <spf:select path="moduleType" type="text" class="form-control form-center-element select-simple select-toggle" data-container="body">
+                        <spf:select path="moduleType" type="text" class="form-control form-top-element select-simple select-toggle" data-container="body">
                             <c:forEach var="ModuleType" items="${ModuleTypes}">
                                 <spf:option value="${ModuleType}"><fmt:message key="${ModuleType}"/></spf:option>
                             </c:forEach>
                         </spf:select>
                         <div class="explanation-select"><fmt:message key="Type"/></div>
+                    </div>
+                    
+                    <div class="relative">
+                        <fmt:message var="Title" key="Title"/>
+                    <spf:input path="title" type="text" class="form-control form-center-element" placeholder="${Title}"/>
+                        <div class="explanation"><fmt:message key="Title"/></div>
+                    </div>
+                    
+                    <div class="relative">
+                        <spf:textarea path="description" maxlength="8000" class="form-control form-center-element"/>
+                        <div class="explanation"><fmt:message key="Description"/></div>
                     </div>
                     
                     <div class="select-toggle-Events relative">

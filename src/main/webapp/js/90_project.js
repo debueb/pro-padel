@@ -195,6 +195,7 @@ app.main = {};
                 }
                 // reenable scrolling of content
                 $('#site-canvas').css('position', 'relative');
+                $('.footer').show();
             } else {
                 // open side menu
                 if (navigator.userAgent.match(/iemobile/i)) {
@@ -205,6 +206,7 @@ app.main = {};
                 }
                 // prevent scrolling of content when interacting with site menu
                 $('#site-canvas').css('position', 'fixed');
+                $('.footer').hide();
             }
         };
 
