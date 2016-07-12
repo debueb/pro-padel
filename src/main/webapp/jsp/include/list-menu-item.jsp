@@ -2,7 +2,7 @@
 <a href="${param.url}" class="menu-item ajaxify">${param.title}
     <c:if test="${not empty param.image}">
         <span class="list-menu-item-icon">
-            <div class="fa fa-lg fa-${param.image}"></div>
+            <div class="fa fa-${param.image}"></div>
         </span> 
     </c:if>
 </a>
