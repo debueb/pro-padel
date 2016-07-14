@@ -27,7 +27,7 @@
                                     <c:set var="req" value="${pageContext.request}" />
                                     <c:forEach var="Ranking" items="${Rankings}" varStatus="status">
                                         <c:set var="Participant" value="${Ranking.key}"/>
-                                        <c:if test="${empty session.customer}">
+                                        <c:if test="${empty sessionScope.customer}">
                                             <c:set var="hostPrefix" value="${req.scheme}://${Participant.customer.domainName}:${req.serverPort}"/>
                                         </c:if>
                                         <tr>
