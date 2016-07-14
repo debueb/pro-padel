@@ -78,6 +78,7 @@ public class LoginFilter implements Filter {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             
             if (httpRequest.getRequestURI().startsWith(PATH_START_PAGE)){
+                sessionUtil.setCustomer(httpRequest, null);
                 chain.doFilter(request, response);
                 return;
             }

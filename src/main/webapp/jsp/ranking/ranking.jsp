@@ -27,9 +27,12 @@
                                     <c:set var="req" value="${pageContext.request}" />
                                     <c:forEach var="Ranking" items="${Rankings}" varStatus="status">
                                         <c:set var="Participant" value="${Ranking.key}"/>
+                                        <c:if test="${empty session.customer}">
+                                            <c:set var="hostPrefix" value="${req.scheme}://${Participant.customer.domainName}:${req.serverPort}"/>
+                                        </c:if>
                                         <tr>
                                             <td class="text-center">${status.index+1}</td>
-                                            <td><a href="${req.scheme}://${Participant.customer.domainName}:${req.serverPort}${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}" class="ajaxify">${Participant}</a></td>
+                                            <td><a href="${hostPrefix}${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}" class="ajaxify">${Participant}</a></td>
                                             <td class="text-center">${Ranking.value}</td>
                                         </tr>
                                     </c:forEach>
