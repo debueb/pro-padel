@@ -84,7 +84,6 @@
                 <script src="/js/90_project.js"></script>
                 <script src="/js/91_jquery.history.min.js"></script>
                 <script src="/js/92_ajaxify.js"></script>
-                <script src="/js/95_ga.js"></script>
                 <script src="/js/98_ie10-viewport-bug-workaround.js"></script>
             </c:otherwise>
         </c:choose>

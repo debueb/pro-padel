@@ -33,6 +33,9 @@ public class Customer extends BaseEntity implements CustomerI{
     @NotEmpty(message = "{NotEmpty.domainNames}")
     private Set<String> domainNames;
 
+    @Column
+    private String googleAnalyticsTrackingId;
+    
     @Override
     public String getName() {
         return name;
@@ -61,5 +64,13 @@ public class Customer extends BaseEntity implements CustomerI{
     @Override
     public String toString(){
         return name;
+    }
+
+    public String getGoogleAnalyticsTrackingId() {
+        return googleAnalyticsTrackingId;
+    }
+
+    public void setGoogleAnalyticsTrackingId(String googleAnalyticsTrackingId) {
+        this.googleAnalyticsTrackingId = googleAnalyticsTrackingId;
     }
 }

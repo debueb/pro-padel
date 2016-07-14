@@ -15,6 +15,7 @@
                         <thead>
                         <th><fmt:message key="Name"/></th>
                         <th><fmt:message key="DomainNames"/></th>
+                        <th><fmt:message key="GoogleAnalyticsTrackingId"/></th>
                         <th class="delete"><fmt:message key="Delete"/></th>
                         </thead>
                         <tbody>
@@ -26,6 +27,7 @@
                                             <a class="ajaxify" href="/admin/customers/edit/${Model.id}">${DomainName}</a>${status.last ? "" : ", "}
                                         </c:forEach>
                                     </td>
+                                    <td><a class="ajaxify" href="/admin/customers/edit/${Model.id}">${Model.googleAnalyticsTrackingId}</a></td>
                                     <td class="delete"><a href="/admin/customers/${Model.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
                                 </tr>
                             </c:forEach>
