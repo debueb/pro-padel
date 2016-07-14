@@ -117,6 +117,13 @@
                 url = State.url,
                 relativeUrl = url.replace(rootUrl, ''),
                 data = State.data;
+              
+            //close any open select pickers that are absolutely attatched to the body
+            $('.select-simple, .select-multiple, .select-ajax-search').selectpicker().each(function(){
+                if ($(this).hasClass('open')){
+                   $(this).removeClass('open');
+                }
+            });
                     
             app.main.showSpinner();
            
