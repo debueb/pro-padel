@@ -4,24 +4,9 @@
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <div class="page-header">
         </div>
-        <c:forEach var="Entry" items="${PageEntries}" varStatus="status">
-            <div class="panel panel-info">
-                <div class="panel-heading"><h4>${Entry.title}</h4></div>
-                <div class="panel-body">${Entry.message}
-                    <c:if test="${Entry.showContactForm}">
-                        <spf:form method="POST" class="form-signin unit" modelAttribute="Mail">
-                            <spf:errors path="*" cssClass="error"/>
-                            <fmt:message key="EmailAddress" var="EmailAddress"/>
-                            <fmt:message key="Subject" var="Subject"/>
-                            <fmt:message key="Message" var="Message"/>
-                            <spf:input type="email" path="from" class="form-control form-top-element" placeholder="${EmailAddress}"/>
-                            <spf:input type="text" path="subject" class="form-control form-center-element" placeholder="${Subject}"/>
-                            <spf:textarea path="body" class="form-control form-bottom-element" placeholder="${Message}"  style="height: 200px;"/>
-                            <button class="btn btn-primary btn-block unit" type="submit"><fmt:message key="Send"/></button>
-                        </spf:form>
-                    </c:if>
-                </div>
-            </div>
+        <c:forEach var="PageEntry" items="${PageEntries}" varStatus="status" >
+            <c:set var="PageEntry" value="${PageEntry}" scope="request"/>
+            <jsp:include page="/jsp/page/pageentry.jsp"/>
             <c:if test="${not status.last}"><hr/></c:if>
         </c:forEach>
     </div>

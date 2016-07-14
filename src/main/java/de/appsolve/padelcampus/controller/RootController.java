@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.controller;
 
+import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.PageEntryDAOI;
 import de.appsolve.padelcampus.db.model.PageEntry;
 import java.util.List;
@@ -27,7 +28,10 @@ public class RootController extends BaseController{
     
     @RequestMapping()
     public ModelAndView getIndex(){
-        List<PageEntry> allNews = pageEntryDAO.findForHomePage();
-        return new ModelAndView("index", "AllNews", allNews);
+        List<PageEntry> pageEntries = pageEntryDAO.findForHomePage();
+        ModelAndView mav = new ModelAndView("index");
+        mav.addObject("PageEntries", pageEntries);
+        mav.addObject("Mail", new Mail());
+        return mav;
     }
 }
