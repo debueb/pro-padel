@@ -10,6 +10,8 @@ import de.appsolve.padelcampus.db.dao.AdminGroupDAOI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Map;
 import java.util.Set;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -19,12 +21,16 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component("adminFilter")
 public class AdminFilter implements Filter {
+    
+    private static final Logger LOG = Logger.getLogger(AdminFilter.class);
 
     @Autowired
     AdminGroupDAOI adminGroupDAO;
@@ -68,6 +74,15 @@ public class AdminFilter implements Filter {
             for (Privilege privilege: privileges){
                 if (privilege.getPathPattern().matcher(pathInfo).matches()){
                     chain.doFilter(request, response);
+                    if (!StringUtils.isEmpty(httpRequest.getMethod()) && httpRequest.getMethod().equalsIgnoreCase("POST")){
+                        LOG.info(String.format("AUDIT: %s executed %s %s", player, httpRequest.getMethod(), httpRequest.getRequestURI()));
+                        Enumeration<String> parameterNames = request.getParameterNames();
+                        while (parameterNames.hasMoreElements()){
+                            String paramName    = parameterNames.nextElement();
+                            String paramValue   = request.getParameter(paramName);
+                            LOG.info(String.format("%s: %s", paramName, paramValue));
+                        }
+                    }
                     return;
                 }
             }
