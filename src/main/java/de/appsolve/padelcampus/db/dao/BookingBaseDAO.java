@@ -24,8 +24,7 @@ public class BookingBaseDAO extends BaseEntityDAO<Booking> implements BookingBas
 
    @Override
     public List<Booking> findBlockedBookings() {
-        Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        Criteria criteria = getCriteria();
         criteria.add(Restrictions.isNotNull("blockingTime"));
         criteria.add(Restrictions.or(Restrictions.isNull("cancelled"), Restrictions.eq("cancelled", false)));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
