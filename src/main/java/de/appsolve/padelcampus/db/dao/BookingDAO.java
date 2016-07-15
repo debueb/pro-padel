@@ -9,7 +9,6 @@ import de.appsolve.padelcampus.db.model.Booking;
 import java.util.HashMap;
 import java.util.Map;
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
