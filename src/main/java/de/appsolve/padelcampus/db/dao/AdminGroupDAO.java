@@ -3,8 +3,9 @@ package de.appsolve.padelcampus.db.dao;
 import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
 import de.appsolve.padelcampus.db.model.AdminGroup;
 import de.appsolve.padelcampus.db.model.Player;
-import java.util.Iterator;
 import java.util.List;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,14 +17,10 @@ public class AdminGroupDAO extends GenericDAO<AdminGroup> implements AdminGroupD
 
     @Override
     public List<AdminGroup> findByPlayer(Player player) {
-        List<AdminGroup> groups = findAll();
-        Iterator<AdminGroup> iterator = groups.iterator();
-        while (iterator.hasNext()){
-            AdminGroup group = iterator.next();
-            if (!group.getPlayers().contains(player)){
-                iterator.remove();
-            }
-        }
-        return groups;
+        Criteria criteria = getCriteria();
+        criteria.createAlias("players", "p");
+        criteria.add(Restrictions.eq("p.id", player.getId()));
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return (List<AdminGroup>) criteria.list();
     }
 }
