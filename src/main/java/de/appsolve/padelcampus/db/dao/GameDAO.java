@@ -3,6 +3,7 @@ package de.appsolve.padelcampus.db.dao;
 import de.appsolve.padelcampus.constants.Gender;
 import org.joda.time.LocalDate;
 import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
+import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.db.model.Game;
 import java.util.List;
 import de.appsolve.padelcampus.db.model.Event;
@@ -20,7 +21,6 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Component;
 
 /**
@@ -119,6 +119,10 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
         criteria.createAlias("gameset.game", "game");
         //criteria.add(Restrictions.eq("game", "gameset.Game"));
         criteria.add(Restrictions.eq("game.event", event));
+        Customer customer = getCustomer();
+        if (customer != null){
+            criteria.add(Restrictions.eq("customer", customer));
+        }
         List<GameSet> gameSets = (List<GameSet>) criteria.list();
         Set<Game> games = new HashSet<>();
         for (GameSet gameSet: gameSets){
