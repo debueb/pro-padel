@@ -7,6 +7,7 @@ package de.appsolve.padelcampus.utils;
 
 import static de.appsolve.padelcampus.constants.Constants.SESSION_ACCESS_LEVEL;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_BOOKING;
+import static de.appsolve.padelcampus.constants.Constants.SESSION_BOOKING_LIST_END_DATE;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_LOGIN_REDIRECT_PATH;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_PRIVILEGES;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_PROFILE_REDIRECT_PATH;
@@ -28,6 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_CUSTOMER;
 import de.appsolve.padelcampus.data.CustomerI;
+import org.joda.time.LocalDate;
+import static de.appsolve.padelcampus.constants.Constants.SESSION_BOOKING_LIST_START_DATE;
 
 
 /*
@@ -155,5 +158,21 @@ public class SessionUtil {
     
     public CustomerI getCustomer(HttpServletRequest request){
         return (CustomerI) getObject(request, SESSION_CUSTOMER);
+    }
+    
+    public void setBookingListStartDate(HttpServletRequest httpRequest, LocalDate date) {
+        setObject(httpRequest, SESSION_BOOKING_LIST_START_DATE, date);
+    }
+    
+    public LocalDate getBookingListStartDate(HttpServletRequest request){
+        return (LocalDate) getObject(request, SESSION_BOOKING_LIST_START_DATE);
+    }
+    
+    public void setBookingListEndDate(HttpServletRequest httpRequest, LocalDate date) {
+        setObject(httpRequest, SESSION_BOOKING_LIST_END_DATE, date);
+    }
+    
+    public LocalDate getBookingListEndDate(HttpServletRequest request){
+        return (LocalDate) getObject(request, SESSION_BOOKING_LIST_END_DATE);
     }
 }

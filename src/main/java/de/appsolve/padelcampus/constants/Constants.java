@@ -41,6 +41,8 @@ public class Constants {
     public static final String SESSION_PROFILE_REDIRECT_PATH= "profileRedirectPath";
     public static final String SESSION_BOOKING              = "booking";
     public static final String SESSION_ACCESS_LEVEL         = "accessLevel";
+    public static final String SESSION_BOOKING_LIST_START_DATE  = "bookingListStartDate";
+    public static final String SESSION_BOOKING_LIST_END_DATE    = "bookingListEndDate";
     
     public static final String APPLICATION_COMPANY_LOGO_PATH= "companyLogoPath";
     public static final String APPLICATION_MENU_LINKS       = "menuLinks";

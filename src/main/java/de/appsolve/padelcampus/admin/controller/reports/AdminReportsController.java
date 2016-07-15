@@ -14,8 +14,10 @@ import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
+import de.appsolve.padelcampus.utils.SessionUtil;
 import java.math.BigDecimal;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
@@ -45,6 +47,9 @@ public class AdminReportsController extends BaseController{
     @Autowired
     BookingDAOI bookingDAO;
     
+    @Autowired
+    SessionUtil sessionUtil;
+    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
@@ -56,9 +61,15 @@ public class AdminReportsController extends BaseController{
     }
     
     @RequestMapping("bookinglist")
-    public ModelAndView getBookingList(){
-        LocalDate startDate = new LocalDate();
-        LocalDate endDate = startDate.plusMonths(4);
+    public ModelAndView getBookingList(HttpServletRequest request){
+        LocalDate startDate = sessionUtil.getBookingListStartDate(request);
+        if (startDate == null){
+            startDate = new LocalDate();
+        }
+        LocalDate endDate = sessionUtil.getBookingListEndDate(request);
+        if (endDate == null){
+            endDate = startDate.plusMonths(4);
+        }
         DateRange dateRange = new DateRange();
         dateRange.setStartDate(startDate);
         dateRange.setEndDate(endDate);
@@ -75,7 +86,9 @@ public class AdminReportsController extends BaseController{
     }
     
     @RequestMapping(value={"bookinglist", "bookinglist/{date}"}, method=POST)
-    public ModelAndView getBookingListForDateRange(@Valid @ModelAttribute("DateRange") DateRange dateRange){
+    public ModelAndView getBookingListForDateRange(HttpServletRequest request, @Valid @ModelAttribute("DateRange") DateRange dateRange){
+        sessionUtil.setBookingListStartDate(request, dateRange.getStartDate());
+        sessionUtil.setBookingListEndDate(request, dateRange.getEndDate());
         return getBookingListView(dateRange); 
     }
     
