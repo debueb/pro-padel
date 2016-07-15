@@ -3,7 +3,7 @@
     <div class="panel-heading">
         <h4>${PageEntry.title}</h4>
         <c:if test="${not empty privileges and fn:contains(privileges, 'ManageGeneral')}">
-            <a href="/admin/general/modules/page/${PageEntry.module.id}/edit/${PageEntry.id}" class="edit"><i class="fa fa-edit"></i></a>
+            <a href="/admin/general/modules/page/${PageEntry.module.id}/edit/${PageEntry.id}" class="edit ajaxify"><i class="fa fa-edit"></i></a>
         </c:if>
     </div>
     <div class="panel-body">${PageEntry.message}
