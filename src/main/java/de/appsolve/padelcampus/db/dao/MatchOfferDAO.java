@@ -23,8 +23,7 @@ public class MatchOfferDAO extends GenericDAO<MatchOffer> implements MatchOfferD
 
     @Override
     public List<MatchOffer> findCurrent() {
-        Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
+        Criteria criteria = getCriteria();
         criteria.add(Restrictions.ge("startDate", new LocalDate()));
         criteria.addOrder(Order.asc("startDate"));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
