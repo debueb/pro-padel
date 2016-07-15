@@ -144,7 +144,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                                         booking.setBookingTime(reservationRequest.getStartTime());
                                         booking.setBookingType(BookingType.reservation);
                                         booking.setComment(reservationRequest.getComment());
-                                        booking.setConfirmed(true);
+                                        booking.setConfirmed(reservationRequest.getPaymentConfirmed());
                                         booking.setCurrency(Currency.EUR);
                                         int minutes = Minutes.minutesBetween(reservationRequest.getStartTime(), reservationRequest.getEndTime()).getMinutes(); 
                                         if (minutes < calendarConfig.getMinDuration()){

@@ -43,6 +43,8 @@ public class ReservationRequest extends CustomerEntity{
     
     private String holidayKey;
     
+    private Boolean paymentConfirmed;
+    
     @NotEmpty(message = "{NotEmpty.offers}")
     private Set<Offer> offers;
     
@@ -138,6 +140,14 @@ public class ReservationRequest extends CustomerEntity{
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Boolean getPaymentConfirmed() {
+        return paymentConfirmed;
+    }
+
+    public void setPaymentConfirmed(Boolean paymentConfirmed) {
+        this.paymentConfirmed = paymentConfirmed;
     }
     
     @Override

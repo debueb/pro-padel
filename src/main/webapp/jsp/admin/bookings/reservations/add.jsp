@@ -101,6 +101,8 @@
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="UntilMinute"/></span>
                     </span>
+                    <spf:checkbox path="paymentConfirmed" id="paymentConfirmed"/>
+                    <label class="checkbox" for="paymentConfirmed"><fmt:message key="PaymentConfirmed"/></label>
                     <div class="clearfix"></div>
 
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>

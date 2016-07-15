@@ -30,7 +30,7 @@
                             </div>
                             <div class="col-xs-8 booking-cell">
                                 <c:choose>
-                                    <c:when test="${Booking.paymentMethod == 'Cash'}">
+                                    <c:when test="${Booking.paymentMethod == 'Cash' or Booking.paymentMethod == 'Reservation'}">
                                         <spf:checkbox path="paymentConfirmed"/><label for="paymentConfirmed1"></label>
                                     </c:when>
                                     <c:otherwise>
