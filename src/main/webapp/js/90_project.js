@@ -186,6 +186,7 @@ app.main = {};
 
         var toggleMenu = function () {
             if (isOpen()) {
+                $('#site-shadow').fadeOut(300);
                 // close side menu
                 if (navigator.userAgent.match(/iemobile/i)) {
                     $('#site-canvas, #site-shadow, .footer').removeClass('show-nav');
@@ -194,8 +195,9 @@ app.main = {};
                     $('#site-canvas, #site-shadow, #site-menu, .footer').removeClass('show-nav');
                 }
                 // reenable scrolling of content
-                $('body').css('overflow', 'auto');
+                $('#site-shadow').off('touchmove');
             } else {
+                $('#site-shadow').fadeIn(300);
                 // open side menu
                 if (navigator.userAgent.match(/iemobile/i)) {
                     $('#site-canvas, #site-shadow, .footer').addClass('show-nav');
@@ -204,7 +206,7 @@ app.main = {};
                     $('#site-canvas, #site-shadow, #site-menu, .footer').addClass('show-nav');
                 }
                 // prevent scrolling of content when interacting with site menu
-                $('body').css('overflow', 'hidden');
+                $('#site-shadow').on('touchmove', function(e) {e.preventDefault();});
             }
         };
 

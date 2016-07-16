@@ -106,9 +106,6 @@ textarea, input[type="text"], input[type="email"], input[type="submit"], input[t
     height: 100%;
 }
 #site-canvas, #site-menu, #site-shadow, .footer {
-    -webkit-backface-visibility: hidden; /* this fixes iOS7 flickering a.k.a menu disappearing */
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
     -webkit-transition: -webkit-transform 0.3s ease, right 0.3s ease;
     -moz-transition: transform 0.3s ease, right 0.3s ease;
     -ms-transition: transform 0.3s ease, right 0.3s ease; /* IE10 is actually unprefixed */
@@ -134,11 +131,11 @@ textarea, input[type="text"], input[type="email"], input[type="submit"], input[t
     #gradient > .vertical(@navBarColor2, @navBarColor);
 }
 #site-shadow{
+    background-color: rgba(0,0,0,0.5);
     width: 100%;
-    position: fixed;
-}
-#site-shadow.show-nav{
     height: 100%;
+    position: fixed;
+    display: none;
     z-index: 4;
 }
 #site-canvas.show-nav,  #site-shadow.show-nav, #site-menu.show-nav, .footer.show-nav{
