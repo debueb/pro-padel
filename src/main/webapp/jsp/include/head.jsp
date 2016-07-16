@@ -46,7 +46,7 @@
         <c:set var="compressJS" value="${compress.js}"/>
         <c:choose>
             <c:when test="${compressJS and empty param.debug}">
-                <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+                <script src="//code.jquery.com/jquery-1.11.1.min.js" integrity="sha384-UM1JrZIpBwVf5jj9dTKVvGiiZPZTLVoq4sfdvIe9SBumsvCuv6AHDNtEiIb5h1kU" crossorigin="anonymous"></script>
                 <script>window.jQuery || document.write('<script src="/js/noconcat/10_jquery-1.11.1.min.js">\x3C/script>');</script>
                 <script src="/js/all.min.js"></script>
                 <script src="/js/noconcat/31_datepicker-de.js"></script>
