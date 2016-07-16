@@ -15,6 +15,7 @@
         
         <meta name="google-site-verification" content="zV4l09W2NsrN2uP1MCLQNG5mR8FPsmIPocAQiYGLaHs" />
         <meta name="48b1e5959ec929f1a8b8366d745e337f2a62cb3e" content="6b492683afd937337dc2c12cbaf78ff023df19c6" /> <%-- tinfoilsecurity --%>
+        <meta name="detectify-verification" content="a4f2af1bd6103ba6eed3eeae0a91ceca" /> <%-- detectify --%>
 
         <%-- https://mathiasbynens.be/notes/touch-icons --%>
         <%-- we only use one touch-icon as it will be downscaled if necessary and the touch-icon has the same ratio on all devices --%>
