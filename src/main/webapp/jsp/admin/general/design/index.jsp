@@ -26,16 +26,37 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <figure id="picture" class="unit">
-                                    <div class="text-center"><fmt:message key="BackgroundImage"/></div>
+                                <hr/>
+                                <figure class="picture unit">
+                                    <div class="text-center"><fmt:message key="BackgroundImage"/>
+                                    <div class="text-center"><fmt:message key="BackgroundImageDesc"/>
+                                    <div class="picture-subtext text-center"><fmt:message key="ClickImageToChange"/></div>
                                     <div class="unit" style="width: 100%; height: 100%; background-size: 100% 100%; content: ${empty Attribute.cssValue ? 'url(\'/images/bg.jpg\')' : Attribute.cssValue}"></div>
-                                    <div id="picture-subtext" class="unit text-center"><fmt:message key="ClickImageToChange"/></div>
                                 </figure>
-                                <input type="file" capture="camera" accept="image/*" id="picture-input" name="backgroundImage" class="hidden"/>
+                                <input type="file" capture="camera" accept="image/*" name="backgroundImage" class="picture-input hidden"/>
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>
-
+                    
+                    <hr/>
+                    <figure class="picture unit">
+                        <div class="text-center"><fmt:message key="TouchIcon"/>
+                        <div class="text-center"><fmt:message key="TouchIconDesc"/></div>
+                        <div class="picture-subtext text-center"><fmt:message key="ClickImageToChange"/></div>
+                        <div class="unit" style="margin: 0 auto; width: 192px; height: 192px; background-size: 192px 192px; background-image: url('${sessionScope.customer.touchIconPath}');"></div>
+                    </figure>
+                    <input type="file" capture="camera" accept="image/*" name="touchIcon" class="picture-input hidden"/>
+                    
+                    <hr/>
+                    <figure class="picture unit">
+                        <div class="text-center"><fmt:message key="CompanyLogo"/></div>
+                        <div class="text-center"><fmt:message key="CompanyLogoDesc"/></div>
+                        <div class="picture-subtext text-center"><fmt:message key="ClickImageToChange"/></div>
+                        <div class="unit" style="margin: 0 auto; width: auto; height: 40px; background-size: auto 40px; content: url('${sessionScope.customer.companyLogoPath}');"></div>
+                    </figure>
+                    <input type="file" capture="camera" accept="image/*" name="companyLogo" class="picture-input hidden"/>
+                    
+                    
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
                 </form>
             </div>

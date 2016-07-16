@@ -44,7 +44,6 @@ public class Constants {
     public static final String SESSION_BOOKING_LIST_START_DATE  = "bookingListStartDate";
     public static final String SESSION_BOOKING_LIST_END_DATE    = "bookingListEndDate";
     
-    public static final String APPLICATION_COMPANY_LOGO_PATH= "companyLogoPath";
     public static final String APPLICATION_MENU_LINKS       = "menuLinks";
     public static final String APPLICATION_FOOTER_LINKS     = "footerLinks";
     
@@ -76,4 +75,8 @@ public class Constants {
     public static final String DATA_DIR_COMPANY_LOGO_IMAGES  = "companyLogoImages";
     public static final Integer COMPANY_LOGO_WIDTH           = 160;
     public static final Integer COMPANY_LOGO_HEIGHT          = 80;
+    
+    public static final String DATA_DIR_TOUCH_ICON_IMAGE     = "touchIconImages";
+    public static final Integer TOUCH_ICON_WIDTH             = 192;
+    public static final Integer TOUCH_ICON_HEIGHT            = 192;
 }

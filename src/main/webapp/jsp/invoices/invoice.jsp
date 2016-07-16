@@ -51,7 +51,7 @@
 
 <body>
     <div class="letter">
-        <a href="/"><img class="logo margin-bottom" src="${companyLogoPath[sessionScope.customer.name]}" alt="logo"></img></a>
+        <a href="/"><img class="logo margin-bottom" src="${sessionScope.customer.touchIconPath}" alt="logo"></img></a>
         <div class="clearfix"></div>
         <div class="small">${MasterData.companyName}, ${MasterData.street}, ${MasterData.zip} ${MasterData.city}</div>
         <div class="recipient margin-bottom">

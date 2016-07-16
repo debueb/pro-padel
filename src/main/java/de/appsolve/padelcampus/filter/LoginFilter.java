@@ -11,7 +11,6 @@ import de.appsolve.padelcampus.db.dao.CustomerDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.LoginCookie;
 import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.utils.CompanyLogoUtil;
 import de.appsolve.padelcampus.utils.LoginUtil;
 import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
@@ -40,9 +39,6 @@ public class LoginFilter implements Filter {
 
     @Autowired
     SessionUtil sessionUtil;
-    
-    @Autowired
-    CompanyLogoUtil companyLogoUtil;
     
     @Autowired
     ModuleUtil moduleUtil;
@@ -135,8 +131,6 @@ public class LoginFilter implements Filter {
                     }
                 }
             }
-            
-            companyLogoUtil.initModules(httpRequest);
             
             moduleUtil.initModules(httpRequest);
         } 

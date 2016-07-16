@@ -79,15 +79,6 @@
                         <div class="explanation"><fmt:message key="EmailAddress"/></div>
                     </div>
                     
-                    <div class="col-xs-12 text-center">
-                        <figure id="picture" class="unit">
-                            <div class="text-center"><fmt:message key="CompanyLogo"/></div>
-                            <div class="text-center"><fmt:message key="CompanyLogoDesc"/></div>
-                            <div class="unit" style="margin: 0 auto; width: auto; height: 40px; background-size: auto 40px; content: url('${Model.companyLogoPath}')"></div>
-                            <div id="picture-subtext" class="unit text-center"><fmt:message key="ClickImageToChange"/></div>
-                        </figure>
-                        <input type="file" capture="camera" accept="image/*" id="picture-input" name="companyLogoFile" class="hidden"/>
-                    </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
                 </spf:form>
             </div>  

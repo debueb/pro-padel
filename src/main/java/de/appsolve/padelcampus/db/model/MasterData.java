@@ -6,11 +6,8 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -75,10 +72,6 @@ public class MasterData extends CustomerEntity{
     @Column
     @NotEmpty(message = "{NotEmpty.MasterData.email}")
     private String email;
-    
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private Image companyLogo;
     
     public String getCompanyName() {
         return companyName;
@@ -182,17 +175,5 @@ public class MasterData extends CustomerEntity{
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Image getCompanyLogo() {
-        return companyLogo;
-    }
-
-    public void setCompanyLogo(Image companyLogo) {
-        this.companyLogo = companyLogo;
-    }
-
-    public String getCompanyLogoPath() {
-        return companyLogo == null ? "/images/logo.png" : "/images/image/"+companyLogo.getSha256();
     }
 }

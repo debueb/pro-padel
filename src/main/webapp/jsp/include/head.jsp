@@ -17,29 +17,8 @@
 
         <%-- https://mathiasbynens.be/notes/touch-icons --%>
         <%-- we only use one touch-icon as it will be downscaled if necessary and the touch-icon has the same ratio on all devices --%>
-        <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
-        <link rel="icon" sizes="192x192" href="/images/touch-icon-192x192.png">
-
-        <%-- iPhone 3 and 4 Non-Retina --%>
-        <link rel="apple-touch-startup-image" media="(device-width: 320px)" href="/images/apple-touch-startup-image-320x460.png">
-        <%-- iPhone 4 Retina --%>
-        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (-webkit-device-pixel-ratio: 2)" href="/images/apple-touch-startup-image-640x920.png">
-        <%-- iPhone 5 Retina --%>
-        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="/images/apple-touch-startup-image-640x1096.png">
-        <%-- iPhone 6 --%>
-        <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)" href="/images/apple-touch-startup-image-750x1296.png">
-        <%-- iPhone 6+ Portrait --%>
-        <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 3)" href="/images/apple-touch-startup-image-1242x2148.png">
-        <%-- iPad Non-Retina Portrait --%>
-        <link rel="apple-touch-startup-image" media="(device-width: 768px) and (orientation: portrait)" href="/images/apple-touch-startup-image-768x1004.png">
-        <%-- iPad Non-Retina Landscape --%>
-        <link rel="apple-touch-startup-image" media="(device-width: 768px) and (orientation: landscape)" href="/images/apple-touch-startup-image-1024x748.png">
-        <%-- iPad Retina Portrait --%>
-        <link rel="apple-touch-startup-image" media="(device-width: 1536px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)" href="/images/apple-touch-startup-image-1536x2008.png">
-        <%-- iPad Retina Landscape --%>
-        <link rel="apple-touch-startup-image" media="(device-width: 1536px)  and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" href="/images/apple-touch-startup-image-2048x1496.png">
-
-        <link rel="icon" href="/favicon.ico">
+        <link rel="apple-touch-icon" href="${sessionScope.customer.touchIconPath}">
+        <link rel="icon" sizes="192x192" href="${sessionScope.customer.touchIconPath}">
 
         <title>${sessionScope.customer}</title>
 
@@ -96,7 +75,7 @@
                     <div class="navbar-header">
                         <c:choose>
                             <c:when test="${pageContext.request.requestURI == '/jsp/index.jsp'}">
-                                <div class="navbar-brand"><img src="${companyLogoPath[sessionScope.customer.name]}" class="customerLogo"/>${pageContext.request.serverName}</div>
+                                <div class="navbar-brand"><img src="${sessionScope.customer.companyLogoPath}" class="customerLogo"/>${pageContext.request.serverName}</div>
                             </c:when>
                             <c:otherwise>
                                 <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a>

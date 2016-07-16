@@ -6,12 +6,15 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.appsolve.padelcampus.data.CustomerI;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -35,6 +38,14 @@ public class Customer extends BaseEntity implements CustomerI{
 
     @Column
     private String googleAnalyticsTrackingId;
+    
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Image companyLogo;
+    
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Image touchIcon;
     
     @Override
     public String getName() {
@@ -73,4 +84,29 @@ public class Customer extends BaseEntity implements CustomerI{
     public void setGoogleAnalyticsTrackingId(String googleAnalyticsTrackingId) {
         this.googleAnalyticsTrackingId = googleAnalyticsTrackingId;
     }
+
+    public Image getCompanyLogo() {
+        return companyLogo;
+    }
+
+    public void setCompanyLogo(Image companyLogo) {
+        this.companyLogo = companyLogo;
+    }
+
+    public String getCompanyLogoPath() {
+        return companyLogo == null ? "/images/logo.png" : "/images/image/"+companyLogo.getSha256();
+    }
+
+    public Image getTouchIcon() {
+        return touchIcon;
+    }
+
+    public void setTouchIcon(Image touchIcon) {
+        this.touchIcon = touchIcon;
+    }
+    
+    public String getTouchIconPath() {
+        return touchIcon == null ? "/images/touch-icon-192x192.png" : "/images/image/"+touchIcon.getSha256();
+    }
+
 }

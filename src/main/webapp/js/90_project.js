@@ -435,15 +435,16 @@ app.main = {};
     };
     
     self.enableAdvancedProfile = function(){
-        $('#picture').livequery(function(){
-            $(this).on('click tap', function(){
-                $('#picture-input').click();
+        $('.picture').livequery(function(){
+            var $picture = $(this);
+            $picture.on('click tap', function(){
+                $(this).next().first('.picture-input').click();
                 return false;
             });
-            $('#picture-input').on('change', function(){
+            $('.picture-input').on('change', function(){
                 var value = $(this).val();
                 var lastIndex = (value.lastIndexOf("\\") === -1) ? 0 : value.lastIndexOf("\\")+1;
-                $('#picture-subtext').text(value.slice(lastIndex)); 
+                $(this).prev().first('.picture').find('.picture-subtext').text(value.slice(lastIndex)); 
             });
         });
         
