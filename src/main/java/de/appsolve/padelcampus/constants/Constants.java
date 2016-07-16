@@ -79,4 +79,6 @@ public class Constants {
     public static final String DATA_DIR_TOUCH_ICON_IMAGE     = "touchIconImages";
     public static final Integer TOUCH_ICON_WIDTH             = 192;
     public static final Integer TOUCH_ICON_HEIGHT            = 192;
+    
+    public static final String OPENSHIFT_DATA_DIR                  = "OPENSHIFT_DATA_DIR";
 }

@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.lesscss.LessCompiler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,9 +57,9 @@ public class HtmlResourceUtil {
     
     private static final Logger log = Logger.getLogger(HtmlResourceUtil.class);
     
-    @Value("${OPENSHIFT_DATA_DIR}")
-    private String DATA_DIR;
-
+    @Autowired
+    Environment environment;
+    
     private static final String VARIABLES_LESS  = "/less/variables.less";
     private static final String PROJECT_LESS    = "/less/90_project.less";
     private static final String PROJECT_CSS     = "/css/90_project.css";
@@ -232,7 +233,7 @@ public class HtmlResourceUtil {
     }
 
     private File getCustomerDir(String customerName) {
-       return new File(DATA_DIR + File.separator + customerName);
+       return new File(environment.getProperty(Constants.OPENSHIFT_DATA_DIR) + File.separator + customerName);
     }
     
     public List<CssAttribute> getDefaultCssAttributes() {
