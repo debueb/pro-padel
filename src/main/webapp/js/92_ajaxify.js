@@ -140,12 +140,15 @@
                             $dataContent = $dataBody.find(contentSelector).filter(':first'),
                             contentHtml, $scripts;
 
+                    //remove Google Analytics script
+                    $dataContent.find('.document-script[data-id="ga"]').detach();
+
                     // Fetch the scripts
                     $scripts = $dataContent.find('.document-script');
                     if ($scripts.length) {
                         $scripts.detach();
                     }
-
+                    
                     // Fetch the content
                     contentHtml = $dataContent.html() || $data.html();
                     if (!contentHtml) {
