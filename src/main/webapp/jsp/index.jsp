@@ -50,10 +50,7 @@
 </div>
 <script src="/js/noconcat/99_addtohomescreen.min.js"></script>
 <script defer type="text/javascript">
-
-    if (("standalone" in window.navigator) && window.navigator.standalone) {
-        $("#iOSApp").hide();
-    } else {
+    if (!("standalone" in window.navigator) || !window.navigator.standalone) {
         addToHomescreen({
             skipFirstVisit: true,
             maxDisplayCount: 1
