@@ -23,19 +23,33 @@ $(document).ready(function () {
     $('#summernote').livequery(function(){
         var $self = $(this);
         $self.summernote({
+            minHeight: 200,
             toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
-//            ['fontname', ['fontname']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-//            ['height', ['height']],
-            ['insert', ['link', 'picture', 'video', 'hr']],
-            ['table', ['table']],
-            ['view', ['fullscreen', 'codeview']]
-//            ['help', ['help']]
-          ],
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['template', 'map', 'link', 'picture', 'video', 'hr']],
+                ['table', ['table']],
+                ['view', ['fullscreen', 'codeview']]
+            ],
+            template: {
+                path: '/templates', // path to your template folder
+                list: [ // list of your template (without the .html extension)
+                    'Gallery',
+                    'Panel'
+                ]
+            },
+            map: {
+                apiKey: 'AIzaSyBu3x1GrcboxPru4-Rq9wvdYeyXIyVKS-s',
+                // This will be used when map is initialized in the dialog.
+                center: {
+                  lat: 50.9573771,
+                  lng: 6.8268944
+                },
+                zoom: 13
+            },
             onImageUpload: function (files, editor, welEditable) {
                 data = new FormData();
                 data.append("file", files[0]);
