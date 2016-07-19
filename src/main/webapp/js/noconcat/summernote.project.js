@@ -68,7 +68,7 @@ $(document).ready(function () {
     });
     $('.summernote-form').livequery(function(){
         $(this).on('submit', function () {
-            $("#summernote-input").val($('#summernote').code());
+            $("#summernote-input").val($('#summernote').summernote('code'));
         });
     });
 });
