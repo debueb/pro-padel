@@ -47,6 +47,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class HtmlResourceUtil {
     
+    private static final Logger LOG = Logger.getLogger(HtmlResourceUtil.class);
+    
     private LessCompiler lessCompiler;
     
     @Autowired
@@ -227,6 +229,10 @@ public class HtmlResourceUtil {
             return new String(bytes, Constants.UTF8);
         } catch (IOException e){
             InputStream stream = context.getResourceAsStream("/css/"+name);
+            if (stream == null){
+                LOG.warn("Unable to load fallback /css/"+name);
+                return null;
+            }
             return IOUtils.toString(stream, StandardCharsets.UTF_8);
         }
         
