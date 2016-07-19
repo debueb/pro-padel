@@ -1,8 +1,19 @@
+.slick-prev, .slick-next{
+    z-index: 999;
+    width: 30px;
+    height: 30px;
+}
+.slick-prev{
+    left: 0;
+}
+.slick-next{
+    right: 0;
+}
 .slick-prev:before, .slick-next:before { 
-    font-family: FontAwesome; 
-    font-size: 20px; 
+    font-family: 'FontAwesome'; 
+    font-size: 30px; 
     line-height: 1;
-    color: black;
+    color: #fff;
     opacity: 0.75; 
     -webkit-font-smoothing: antialiased; 
     -moz-osx-font-smoothing: grayscale; }   

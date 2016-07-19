@@ -461,12 +461,13 @@ app.main = {};
     
     self.enableGalleryAutoPlay = function(){
         $('.gallery-autoplay').livequery(function(){
-            $(this).slick({
-                "autoplay": true,
-                "autoplaySpeed": 3000,
-                "arrows": false,
-                "adaptiveHeight": true
-            });  
+            if (!($(this).parents('.summernote-form').length)){ //do not initialize when inside editor
+                $(this).slick({
+                    "autoplaySpeed": 3000,
+                    "arrows": true,
+                    "adaptiveHeight": false
+                });
+            }
         });
     };
     
