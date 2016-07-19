@@ -34,6 +34,9 @@
                         <div id="summernote">${Model.message}</div>
                     </div>
                     <div class="unit">
+                        <spf:checkbox path="fullWidth" id="fullWidth"/><label for="fullWidth"><fmt:message key="FullWidth"/></label>
+                    </div>
+                    <div class="unit">
                         <spf:checkbox path="showOnHomepage" id="showOnHomepage"/><label for="showOnHomepage"><fmt:message key="ShowOnHomepage"/></label>
                     </div>
                     <div class="unit">
@@ -44,12 +47,4 @@
             </div>
         </div>
     </div></div>
-
-<%-- include summernote in body when requested via ajax, otherwise after footer (where jquery is added) --%>
-<c:if test="${not empty header['x-requested-with']}">
-    <jsp:include page="/jsp/admin/include/summernote.jsp"/>
-</c:if>
-<jsp:include page="/jsp/include/footer.jsp"/>
-<c:if test="${empty header['x-requested-with']}">
-    <jsp:include page="/jsp/admin/include/summernote.jsp"/>
-</c:if>
+<jsp:include page="/jsp/admin/include/summernote.jsp"/>

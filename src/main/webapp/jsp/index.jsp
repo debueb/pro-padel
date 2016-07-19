@@ -1,14 +1,12 @@
 <%@include file="/jsp/include/include.jsp"%>
 <jsp:include page="/jsp/include/head.jsp"/>
+<c:forEach var="PageEntry" items="${PageEntries}">
+    <c:set var="PageEntry" value="${PageEntry}" scope="request"/>
+    <jsp:include page="/jsp/page/pageentry.jsp"/>
+    <hr>
+</c:forEach>
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
-        <div class="page-header"></div>
-        <c:forEach var="PageEntry" items="${PageEntries}">
-            <c:set var="PageEntry" value="${PageEntry}" scope="request"/>
-            <jsp:include page="/jsp/page/pageentry.jsp"/>
-            <hr>
-        </c:forEach>
-            
         <div class="container-flex flex-wrap stretch" id="container-home">
             <c:forEach var="Module" items="${menuLinks[sessionScope.customer.name]}" varStatus="status">   
                 <jsp:include page="/jsp/include/flip-item.jsp">

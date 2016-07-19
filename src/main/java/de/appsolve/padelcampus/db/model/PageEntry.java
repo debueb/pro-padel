@@ -39,6 +39,9 @@ public class PageEntry extends SortableEntity{
     private String message;
     
     @Column
+    private Boolean fullWidth;
+    
+    @Column
     private Boolean showOnHomepage;
     
     @Column
@@ -69,6 +72,14 @@ public class PageEntry extends SortableEntity{
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Boolean getFullWidth() {
+        return fullWidth == null ? Boolean.FALSE : fullWidth;
+    }
+
+    public void setFullWidth(Boolean fullWidth) {
+        this.fullWidth = fullWidth;
     }
 
     public Boolean getShowOnHomepage() {
