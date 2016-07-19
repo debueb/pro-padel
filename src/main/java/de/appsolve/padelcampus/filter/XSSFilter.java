@@ -24,10 +24,14 @@ public class XSSFilter implements Filter {
     private static final Logger log = Logger.getLogger(XSSFilter.class);
 
     private Pattern excludePattern;
+    
+    public void setExcludePattern(Pattern pattern){
+        this.excludePattern = pattern;
+    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        excludePattern = Pattern.compile(filterConfig.getInitParameter("excludePatterns"));
+        //
     }
 
     @Override

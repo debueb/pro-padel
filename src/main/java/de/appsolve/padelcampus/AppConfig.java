@@ -8,26 +8,24 @@ package de.appsolve.padelcampus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.appsolve.padelcampus.external.cloudflare.CloudFlareApiRequestInterceptor;
 import de.appsolve.padelcampus.external.openshift.OpenshiftApiRequestInterceptor;
-import de.appsolve.padelcampus.filter.ResponseCachingFilter;
 import de.appsolve.padelcampus.listener.ContextInitializationListener;
 import de.appsolve.padelcampus.resolver.PutAwareCommonsMultipartResolver;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.http.CacheControl;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -38,21 +36,32 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 /**
  *
  * @author dominik
  */
 @Configuration
-@ComponentScan(useDefaultFilters = true, basePackages = "de.appsolve", excludeFilters={@Filter(org.springframework.stereotype.Controller.class)})
 @PropertySource(value="classpath:settings.properties")
 @EnableTransactionManagement
 @EnableScheduling
-public class AppConfig {
+@ComponentScan(basePackages = "de.appsolve")
+@EnableWebMvc
+//@ComponentScan(basePackages = "de.appsolve", useDefaultFilters=true, excludeFilters = {@ComponentScan.Filter(org.springframework.stereotype.Controller.class)})
+public class AppConfig extends WebMvcConfigurerAdapter{
     
     @Autowired
     Environment env;
@@ -64,6 +73,15 @@ public class AppConfig {
         messageSource.setBasename("/WEB-INF/Messages");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
+    }
+    
+    @Bean
+    public MessageSource validationMessageSource(){
+        ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
+        source.setCacheSeconds(env.getProperty("messagesReloadInterval", Integer.class, 0));
+        source.setBasename("/WEB-INF/ValidationMessages");
+        source.setDefaultEncoding("UTF-8");
+        return source;
     }
     
     @Bean
@@ -106,16 +124,6 @@ public class AppConfig {
         return new PersistenceExceptionTranslationPostProcessor();
     }
    
-    @Bean
-    public ResponseCachingFilter responseCachingFilter(){
-        ResponseCachingFilter responseCachingFilter = new ResponseCachingFilter();
-        responseCachingFilter.setCacheSeconds(0);
-        responseCachingFilter.setCacheControl(CacheControl.noStore());
-        Integer duration = env.getProperty("httpResponseCacheDuration", Integer.class);
-        responseCachingFilter.addCacheMapping(CacheControl.maxAge(duration, TimeUnit.SECONDS), "/**/*.js", "/**/*.css", "/**/*.png", "/**/*.jpg", "/**/*.gif", "/**/*.svg", "/**/*.ttf", "/**/*.woff");
-        return responseCachingFilter;
-    }
-    
     @Bean
     public LocaleResolver localeResolver(){
         FixedLocaleResolver resolver = new FixedLocaleResolver();
@@ -172,5 +180,44 @@ public class AppConfig {
         arrayList.add(new OpenshiftApiRequestInterceptor());
         restTemplate.setInterceptors(arrayList);
         return restTemplate;
+    }
+    
+    @Bean
+    public ViewResolver getViewResolver(){
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        resolver.setPrefix("/jsp/");
+        resolver.setSuffix(".jsp");
+        return resolver;
+    }
+    
+    @Bean
+    public Validator validator(){
+        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+        validator.setValidationMessageSource(validationMessageSource());
+        return validator;
+    }
+    
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/css/**").addResourceLocations("/css/");
+        registry.addResourceHandler("/js/**").addResourceLocations("/js/");
+        registry.addResourceHandler("/images/**").addResourceLocations("/images/");
+        registry.addResourceHandler("/templates/**").addResourceLocations("/templates/");
+    }
+    
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
+    
+    @Override
+    public Validator getValidator(){
+        return validator();
+    }
+    
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();
+        argumentResolvers.add(resolver);
     }
 }
