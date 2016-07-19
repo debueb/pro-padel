@@ -53,6 +53,10 @@
                     </spf:select>
                     
                     <div>
+                        <spf:checkbox path="showOnHomepage" />
+                        <label class="checkbox" for="showOnHomepage1"><fmt:message key="ShowOnHomepage"/></label>
+                    </div>
+                    <div>
                         <spf:checkbox path="showInMenu" />
                         <label class="checkbox" for="showInMenu1"><fmt:message key="ShowInMenu"/></label>
                     </div>

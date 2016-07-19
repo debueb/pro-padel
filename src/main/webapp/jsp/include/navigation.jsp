@@ -1,11 +1,13 @@
 <%@include file="/jsp/include/include.jsp"%>
 <div class="menu-item-container">
-    <c:forEach var="Module" items="${menuLinks[sessionScope.customer.name]}" varStatus="status">      
-        <jsp:include page="/jsp/include/list-menu-item.jsp">
-            <jsp:param name="image" value="${Module.iconName}"/>
-            <jsp:param name="title" value="${Module.title}"/>
-            <jsp:param name="url" value="${Module.url}"/>
-        </jsp:include>
+    <c:forEach var="Module" items="${customerModules[sessionScope.customer.name]}" varStatus="status">
+        <c:if test="${Module.showInMenu}">
+            <jsp:include page="/jsp/include/list-menu-item.jsp">
+                <jsp:param name="image" value="${Module.iconName}"/>
+                <jsp:param name="title" value="${Module.title}"/>
+                <jsp:param name="url" value="${Module.url}"/>
+            </jsp:include>
+        </c:if>
     </c:forEach> 
     <c:if test="${not empty privileges}">
         <fmt:message key="Administration" var="title"/>

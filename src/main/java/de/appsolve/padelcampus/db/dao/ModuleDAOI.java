@@ -8,7 +8,6 @@ package de.appsolve.padelcampus.db.dao;
 
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Module;
-import java.util.List;
 
 /**
  *
@@ -16,7 +15,5 @@ import java.util.List;
  */
 public interface ModuleDAOI extends BaseEntityDAOI<Module>{
     
-    public List<Module> findFooterModules();
-    public List<Module> findMenuModules();
     public Module findByTitle(String title);
 }

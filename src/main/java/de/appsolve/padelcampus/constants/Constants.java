@@ -44,8 +44,7 @@ public class Constants {
     public static final String SESSION_BOOKING_LIST_START_DATE  = "bookingListStartDate";
     public static final String SESSION_BOOKING_LIST_END_DATE    = "bookingListEndDate";
     
-    public static final String APPLICATION_MENU_LINKS       = "menuLinks";
-    public static final String APPLICATION_FOOTER_LINKS     = "footerLinks";
+    public static final String APPLICATION_CUSTOMER_MODULES = "customerModules";
     
     public static final String COOKIE_LOGIN_TOKEN           = "loginToken";
     

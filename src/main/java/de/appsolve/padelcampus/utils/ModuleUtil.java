@@ -34,27 +34,22 @@ public class ModuleUtil {
         CustomerI customer = sessionUtil.getCustomer(request);
         
         ServletContext context = request.getServletContext();
-        Map<String, List<Module>> links = (Map<String, List<Module>>) context.getAttribute(Constants.APPLICATION_MENU_LINKS);
-        Map<String, List<Module>> footerLinks = (Map<String, List<Module>>) context.getAttribute(Constants.APPLICATION_FOOTER_LINKS);
-        if (links == null || footerLinks == null){
-            links = new HashMap<>();
-            footerLinks = new HashMap<>();
+        @SuppressWarnings("unchecked")
+        Map<String, List<Module>> customerModules = (Map<String, List<Module>>) context.getAttribute(Constants.APPLICATION_CUSTOMER_MODULES);
+        if (customerModules == null ){
+            customerModules = new HashMap<>();
         }
         String customerName = customer.getName();
-        if (!links.containsKey(customerName) || !footerLinks.containsKey(customerName)){
-            List<Module> modules = moduleDAO.findMenuModules();
-            List<Module> footerModules = moduleDAO.findFooterModules();
-            links.put(customer.getName(), modules);
-            footerLinks.put(customer.getName(), footerModules);
-            context.setAttribute(Constants.APPLICATION_MENU_LINKS, links);
-            context.setAttribute(Constants.APPLICATION_FOOTER_LINKS, footerLinks);
+        if (!customerModules.containsKey(customerName)){
+            List<Module> modules = moduleDAO.findAll();
+            customerModules.put(customerName, modules);
+            context.setAttribute(Constants.APPLICATION_CUSTOMER_MODULES, customerModules);
         }
     } 
     
     public void reloadModules(HttpServletRequest request) {
         ServletContext context = request.getServletContext();
-        context.setAttribute(Constants.APPLICATION_MENU_LINKS, null);
-        context.setAttribute(Constants.APPLICATION_FOOTER_LINKS, null);
+        context.setAttribute(Constants.APPLICATION_CUSTOMER_MODULES, null);
         initModules(request);
     }
 }

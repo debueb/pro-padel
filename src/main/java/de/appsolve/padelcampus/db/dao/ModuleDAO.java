@@ -15,20 +15,6 @@ import org.springframework.stereotype.Component;
 public class ModuleDAO extends SortedGenericDAO<Module> implements ModuleDAOI{
 
     @Override
-    public List<Module> findFooterModules() {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("showInFooter", true);
-        return findByAttributes(attributes);
-    }
-
-    @Override
-    public List<Module> findMenuModules() {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("showInMenu", true);
-        return findByAttributes(attributes);
-    }
-    
-    @Override
     public Module findByTitle(String title) {
         title = title.replace("-", " ");
         return findByAttribute("title", title);

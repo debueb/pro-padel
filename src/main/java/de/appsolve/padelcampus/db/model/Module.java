@@ -47,6 +47,9 @@ public class Module extends SortableEntity{
     @Column
     private Boolean showInFooter;
     
+    @Column
+    private Boolean showOnHomepage;
+    
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<EventType> eventTypes;
@@ -77,6 +80,14 @@ public class Module extends SortableEntity{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Boolean getShowOnHomepage() {
+        return showOnHomepage == null ? Boolean.TRUE : showOnHomepage;
+    }
+
+    public void setShowOnHomepage(Boolean showOnHomepage) {
+        this.showOnHomepage = showOnHomepage;
     }
 
     public Boolean getShowInMenu() {
