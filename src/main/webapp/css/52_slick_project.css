@@ -1,3 +1,6 @@
+.slick-loading .slick-list{
+    background: transparent;
+}
 .slick-prev, .slick-next{
     z-index: 999;
     width: 30px;
