@@ -9,7 +9,9 @@
             <div class="panel-heading">
                 <h4><fmt:message key="Offers"/></h4>
             </div>
-            <div class="panel-body"> <div class="table-responsive">
+            <div class="panel-body"> 
+                <jsp:include page="/jsp/admin/include/search.jsp"/>
+                <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead>
                         <th></th>
@@ -27,6 +29,7 @@
                         </tbody>
                     </table>
                 </div>
+                <jsp:include page="/jsp/admin/include/pagination.jsp"/>
                 <a href="/admin/bookings/offers/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewOffer"/></a>
             </div>
         </div>
