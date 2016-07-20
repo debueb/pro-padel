@@ -122,7 +122,7 @@
                     </div>
 
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
-                    <a class="btn btn-primary btn-block unit" href="/matchoffers"><fmt:message key="Cancel"/></a>
+                    <a class="btn btn-primary btn-block unit ajaxify" href="/matchoffers"><fmt:message key="Cancel"/></a>
                     <c:if test="${not empty Model.id}">
                         <a class="btn btn-primary btn-block unit" href="/matchoffers/${Model.id}/delete"><fmt:message key="Delete"/></a>
                     </c:if>
