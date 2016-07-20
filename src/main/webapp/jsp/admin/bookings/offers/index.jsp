@@ -12,12 +12,14 @@
             <div class="panel-body"> <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead>
+                        <th></th>
                         <th><fmt:message key="Name"/></th>
                         <th class="delete"><fmt:message key="Delete"/></th>
                         </thead>
-                        <tbody>
+                        <tbody class="table-sortable">
                             <c:forEach var="Model" items="${Models}">
-                                <tr>
+                                <tr data-id="${Model.id}">
+                                    <td class="sortable-handle"><i class="fa fa-arrows-v"></i></td>
                                     <td><a class="ajaxify" href="/${moduleName}/edit/${Model.id}">${Model.name}</a></td>
                                     <td class="delete"><a href="/${moduleName}/${Model.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
                                 </tr>

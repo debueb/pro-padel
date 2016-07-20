@@ -6,7 +6,7 @@
 
 package de.appsolve.padelcampus.admin.controller.bookings;
 
-import de.appsolve.padelcampus.admin.controller.AdminBaseController;
+import de.appsolve.padelcampus.admin.controller.general.AdminSortableController;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Offer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller()
 @RequestMapping("/admin/bookings/offers")
-public class AdminBookingsOffersController extends AdminBaseController<Offer> {
+public class AdminBookingsOffersController extends AdminSortableController<Offer> {
     
     @Autowired
     BaseEntityDAOI<Offer> offerDAO;

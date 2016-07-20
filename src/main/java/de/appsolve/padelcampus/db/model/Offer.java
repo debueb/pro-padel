@@ -18,7 +18,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author dominik
  */
 @Entity
-public class Offer extends CustomerEntity{
+public class Offer extends SortableEntity{
     
     @Transient
     private static final long serialVersionUID = 1L;
@@ -37,9 +37,6 @@ public class Offer extends CustomerEntity{
     
     @Column
     private String hexColor;
-    
-    @Column
-    private Long position;
     
     public String getName() {
         return name;
@@ -72,28 +69,4 @@ public class Offer extends CustomerEntity{
     public void setHexColor(String hexColor) {
         this.hexColor = hexColor;
     }
-
-    public Long getPosition() {
-        return position == null ? 0 : position;
-    }
-
-    public void setPosition(Long position) {
-        this.position = position;
-    }
-
-    @Override
-    public String toString() {
-        return getName();
-    }
-
-    @Override
-    public int compareTo(BaseEntityI o) {
-        if (o instanceof Offer){
-            Offer other = (Offer) o;
-            return this.getPosition().compareTo(other.getPosition());
-        }
-        return super.compareTo(o);
-    }
-    
-   
 }
