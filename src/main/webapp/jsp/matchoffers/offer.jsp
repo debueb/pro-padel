@@ -45,6 +45,7 @@
                 </c:choose>
                 <c:url var="fullUrl" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}${url}"/>
                 <a class="btn btn-primary btn-block" href="whatsapp://send?text=${fullUrl}"><fmt:message key="ShareOfferViaWhatsApp"/></a>
+                <a class="btn btn-primary btn-block" href="tg://msg?text=${fullUrl}"><fmt:message key="ShareOfferViaTelegram"/></a>
                 <a class="btn btn-primary btn-block" href="mailto:?subject=${NewMatchOfferMailSubject}&body=${NewMatchOfferMailBody}"><fmt:message key="ShareOfferViaMail"/></a>
                 <a class="btn btn-primary btn-block" href="/matchoffers"><fmt:message key="OtherMatchOffers"/></a>
             </div>
