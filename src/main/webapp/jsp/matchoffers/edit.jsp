@@ -63,18 +63,7 @@
                         <span class="explanation-select"><fmt:message key="Duration"/></span>
                     </div>
 
-                    <%-- Spielstärken --%>
-                    <div class="relative">
-                        <fmt:message key="SkillLevel" var="SkillLevel"/>
-                        <spf:select path="skillLevels" class="select-multiple show-tick form-control" data-style="form-center-element" title="${SkillLevel}" multiple="true" data-container="body">
-                            <c:forEach var="SkillLevel" items="${SkillLevels}">
-                                <c:set var="selected" value="${fn:contains(Model.skillLevels, SkillLevel) ? 'selected': 'false'}"/>
-                                <spf:option value="${SkillLevel}"><fmt:message key="${SkillLevel}"/></spf:option>
-                            </c:forEach>
-                        </spf:select>
-                        <span class="explanation-select"><fmt:message key="SkillLevel"/></span>
-                    </div>
-
+                  
                     <%-- Min. Teilnehmer --%>
                     <div class="input-group">
                         <span class="input-group-btn">
@@ -114,10 +103,22 @@
                     <%-- Teilnehmer --%>
                     <div class="relative">
                         <fmt:message key="Participants" var="Participants"/>
-                        <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${Participants}" multiple="true" data-live-search="true" data-container="body">
+                        <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-center-element" title="${Participants}" multiple="true" data-live-search="true" data-container="body">
                             <spf:options items="${Players}" itemValue="id"/>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Participants"/></span>
+                    </div>
+                    
+                    <%-- Spielstärken --%>
+                    <div class="relative">
+                        <fmt:message key="SkillLevel" var="SkillLevel"/>
+                        <spf:select path="skillLevels" class="select-multiple show-tick form-control" data-style="form-bottom-element" title="${SkillLevel}" multiple="multiple" data-container="body">
+                            <c:forEach var="SkillLevel" items="${SkillLevels}">
+                                <c:set var="selected" value="${fn:contains(Model.skillLevels, SkillLevel) ? 'selected': 'false'}"/>
+                                <spf:option value="${SkillLevel}"><fmt:message key="${SkillLevel}"/></spf:option>
+                            </c:forEach>
+                        </spf:select>
+                        <span class="explanation-select"><fmt:message key="SkillLevel"/></span>
                     </div>
 
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
