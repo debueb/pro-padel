@@ -73,7 +73,7 @@
                         <span class="explanation-select"><fmt:message key="FromHour"/></span>
                     </span>
                     <span class="relative input-hour">
-                        <spf:select path="startTimeMinute" class="select-simple form-right-element form-center-element" data-container="body">
+                        <spf:select path="startTimeMinute" class="select-simple form-right-element form-center-element " data-container="body">
                             <c:forEach var="minute" begin="0" end="55" step="5">
                                 <fmt:formatNumber value="${minute}" minIntegerDigits="2" var="minute"/>
                                 <spf:option value="${minute}"/>
@@ -84,7 +84,7 @@
 
                     <%-- Bis --%>
                     <span class="relative input-hour">
-                        <spf:select path="endTimeHour" class="select-simple form-left-element form-bottom-element" data-container="body">
+                        <spf:select path="endTimeHour" class="select-simple form-bottom-element form-left-element" data-container="body">
                             <c:forEach var="hour" begin="0" end="23">
                                 <fmt:formatNumber value="${hour}" minIntegerDigits="2" var="hour"/>
                                 <spf:option value="${hour}"/>
@@ -93,7 +93,7 @@
                         <span class="explanation-select"><fmt:message key="UntilHour"/></span>
                     </span>
                     <span class="relative input-hour">
-                        <spf:select path="endTimeMinute" class="select-simple form-right-element form-bottom-element" data-container="body">
+                        <spf:select path="endTimeMinute" class="select-simple form-bottom-element form-right-element" data-container="body">
                             <c:forEach var="minute" begin="0" end="55" step="5">
                                 <fmt:formatNumber value="${minute}" minIntegerDigits="2" var="minute"/>
                                 <spf:option value="${minute}"/>
@@ -101,10 +101,12 @@
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="UntilMinute"/></span>
                     </span>
-                    <spf:checkbox path="paymentConfirmed" id="paymentConfirmed"/>
-                    <label class="checkbox" for="paymentConfirmed"><fmt:message key="PaymentConfirmed"/></label>
                     <div class="clearfix"></div>
-
+                    <span class="unit">
+                        <spf:checkbox path="paymentConfirmed" id="paymentConfirmed"/>
+                        <label class="checkbox" for="paymentConfirmed"><fmt:message key="Paid"/></label>
+                    </span>
+                    
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
                     <a href="/admin/bookings" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="Cancel"/></a>
                 </spf:form>
