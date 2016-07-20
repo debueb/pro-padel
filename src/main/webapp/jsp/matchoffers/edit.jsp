@@ -13,7 +13,7 @@
                 <c:if test="${empty Model.id}"><p>
                         <fmt:message key="NewMatchOfferDesc"/></p>
                     </c:if>
-                    <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
+                    <spf:form method="POST" class="form-signin ajaxify" role="form" modelAttribute="Model">
                         <spf:input type="hidden" path="id"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
 
