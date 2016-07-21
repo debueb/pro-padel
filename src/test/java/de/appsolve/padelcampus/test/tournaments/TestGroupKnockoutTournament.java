@@ -5,11 +5,11 @@
  */
 package de.appsolve.padelcampus.test.tournaments;
 
+import com.google.gson.JsonObject;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.Privilege;
 import de.appsolve.padelcampus.db.model.AdminGroup;
-import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.test.*;
 import de.appsolve.padelcampus.test.matchers.ModelAttributeToStringEquals;
@@ -17,10 +17,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import org.apache.log4j.Logger;
-import org.hamcrest.Matchers;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -29,14 +28,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author dominik
  */
-public class TestKnockoutTournament extends TestBase {
+public class TestGroupKnockoutTournament extends TestBase {
     
     
     private static final String ADMIN_EMAIL     = "admin@appsolve.de";
     private static final String ADMIN_PASSWORD  = "test";
     private static final Integer NUM_PLAYERS    = 10;
 
-    private static final Logger LOG = Logger.getLogger(TestKnockoutTournament.class);
+    private static final Logger LOG = Logger.getLogger(TestGroupKnockoutTournament.class);
     
     @Test
     public void test01CreateNewAccount() throws Exception {
@@ -94,13 +93,12 @@ public class TestKnockoutTournament extends TestBase {
                      
         }
         
-        
         List<String> teamUUIDs = new ArrayList<>();
         for (long i=0; i<NUM_PLAYERS; i=i+2){
             teamUUIDs.add(teamDAO.findByAttribute("name", "Team "+i).getUUID());
         }
         
-        LOG.info("creating new knockout tournament");
+        LOG.info("creating new tournament");
         mockMvc.perform(post("/admin/events/add")
             .session(session)
             .param("name", "Knockout Tournament")
@@ -112,11 +110,11 @@ public class TestKnockoutTournament extends TestBase {
             .param("participants", teamUUIDs.toArray(new String[teamUUIDs.size()])))
             .andExpect(status().is3xxRedirection());
         
-        LOG.info("attempt to modify knockout tournament should fail");
+        LOG.info("attempt to modify tournament should fail");
         mockMvc.perform(post("/admin/events/edit/1")
             .session(session)
             .param("id", "1")
-            .param("name", "Knockout Tournament")
+            .param("name", "GroupKnockout Tournament")
             .param("gender", Gender.male.name())
             .param("eventType", EventType.GroupKnockout.name())
             .param("startDate", "2016-05-06")
@@ -126,15 +124,38 @@ public class TestKnockoutTournament extends TestBase {
             .andExpect(model().hasErrors());
 
         
-        //update games
+        LOG.info("update group draws");
+        mockMvc.perform(post("/admin/events/edit/1/groupdraws")
+            .session(session)
+            .param("_groupParticipants[0]", "1")
+            .param("groupParticipants[0]", teamUUIDs.get(0))
+            .param("groupParticipants[0]", teamUUIDs.get(1))
+            .param("groupParticipants[0]", teamUUIDs.get(2))
+            .param("_groupParticipants[1]", "1")
+            .param("groupParticipants[1]", teamUUIDs.get(3))
+            .param("groupParticipants[1]", teamUUIDs.get(4)))
+            .andExpect(status().is3xxRedirection());
+        
         LOG.info("check tournament view");
         
         mockMvc.perform(get("/events/event/1")
             .session(session))
             .andExpect(status().isOk())
-                .andExpect(model().hasNoErrors())
-                .andExpect(new ModelAttributeToStringEquals("RoundGameMap", "{0=[Team 0, Team 6 vs. Team 8, Team 2, Team 4], 1=[Team 0, Team 2 vs. Team 4], 2=[]}"))
-                ;
-               
+            .andExpect(model().hasNoErrors())
+            .andExpect(model().attributeExists("Model"));
+        
+        mockMvc.perform(get("/events/event/1/groupgames")
+            .session(session))
+            .andExpect(status().isOk())
+            .andExpect(model().hasNoErrors())
+            .andExpect(view().name("events/groupknockout/groupgames"))
+            .andExpect(model().attributeExists("GroupParticipantGameResultMap"));
+                
+        mockMvc.perform(get("/events/event/1/knockoutgames")
+            .session(session))
+            .andExpect(status().isOk())
+            .andExpect(model().hasNoErrors())
+            .andExpect(view().name("events/groupknockout/knockoutgamesend"));
+            //.andExpect(new ModelAttributeToStringEquals("RoundGameMap", "{0=[Team 0, Team 6 vs. Team 8, Team 2, Team 4], 1=[Team 0, Team 2 vs. Team 4], 2=[]}"));
     }
 }
