@@ -14,14 +14,17 @@ import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationInfo;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.ServletContextAware;
 
 /**
  *
  * @author dominik
  */
-public class ContextInitializationListener implements InitializingBean{
+public class ContextInitializationListener implements InitializingBean, ServletContextAware{
 
     private static final Logger LOG = Logger.getLogger(ContextInitializationListener.class);
+    
+    private ServletContext servletContext;
     
     @Autowired
     DataSource dataSource;
@@ -29,9 +32,6 @@ public class ContextInitializationListener implements InitializingBean{
     @Autowired
     HtmlResourceUtil htmlResourceUtil;
     
-    @Autowired
-    ServletContext servletContext;
-
     @Override
     public void afterPropertiesSet() throws Exception {
         //do database migrations if necessary
@@ -48,5 +48,10 @@ public class ContextInitializationListener implements InitializingBean{
         } catch (Exception ex) {
             LOG.warn(ex);
         }
+    }
+
+    @Override
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
     }
 }

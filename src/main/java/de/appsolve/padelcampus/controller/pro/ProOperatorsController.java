@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -48,9 +49,11 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 @RequestMapping("/pro/operators")
-public class ProOperatorsController {
+public class ProOperatorsController implements ServletContextAware{
     
     private static final Logger LOG = Logger.getLogger(ProOperatorsController.class);
+    
+    private ServletContext servletContext;
     
     @Autowired
     CustomerDAOI customerDAO;
@@ -69,9 +72,6 @@ public class ProOperatorsController {
     
     @Autowired
     OpenshiftApiClient openshiftApiClient;
-    
-    @Autowired
-    ServletContext servletContext;
     
     @Autowired
     HtmlResourceUtil htmlResourceUtil;
@@ -206,4 +206,9 @@ public class ProOperatorsController {
 //        }
 //        return null;
 //    }
+
+    @Override
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
 }
