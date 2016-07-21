@@ -1,6 +1,6 @@
 .note-editor .note-toolbar,
 .note-editor .note-editable {
-  background: white;
+   background: #fff;
 }
 .note-editor {
     margin-bottom: 0 !important;
@@ -30,4 +30,7 @@
 .note-editable[contentEditable=true]:empty:not(:focus):before{
     content:'Content';
     color: #afafaf;
+}
+.note-editor.note-frame .note-editing-area .note-editable{
+    background: #f5f5f5;
 }
