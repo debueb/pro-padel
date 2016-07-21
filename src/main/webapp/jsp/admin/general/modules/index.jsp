@@ -15,9 +15,10 @@
                         <thead>
                         <th></th>
                         <th><fmt:message key="Title"/></th>
-                        <th><fmt:message key="Type"/></th>
-                        <th><fmt:message key="ShowInMenu"/></th>
-                        <th><fmt:message key="ShowInFooter"/></th>
+                        <th class="text-center"><fmt:message key="Type"/></th>
+                        <th class="text-center"><fmt:message key="ShowOnHomepage"/></th>
+                        <th class="text-center"><fmt:message key="ShowInMenu"/></th>
+                        <th class="text-center"><fmt:message key="ShowInFooter"/></th>
                         <th class="delete"><fmt:message key="Delete"/></th>
                         </thead>
                         <tbody class="table-sortable">
@@ -26,9 +27,10 @@
                                 <tr data-id="${Model.id}">
                                     <td class="sortable-handle"><i class="fa fa-arrows-v"></i></td>
                                     <td><a class="ajaxify" href="${editUrl}">${Model.title}</a></td>
-                                    <td><a class="ajaxify" href="${editUrl}">${Model.moduleType}</a></td>
-                                    <td><a class="ajaxify" href="${editUrl}"><i class="fa fa-${Model.showInMenu ? 'check' : 'remove'}"/></a></td>
-                                    <td><a class="ajaxify" href="${editUrl}"><i class="fa fa-${Model.showInFooter ? 'check' : 'remove'}"/></a></td>
+                                    <td class="text-center"><a class="ajaxify" href="${editUrl}">${Model.moduleType}</a></td>
+                                    <td class="text-center"><a class="ajaxify" href="${editUrl}"><i class="fa fa-${Model.showOnHomepage ? 'check' : 'remove'}"/></a></td>
+                                    <td class="text-center"><a class="ajaxify" href="${editUrl}"><i class="fa fa-${Model.showInMenu ? 'check' : 'remove'}"/></a></td>
+                                    <td class="text-center"><a class="ajaxify" href="${editUrl}"><i class="fa fa-${Model.showInFooter ? 'check' : 'remove'}"/></a></td>
                                     <td class="delete"><a href="/admin/general/modules/${Model.id}/delete" class="fa fa-minus-circle ajaxify"></a></td>
                                 </tr>
                             </c:forEach>
