@@ -5,6 +5,7 @@ import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -59,6 +60,9 @@ public class TeamDAO extends SortedBaseDAO<Team> implements TeamDAOI{
     
     @Override
     public List<Team> findByPlayer(Player player) {
+        if (player == null){
+            return Collections.<Team>emptyList();
+        }
         Criteria criteria = getCriteria();
         criteria.createAlias("players", "p");
         criteria.add(Restrictions.eq("p.id", player.getId()));

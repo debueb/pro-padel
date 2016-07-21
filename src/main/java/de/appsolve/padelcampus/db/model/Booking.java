@@ -304,6 +304,6 @@ public class Booking extends CustomerEntity{
     
     @Override
     public String toString() {
-        return String.format("%s - %s - %s - %s", getPlayer(), getOffer(), getBookingDate().toString(FormatUtils.DATE_WITH_DAY), getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE));
+        return String.format("%s - %s - %s - %s", getPlayer(), getOffer(), getBookingDate() == null ? "no booking date" : getBookingDate().toString(FormatUtils.DATE_WITH_DAY), getBookingTime() == null ? "no booking time" : getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE));
     }
 }
