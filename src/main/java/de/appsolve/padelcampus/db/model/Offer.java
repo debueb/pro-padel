@@ -69,4 +69,9 @@ public class Offer extends SortableEntity{
     public void setHexColor(String hexColor) {
         this.hexColor = hexColor;
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }
