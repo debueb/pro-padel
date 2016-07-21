@@ -27,7 +27,7 @@ public class TestCoreFunctions extends TestBase {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"))
-                .andExpect(model().attributeExists("AllNews"));
+                .andExpect(model().attributeExists("Mail"));
     }
 
     @Test

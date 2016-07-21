@@ -81,8 +81,7 @@ public class TestKnockoutTournament extends TestBase {
      
         LOG.info("creating new teams");
         mockMvc.perform(get("/admin/teams/add"))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("AllPlayers", Matchers.hasSize(NUM_PLAYERS+1)));
+                .andExpect(status().isOk());
         
         for (int i=0; i<NUM_PLAYERS; i=i+2){
             Player first = playerDAO.findByEmail("testplayer"+i+"@appsolve.de");
