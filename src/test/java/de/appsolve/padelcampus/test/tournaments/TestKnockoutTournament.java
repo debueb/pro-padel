@@ -89,15 +89,15 @@ public class TestKnockoutTournament extends TestBase {
             mockMvc.perform(post("/admin/teams/add")
                 .session(session)
                 .param("name", "Team "+i)
-                .param("players", first.getId().toString(), second.getId().toString()))
+                .param("players", first.getUUID(), second.getUUID()))
                 .andExpect(status().is3xxRedirection());
                      
         }
         
         
-        List<String> teamIds = new ArrayList<>();
+        List<String> teamUUIDs = new ArrayList<>();
         for (long i=0; i<NUM_PLAYERS; i=i+2){
-            teamIds.add(teamDAO.findByAttribute("name", "Team "+i).getId().toString());
+            teamUUIDs.add(teamDAO.findByAttribute("name", "Team "+i).getUUID());
         }
         
         LOG.info("creating new knockout tournament");
@@ -109,7 +109,7 @@ public class TestKnockoutTournament extends TestBase {
             .param("startDate", "2016-05-06")
             .param("endDate", "2016-05-06")
             .param("active", "on")
-            .param("participants", teamIds.toArray(new String[teamIds.size()])))
+            .param("participants", teamUUIDs.toArray(new String[teamUUIDs.size()])))
             .andExpect(status().is3xxRedirection());
         
         LOG.info("attempt to modify knockout tournament should fail");
@@ -122,13 +122,12 @@ public class TestKnockoutTournament extends TestBase {
             .param("startDate", "2016-05-06")
             .param("endDate", "2016-05-06")
             .param("active", "on")
-            .param("participants", teamIds.toArray(new String[teamIds.size()])))
+            .param("participants", teamUUIDs.toArray(new String[teamUUIDs.size()])))
             .andExpect(model().hasErrors());
 
         
         //update games
         LOG.info("check tournament view");
-        SortedMap<Integer, List<Game>> roundGames = new TreeMap<>();
         
         mockMvc.perform(get("/events/event/1")
             .session(session))
