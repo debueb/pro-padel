@@ -23,6 +23,8 @@ $(document).ready(function () {
     $('#summernote').livequery(function(){
         var $self = $(this);
         $self.summernote({
+            airmode: false,
+            popover: false,
             minHeight: 200,
             toolbar: [
                 ['style', ['style']],
