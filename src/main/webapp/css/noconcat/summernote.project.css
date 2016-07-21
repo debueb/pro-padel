@@ -4,6 +4,8 @@
 }
 .note-editor {
     margin-bottom: 0 !important;
+}
+.note-editor.note-frame{
     border: 1px solid #ccc;
 }
 .form-center-element .panel{
