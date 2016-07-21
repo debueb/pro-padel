@@ -46,5 +46,6 @@
                 </spf:form>
             </div>
         </div>
-    </div></div>
+    </div>
+</div>
 <jsp:include page="/jsp/admin/include/summernote.jsp"/>
