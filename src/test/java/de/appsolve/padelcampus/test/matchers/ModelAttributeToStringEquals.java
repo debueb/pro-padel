@@ -15,8 +15,8 @@ import org.springframework.test.web.servlet.ResultMatcher;
  */
 public class ModelAttributeToStringEquals implements ResultMatcher{
     
-    private String attribute;
-    private String value;
+    private final String attribute;
+    private final String value;
     
     public ModelAttributeToStringEquals(String attribute, String value){
         this.attribute = attribute;
@@ -27,6 +27,10 @@ public class ModelAttributeToStringEquals implements ResultMatcher{
     public void match(MvcResult result) throws Exception {
         Object object = result.getModelAndView().getModel().get(attribute);
         Assert.assertNotNull(object);
+        if (!object.toString().equals(value)){
+            System.out.println("exp: "+value);
+            System.out.println("got: "+object.toString());
+        }
         Assert.assertTrue(object.toString().equals(value));
     }
     
