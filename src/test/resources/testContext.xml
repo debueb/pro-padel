@@ -15,7 +15,7 @@
    
     <context:component-scan base-package="de.appsolve" use-default-filters="true"/>
    
-    <bean id="myEmf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
            <property name="dataSource" ref="dataSource" />
            <property name="packagesToScan" value="de.appsolve.padelcampus.db.model" />
            <property name="jpaVendorAdapter">
@@ -38,7 +38,7 @@
     </bean>
  
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="myEmf" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
     <tx:annotation-driven />
     
