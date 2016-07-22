@@ -75,7 +75,12 @@
                     <div class="navbar-header">
                         <c:choose>
                             <c:when test="${pageContext.request.requestURI == '/jsp/index.jsp'}">
-                                <div class="navbar-brand"><img src="${sessionScope.customer.companyLogoPath}" class="customerLogo"/>${sessionScope.customer}</div>
+                                <div class="navbar-brand">
+                                    <img src="${sessionScope.customer.companyLogoPath}" class="customerLogo"/>
+                                </div>
+                                <c:if test="${empty sessionScope.customer.companyLogo}">
+                                    <div class="navbar-brand">${sessionScope.customer}</div>
+                                </c:if>
                             </c:when>
                             <c:otherwise>
                                 <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a>
