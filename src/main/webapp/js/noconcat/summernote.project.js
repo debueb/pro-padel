@@ -33,14 +33,20 @@ $(document).ready(function () {
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['insert', ['template', 'map', 'link', 'picture', 'video', 'hr']],
-                ['table', ['table']],
                 ['view', ['fullscreen', 'codeview']]
             ],
             template: {
                 path: '/templates', // path to your template folder
                 list: [ // list of your template (without the .html extension)
-                    'Gallery',
-                    'Panel'
+                    'Table',
+                    'GallerySlider',
+                    'Panel',
+                    'ButtonPrimary',
+                    'ButtonDefault',
+                    'Jumbotron',
+                    'AlertInfo',
+                    'AlertWarning',
+                    'AlertDanger'
                 ]
             },
             map: {
