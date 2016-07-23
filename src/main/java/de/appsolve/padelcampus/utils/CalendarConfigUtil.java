@@ -10,6 +10,7 @@ import static de.appsolve.padelcampus.constants.Constants.NO_HOLIDAY_KEY;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
+import de.jollyday.ManagerParameters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -49,7 +50,7 @@ public class CalendarConfigUtil {
                 String[] holidayKeySplit = holidayKey.split("-");
                 String country = holidayKeySplit[0];
                 String region  = holidayKeySplit[1];
-                HolidayManager countryHolidays = HolidayManager.getInstance(HolidayCalendar.valueOf(country));
+                HolidayManager countryHolidays = HolidayManager.getInstance(ManagerParameters.create(HolidayCalendar.valueOf(country)));
                 isHoliday = countryHolidays.isHoliday(date, region);
             }
             if (isHoliday){
