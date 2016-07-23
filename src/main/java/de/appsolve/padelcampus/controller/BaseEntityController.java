@@ -30,6 +30,7 @@ public abstract class BaseEntityController<T extends BaseEntityI> extends BaseCo
     
     @RequestMapping(value = "/{id}/delete")
     public ModelAndView getDelete(@PathVariable("id") Long id){
+        @SuppressWarnings("unchecked")
         T model = (T)getDAO().findById(id);
         return getDeleteView(model);
     }
@@ -39,6 +40,7 @@ public abstract class BaseEntityController<T extends BaseEntityI> extends BaseCo
         try {
             getDAO().deleteById(id);
         } catch (DataIntegrityViolationException e){
+            @SuppressWarnings("unchecked")
             T model = (T)getDAO().findById(id);
             log.warn("Attempt to delete "+model+" failed due to "+e);
             ModelAndView deleteView = getDeleteView(model);

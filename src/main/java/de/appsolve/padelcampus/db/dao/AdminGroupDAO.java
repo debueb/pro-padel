@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 public class AdminGroupDAO extends GenericDAO<AdminGroup> implements AdminGroupDAOI{
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<AdminGroup> findByPlayer(Player player) {
         Criteria criteria = getCriteria();
         criteria.createAlias("players", "p");

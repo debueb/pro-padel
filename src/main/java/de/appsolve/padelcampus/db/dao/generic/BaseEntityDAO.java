@@ -218,6 +218,7 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public T findByUUIDFetchEagerly(final String uuid, String... associations) {
         Criteria criteria = getCriteria();
         for (String association: associations){
@@ -228,6 +229,7 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public T findByIdFetchEagerly(final long id, String... associations) {
         Criteria criteria = getCriteria();
         for (String association: associations){
@@ -246,6 +248,7 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         //we only want unique results
         //see http://stackoverflow.com/questions/18753245/one-to-many-relationship-gets-duplicate-objects-whithout-using-distinct-why
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        @SuppressWarnings("unchecked")
         List<T> list = (List<T>) crit.list();
         sort(list);
         return list;
@@ -260,6 +263,7 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         //we only want unique results
         //see http://stackoverflow.com/questions/18753245/one-to-many-relationship-gets-duplicate-objects-whithout-using-distinct-why
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        @SuppressWarnings("unchecked")
         List<T> list = (List<T>) crit.list();
         sort(list);
         return list;
