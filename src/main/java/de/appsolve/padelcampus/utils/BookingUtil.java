@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
 import org.apache.log4j.Logger;
@@ -255,7 +256,7 @@ public class BookingUtil {
             }
         }
         
-        Set<Offer> offers = new TreeSet<>();
+        SortedSet<Offer> offers = new TreeSet<>();
         List<TimeRange> rangeList = new ArrayList<>();
         //Map<TimeRange, List<TimeSlot>> rangeList = new TreeMap<>();
         for (TimeSlot slot: timeSlots){
@@ -286,6 +287,7 @@ public class BookingUtil {
                 selectedOffers.addAll(facility.getOffers());
             }
         }
+        Collections.sort(selectedOffers);
         
         mav.addObject("dayConfigs", objectMapper.writeValueAsString(dayConfigs));
         mav.addObject("maxDate", lastDay.toString());
