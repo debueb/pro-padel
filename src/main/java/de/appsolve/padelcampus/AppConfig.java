@@ -5,11 +5,21 @@
  */
 package de.appsolve.padelcampus;
 
+import cn.bluejoe.elfinder.controller.executor.CommandExecutorFactory;
+import cn.bluejoe.elfinder.controller.executor.DefaultCommandExecutorFactory;
+import cn.bluejoe.elfinder.controller.executors.MissingCommandExecutor;
+import cn.bluejoe.elfinder.impl.DefaultFsService;
+import cn.bluejoe.elfinder.impl.DefaultFsServiceConfig;
+import cn.bluejoe.elfinder.impl.FsSecurityCheckForAll;
+import cn.bluejoe.elfinder.impl.StaticFsServiceFactory;
+import cn.bluejoe.elfinder.localfs.LocalFsVolume;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static de.appsolve.padelcampus.constants.Constants.OPENSHIFT_DATA_DIR;
 import de.appsolve.padelcampus.external.cloudflare.CloudFlareApiRequestInterceptor;
 import de.appsolve.padelcampus.external.openshift.OpenshiftApiRequestInterceptor;
 import de.appsolve.padelcampus.listener.ContextInitializationListener;
 import de.appsolve.padelcampus.resolver.PutAwareCommonsMultipartResolver;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -195,6 +205,40 @@ public class AppConfig extends WebMvcConfigurerAdapter{
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.setValidationMessageSource(validationMessageSource());
         return validator;
+    }
+    
+    //ElFinder Connector https://github.com/bluejoe2008/elfinder-2.x-servlet
+    @Bean
+    public CommandExecutorFactory commandExecutorFactory(){
+        DefaultCommandExecutorFactory defaultCommandExecutorFactory = new DefaultCommandExecutorFactory();
+        defaultCommandExecutorFactory.setClassNamePattern("cn.bluejoe.elfinder.controller.executors.%sCommandExecutor");
+        defaultCommandExecutorFactory.setFallbackCommand(new MissingCommandExecutor());
+        return defaultCommandExecutorFactory;
+    }
+    
+    @Bean
+    public StaticFsServiceFactory fsServiceFactory() {
+        StaticFsServiceFactory staticFsServiceFactory = new StaticFsServiceFactory();
+        DefaultFsService fsService = createFsService();
+        staticFsServiceFactory.setFsService(fsService);
+        return staticFsServiceFactory;
+    }
+    
+    protected DefaultFsService createFsService() {
+        DefaultFsService fsService = new DefaultFsService();
+        fsService.setSecurityChecker(new FsSecurityCheckForAll());
+        DefaultFsServiceConfig serviceConfig = new DefaultFsServiceConfig();
+        serviceConfig.setTmbWidth(80);
+        fsService.setServiceConfig(serviceConfig);
+        fsService.addVolume("Files", createLocalFsVolume("Files", new File(env.getProperty(OPENSHIFT_DATA_DIR))));
+        return fsService;
+    }
+    
+    private LocalFsVolume createLocalFsVolume(String name, File rootDir) {
+        LocalFsVolume localFsVolume = new LocalFsVolume();
+        localFsVolume.setName(name);
+        localFsVolume.setRootDir(rootDir);
+        return localFsVolume;
     }
     
     @Override

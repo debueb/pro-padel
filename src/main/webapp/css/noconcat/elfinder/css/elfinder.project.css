@@ -1,0 +1,27 @@
+.elfinder{
+    font-family: inherit;
+}
+.elfinder-button{
+    background: #fff !important;
+}
+.dialogelfinder-drag, .elfinder .elfinder-statusbar{
+    color: #fff;
+}
+.elfinder-toolbar{
+    background: #fff;
+}
+.elfinder-ltr .dialogelfinder-drag-close {
+    right: 5px;
+    top: 10px;
+}
+.dialogelfinder-drag-close .ui-icon{
+    color: #fff;
+    text-indent: 0;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+.dialogelfinder-drag-close .ui-icon:before{
+    content: "\f00d";
+}

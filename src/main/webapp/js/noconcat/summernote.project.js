@@ -32,7 +32,7 @@ $(document).ready(function () {
                 ['fontsize', ['fontsize']],
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['template', 'map', 'link', 'picture', 'video', 'hr']],
+                ['insert', ['template', 'map', 'link', 'elfinder', 'picture', 'video', 'hr']],
                 ['view', ['fullscreen', 'codeview']]
             ],
             template: {
