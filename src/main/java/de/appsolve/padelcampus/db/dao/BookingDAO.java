@@ -36,6 +36,7 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
     }    
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Booking> findBlockedBookingsForDate(LocalDate date) {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.eq("bookingDate", date));
@@ -46,6 +47,7 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public List<Booking> findBlockedBookingsBetween(LocalDate startDate, LocalDate endDate) {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.ge("bookingDate", startDate));
@@ -57,6 +59,7 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Booking> findBlockedBookings() {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.isNotNull("blockingTime"));
@@ -66,6 +69,7 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Booking> findActiveBookingsBetween(LocalDate startDate, LocalDate endDate) {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.ge("bookingDate", startDate));
@@ -77,6 +81,7 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Booking> findReservations() {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.eq("paymentMethod", PaymentMethod.Reservation));

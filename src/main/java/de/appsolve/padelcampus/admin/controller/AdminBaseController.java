@@ -58,6 +58,7 @@ public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEnt
     }
     
     @RequestMapping(value={"add", "edit/{modelId}"}, method=POST)
+    @SuppressWarnings("unchecked")
     public ModelAndView postEditView(@ModelAttribute("Model") T model, HttpServletRequest request, BindingResult result){
         validator.validate(model, result);
         if (result.hasErrors()){
@@ -82,14 +83,17 @@ public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEnt
         return mav;
     }
     
+    @SuppressWarnings("unchecked")
     protected Page<T> findAll(Pageable pageable) {
         return getDAO().findAll(pageable);
     }
     
+    @SuppressWarnings("unchecked")
     protected Page<T> findAllByFuzzySearch(String search) {
         return getDAO().findAllByFuzzySearch(search);
     }
 
+    @SuppressWarnings("unchecked")
     protected T findById(Long modelId) {
         return (T) getDAO().findById(modelId);
     }

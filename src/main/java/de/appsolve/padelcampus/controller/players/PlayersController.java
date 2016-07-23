@@ -15,12 +15,11 @@ import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.ParticipantI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
-import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,9 +50,6 @@ public class PlayersController extends BaseController {
     EventDAOI eventDAO;
     
     @Autowired
-    Msg msg;
-    
-    @Autowired
     SessionUtil sessionUtil;
     
     @RequestMapping()
@@ -77,7 +73,7 @@ public class PlayersController extends BaseController {
                 }
             }
         }
-        return getPlayersView(setToList(players), msg.get("AllPlayers"));
+        return getPlayersView(new ArrayList<>(players), msg.get("AllPlayers"));
     }
     
     @RequestMapping("/player/{UUID}")
@@ -116,7 +112,7 @@ public class PlayersController extends BaseController {
             Set<Player> players = team.getPlayers();
             participants.addAll(players);
         }
-        return getPlayersView(setToList(participants), msg.get("PlayersIn", new Object[]{event.getName()}));
+        return getPlayersView(new ArrayList<>(participants), msg.get("PlayersIn", new Object[]{event.getName()}));
     }
 
     private ModelAndView getPlayersView(List<? extends ParticipantI> players, String title){
@@ -134,10 +130,5 @@ public class PlayersController extends BaseController {
         ModelAndView mav = new ModelAndView("players/index");
         mav.addObject("Events", eventDAO.findAllActive());
         return mav;
-    }
-    
-    private List<? extends ParticipantI> setToList(Set<? extends ParticipantI> participants){
-        ParticipantI[] participantArray = new ParticipantI[participants.size()];
-        return Arrays.asList(((Set<ParticipantI>)participants).toArray(participantArray));
     }
 }

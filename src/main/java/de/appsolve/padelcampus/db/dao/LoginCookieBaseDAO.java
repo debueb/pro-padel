@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class LoginCookieBaseDAO extends BaseEntityDAO<LoginCookie> implements LoginCookieBaseDAOI{
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<LoginCookie> findExpiredBefore(LocalDate date) {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.lt("validUntil", date));

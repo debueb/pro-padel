@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class VoucherBaseDAO extends BaseEntityDAO<Voucher> implements VoucherBaseDAOI{
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Voucher> findExpiredBefore(LocalDate date) {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.lt("validUntil", date));

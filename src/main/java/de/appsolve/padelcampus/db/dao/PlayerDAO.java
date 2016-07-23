@@ -56,6 +56,7 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Player> findRegistered() {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.isNotNull("passwordHash"));
@@ -69,6 +70,7 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
         criteria.add(Restrictions.isNotNull("enableMatchNotifications"));
         criteria.add(Restrictions.eq("enableMatchNotifications", true));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        @SuppressWarnings("unchecked")
         List<Player> interestedPlayers = (List<Player>) criteria.list();
         Iterator<Player> iterator = interestedPlayers.iterator();
         //remove all players that are not interested in the skill levels associated with the match offer

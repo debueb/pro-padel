@@ -27,6 +27,7 @@ public abstract class AdminSortableController<T extends SortableEntity> extends 
     @RequestMapping(value="/updatesortorder", method=POST)
     @ResponseStatus(OK)
     public void updateSortOrder(HttpServletRequest request, @ModelAttribute("Model") T model, @RequestBody List<Long> orderedIds){
+        @SuppressWarnings("unchecked")
         BaseEntityDAOI<T> dao = getDAO();
         Long position = 0L;
         for (Long id: orderedIds){

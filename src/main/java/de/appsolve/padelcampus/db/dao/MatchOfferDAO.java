@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 public class MatchOfferDAO extends GenericDAO<MatchOffer> implements MatchOfferDAOI{
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<MatchOffer> findCurrent() {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.ge("startDate", new LocalDate()));

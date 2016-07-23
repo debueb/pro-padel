@@ -40,7 +40,6 @@ import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.MailUtils;
-import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import de.appsolve.padelcampus.utils.TeamUtil;
@@ -89,7 +88,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/bookings")
 public class BookingsController extends BaseController {
 
-    private static final Logger log = Logger.getLogger(BookingsController.class);
+    private static final Logger LOG = Logger.getLogger(BookingsController.class);
 
     @Autowired
     SessionUtil sessionUtil;
@@ -132,9 +131,6 @@ public class BookingsController extends BaseController {
     
     @Autowired
     GameUtil gameUtil;
-    
-    @Autowired
-    Msg msg;
 
     @RequestMapping()
     public ModelAndView getToday(
@@ -294,7 +290,7 @@ public class BookingsController extends BaseController {
                     return confirmView;
             }
         } catch (Exception e) {
-            log.error("Error while processing booking request: "+e.getMessage(), e);
+            LOG.error("Error while processing booking request: "+e.getMessage(), e);
             confirmView.addObject("error", e.getMessage());
             return confirmView;
         }
@@ -365,7 +361,7 @@ public class BookingsController extends BaseController {
             booking.setConfirmationMailSent(true);
             bookingDAO.saveOrUpdate(booking);
         } catch (MailException | IOException ex) {
-            log.error("Error while sending booking confirmation email", ex);
+            LOG.error("Error while sending booking confirmation email", ex);
             mav.addObject("error", msg.get("FailedToSendBookingConfirmationEmail", new Object[]{FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()), FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime())}));
         } catch (Exception e){
             mav.addObject("error", e.getMessage());
@@ -423,7 +419,7 @@ public class BookingsController extends BaseController {
                 validUntilDate  = booking.getBookingDate().plusYears(1);
                 validFromTime   = new LocalTime().withHourOfDay(Constants.BOOKING_DEFAULT_VALID_FROM_HOUR).withMinuteOfHour(Constants.BOOKING_DEFAULT_VALID_FROM_MINUTE);
                 validUntilTime  = new LocalTime().withHourOfDay(Constants.BOOKING_DEFAULT_VALID_UNTIL_HOUR).withMinuteOfHour(Constants.BOOKING_DEFAULT_VALID_UNTIL_MINUTE);
-                weekDays        = CalendarWeekDay.valuesAsSet();
+                weekDays        = new HashSet<>(Arrays.asList(CalendarWeekDay.values()));
             }
             
             String comment              = "Replacement voucher for Booking ["+booking.toString()+"]";
@@ -449,11 +445,11 @@ public class BookingsController extends BaseController {
                 booking.setCancelReason("cancellation with replacement voucher");
                 bookingDAO.saveOrUpdate(booking);
             } catch (MailException | IOException ex) {
-                log.error("Error while sending booking cancellation success email", ex);
+                LOG.error("Error while sending booking cancellation success email", ex);
                 throw (ex);
             }
         } catch (Exception e) {
-            log.error("Error during booking cancellation", e);
+            LOG.error("Error during booking cancellation", e);
             ModelAndView cancellationView = getCancellationView(booking);
             cancellationView.addObject("error", e.getMessage());
             return cancellationView;

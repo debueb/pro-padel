@@ -51,6 +51,7 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
         criteria.add(Restrictions.eq("e.gender", gender));
         criteria.add(Restrictions.isNotEmpty("gameSets"));
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        @SuppressWarnings("unchecked")
         List<Game> games = (List<Game>) criteria.list();
         for (Game game: games){
             for (Participant participant: game.getParticipants()){
@@ -78,12 +79,14 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Game> findByParticipant(Participant participant) {
         Criteria criteria = getFindByParticipantCriteria(participant);
         return criteria.list();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Game> findByParticipantAndEvent(Participant participant, Event event) {
         Criteria criteria = getFindByParticipantCriteria(participant);
         criteria.add(Restrictions.eq("event", event));
@@ -123,6 +126,7 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
         if (customer != null){
             criteria.add(Restrictions.eq("customer", customer));
         }
+        @SuppressWarnings("unchecked")
         List<GameSet> gameSets = (List<GameSet>) criteria.list();
         Set<Game> games = new HashSet<>();
         for (GameSet gameSet: gameSets){
