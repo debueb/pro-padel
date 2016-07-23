@@ -11,7 +11,6 @@ import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Map;
 import java.util.Set;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
