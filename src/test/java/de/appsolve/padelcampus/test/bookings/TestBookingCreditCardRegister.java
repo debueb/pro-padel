@@ -24,7 +24,7 @@ public class TestBookingCreditCardRegister extends TestBase {
 
     @Test
     public void testBookingWorkflowCreditCardRegister() throws Exception {
-        log.info("Test booking workflow [paymentMethod: CreditCard, bookingType: register]");
+        LOG.info("Test booking workflow [paymentMethod: CreditCard, bookingType: register]");
         LocalDate nextMonday = getNextMonday();
         
         mockMvc.perform(post("/bookings/" + nextMonday + "/10:00/offer/"+offer1.getId())

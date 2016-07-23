@@ -5,13 +5,12 @@
  */
 package de.appsolve.padelcampus.test;
 
-import org.apache.log4j.Logger;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.hasSize;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.hasSize;
 
 /**
  *
@@ -19,11 +18,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class TestCoreFunctions extends TestBase {
 
-    private static final Logger log = Logger.getLogger(TestCoreFunctions.class);
-
     @Test
     public void testRootPage() throws Exception {
-        log.info("Make sure root page contains news");
+        LOG.info("Make sure root page contains news");
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"))
@@ -32,7 +29,7 @@ public class TestCoreFunctions extends TestBase {
 
     @Test
     public void testBookingsIndexPage() throws Exception {
-        log.info("Make sure bookings index page contains time slots if a matching calendar config exists");
+        LOG.info("Make sure bookings index page contains time slots if a matching calendar config exists");
         LocalDate nextMonday = getNextMonday();
         mockMvc.perform(get("/bookings/?date=" + nextMonday))
                 .andExpect(status().isOk())
@@ -42,7 +39,7 @@ public class TestCoreFunctions extends TestBase {
 
     @Test
     public void testBookingsDetailsPageHasDurations() throws Exception {
-        log.info("Make sure bookings detail page contains duration when matching calendar config exists");
+        LOG.info("Make sure bookings detail page contains duration when matching calendar config exists");
         LocalDate nextMonday = getNextMonday();
         mockMvc.perform(get("/bookings/" + nextMonday + "/10:00/offer/"+offer1.getId()))
                 .andExpect(status().isOk())

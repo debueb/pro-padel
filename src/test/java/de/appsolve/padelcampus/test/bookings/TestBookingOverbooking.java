@@ -27,7 +27,7 @@ public class TestBookingOverbooking extends TestBookingVoucher {
     
     @Test
     public void testBookingOverbooking() throws Exception {
-        log.info("Test booking overbooking");
+        LOG.info("Test booking overbooking");
                
         bookViaVoucherAndNoLogin(offer1);
         bookViaVoucherAndNoLogin(offer2);

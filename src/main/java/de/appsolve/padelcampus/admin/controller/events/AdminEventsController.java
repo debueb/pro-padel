@@ -412,7 +412,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
             eventDAO.deleteById(event.getId());
         } catch (DataIntegrityViolationException e){
             Event model = (Event)getDAO().findById(id);
-            log.warn("Attempt to delete "+model+" failed due to "+e);
+            LOG.warn("Attempt to delete "+model+" failed due to "+e);
             ModelAndView deleteView = getDeleteView(model);
             deleteView.addObject("error", msg.get("CannotDeleteDueToRefrence", new Object[]{model.toString()}));
             return deleteView;

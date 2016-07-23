@@ -69,7 +69,7 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
             String[] iconNames = fileContents.split("\n");
             mav.addObject("FontAwesomeIconNames", iconNames);
         } catch (IOException ex) {
-            log.warn("Unable to get list of font-aweseome icon names");
+            LOG.warn("Unable to get list of font-aweseome icon names");
         }
         return mav;
     }

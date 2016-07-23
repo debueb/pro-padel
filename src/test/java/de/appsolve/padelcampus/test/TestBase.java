@@ -41,6 +41,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 import org.springframework.web.context.WebApplicationContext;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 /**
  *
@@ -64,7 +65,7 @@ public abstract class TestBase  {
     
     protected Offer offer2;
 
-    protected static final Logger log = Logger.getLogger(TestBase.class);
+    protected static final Logger LOG = Logger.getLogger(TestBase.class);
     
     @Autowired
     protected WebApplicationContext wac;

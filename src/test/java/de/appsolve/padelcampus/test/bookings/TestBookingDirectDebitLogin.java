@@ -28,7 +28,7 @@ public class TestBookingDirectDebitLogin extends TestBase {
 
     @Test
     public void testBookingWorkflowDirectDebitLogin() throws Exception {
-        log.info("Test booking workflow [paymentMethod: DirectDebit, bookingType: login]");
+        LOG.info("Test booking workflow [paymentMethod: DirectDebit, bookingType: login]");
         LocalDate nextMonday = getNextMonday();
         
         Player player = new Player();

@@ -31,7 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEntityController<T> implements BaseEntityControllerI{
     
-    protected static final Logger log = Logger.getLogger(AdminBaseController.class);
+    protected static final Logger LOG = Logger.getLogger(AdminBaseController.class);
     
     @Autowired
     protected Validator validator;
@@ -100,7 +100,7 @@ public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEnt
             Class<T> clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
             return clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e){
-            log.error(e);
+            LOG.error(e);
         }
         return null;
     }

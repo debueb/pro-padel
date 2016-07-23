@@ -23,9 +23,9 @@ import de.appsolve.padelcampus.utils.VoucherUtil;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import org.springframework.util.Assert;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 /**
  *
@@ -37,7 +37,7 @@ public abstract class TestBookingVoucher extends TestBase{
     private VoucherDAOI voucherDAO;
     
     protected void bookViaVoucherAndNoLogin(Offer offer) throws Exception {
-        log.info("Test booking workflow [paymentMethod: Voucher, bookingType: nologin]");
+        LOG.info("Test booking workflow [paymentMethod: Voucher, bookingType: nologin]");
         LocalDate nextMonday = getNextMonday();
         LocalTime validFromTime = TIME_HUMAN_READABLE.parseLocalTime(BOOKING_DEFAULT_VALID_FROM_HOUR+":"+BOOKING_DEFAULT_VALID_FROM_MINUTE);
         LocalTime validUntilTime = TIME_HUMAN_READABLE.parseLocalTime(BOOKING_DEFAULT_VALID_UNTIL_HOUR+":"+BOOKING_DEFAULT_VALID_UNTIL_MINUTE);
