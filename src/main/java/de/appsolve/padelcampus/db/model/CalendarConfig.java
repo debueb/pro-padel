@@ -24,6 +24,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.SortNatural;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
@@ -73,6 +74,7 @@ public class CalendarConfig extends CustomerEntity{
     
     @ManyToMany(fetch=FetchType.EAGER)
     @NotEmpty(message = "{NotEmpty.offers}")
+    @SortNatural
     private Set<Offer> offers;
     
     @Column
