@@ -16,7 +16,7 @@ import java.util.TreeMap;
  */
 public class SortUtil {
     
-    public static <K extends Comparable, V extends Comparable> SortedMap<K, V> sortMap(Map<K, V> map){
+    public static <K extends Comparable<K>, V extends Comparable<V>> SortedMap<K, V> sortMap(Map<K, V> map){
         SortedMap<K, V> sortedMap = new TreeMap<>(new MapValueComparator<>(map));
         sortedMap.putAll(map);
         return sortedMap;
