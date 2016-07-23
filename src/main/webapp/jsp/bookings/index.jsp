@@ -69,7 +69,13 @@
                                 <thead>
                                     <tr>
                                         <c:forEach var="Offer" items="${SelectedOffers}">
-                                            <th style="background-color: ${Offer.hexColor};">${Offer.shortName}</th>
+                                            <th style="background-color: ${Offer.hexColor};">
+                                                <div    data-toggle="tooltip" 
+                                                        data-placement="top"
+                                                        title="${Offer}">
+                                                    ${Offer.shortName}
+                                                </div>
+                                            </th>
                                         </c:forEach>
                                     </tr>
                                 </thead>
@@ -99,7 +105,13 @@
                                     </c:forEach>
                                     <tr>
                                         <c:forEach var="Offer" items="${SelectedOffers}">
-                                            <td style="background-color: ${Offer.hexColor};">${Offer.shortName}</td>
+                                            <td style="background-color: ${Offer.hexColor};">
+                                                <div    data-toggle="tooltip" 
+                                                        data-placement="bottom"
+                                                        title="${Offer}">
+                                                    ${Offer.shortName}
+                                                </div>
+                                            </td>
                                         </c:forEach>
                                     </tr>
                                 </tbody>

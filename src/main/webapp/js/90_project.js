@@ -513,7 +513,11 @@ app.main = {};
                
            });
         });
-    };  
+    };
+    
+    self.enableTooltips = function(){
+        $('[data-toggle="tooltip"]').tooltip()
+    };
     
     return app;
 }).apply(app.main);
@@ -537,5 +541,6 @@ $(document).ready(function () {
     app.main.enableGalleryAutoPlay();
     app.main.enableSelectToggle();
     app.main.enableAutoSearch();
+    app.main.enableTooltips();
     
 });
