@@ -41,6 +41,7 @@ public abstract class TestBookingVoucher extends TestBase{
         LocalDate nextMonday = getNextMonday();
         LocalTime validFromTime = TIME_HUMAN_READABLE.parseLocalTime(BOOKING_DEFAULT_VALID_FROM_HOUR+":"+BOOKING_DEFAULT_VALID_FROM_MINUTE);
         LocalTime validUntilTime = TIME_HUMAN_READABLE.parseLocalTime(BOOKING_DEFAULT_VALID_UNTIL_HOUR+":"+BOOKING_DEFAULT_VALID_UNTIL_MINUTE);
+        @SuppressWarnings("unchecked")
         Voucher testVoucher = VoucherUtil.createNewVoucher("test voucher", 60L, getNextMonday(), validFromTime, validUntilTime, CalendarWeekDay.valuesAsSet(), offers);
         voucherDAO.saveOrUpdate(testVoucher);
 
