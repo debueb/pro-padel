@@ -82,7 +82,7 @@ public class MatchOffer extends CustomerEntity{
     private Set<SkillLevel> skillLevels;
 
     public Set<Player> getPlayers() {
-        return players == null ? Collections.EMPTY_SET : players;
+        return players == null ? Collections.<Player>emptySet() : players;
     }
 
     public void setPlayers(Set<Player> players) {
@@ -90,7 +90,7 @@ public class MatchOffer extends CustomerEntity{
     }
 
     public Set<Player> getWaitingList() {
-        return waitingList == null ? Collections.EMPTY_SET : waitingList;
+        return waitingList == null ? Collections.<Player>emptySet() : waitingList;
     }
 
     public void setWaitingList(Set<Player> waitingList) {
@@ -140,7 +140,7 @@ public class MatchOffer extends CustomerEntity{
         return null;
     }
     public Set<SkillLevel> getSkillLevels() {
-        return skillLevels == null ? Collections.EMPTY_SET : skillLevels;
+        return skillLevels == null ? Collections.<SkillLevel>emptySet() : skillLevels;
     }
 
     public void setSkillLevels(Set<SkillLevel> skillLevels) {
