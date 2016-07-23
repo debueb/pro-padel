@@ -59,6 +59,7 @@ public class TeamDAO extends SortedBaseDAO<Team> implements TeamDAOI{
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public List<Team> findByPlayer(Player player) {
         if (player == null){
             return Collections.<Team>emptyList();

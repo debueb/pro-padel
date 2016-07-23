@@ -34,7 +34,9 @@ import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.VoucherUtil;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -228,7 +230,7 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
         voucher.setValidFromMinute(BOOKING_DEFAULT_VALID_FROM_MINUTE);
         voucher.setValidUntilHour(BOOKING_DEFAULT_VALID_UNTIL_HOUR);
         voucher.setValidUntilMinute(BOOKING_DEFAULT_VALID_UNTIL_MINUTE);
-        voucher.setCalendarWeekDays(CalendarWeekDay.valuesAsSet());
+        voucher.setCalendarWeekDays(new HashSet<>(Arrays.asList(CalendarWeekDay.values())));
         return voucher;
     }
 
