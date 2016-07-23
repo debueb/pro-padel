@@ -23,7 +23,8 @@ import de.appsolve.padelcampus.db.model.Voucher;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
@@ -57,7 +58,7 @@ public abstract class TestBase  {
     
     protected MockHttpSession session;
     
-    protected Set<Offer> offers;
+    protected SortedSet<Offer> offers;
     
     protected Offer offer1;
     
@@ -123,15 +124,17 @@ public abstract class TestBase  {
                 offerDAO.deleteById(offer.getId());
             }
             
-            offers = new HashSet<>();
+            offers = new TreeSet<>();
             offer1 = new Offer();
             offer1.setName("Platz 1");
             offer1.setMaxConcurrentBookings(1L);
+            offer1.setPosition(0L);
             offerDAO.saveOrUpdate(offer1);
             offers.add(offer1);
             offer2 = new Offer();
             offer2.setName("Platz 2");
             offer2.setMaxConcurrentBookings(1L);
+            offer2.setPosition(1L);
             offerDAO.saveOrUpdate(offer2);
             offers.add(offer2);
             CalendarConfig calendarConfig = new CalendarConfig();

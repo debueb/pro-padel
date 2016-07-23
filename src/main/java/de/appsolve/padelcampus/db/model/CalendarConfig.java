@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.SortedSet;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -75,7 +76,7 @@ public class CalendarConfig extends CustomerEntity{
     @ManyToMany(fetch=FetchType.EAGER)
     @NotEmpty(message = "{NotEmpty.offers}")
     @SortNatural
-    private Set<Offer> offers;
+    private SortedSet<Offer> offers;
     
     @Column
     private Integer minDuration;
@@ -176,7 +177,7 @@ public class CalendarConfig extends CustomerEntity{
         return offers;
     }
 
-    public void setOffers(Set<Offer> offers) {
+    public void setOffers(SortedSet<Offer> offers) {
         this.offers = offers;
     }
 
