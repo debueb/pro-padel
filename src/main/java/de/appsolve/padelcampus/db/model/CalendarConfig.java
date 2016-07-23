@@ -99,7 +99,7 @@ public class CalendarConfig extends CustomerEntity{
         if (calendarWeekDays!=null && !calendarWeekDays.isEmpty()){
             return EnumSet.copyOf(calendarWeekDays);
         }
-        return Collections.EMPTY_SET;
+        return Collections.<CalendarWeekDay>emptySet();
     }
 
     public void setCalendarWeekDays(Set<CalendarWeekDay> calendarWeekDays) {
@@ -110,7 +110,7 @@ public class CalendarConfig extends CustomerEntity{
         if (paymentMethods!=null && !paymentMethods.isEmpty()){
             return EnumSet.copyOf(paymentMethods);
         }
-        return Collections.EMPTY_SET;
+        return Collections.<PaymentMethod>emptySet();
     }
 
     public void setPaymentMethods(Set<PaymentMethod> paymentMethods) {
