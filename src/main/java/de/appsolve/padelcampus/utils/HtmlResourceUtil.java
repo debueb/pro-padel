@@ -36,8 +36,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.lesscss.LessCompiler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -60,7 +58,7 @@ public class HtmlResourceUtil {
     private static final Logger log = Logger.getLogger(HtmlResourceUtil.class);
     
     @Autowired
-    Environment environment;
+    CustomerUtil customerUtil;
     
     private static final String VARIABLES_LESS  = "/less/variables.less";
     private static final String PROJECT_LESS    = "/less/90_project.less";
@@ -98,7 +96,7 @@ public class HtmlResourceUtil {
         if (!cssAttributes.isEmpty()) {
             //PROBLEM: on openshift, the war file is not extracted. Thus, sortedFiles cannot be overwritten and must be read with context.getResource...
 
-            File destDir = getCustomerDir(customerName);
+            File destDir = customerUtil.getCustomerDir(customerName);
 
             //copy css sortedFiles to data directory
             copyResources(context, FOLDER_CSS, destDir);
@@ -168,7 +166,7 @@ public class HtmlResourceUtil {
     public String getAllMinCss(ServletContext context, String customerName) throws IOException{
         String cssContent = (String) context.getAttribute(customerName);
         if (cssContent == null){
-            cssContent = reloadAllMinCss(context, getCustomerDir(customerName));
+            cssContent = reloadAllMinCss(context, customerUtil.getCustomerDir(customerName));
             context.setAttribute(customerName, cssContent);
         }
         return cssContent;
@@ -221,7 +219,7 @@ public class HtmlResourceUtil {
     }
     
     public String getCssFile(ServletContext context, String name, String customer) throws IOException{
-        File customerDir = getCustomerDir(customer);
+        File customerDir = customerUtil.getCustomerDir(customer);
         File cssDir = new File(customerDir, "css");
         File file = new File(cssDir, name);
         try {
@@ -238,10 +236,6 @@ public class HtmlResourceUtil {
         
     }
 
-    private File getCustomerDir(String customerName) {
-       return new File(environment.getProperty(Constants.OPENSHIFT_DATA_DIR) + File.separator + customerName);
-    }
-    
     public List<CssAttribute> getDefaultCssAttributes() {
         List<CssAttribute> atts = new ArrayList<>();
         atts.add(getCssAttribute("bgColor", "#94cfea", "#94cfea"));

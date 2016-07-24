@@ -8,6 +8,7 @@ package de.appsolve.padelcampus.db.dao.generic;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.model.BaseEntityI;
 import de.appsolve.padelcampus.db.model.Customer;
+import de.appsolve.padelcampus.utils.CustomerUtil;
 import de.appsolve.padelcampus.utils.GenericsUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -276,18 +277,7 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     }
     
     protected Customer getCustomer(){
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpServletRequest request = attr.getRequest();
-        if (request!=null){
-            HttpSession session = request.getSession();
-            if (session!=null){
-                Object object = session.getAttribute(Constants.SESSION_CUSTOMER);
-                if (object instanceof Customer){
-                    return (Customer) object;
-                }
-            }
-        }
-        return null;
+        return CustomerUtil.getCustomer();
     }
 
     private Criteria getPageableCriteria(Pageable pageable) {
