@@ -3,6 +3,5 @@
 <c:forEach var="PageEntry" items="${PageEntries}" varStatus="status" >
     <c:set var="PageEntry" value="${PageEntry}" scope="request"/>
     <jsp:include page="/jsp/page/pageentry.jsp"/>
-    <c:if test="${not status.last}"><hr/></c:if>
 </c:forEach>
 <jsp:include page="/jsp/include/footer.jsp"/>
