@@ -54,7 +54,6 @@ public class ImagesController extends BaseController{
         if (image!=null){
             return fileUtil.getByteArray(image.getFilePath());
         }
-        //TODO: return default image
         return null;
     }
     

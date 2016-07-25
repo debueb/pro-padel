@@ -223,7 +223,6 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
     @Override
     protected Voucher createNewInstance() {
         Voucher voucher = new Voucher();
-        //TODO: use minDuration
         voucher.setDuration(60L);
         voucher.setValidUntil(new LocalDate(DEFAULT_TIMEZONE).plusDays(VOUCHER_DEFAULT_VALIDITY_IN_DAYS));
         voucher.setValidFromHour(BOOKING_DEFAULT_VALID_FROM_HOUR);
@@ -235,7 +234,6 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
     }
 
     private void addObjects(ModelAndView mav) {
-        //TODO: calculate from minDuration + minInterval
         mav.addObject("Durations", new Integer[]{60,90,120});
         mav.addObject("WeekDays", CalendarWeekDay.values());
         mav.addObject("Offers", offerDAO.findAll());
