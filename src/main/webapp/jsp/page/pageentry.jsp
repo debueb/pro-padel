@@ -1,8 +1,8 @@
 <%@include file="/jsp/include/include.jsp"%>
 <div class="row pageentry">
-    <div <c:if test="${not PageEntry.fullWidth}">class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2"</c:if>>
+    <c:if test="${not PageEntry.fullWidth}"><div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2"></c:if>
     ${PageEntry.message}
-    </div>
+    <c:if test="${not PageEntry.fullWidth}"></div></c:if>
 </div>
 <c:if test="${PageEntry.showContactForm}">
     <div class="row pageentry">
