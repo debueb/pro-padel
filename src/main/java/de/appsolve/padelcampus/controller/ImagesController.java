@@ -60,7 +60,7 @@ public class ImagesController extends BaseController{
     @ResponseBody
     @RequestMapping(value="upload", method = POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
     public String postImage(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException, ImageProcessingException {
-        Image image = imageUtil.saveImage(file.getBytes(), Constants.SUMMERNOTE_IMAGE_WIDTH, Constants.SUMMERNOTE_IMAGE_HEIGHT, Constants.DATA_DIR_SUMMERNOTE_IMAGES);
+        Image image = imageUtil.saveImage(file.getBytes(), Constants.DATA_DIR_SUMMERNOTE_IMAGES);
         return "/images/image/"+image.getSha256();
     }
 }
