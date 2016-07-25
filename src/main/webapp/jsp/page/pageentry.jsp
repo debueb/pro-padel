@@ -5,7 +5,7 @@
     </div>
 </div>
 <c:if test="${PageEntry.showContactForm}">
-    <div class="row">
+    <div class="row pageentry">
         <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
 
             <div class="panel panel-info relative">
