@@ -41,36 +41,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!--
-                                    <c:forEach var="TimeRange" items="${RangeMap}">
-                                        <tr>
-                                        <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
-                                        <joda:format value="${TimeRange.endTime}" pattern="HH:mm" var="endTime"/>
-                                        <td class="booking-time">${startTime}<span>-</span>${endTime}</td>
-                                    
-                                        <c:forEach var="WeekDay" items="${WeekDays}">
-                                            <c:set var="containsTimeSlot" value="false"/>
-                                            <c:forEach var="TimeSlot" items="${TimeSlots}">
-                                                <c:if test="${TimeSlot.date.dayOfWeek == WeekDay.dayOfWeek}">
-                                                    <c:set var="containsTimeSlot" value="true"/>
-                                                    <c:set var="urlDetail" value="/admin/reports/bookinglist/${TimeSlot.date}"/>
-                                                    <td class="booking-bookable ${fn:length(TimeSlot.bookings) == 0 ? 'booking-bookable-last' : ''}">
-                                                        <a class="block ajaxify" href="${urlDetail}">${fn:length(TimeSlot.bookings)}</a>
-                                                    </td>
-                                                </c:if>
-                                            </c:forEach>
-                                            <c:if test="${containsTimeSlot == false}">
-                                                <td class="booking-disabled"></td>
-                                            </c:if>
-                                        </c:forEach>
-                                    </tr>
-                                    </c:forEach>
-                                    -->
                                     <c:forEach var="TimeRange" items="${RangeMap}">
                                         <tr>
                                             <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
                                             <joda:format value="${TimeRange.endTime}" pattern="HH:mm" var="endTime"/>
-                                            <td class="booking-time">${startTime}<span>-</span>${endTime}</td>
+                                            <td class="booking-time">${startTime}</td>
 
                                             <c:forEach var="WeekDay" items="${WeekDays}">
                                                 <c:set var="offerCount" value="0"/>

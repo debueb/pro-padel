@@ -719,6 +719,10 @@ table.table-round > tbody > tr > td{
     width: 100%;
     height: 100%;
 }
+.booking-offer-row{
+    display: table-cell;
+    vertical-align: middle;
+}
 #content, #spinner{
     transition: opacity .25s ease-in-out;
     -moz-transition: opacity .25s ease-in-out;
@@ -959,13 +963,8 @@ div.product-chooser div.product-chooser-item input{
 
 .ui-state-focus { outline: none; }
 @media (max-width: @screen-sm) {
-    .booking-time{
-        transform: rotate(-90deg);
-        -webkit-transform: rotate(-90deg);
-        -moz-transform: rotate(-90deg);
-        -ms-transform: rotate(-90deg);
-        -o-transform: rotate(-90deg);
-        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    .table.table-round > thead:first-child > tr:first-child > th {
+        padding: 2px;
     }
 }
 @media (max-width: @screen-xs) {
