@@ -47,6 +47,7 @@
         </div>
     </div>
 </div>
+<jsp:include page="/jsp/include/footer.jsp"/>
 <script src="/js/noconcat/99_addtohomescreen.min.js"></script>
 <script defer type="text/javascript">
     if (!("standalone" in window.navigator) || !window.navigator.standalone) {
@@ -56,5 +57,3 @@
         });
     }
 </script>
-
-<jsp:include page="/jsp/include/footer.jsp"/>
