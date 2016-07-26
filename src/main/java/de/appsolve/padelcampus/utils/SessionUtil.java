@@ -31,6 +31,8 @@ import static de.appsolve.padelcampus.constants.Constants.SESSION_CUSTOMER;
 import de.appsolve.padelcampus.data.CustomerI;
 import org.joda.time.LocalDate;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_BOOKING_LIST_START_DATE;
+import static de.appsolve.padelcampus.constants.Constants.SESSION_RESERVATION_LIST_END_DATE;
+import static de.appsolve.padelcampus.constants.Constants.SESSION_RESERVATION_LIST_START_DATE;
 
 
 /*
@@ -174,5 +176,21 @@ public class SessionUtil {
     
     public LocalDate getBookingListEndDate(HttpServletRequest request){
         return (LocalDate) getObject(request, SESSION_BOOKING_LIST_END_DATE);
+    }
+    
+    public void setReservationListStartDate(HttpServletRequest httpRequest, LocalDate date) {
+        setObject(httpRequest, SESSION_RESERVATION_LIST_START_DATE, date);
+    }
+    
+    public LocalDate getReservationListStartDate(HttpServletRequest request){
+        return (LocalDate) getObject(request, SESSION_RESERVATION_LIST_START_DATE);
+    }
+    
+    public void setReservationListEndDate(HttpServletRequest httpRequest, LocalDate date) {
+        setObject(httpRequest, SESSION_RESERVATION_LIST_END_DATE, date);
+    }
+    
+    public LocalDate getReservationListEndDate(HttpServletRequest request){
+        return (LocalDate) getObject(request, SESSION_RESERVATION_LIST_END_DATE);
     }
 }

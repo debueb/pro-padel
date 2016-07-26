@@ -12,6 +12,7 @@ import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.Currency;
 import de.appsolve.padelcampus.constants.PaymentMethod;
+import de.appsolve.padelcampus.data.DateRange;
 import de.appsolve.padelcampus.data.ReservationRequest;
 import de.appsolve.padelcampus.data.TimeSlot;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
@@ -50,6 +52,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -91,10 +94,25 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     
     @Override
     public ModelAndView showIndex(HttpServletRequest request, Pageable pageable, String search){
-        ModelAndView mav = new ModelAndView("admin/bookings/reservations/index");
-        List<Booking> reservations = bookingDAO.findReservations();
-        mav.addObject("Reservations", reservations);
-        return mav;
+        LocalDate startDate = sessionUtil.getBookingListStartDate(request);
+        if (startDate == null){
+            startDate = new LocalDate();
+        }
+        LocalDate endDate = sessionUtil.getBookingListEndDate(request);
+        if (endDate == null){
+            endDate = startDate.plusMonths(4);
+        }
+        DateRange dateRange = new DateRange();
+        dateRange.setStartDate(startDate);
+        dateRange.setEndDate(endDate);
+        return getIndexView(dateRange);
+    }
+    
+    @RequestMapping(method=POST)
+    public ModelAndView postIndex(HttpServletRequest request, @Valid @ModelAttribute("DateRange") DateRange dateRange){
+        sessionUtil.setBookingListStartDate(request, dateRange.getStartDate());
+        sessionUtil.setBookingListEndDate(request, dateRange.getEndDate());
+        return getIndexView(dateRange); 
     }
     
     @Override
@@ -223,5 +241,13 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     @Override
     public String getModuleName() {
         return "admin/bookings/reservations";
+    }
+
+    private ModelAndView getIndexView(DateRange dateRange) {
+        ModelAndView mav = new ModelAndView("admin/bookings/reservations/index");
+        List<Booking> reservations = bookingDAO.findActiveReservationsBetween(dateRange.getStartDate(), dateRange.getEndDate());
+        mav.addObject("Reservations", reservations);
+        mav.addObject("DateRange", dateRange);
+        return mav;
     }
 }

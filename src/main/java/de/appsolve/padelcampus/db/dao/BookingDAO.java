@@ -79,12 +79,15 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<Booking>) criteria.list();
     }
-
+    
     @Override
     @SuppressWarnings("unchecked")
-    public List<Booking> findReservations() {
+    public List<Booking> findActiveReservationsBetween(LocalDate startDate, LocalDate endDate) {
         Criteria criteria = getCriteria();
-        criteria.add(Restrictions.eq("paymentMethod", PaymentMethod.Reservation));
+        criteria.add(Restrictions.ge("bookingDate", startDate));
+        criteria.add(Restrictions.le("bookingDate", endDate));
+        criteria.add(Restrictions.or(Restrictions.eq("paymentMethod", PaymentMethod.Reservation)));
+        criteria.add(Restrictions.or(Restrictions.isNull("cancelled"), Restrictions.eq("cancelled", false)));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<Booking>) criteria.list();
     }

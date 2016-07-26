@@ -12,7 +12,7 @@
                 <h4><fmt:message key="TopTimes"/></h4>
             </div>
             <div class="panel-body">
-                <jsp:include page="/jsp/admin/reports/include/daterange.jsp"/>
+                <jsp:include page="/jsp/admin/include/daterange.jsp"/>
 
                 <div id="times" class="unit"></div>
             </div>

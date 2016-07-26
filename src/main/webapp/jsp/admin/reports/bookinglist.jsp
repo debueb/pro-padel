@@ -12,7 +12,7 @@
                 <h4><fmt:message key="BookingList"/></h4>
             </div>
             <div class="panel-body">
-                <jsp:include page="/jsp/admin/reports/include/daterange.jsp"/>
+                <jsp:include page="/jsp/admin/include/daterange.jsp"/>
 
                 <div style="margin-top: 40px;">
                     <table class="table table-striped table-bordered table-centered datatable">

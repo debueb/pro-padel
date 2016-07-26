@@ -10,7 +10,9 @@
                 <h4><fmt:message key="CourtReservations"/></h4>
             </div>
             <div class="panel-body">
-                <div class="table-responsive">
+                <jsp:include page="/jsp/admin/include/daterange.jsp"/>
+                
+                <div class="table-responsive unit-2">
                     <table class="table table-striped table-bordered unit">
                         <thead>
                         <th><fmt:message key="Date"/></th>
