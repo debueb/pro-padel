@@ -14,11 +14,13 @@ import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
+import de.appsolve.padelcampus.db.dao.PayDirektConfigDAOI;
 import de.appsolve.padelcampus.db.dao.PayMillConfigDAOI;
 import de.appsolve.padelcampus.db.dao.PayPalConfigDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
+import de.appsolve.padelcampus.db.model.PayDirektConfig;
 import de.appsolve.padelcampus.db.model.PayMillConfig;
 import de.appsolve.padelcampus.db.model.PayPalConfig;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
@@ -63,6 +65,9 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
     @Autowired
     PayPalConfigDAOI payPalConfigDAO;
 
+    @Autowired
+    PayDirektConfigDAOI payDirektConfigDAO;
+    
     @Autowired
     PayMillConfigDAOI payMillConfigDAO;
     
@@ -130,12 +135,20 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
         ModelAndView editView = new ModelAndView("/"+getModuleName()+"/edit", "Model", model);
         //determine valid payment methods
         List<PaymentMethod> paymentMethods = new ArrayList<>();
+        //always support cash and vouchers
         paymentMethods.add(PaymentMethod.Cash);
+        paymentMethods.add(PaymentMethod.Voucher);
         
         //check if PayPal config exists and is active
         PayPalConfig paypalConfig = payPalConfigDAO.findFirst();
         if (paypalConfig != null && paypalConfig.getActive()) {
             paymentMethods.add(PaymentMethod.PayPal);
+        }
+        
+        //check if PayDirekt config exists and is active
+        PayDirektConfig payDirektConfig = payDirektConfigDAO.findFirst();
+        if (payDirektConfig != null && payDirektConfig.getActive()) {
+            paymentMethods.add(PaymentMethod.PayDirekt);
         }
 
         //check if PayMill config exists
@@ -149,8 +162,6 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
             }
         }
         
-        //always support vouchers
-        paymentMethods.add(PaymentMethod.Voucher);
         
         editView.addObject("PaymentMethods", paymentMethods);
         editView.addObject("WeekDays", CalendarWeekDay.values());

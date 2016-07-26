@@ -3,19 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.appsolve.padelcampus.constants;
+package de.appsolve.padelcampus;
 
 /**
  *
  * @author dominik
  */
-public enum PaymentMethod {
+public class PayDirektClient {
     
-    Cash,
-    PayPal,
-    PayDirekt,
-    CreditCard,
-    DirectDebit,
-    Voucher,
-    Reservation;
 }

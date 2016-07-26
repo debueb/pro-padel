@@ -119,6 +119,9 @@ public class BookingsController extends BaseController {
     
     @Autowired
     BookingsPayPalController bookingsPayPalController;
+    
+    @Autowired
+    BookingsPayDirektController bookingsPayDirektController;
 
     @Autowired
     BookingsPayMillController bookingsPayMillController;
@@ -279,6 +282,8 @@ public class BookingsController extends BaseController {
                     return getRedirectToSuccessView(booking);
                 case PayPal:
                     return bookingsPayPalController.redirectToPaypal(booking, request);
+                case PayDirekt:
+                    return bookingsPayDirektController.redirectToPayDirekt(booking, request);
                 case DirectDebit:
                     return bookingsPayMillController.redirectToDirectDebit(booking);
                 case CreditCard:

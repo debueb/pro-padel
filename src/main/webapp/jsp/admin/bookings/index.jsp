@@ -28,6 +28,11 @@
                         <jsp:param name="icon" value="paypal"/>
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/bookings/paydirekt"/>
+                        <jsp:param name="key" value="PayDirekt"/>
+                        <jsp:param name="icon" value="bank"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/bookings/paymill"/>
                         <jsp:param name="key" value="PayMill"/>
                         <jsp:param name="icon" value="credit-card"/>
