@@ -27,7 +27,7 @@ import de.appsolve.padelcampus.utils.HolidayUtil;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.SortedSet;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
@@ -70,7 +70,7 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
         
-        binder.registerCustomEditor(Set.class, "offers", new CustomCollectionEditor(Set.class) {
+        binder.registerCustomEditor(SortedSet.class, "offers", new CustomCollectionEditor(SortedSet.class) {
             @Override
             protected Object convertElement(Object element) {
                 Long id = Long.parseLong((String) element);

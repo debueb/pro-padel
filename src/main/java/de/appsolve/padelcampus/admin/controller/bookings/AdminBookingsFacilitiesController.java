@@ -10,7 +10,7 @@ import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Facility;
 import de.appsolve.padelcampus.db.model.Offer;
-import java.util.Set;
+import java.util.SortedSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
@@ -35,7 +35,7 @@ public class AdminBookingsFacilitiesController extends AdminBaseController<Facil
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(Set.class, "offers", new CustomCollectionEditor(Set.class) {
+        binder.registerCustomEditor(SortedSet.class, "offers", new CustomCollectionEditor(SortedSet.class) {
             @Override
             protected Object convertElement(Object element) {
                 Long id = Long.parseLong((String) element);

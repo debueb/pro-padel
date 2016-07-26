@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedSet;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -83,7 +84,7 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
-        binder.registerCustomEditor(Set.class, "offers", new CustomCollectionEditor(Set.class) {
+        binder.registerCustomEditor(SortedSet.class, "offers", new CustomCollectionEditor(SortedSet.class) {
             @Override
             protected Object convertElement(Object element) {
                 Long id = Long.parseLong((String) element);
