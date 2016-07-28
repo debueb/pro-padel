@@ -116,7 +116,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div class="booking-gallery-day">
+                                <div class="booking-gallery-day booking-gallery-day-bottom">
                                     <fmt:message key="DayShort-${WeekDay.dayOfWeek}"/>, <joda:format value="${WeekDay}" pattern="dd.MM."/>
                                 </div>
                             </div>
