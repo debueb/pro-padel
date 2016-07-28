@@ -52,7 +52,7 @@
                         </tbody>
                     </table>
                 </div>
-                <a href="/admin/bookings/settings/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="AddRule"/></a>
+                <a href="/admin/bookings/settings/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="AddCalendarConfig"/></a>
             </div>
         </div>
     </div>
