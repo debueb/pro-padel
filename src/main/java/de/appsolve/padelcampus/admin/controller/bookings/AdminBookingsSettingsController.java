@@ -194,6 +194,12 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
             if (booking.getBookingTime().compareTo(config.getEndTime()) >= 0){
                 iterator.remove();
             }
+            //remove bookings that do not match the offer
+            if (booking.getOffer()!=null){
+                if (!config.getOffers().contains(booking.getOffer())){
+                    iterator.remove();
+                }
+            }
         }
         if (!bookings.isEmpty()){
             mav.addObject("error", msg.get("TheFollowingBookingsAreAffected", new Object[]{StringUtils.join(bookings, "<br/>")}));
