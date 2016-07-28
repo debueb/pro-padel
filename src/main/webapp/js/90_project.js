@@ -480,7 +480,7 @@ app.main = {};
             $(document).find("[class^='select-toggle-']").hide();
             
             var selectedValues = [];
-            $(document).find('select.select-toggle').each(function(){
+            $(document).find('.select-toggle').each(function(){
                 selectedValues.push($(this).val());
             });
             

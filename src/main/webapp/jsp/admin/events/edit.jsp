@@ -52,7 +52,7 @@
                             </div>
                         </c:when>
                         <c:otherwise>
-                            <spf:input type="hidden" path="eventType"/>
+                            <spf:input type="hidden" path="eventType" class="select-toggle"/>
                         </c:otherwise>
                     </c:choose>
                     
