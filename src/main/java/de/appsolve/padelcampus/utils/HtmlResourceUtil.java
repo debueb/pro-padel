@@ -78,6 +78,8 @@ public class HtmlResourceUtil {
         if (customers.isEmpty()){
             applyCustomerCss(context, getDefaultCssAttributes(), "");
         } else {
+            lessCompiler = new LessCompiler();
+            lessCompiler.init();
             int availableProcessors = Runtime.getRuntime().availableProcessors();
             LOG.info(String.format("Compiling less with %s processors", availableProcessors));
             ExecutorService executor = Executors.newFixedThreadPool(availableProcessors);
