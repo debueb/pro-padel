@@ -29,6 +29,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 import javax.servlet.ServletContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -55,8 +59,6 @@ public class HtmlResourceUtil {
     @Autowired
     CssAttributeBaseDAOI cssAttributeBaseDAO;
     
-    private static final Logger log = Logger.getLogger(HtmlResourceUtil.class);
-    
     @Autowired
     CustomerUtil customerUtil;
     
@@ -71,14 +73,35 @@ public class HtmlResourceUtil {
     
     private static final String ALL_MIN_CSS = "/css/all.min.css";
 
-    public void updateCss(ServletContext context) throws Exception {
+    public void updateCss(final ServletContext context) throws Exception {
         List<Customer> customers = customerDAO.findAll();
         if (customers.isEmpty()){
             applyCustomerCss(context, getDefaultCssAttributes(), "");
         } else {
-            for (Customer customer: customers){
-                updateCss(context, customer);
+            int availableProcessors = Runtime.getRuntime().availableProcessors();
+            LOG.info(String.format("Compiling less with %s processors", availableProcessors));
+            ExecutorService executor = Executors.newFixedThreadPool(availableProcessors);
+            List<FutureTask<Void>> taskList = new ArrayList<>();
+
+            for (final Customer customer: customers){
+                FutureTask<Void> futureTask = new FutureTask<>(new Callable<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        try {
+                            updateCss(context, customer);
+                        } catch (Exception ex) {
+                            LOG.error(ex);
+                        }
+                        return null;
+                    }
+                });
+                taskList.add(futureTask);
+                executor.execute(futureTask);
             } 
+            for (FutureTask task: taskList) {
+                task.get();
+            }
+            executor.shutdown();
         }
     }
     
