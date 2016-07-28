@@ -26,6 +26,7 @@ import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
 import de.jollyday.ManagerParameters;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import java.util.TreeSet;
 import java.util.UUID;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -92,35 +94,44 @@ public class BookingUtil {
             Collections.sort(calendarConfigs);
 
             Integer minIntervalLastConfig = null;
-            LocalTime time = null;
-            LocalTime now = new LocalTime(DEFAULT_TIMEZONE);
-            
-            //LocalTime time = calendarConfigs.get(0).getStartTime(); 
+            BigDecimal basePriceLastConfig = null;
+            LocalDateTime time = null;
+            LocalDateTime now = new LocalDateTime(DEFAULT_TIMEZONE);
             
             //generate list of bookable time slots
             for (CalendarConfig config : calendarConfigs) {
+                LocalDateTime startDateTime = getLocalDateTime(selectedDate, config.getStartTime());
                 if (time==null){
                     //on first iteration
-                    time = config.getStartTime();
+                    time = startDateTime;
                 } else {
-                    if (time.plusMinutes(minIntervalLastConfig).equals(config.getStartTime())){
+                    if (time.plusMinutes(minIntervalLastConfig).equals(startDateTime)){
                         //contiguous bookings possible
                         //time = time;
                     } else {
-                        time = config.getStartTime();
+                        time = startDateTime;
                     }
                 }
-                while (time.plusMinutes(config.getMinDuration()).compareTo(config.getEndTime()) <= 0) {
+                LocalDateTime endDateTime = getLocalDateTime(selectedDate, config.getEndTime());
+                while (time.plusMinutes(config.getMinDuration()).compareTo(endDateTime) <= 0) {
+                    BigDecimal pricePerMinDuration;
+                    if (basePriceLastConfig == null){
+                        pricePerMinDuration = config.getBasePrice();
+                    } else {
+                        pricePerMinDuration = config.getBasePrice().add(basePriceLastConfig).divide(new BigDecimal("2"));
+                        basePriceLastConfig = null;
+                    }
                     if (onlyFutureTimeSlots) {
                         if (selectedDate.isAfter(today) || time.isAfter(now)){
-                            addTimeSlot(timeSlots, selectedDate, time, config);
+                            addTimeSlot(timeSlots, time, config, pricePerMinDuration);
                         }
                     } else {
-                        addTimeSlot(timeSlots, selectedDate, time, config);
+                        addTimeSlot(timeSlots, time, config, pricePerMinDuration);
                     }
                     time = time.plusMinutes(config.getMinInterval());
                 }
                 minIntervalLastConfig = config.getMinInterval();
+                basePriceLastConfig = config.getBasePrice();
             }
             //sort time slots by time
             Collections.sort(timeSlots);
@@ -133,12 +144,13 @@ public class BookingUtil {
         return timeSlots;
     }
     
-    private void addTimeSlot(List<TimeSlot> timeSlots, LocalDate date, LocalTime time, CalendarConfig config) {
+    private void addTimeSlot(List<TimeSlot> timeSlots, LocalDateTime time, CalendarConfig config, BigDecimal pricePerMinDuration) {
         TimeSlot timeSlot = new TimeSlot();
-        timeSlot.setDate(date);
-        timeSlot.setStartTime(time);
-        timeSlot.setEndTime(time.plusMinutes(config.getMinDuration()));
+        timeSlot.setDate(time.toLocalDate());
+        timeSlot.setStartTime(time.toLocalTime());
+        timeSlot.setEndTime(time.toLocalTime().plusMinutes(config.getMinDuration()));
         timeSlot.setConfig(config);
+        timeSlot.setPricePerMinDuration(pricePerMinDuration);
 
         //only add timeSlot if timeSlots does not already contain an entry that overlaps
         if (!overlaps(timeSlot, timeSlots)){
@@ -331,5 +343,9 @@ public class BookingUtil {
             dayConfigs.put(date.toString(), dayConfig);
         }
         return dayConfigs;
+    }
+
+    public LocalDateTime getLocalDateTime(LocalDate selectedDate, LocalTime startTime) {
+        return new LocalDateTime(selectedDate.getYear(), selectedDate.getMonthOfYear(), selectedDate.getDayOfMonth(), startTime.getHourOfDay(), startTime.getMinuteOfHour());
     }
 }

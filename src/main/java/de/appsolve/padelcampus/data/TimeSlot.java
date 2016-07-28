@@ -8,6 +8,7 @@ package de.appsolve.padelcampus.data;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -30,6 +31,8 @@ public class TimeSlot implements Comparable<TimeSlot> {
     private CalendarConfig config;
 
     private List<Booking> bookings;
+    
+    private BigDecimal pricePerMinDuration;
 
     public LocalDate getDate() {
         return date;
@@ -75,6 +78,14 @@ public class TimeSlot implements Comparable<TimeSlot> {
         List<Booking> _bookings = getBookings();
         _bookings.add(booking);
         setBookings(_bookings);
+    }
+
+    public BigDecimal getPricePerMinDuration() {
+        return pricePerMinDuration;
+    }
+
+    public void setPricePerMinDuration(BigDecimal pricePerMinDuration) {
+        this.pricePerMinDuration = pricePerMinDuration;
     }
 
     //jstl

@@ -612,18 +612,19 @@ public class BookingsController extends BaseController {
             Map.Entry<Offer, List<CalendarConfig>> entry = iterator.next();
             Offer offer = entry.getKey();
             List<CalendarConfig> configsForOffer = entry.getValue();
-            CalendarConfig firstConfig = configsForOffer.get(0);
+            CalendarConfig currentConfig = configsForOffer.get(0);
             
             //make sure the first configuration starts before the requested booking time
-            if (selectedTime.compareTo(firstConfig.getStartTime()) < 0){
+            if (selectedTime.compareTo(currentConfig.getStartTime()) < 0){
                 continue;
             }
             
-            LocalTime endTime = null;
-            Integer duration = firstConfig.getMinDuration();
+            LocalDateTime endTime = null;
+            Integer duration = currentConfig.getMinDuration();
                 
             BigDecimal basePricePerMinute;
             BigDecimal price = null;
+            CalendarConfig previousConfig = null;
             
             Map<Integer, BigDecimal> durationPriceMap = new TreeMap<>();
             Boolean isContiguous = true;
@@ -632,27 +633,29 @@ public class BookingsController extends BaseController {
                 //make sure there is no gap between calendar configurations
                 if (endTime == null){
                     //first run
-                    endTime = selectedTime.plusMinutes(config.getMinDuration());
+                    endTime = bookingUtil.getLocalDateTime(selectedDate, selectedTime).plusMinutes(config.getMinDuration());
                 } else {
                     //break if there are durations available and calendar configs are not contiguous
                     if (!durationPriceMap.isEmpty()){
                         //we substract min interval before the comparison as it has been added during the last iteration
-                        if (!endTime.minusMinutes(firstConfig.getMinInterval()).equals(config.getStartTime())){
+                        LocalDateTime configStartDateTime = bookingUtil.getLocalDateTime(selectedDate, config.getStartTime());
+                        if (!endTime.minusMinutes(currentConfig.getMinInterval()).equals(configStartDateTime)){
                             break;
                         }
                     }
                 }
                 
-                Integer interval = firstConfig.getMinInterval();
+                Integer interval = currentConfig.getMinInterval();
             
-                basePricePerMinute = config.getBasePrice().divide(new BigDecimal(firstConfig.getMinDuration().toString()), MathContext.DECIMAL128);
+                basePricePerMinute = config.getBasePrice().divide(new BigDecimal(currentConfig.getMinDuration().toString()), MathContext.DECIMAL128);
                 
                 //as long as the endTime is before the end time configured in the calendar
-                while (endTime.compareTo(config.getEndTime()) <= 0) {
+                LocalDateTime configEndDateTime = bookingUtil.getLocalDateTime(selectedDate, config.getEndTime());
+                while (endTime.compareTo(configEndDateTime) <= 0) {
                     TimeSlot timeSlot = new TimeSlot();
                     timeSlot.setDate(selectedDate);
                     timeSlot.setStartTime(selectedTime);
-                    timeSlot.setEndTime(endTime);
+                    timeSlot.setEndTime(endTime.toLocalTime());
                     timeSlot.setConfig(config);
                     Long bookingSlotsLeft = bookingUtil.getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
 
@@ -663,8 +666,12 @@ public class BookingsController extends BaseController {
                     }
                     
                     if (price == null){
-                        //initilze price based on min duration
-                        price = basePricePerMinute.multiply(new BigDecimal(duration.toString()), MathContext.DECIMAL128);
+                        //initialze price based on min duration
+                        if (previousConfig == null){
+                            price = basePricePerMinute.multiply(new BigDecimal(duration.toString()), MathContext.DECIMAL128);
+                        } else {
+                            price = previousConfig.getBasePrice().add(config.getBasePrice()).divide(new BigDecimal("2"));
+                        }
                     } else {
                         //add price for additional interval
                         price = price.add(basePricePerMinute.multiply(new BigDecimal(interval.toString()), MathContext.DECIMAL128));
@@ -688,6 +695,7 @@ public class BookingsController extends BaseController {
                     //we only allow coniguous bookings for one offer. process next offer
                     break;
                 }
+                previousConfig = config;
             }
         }
         return offerDurationPrices;

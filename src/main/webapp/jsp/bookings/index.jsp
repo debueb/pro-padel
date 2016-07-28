@@ -93,7 +93,7 @@
                                                                             <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
                                                                             <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
                                                                             <a class="ajaxify booking-gallery-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${Offer.hexColor};">
-                                                                                ${TimeSlot.config.basePrice}
+                                                                                ${TimeSlot.pricePerMinDuration}
                                                                             </a>
                                                                         </c:when>
                                                                     </c:choose>

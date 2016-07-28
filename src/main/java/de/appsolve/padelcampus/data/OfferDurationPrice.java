@@ -5,7 +5,6 @@
  */
 package de.appsolve.padelcampus.data;
 
-import de.appsolve.padelcampus.constants.Currency;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
 import java.math.BigDecimal;
