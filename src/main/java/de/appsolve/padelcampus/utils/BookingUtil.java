@@ -27,6 +27,8 @@ import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
 import de.jollyday.ManagerParameters;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -93,8 +95,7 @@ public class BookingUtil {
             //sort all calendar configurations for selected date by start time
             Collections.sort(calendarConfigs);
 
-            Integer minIntervalLastConfig = null;
-            BigDecimal basePriceLastConfig = null;
+            CalendarConfig previousConfig = null;
             LocalDateTime time = null;
             LocalDateTime now = new LocalDateTime(DEFAULT_TIMEZONE);
             
@@ -105,22 +106,28 @@ public class BookingUtil {
                     //on first iteration
                     time = startDateTime;
                 } else {
-                    if (time.plusMinutes(minIntervalLastConfig).equals(startDateTime)){
+                    if (time.plusMinutes(previousConfig.getMinInterval()).equals(startDateTime)){
                         //contiguous bookings possible
                         //time = time;
                     } else {
+                        //reset basePriceLastConfig as this is a non contiguous offer
+                        previousConfig = null;
                         time = startDateTime;
                     }
                 }
                 LocalDateTime endDateTime = getLocalDateTime(selectedDate, config.getEndTime());
                 while (time.plusMinutes(config.getMinDuration()).compareTo(endDateTime) <= 0) {
                     BigDecimal pricePerMinDuration;
-                    if (basePriceLastConfig == null){
+                    if (previousConfig == null){
                         pricePerMinDuration = config.getBasePrice();
                     } else {
-                        pricePerMinDuration = config.getBasePrice().add(basePriceLastConfig).divide(new BigDecimal("2"));
-                        basePriceLastConfig = null;
+                        BigDecimal previousConfigBasePricePerMinute = getPricePerMinute(previousConfig);
+                        pricePerMinDuration = previousConfigBasePricePerMinute.multiply(new BigDecimal(previousConfig.getMinInterval()), MathContext.DECIMAL128);
+                        BigDecimal basePricePerMinute = getPricePerMinute(config);
+                        pricePerMinDuration = pricePerMinDuration.add(basePricePerMinute.multiply(new BigDecimal(config.getMinDuration()-previousConfig.getMinInterval()), MathContext.DECIMAL128));
+                        previousConfig = null;
                     }
+                    pricePerMinDuration = pricePerMinDuration.setScale(2, RoundingMode.HALF_EVEN);
                     if (onlyFutureTimeSlots) {
                         if (selectedDate.isAfter(today) || time.isAfter(now)){
                             addTimeSlot(timeSlots, time, config, pricePerMinDuration);
@@ -130,8 +137,7 @@ public class BookingUtil {
                     }
                     time = time.plusMinutes(config.getMinInterval());
                 }
-                minIntervalLastConfig = config.getMinInterval();
-                basePriceLastConfig = config.getBasePrice();
+                previousConfig = config;
             }
             //sort time slots by time
             Collections.sort(timeSlots);
@@ -347,5 +353,9 @@ public class BookingUtil {
 
     public LocalDateTime getLocalDateTime(LocalDate selectedDate, LocalTime startTime) {
         return new LocalDateTime(selectedDate.getYear(), selectedDate.getMonthOfYear(), selectedDate.getDayOfMonth(), startTime.getHourOfDay(), startTime.getMinuteOfHour());
+    }
+
+    public BigDecimal getPricePerMinute(CalendarConfig config) {
+        return config.getBasePrice().divide(new BigDecimal(config.getMinDuration().toString()), MathContext.DECIMAL128);
     }
 }

@@ -47,6 +47,7 @@ import de.appsolve.padelcampus.utils.VoucherUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -612,20 +613,17 @@ public class BookingsController extends BaseController {
             Map.Entry<Offer, List<CalendarConfig>> entry = iterator.next();
             Offer offer = entry.getKey();
             List<CalendarConfig> configsForOffer = entry.getValue();
-            CalendarConfig currentConfig = configsForOffer.get(0);
             
             //make sure the first configuration starts before the requested booking time
-            if (selectedTime.compareTo(currentConfig.getStartTime()) < 0){
+            if (selectedTime.compareTo(configsForOffer.get(0).getStartTime()) < 0){
                 continue;
             }
             
             LocalDateTime endTime = null;
-            Integer duration = currentConfig.getMinDuration();
-                
-            BigDecimal basePricePerMinute;
+            Integer duration = configsForOffer.get(0).getMinDuration();
+            BigDecimal pricePerMinute;
             BigDecimal price = null;
             CalendarConfig previousConfig = null;
-            
             Map<Integer, BigDecimal> durationPriceMap = new TreeMap<>();
             Boolean isContiguous = true;
             for (CalendarConfig config: configsForOffer){
@@ -639,15 +637,16 @@ public class BookingsController extends BaseController {
                     if (!durationPriceMap.isEmpty()){
                         //we substract min interval before the comparison as it has been added during the last iteration
                         LocalDateTime configStartDateTime = bookingUtil.getLocalDateTime(selectedDate, config.getStartTime());
-                        if (!endTime.minusMinutes(currentConfig.getMinInterval()).equals(configStartDateTime)){
+                        if (!endTime.minusMinutes(config.getMinInterval()).equals(configStartDateTime)){
                             break;
                         }
                     }
                 }
                 
-                Integer interval = currentConfig.getMinInterval();
+                
+                Integer interval = config.getMinInterval();
             
-                basePricePerMinute = config.getBasePrice().divide(new BigDecimal(currentConfig.getMinDuration().toString()), MathContext.DECIMAL128);
+                pricePerMinute = bookingUtil.getPricePerMinute(config);
                 
                 //as long as the endTime is before the end time configured in the calendar
                 LocalDateTime configEndDateTime = bookingUtil.getLocalDateTime(selectedDate, config.getEndTime());
@@ -666,16 +665,19 @@ public class BookingsController extends BaseController {
                     }
                     
                     if (price == null){
-                        //initialze price based on min duration
-                        if (previousConfig == null){
-                            price = basePricePerMinute.multiply(new BigDecimal(duration.toString()), MathContext.DECIMAL128);
+                        //see if previousConfig endTime - minInterval matches the selected time. if so, take half of the previous config price as a basis
+                        if (previousConfig != null && previousConfig.getEndTime().minusMinutes(previousConfig.getMinInterval()).equals(selectedTime)){
+                            BigDecimal previousConfigPricePerMinute = bookingUtil.getPricePerMinute(previousConfig);
+                            price = previousConfigPricePerMinute.multiply(new BigDecimal(previousConfig.getMinInterval()), MathContext.DECIMAL128);
+                            price = price.add(pricePerMinute.multiply(new BigDecimal(duration-previousConfig.getMinInterval()), MathContext.DECIMAL128));
                         } else {
-                            price = previousConfig.getBasePrice().add(config.getBasePrice()).divide(new BigDecimal("2"));
+                            price = pricePerMinute.multiply(new BigDecimal(duration.toString()), MathContext.DECIMAL128);
                         }
                     } else {
                         //add price for additional interval
-                        price = price.add(basePricePerMinute.multiply(new BigDecimal(interval.toString()), MathContext.DECIMAL128));
+                        price = price.add(pricePerMinute.multiply(new BigDecimal(interval.toString()), MathContext.DECIMAL128));
                     }
+                    price = price.setScale(2, RoundingMode.HALF_EVEN);
                     durationPriceMap.put(duration, price);
 
                     //increase the duration by the configured minimum interval and determine the new end time for the next iteration
@@ -693,9 +695,11 @@ public class BookingsController extends BaseController {
                 
                 if (!isContiguous){
                     //we only allow coniguous bookings for one offer. process next offer
+//                    previousConfig = null;
                     break;
-                }
+                } 
                 previousConfig = config;
+                
             }
         }
         return offerDurationPrices;
