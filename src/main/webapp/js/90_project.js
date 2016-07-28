@@ -58,6 +58,28 @@ app.main = {};
         });
     };
     
+    self.enableFormAutoSubmit = function(){
+        $('input.auto-submit').livequery(function(){
+            //change is not fired on hidden input elements, therefore we use MutationObserver
+            if ($(this).attr('type') === 'hidden'){
+                var changeObserver = new MutationObserver(function(mutations) {
+                    for (var i=0; i<mutations.length; i++){
+                        if(mutations[i].attributeName === "value") {
+                            $(mutations[i].target).trigger("change");
+                            break;
+                        }
+                    }
+                });
+                changeObserver.observe(this, {attributes: true});
+            }
+           
+           
+           $(this).on('change', function(){
+              $(this).closest('form').submit(); 
+           });
+        });
+    };
+    
     self.enableDatePicker = function () {
 
         var addLeadingZero = function(str){
@@ -530,6 +552,7 @@ $(document).ready(function () {
     app.main.enableForms();
     app.main.enablePrivateDataLinks();
     app.main.enableDatePicker();
+    app.main.enableFormAutoSubmit();
     app.main.enableSideMenu();
     app.main.enableAccordion();
     app.main.enableBookingLoginSelection();
