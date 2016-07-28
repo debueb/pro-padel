@@ -38,6 +38,9 @@ public class AdminBookingsFacilitiesController extends AdminBaseController<Facil
         binder.registerCustomEditor(SortedSet.class, "offers", new CustomCollectionEditor(SortedSet.class) {
             @Override
             protected Object convertElement(Object element) {
+                if (element instanceof Offer){
+                    return element;
+                }
                 Long id = Long.parseLong((String) element);
                 return offerDAO.findById(id);
             }
