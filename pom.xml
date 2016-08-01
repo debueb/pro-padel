@@ -434,7 +434,7 @@
                 <OPENSHIFT_MYSQL_DB_PORT>3306</OPENSHIFT_MYSQL_DB_PORT>
                 <OPENSHIFT_MYSQL_DB_USERNAME>padelcampus</OPENSHIFT_MYSQL_DB_USERNAME>
                 <OPENSHIFT_MYSQL_DB_PASSWORD>padelcampus</OPENSHIFT_MYSQL_DB_PASSWORD>
-                <OPENSHIFT_APP_NAME>padelcampus</OPENSHIFT_APP_NAME>
+                <OPENSHIFT_APP_NAME>padelcampus?useSSL=false</OPENSHIFT_APP_NAME>
                 <OPENSHIFT_DATA_DIR>/Users/dominik/Dropbox/Coding/padelcampus/data</OPENSHIFT_DATA_DIR>
             </properties>
         </profile>
