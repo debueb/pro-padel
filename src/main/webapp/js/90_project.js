@@ -59,7 +59,7 @@ app.main = {};
     };
     
     self.enableFormAutoSubmit = function(){
-        $('input.auto-submit').livequery(function(){
+        $('.auto-submit').livequery(function(){
             //change is not fired on hidden input elements, therefore we use MutationObserver
             if ($(this).attr('type') === 'hidden'){
                 var changeObserver = new MutationObserver(function(mutations) {

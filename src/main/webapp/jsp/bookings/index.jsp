@@ -21,7 +21,7 @@
                     <c:if test="${not empty RangeMap}">
                         <c:if test="${not empty Facilities}">
                             <div class="relative">
-                                <select name="facilities" class="select-multiple form-control form-bottom-element" multiple="true" data-container="body">
+                                <select name="facilities" class="select-multiple form-control form-bottom-element auto-submit" multiple="true" data-container="body">
                                     <c:forEach var="Facility" items="${Facilities}">
                                         <option value="${Facility.id}" ${as:contains(SelectedFacilities, Facility) ? 'selected="selected"' : ''}>
                                             ${Facility.name}
@@ -32,8 +32,6 @@
                             </div>
                         </c:if>
                     </c:if>
-
-                    <button type="submit" class="btn btn-primary unit stretch"><fmt:message key="Refresh"/></button>
                 </form>
             </div>
         </div>
