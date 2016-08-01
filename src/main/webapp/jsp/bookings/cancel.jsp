@@ -18,7 +18,11 @@
                     <jsp:include page="include/booking-data.jsp"/>
 
                     <c:if test="${empty error}">
-                        <button class="btn btn-primary unit" type="submit"><fmt:message key="CancelBooking2"/></button>
+                        <div class="row">
+                            <div class="col-xs-offset-4 col-xs-8 booking-cell unit">
+                                <button class="btn btn-primary" type="submit"><fmt:message key="CancelBooking2"/></button>
+                            </div>
+                        </div>
                     </c:if>
                 </spf:form>
             </div>
