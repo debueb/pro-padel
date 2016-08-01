@@ -6,8 +6,6 @@
 package de.appsolve.padelcampus.data;
 
 import static de.appsolve.padelcampus.constants.Constants.MAIL_NOREPLY_SENDER_NAME;
-import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.utils.RequestUtil;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
