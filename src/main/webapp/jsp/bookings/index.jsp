@@ -95,6 +95,12 @@
                                                                                 ${TimeSlot.pricePerMinDuration}
                                                                             </a>
                                                                         </c:when>
+                                                                        <%-- Show who booked the court
+                                                                        <c:when test="${not empty TimeSlot.bookings}">
+                                                                            <c:set var="Booking" value="${TimeSlot.bookings[0]}"/>
+                                                                            <i class="fa fa-info-circle text-center" data-toggle="tooltip" data-placement="top" title="${Booking.player}<br /> ${Booking.duration} min<br />${Booking.comment}"></i>
+                                                                        </c:when>
+                                                                        --%>
                                                                     </c:choose>
                                                                 </c:if>
                                                             </c:forEach>
