@@ -1,4 +1,3 @@
-<%@ page pageEncoding="UTF-8" contentType="text/html" %> 
 <%@include file="/jsp/include/include.jsp"%>
 <jsp:include page="/jsp/include/head.jsp"/>
 
@@ -23,7 +22,7 @@
                     <fmt:message key="CardNumber" var="placeholder"/>
                     <input class="card-number form-control form-center-element" type="tel" maxlength="20" data-valid-chars="[0-9]" placeholder="${placeholder}" />
 
-                    <%-- GÃ¼ltig bis --%>
+                    <%-- Gültig bis --%>
                     <span class="relative input-hour">
                         <select class="card-expiry-month select-simple form-left-element form-center-element" data-container="body">
                             <c:forEach var="month" begin="1" end="12">

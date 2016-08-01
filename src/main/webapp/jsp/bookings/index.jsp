@@ -1,4 +1,3 @@
-<%@ page pageEncoding="UTF-8" contentType="text/html" %> 
 <%@include file="/jsp/include/include.jsp"%>
 <jsp:include page="/jsp/include/head.jsp"/>
 <div class="row">
