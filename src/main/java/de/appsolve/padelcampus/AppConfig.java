@@ -60,7 +60,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableScheduling
 @ComponentScan(basePackages = "de.appsolve")
 @EnableWebMvc
-//@ComponentScan(basePackages = "de.appsolve", useDefaultFilters=true, excludeFilters = {@ComponentScan.Filter(org.springframework.stereotype.Controller.class)})
 public class AppConfig extends WebMvcConfigurerAdapter{
     
     @Autowired
