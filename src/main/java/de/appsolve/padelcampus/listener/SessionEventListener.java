@@ -47,8 +47,8 @@ public class SessionEventListener implements HttpSessionListener{
         }
         
         //also look for other blocking bookings that might no have been deleted
-        LOG.info("Looking for unpaid blocking bookings");
         LocalDateTime maxAge = now.minusSeconds(se.getSession().getMaxInactiveInterval());
+        LOG.info("Looking for unpaid blocking bookings before "+maxAge);
         for (Booking blockingBooking : bookingBaseDAO.findBlockedBookings()) {
             cancelBooking(blockingBooking, maxAge);
         }
