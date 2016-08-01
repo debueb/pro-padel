@@ -64,7 +64,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/admin/bookings/reservations")
 public class AdminBookingsReservationsController extends AdminBaseController<ReservationRequest>{
     
-    private static final Logger log = Logger.getLogger(AdminBookingsReservationsController.class);
+    private static final Logger LOG = Logger.getLogger(AdminBookingsReservationsController.class);
     
     @Autowired
     BookingDAOI bookingDAO;
@@ -198,7 +198,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                             }
                             break;
                         } catch (CalendarConfigException e){
-                            log.warn("Caught calendar config exception during add reservation request. This may be normal (for holidays)", e);
+                            LOG.warn("Caught calendar config exception during add reservation request. This may be normal (for holidays)", e);
                         }
                     }
                 }
@@ -220,8 +220,8 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
             
             return new ModelAndView("redirect:/admin/bookings/reservations");
         } catch (Exception e){
-            log.error(e);
-            bindingResult.addError(new ObjectError("comment", e.toString()));
+            LOG.error(e);
+            bindingResult.addError(new ObjectError("comment", e.getMessage()));
             return addView;
         }
     }
