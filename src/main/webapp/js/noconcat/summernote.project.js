@@ -58,33 +58,35 @@ $(document).ready(function () {
                 },
                 zoom: 13
             },
-            onImageUpload: function (files, editor, welEditable) {
-                data = new FormData();
-                data.append("file", files[0]);
-                $.ajax({
-                    accepts: "text/plain",
-                    dataType: "text",
-                    data: data,
-                    type: 'POST',
-                    enctype: 'multipart/form-data',
-                    xhr: function() {
-                        var myXhr = $.ajaxSettings.xhr();
-                        if (myXhr.upload) myXhr.upload.addEventListener('progress', progressHandlingFunction, false);
-                        return myXhr;
-                    },
-                    url: '/images/upload',
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function(url) {
-                        $self.summernote('editor.insertImage', url);
-                        //editor.insertImage(welEditable, url);
-                    },
-                    error: function(e){
-                        resetProgressBar();
-                        alert("Failed to upload image: Error "+e.status+" "+e.statusText);
-                    }
-                });
+            callbacks: {
+                onImageUpload: function (files, editor, welEditable) {
+                    data = new FormData();
+                    data.append("file", files[0]);
+                    $.ajax({
+                        accepts: "text/plain",
+                        dataType: "text",
+                        data: data,
+                        type: 'POST',
+                        enctype: 'multipart/form-data',
+                        xhr: function() {
+                            var myXhr = $.ajaxSettings.xhr();
+                            if (myXhr.upload) myXhr.upload.addEventListener('progress', progressHandlingFunction, false);
+                            return myXhr;
+                        },
+                        url: '/images/upload',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function(url) {
+                            $self.summernote('editor.insertImage', url);
+                            //editor.insertImage(welEditable, url);
+                        },
+                        error: function(e){
+                            resetProgressBar();
+                            alert("Failed to upload image: Error "+e.status+" "+e.statusText);
+                        }
+                    });
+                }
             }
         });
     });
