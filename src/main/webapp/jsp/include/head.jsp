@@ -71,32 +71,33 @@
     <body ontouchstart="">
         <div class="background">
             <div class="wrapper">
-                <div class="navbar navbar-default navbar-fixed-top">
-                    <div class="navbar-header">
-                        <c:choose>
-                            <c:when test="${pageContext.request.requestURI == '/jsp/index.jsp'}">
-                                <div class="navbar-brand">
-                                    <img src="${sessionScope.customer.companyLogoPath}" class="customerLogo"/>
-                                </div>
-                                <c:if test="${empty sessionScope.customer.companyLogo}">
-                                    <div class="navbar-brand">${sessionScope.customer}</div>
-                                </c:if>
-                            </c:when>
-                            <c:otherwise>
-                                <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a>
-                                <a class="navbar-icon navbar-hover home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>
-                            </c:otherwise>
-                            </c:choose>
-                        <a class="navbar-icon navbar-toggle">
-                            <div class="menu-line menu-line-1"></div>
-                            <div class="menu-line menu-line-2"></div>
-                            <div class="menu-line menu-line-3"></div>
-                        </a>        
-                    </div>
-                    <div class="collapse navbar-collapse">
-                        <div class="nav navbar-nav stretch">
-                            <jsp:include page="/jsp/include/navigation.jsp"/>
+                <c:set var="isHomepage" value="${pageContext.request.requestURI == '/jsp/index.jsp'}"/>
+                <%--
+                <c:if test="${isHomepage}">
+                    <div class="text-center">
+                        <div class="navbar-brand">
+                            <img src="${sessionScope.customer.companyLogoPath}" class="customerLogo"/>
                         </div>
+                        <c:if test="${empty sessionScope.customer.companyLogo}">
+                            <div class="navbar-brand">${sessionScope.customer}</div>
+                        </c:if>
+                    </div>
+                </c:if>
+                <div class="navbar navbar-default ${isHomepage ? '' : 'navbar-fixed-top'}">
+                --%>
+                <div class="navbar navbar-default navbar-fixed-top">
+                    <c:if test="${not isHomepage}">
+                        <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a>
+                        <a class="navbar-icon navbar-hover home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>
+                    </c:if>
+                    
+                    <a class="navbar-icon navbar-toggle">
+                        <div class="menu-line menu-line-1"></div>
+                        <div class="menu-line menu-line-2"></div>
+                        <div class="menu-line menu-line-3"></div>
+                    </a> 
+                    <div class="collapse navbar-collapse">
+                        <jsp:include page="/jsp/include/navigation.jsp"/>
                     </div>
                 </div>
                 <jsp:include page="/jsp/include/spinner.jsp"/>

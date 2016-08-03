@@ -13,7 +13,10 @@
 }
 
 .navbar-toggle{
-    position:relative;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0;
 }
 .menu-line{
     position: relative;
@@ -75,7 +78,6 @@ body {
     background-color: @navBarColor2;
     #gradient > .vertical(@navBarColor2, @navBarColor);
     opacity: .9;
-    border-top: 1px solid white;
     font-size: 11px;
     padding-left: 10px;
     padding-right: 10px;
@@ -102,7 +104,7 @@ textarea, input[type="text"], input[type="email"], input[type="submit"], input[t
 }
 #site-canvas{
     width: 100%;
-    height: 100%;
+    height: auto;
 }
 #site-canvas, #site-menu, #site-shadow, .footer {
     -webkit-transition: -webkit-transform 0.3s ease, right 0.3s ease;
@@ -110,13 +112,6 @@ textarea, input[type="text"], input[type="email"], input[type="submit"], input[t
     -ms-transition: transform 0.3s ease, right 0.3s ease; /* IE10 is actually unprefixed */
     -o-transition: transform 0.3s ease, right 0.3s ease;
     transition: transform 0.3s ease, right 0.3s ease;
-}
-.navbar-fixed-top{
-    max-height: 50px;
-}
-.navbar-collapse.collapse{
-    overflow-y: hidden !important;
-    max-height: 50px;
 }
 #site-menu {
     overflow-y: auto;
@@ -255,7 +250,9 @@ table.table-scores tbody tr td{
 .list-group-item-icon, .list-menu-item-icon{
     text-align: center;
 }
-    
+#site-menu .list-menu-item-icon{
+    display: block;
+}
 .list-menu-item-icon{
     width: 18px;
     float: right;  
@@ -294,6 +291,11 @@ table.table-scores tbody tr td{
     position: relative;
     margin-left: 0;
 }
+.navbar{
+    border-radius: 0;
+    margin-bottom: 0;
+    border: 0;
+}
 .navbar-icon{
     border: 0;
     display:inline-block;
@@ -307,8 +309,10 @@ table.table-scores tbody tr td{
 .navbar-brand{
     display: inline-block;
     float: none;
-    padding: 5px;
-    line-height: 40px;
+    padding: 0;
+    height: 100px;
+    line-height: 100px;
+    margin-top: -50px;
 }
 .navbar-header{
     position:relative;
@@ -322,13 +326,9 @@ table.table-scores tbody tr td{
     max-height: 50px;
     white-space: nowrap;
 }
-.navbar-header a.navbar-toggle{
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0;
+.navbar-default{
+    max-height: 50px;
 }
-
 .navbar-default .navbar-brand, .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus{
     color: @white;
     outline: none;
@@ -1333,8 +1333,7 @@ th.normal{
     max-width: 100%;
 }
 .customerLogo{
-    height: 40px;
-    padding-left: 10px;
+    height: 100px;
 }
 .bootstrap-select.form-center-element .btn{
     border-radius: 0;
@@ -1504,57 +1503,47 @@ th.normal{
         transform: rotateY(-180deg);
     }
 }
-.nav .menu-item-container{
-    -ms-box-orient: horizontal;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -moz-flex;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row wrap;
-    -moz-flex-flow: row wrap;
-    -ms-flex-flow: row wrap;
-    flex-flow: row wrap;
-    justify-content: space-around;
-    height: 50px;
-    align-items: center;
-}
-.nav a.menu-item{
-    -webkit-flex: 1 0 auto;
-    -moz-flex: 1 0 auto;
-    -ms-flex: 1 0 auto;
-    flex: 1 0 auto;
-}
-.nav .list-menu-item-icon{
+.list-menu-item-icon{
     display: none;
-}
-@media (min-width: @grid-float-breakpoint){
-    .navbar-toggle{
-        display: none;
-    }
 }
 a.menu-item{
     color: white;
-    display: block;
     text-decoration: none;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: inline-block;
 }
 a.menu-item:hover{
     color: @primaryColor;
     background-color: white;
     text-decoration: none;
 }
-.nav a.menu-item{
+a.menu-item{
     height: 50px;
     line-height: 50px;
     text-align: center;
 }
-#site-menu a.menu-item{
-    padding: 10px;
-    text-align: left;
+@media (min-width: @grid-float-breakpoint){
+    .navbar-toggle{
+        display: none;
+    }
+    .navbar-collapse.collapse {
+        display: inline-block !important;
+        float: right;
+        padding-left: 0;
+        padding-right: 0;
+    }
 }
-#site-menu .menu-item:not(:last-child){
-    border-bottom: 1px solid #fff;
+@media (max-width: @grid-float-breakpoint-max){
+    a.menu-item:first-child{
+        border-top: 1px solid #fff;
+    }
+    a.menu-item{
+        display: block;
+        text-align: left;
+        border-bottom: 1px solid #fff;
+        box-sizing: content-box;
+    }
 }
 .panel-heading a.edit{
     color: #fff;
