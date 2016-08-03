@@ -72,21 +72,39 @@ public class AdminGeneralDesignController extends BaseController{
     public ModelAndView postIndex(
             HttpServletRequest request,
             @RequestParam("backgroundImage") MultipartFile backgroundImage, 
+            @RequestParam(value = "backgroundImageRepeat", required = false, defaultValue = "false") Boolean backgroundImageRepeat, 
+            @RequestParam(value = "backgroundSizeCover", required = false, defaultValue = "false") Boolean backgroundSizeCover, 
             @RequestParam("companyLogo") MultipartFile companyLogo, 
             @RequestParam("touchIcon") MultipartFile touchIcon) throws Exception {
         List<CssAttribute> atts = getCssAttributes();
         for (CssAttribute att: atts){
-            if (att.getName().equals("backgroundImage")){
-                if (!backgroundImage.isEmpty()){
-                    StringBuilder sb = new StringBuilder("url(data:");
-                    sb.append(backgroundImage.getContentType());
-                    sb.append(";base64,");
-                    sb.append(Base64.encodeBase64String(backgroundImage.getBytes()));
-                    sb.append(")");
-                    att.setCssValue(sb.toString());
-                }
-            } else {
-                att.setCssValue(request.getParameter(att.getId()+""));
+            switch (att.getName()){
+                case "backgroundImage":
+                    if (!backgroundImage.isEmpty()){
+                        StringBuilder sb = new StringBuilder("url(data:");
+                        sb.append(backgroundImage.getContentType());
+                        sb.append(";base64,");
+                        sb.append(Base64.encodeBase64String(backgroundImage.getBytes()));
+                        sb.append(")");
+                        att.setCssValue(sb.toString());
+                    }
+                    break;
+                case "backgroundRepeat":
+                    if (backgroundImageRepeat){
+                        att.setCssValue("repeat");
+                    } else {
+                        att.setCssValue("no-repeat");
+                    }
+                    break;
+                case "backgroundSize":
+                    if (backgroundSizeCover){
+                        att.setCssValue("cover");
+                    } else {
+                        att.setCssValue("inherit");
+                    }
+                    break;
+                default:
+                    att.setCssValue(request.getParameter(att.getId()+""));
             }
             cssAttributeDAO.saveOrUpdate(att);
         }

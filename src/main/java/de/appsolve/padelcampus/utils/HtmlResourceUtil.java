@@ -268,6 +268,8 @@ public class HtmlResourceUtil {
         atts.add(getCssAttribute("primaryLinkColor", "#31708f", "#31708f"));
         atts.add(getCssAttribute("primaryLinkHoverColor", "#94cfeb", "#94cfeb"));
         atts.add(getCssAttribute("backgroundImage", "url\\('\\/images\\/bg\\.jpg'\\)", "url('/images/bg.jpg')"));
+        atts.add(getCssAttribute("backgroundRepeat", "no-repeat", "no-repeat"));
+        atts.add(getCssAttribute("backgroundSize", "cover", "cover"));
         return atts;
     }
 

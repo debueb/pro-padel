@@ -25,6 +25,18 @@
                                     </span>
                                 </div>
                             </c:when>
+                            <c:when test="${Attribute.name eq 'backgroundRepeat'}">
+                                <div class="text-center unit">
+                                    <input type="checkbox" name="backgroundImageRepeat" id="backgroundImageRepeat" ${Attribute.cssValue eq 'repeat' ? 'checked' : ''}/>
+                                    <label for="backgroundImageRepeat"><fmt:message key="BackgroundImageRepeat"/></label>
+                                </div>
+                            </c:when>
+                            <c:when test="${Attribute.name eq 'backgroundSize'}">
+                                <div class="text-center unit">
+                                    <input type="checkbox" name="backgroundSizeCover" id="backgroundSizeCover" ${Attribute.cssValue eq 'repeat' ? 'checked' : ''}/>
+                                    <label for="backgroundSizeCover"><fmt:message key="BackgroundSizeCover"/></label>
+                                </div>
+                            </c:when>
                             <c:otherwise>
                                 <hr/>
                                 <figure class="picture unit">
