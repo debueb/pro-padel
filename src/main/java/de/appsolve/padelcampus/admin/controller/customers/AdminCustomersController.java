@@ -39,8 +39,20 @@ public class AdminCustomersController extends AdminBaseController<Customer> {
     
     @Override
     public ModelAndView postEditView(@ModelAttribute("Model") Customer model, HttpServletRequest request, BindingResult result){
-        ModelAndView editView = super.postEditView(model, request, result);
+        ModelAndView editView = getEditView(model);
+        validator.validate(model, result);
+        if (result.hasErrors()){
+            return editView;
+        }
+        //transfer properties in order to avoid overwriting 
+        if (model.getId() != null){
+            Customer existingCustomer = customerDAO.findById(model.getId());
+            model.setCompanyLogo(existingCustomer.getCompanyLogo());
+            model.setTouchIcon(existingCustomer.getTouchIcon());
+        }
+        customerDAO.saveOrUpdate(model);
         try {
+            //recreate html resources as customer name is used in path
             htmlResourceUtil.updateCss(request.getServletContext(), sessionUtil.getCustomer(request));
         } catch (Exception e){
             result.addError(new ObjectError("*", e.getMessage()));
