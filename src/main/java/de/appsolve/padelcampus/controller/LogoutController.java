@@ -6,10 +6,8 @@
 
 package de.appsolve.padelcampus.controller;
 
-import static de.appsolve.padelcampus.constants.Constants.COOKIE_LOGIN_TOKEN;
 import de.appsolve.padelcampus.utils.LoginUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
