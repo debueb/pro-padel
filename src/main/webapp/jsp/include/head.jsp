@@ -72,24 +72,19 @@
         <div class="background">
             <div class="wrapper">
                 <c:set var="isHomepage" value="${pageContext.request.requestURI == '/jsp/index.jsp'}"/>
-                <%--
-                <c:if test="${isHomepage}">
-                    <div class="text-center">
-                        <div class="navbar-brand">
-                            <img src="${sessionScope.customer.companyLogoPath}" class="customerLogo"/>
-                        </div>
+                <div class="navbar navbar-default navbar-fixed-top">
+                    <%--
+                    <c:if test="${isHomepage}">
+                        <img class="navbar-brand" src="${sessionScope.customer.companyLogoPath}" class="customerLogo"/>
                         <c:if test="${empty sessionScope.customer.companyLogo}">
                             <div class="navbar-brand">${sessionScope.customer}</div>
                         </c:if>
-                    </div>
-                </c:if>
-                <div class="navbar navbar-default ${isHomepage ? '' : 'navbar-fixed-top'}">
-                --%>
-                <div class="navbar navbar-default navbar-fixed-top">
+                    </c:if>
+                    --%>
                     <c:if test="${not isHomepage}">
                         <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a>
-                        <a class="navbar-icon navbar-hover home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>
                     </c:if>
+                    <a class="navbar-icon navbar-hover home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>
                     
                     <a class="navbar-icon navbar-toggle">
                         <div class="menu-line menu-line-1"></div>
