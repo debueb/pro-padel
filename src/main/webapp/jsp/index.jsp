@@ -17,33 +17,6 @@
                     </jsp:include>
                 </c:if>
             </c:forEach>
-            <c:if test="${not empty user}">
-                <fmt:message key="AccountDesc" var="desc"/>
-                <jsp:include page="/jsp/include/flip-item.jsp">
-                    <jsp:param name="url" value="/account"/>
-                    <jsp:param name="title" value="Account"/>
-                    <jsp:param name="iconName" value="child"/>
-                    <jsp:param name="desc" value="${desc}"/>
-                </jsp:include>
-            </c:if>
-            <c:if test="${not empty privileges}">
-                <fmt:message key="AdminDesc" var="desc"/>
-                <jsp:include page="/jsp/include/flip-item.jsp">
-                    <jsp:param name="url" value="/admin"/>
-                    <jsp:param name="title" value="Administration"/>
-                    <jsp:param name="iconName" value="gear"/>
-                    <jsp:param name="desc" value="${desc}"/>
-                </jsp:include>
-            </c:if>
-            <c:if test="${empty user}">
-                <fmt:message key="LoginDesc" var="desc"/>
-                <jsp:include page="/jsp/include/flip-item.jsp">
-                    <jsp:param name="url" value="/login"/>
-                    <jsp:param name="title" value="Login"/>
-                    <jsp:param name="iconName" value="sign-in"/>
-                    <jsp:param name="desc" value="${desc}"/>
-                </jsp:include>
-            </c:if>
         </div>
     </div>
 </div>
