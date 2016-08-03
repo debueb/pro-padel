@@ -52,7 +52,7 @@
                         <div class="text-center"><fmt:message key="CompanyLogo"/></div>
                         <div class="text-center"><fmt:message key="CompanyLogoDesc"/></div>
                         <div class="picture-subtext text-center"><fmt:message key="ClickImageToChange"/></div>
-                        <div class="unit" style="margin: 0 auto; width: auto; height: 40px; background-size: auto 40px; content: url('${sessionScope.customer.companyLogoPath}');"></div>
+                        <div class="unit" style="margin: 0 auto; width: auto; height: 100px; background-size: auto 100px; content: url('${sessionScope.customer.companyLogoPath}');"></div>
                     </figure>
                     <input type="file" capture="camera" accept="image/*" name="companyLogo" class="picture-input hidden"/>
                     
