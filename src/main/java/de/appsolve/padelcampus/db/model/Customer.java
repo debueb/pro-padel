@@ -47,6 +47,9 @@ public class Customer extends BaseEntity implements CustomerI{
     @JsonIgnore
     private Image touchIcon;
     
+    @Column(length = 8000)
+    private String footerPrefix;
+    
     @Override
     public String getName() {
         return name;
@@ -109,4 +112,11 @@ public class Customer extends BaseEntity implements CustomerI{
         return touchIcon == null ? "/images/touch-icon-192x192.png" : "/images/image/"+touchIcon.getSha256();
     }
 
+    public String getFooterPrefix() {
+        return footerPrefix;
+    }
+
+    public void setFooterPrefix(String footerPrefix) {
+        this.footerPrefix = footerPrefix;
+    }
 }

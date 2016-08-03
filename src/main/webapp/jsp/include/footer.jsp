@@ -9,6 +9,9 @@
         </div>
     </div>
         <div class="footer">
+            <c:if test="${not empty sessionScope.customer.footerPrefix}">
+                ${sessionScope.customer.footerPrefix}&nbsp;
+            </c:if>
             <c:forEach var="Module" items="${customerModules[sessionScope.customer.name]}" varStatus="status">
                 <c:if test="${Module.showInFooter}">
                     <a href="${Module.url}" class="ajaxify">${Module.title}</a> | 
