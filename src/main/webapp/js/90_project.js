@@ -485,11 +485,13 @@ app.main = {};
         $('.gallery-autoplay').livequery(function(){
             if (!($(this).parents('.summernote-form').length)){ //do not initialize when inside editor
                 $(this).slick({
+                    "dots": true,
                     "accessibility": true,
                     "autoplay": true,
                     "autoplaySpeed": 3000,
                     "arrows": true,
-                    "adaptiveHeight": false
+                    "adaptiveHeight": false,
+                    "lazyLoad": "progressive"
                 });
             }
         });
