@@ -13,12 +13,16 @@ import de.appsolve.padelcampus.db.model.Image;
 import de.appsolve.padelcampus.utils.FileUtil;
 import de.appsolve.padelcampus.utils.imaging.ImageUtilI;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/images")
 public class ImagesController extends BaseController{
     
-    private static final Logger log = Logger.getLogger(ImagesController.class);
+    private static final Logger LOG = Logger.getLogger(ImagesController.class);
     
     @Autowired
     FileUtil fileUtil;
@@ -47,14 +51,20 @@ public class ImagesController extends BaseController{
     @Autowired
     ImageDAOI imageDAO;
     
-    @ResponseBody
     @RequestMapping(value="image/{sha256}", produces = MediaType.IMAGE_PNG_VALUE)
-    public byte[] showImage(@PathVariable("sha256") String sha256, HttpServletResponse response) throws IOException{
+    public ResponseEntity<byte[]> showImage(@PathVariable("sha256") String sha256, HttpServletResponse response) throws IOException{
         Image image = imageDAO.findBySha256(sha256);
         if (image!=null){
-            return fileUtil.getByteArray(image.getFilePath());
+            byte[] byteArray = fileUtil.getByteArray(image.getFilePath());
+            return ResponseEntity
+                    .ok()
+                    .cacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
+                    .contentLength(byteArray.length)
+                    .body(byteArray);
+                    
         }
-        return null;
+        LOG.warn(String.format("Unable to display image %s", sha256));
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
     
     @ResponseBody
