@@ -48,7 +48,7 @@
         options.map = $.extend(mapOption, options.map);
 
         // Define Google Maps API URLs with user's apikey
-        const GOOGLE_MAPS_API_URL = ("http://maps.google.com/maps/api/js?key=API_KEY&libraries=places").replace("API_KEY", options.map.apiKey);
+        const GOOGLE_MAPS_API_URL = ("https://maps.google.com/maps/api/js?key=API_KEY&libraries=places").replace("API_KEY", options.map.apiKey);
         const EMBED_URL = ("https://www.google.com/maps/embed/v1/place?key=API_KEY&q=PLACE").replace("API_KEY", options.map.apiKey);
 
         // Create a map button to be used in the toolbar
