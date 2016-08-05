@@ -52,7 +52,7 @@ public class WebAppInitializer implements WebApplicationInitializer{
         servletContext.addListener(RequestContextListener.class);
         
         XSSFilter xssFilter = new XSSFilter();
-        xssFilter.setExcludePattern(Pattern.compile("/admin/modules"));
+        xssFilter.setExcludePattern(Pattern.compile("/admin/general/modules/page.*"));
         servletContext.addFilter("XSSFilter", xssFilter).addMappingForUrlPatterns(null, false, "/*");
         
         servletContext.addFilter("loginFilter", new DelegatingFilterProxy("loginFilter")).addMappingForUrlPatterns(null, false, "/*");
