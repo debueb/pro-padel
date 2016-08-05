@@ -93,12 +93,13 @@
                                                                                 ${TimeSlot.pricePerMinDuration}
                                                                             </a>
                                                                         </c:when>
-                                                                        <%-- Show who booked the court
                                                                         <c:when test="${not empty TimeSlot.bookings}">
-                                                                            <c:set var="Booking" value="${TimeSlot.bookings[0]}"/>
-                                                                            <i class="fa fa-info-circle text-center" data-toggle="tooltip" data-placement="top" title="${Booking.player}<br /> ${Booking.duration} min<br />${Booking.comment}"></i>
+                                                                            <c:forEach var="Booking" items="${TimeSlot.bookings}">
+                                                                                <c:if test="${Booking.publicBooking}">
+                                                                                    <i class="fa fa-info-circle text-center" data-toggle="tooltip" data-placement="top" title="${Booking.player}<br /> <joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/><br />${Booking.comment}"></i>
+                                                                                </c:if>
+                                                                            </c:forEach>
                                                                         </c:when>
-                                                                        --%>
                                                                     </c:choose>
                                                                 </c:if>
                                                             </c:forEach>

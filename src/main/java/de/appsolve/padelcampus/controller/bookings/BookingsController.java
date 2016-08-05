@@ -259,11 +259,16 @@ public class BookingsController extends BaseController {
             if (booking == null) {
                 throw new Exception(msg.get("SessionTimeout"));
             }
+            
+            String publicBooking = request.getParameter("public-booking");
+            Boolean isPublicBooking = !StringUtils.isEmpty(publicBooking) && publicBooking.equalsIgnoreCase("on");
+            booking.setPublicBooking(isPublicBooking);
+            
             String cancellationPolicyCheckbox = request.getParameter("accept-cancellation-policy");
             if (StringUtils.isEmpty(cancellationPolicyCheckbox) || !cancellationPolicyCheckbox.equals("on")) {
                 throw new Exception(msg.get("BookingCancellationPolicyNotAccepted"));
             }
-
+            
             //rerun checks (date time valid, overbooked...)
             validateAndAddObjectsToView(null, request, booking, day, time, booking.getOffer());
 

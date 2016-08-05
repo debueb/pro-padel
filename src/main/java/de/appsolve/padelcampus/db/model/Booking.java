@@ -126,6 +126,9 @@ public class Booking extends CustomerEntity{
     @ManyToMany(fetch = FetchType.LAZY)
     Set<Player> players;
     
+    @Column
+    private Boolean publicBooking;
+    
     public Player getPlayer() {
         return player;
     }
@@ -300,6 +303,14 @@ public class Booking extends CustomerEntity{
 
     public void setPlayers(Set<Player> players) {
         this.players = players;
+    }
+
+    public Boolean getPublicBooking() {
+        return publicBooking == null ? Boolean.FALSE : publicBooking;
+    }
+
+    public void setPublicBooking(Boolean publicBooking) {
+        this.publicBooking = publicBooking;
     }
     
     @Override

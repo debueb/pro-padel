@@ -119,6 +119,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     @Override
     public ModelAndView showAddView(){
         ReservationRequest request = new ReservationRequest();
+        request.setPublicBooking(Boolean.TRUE);
         request.setStartTimeHour(Constants.BOOKING_DEFAULT_VALID_FROM_HOUR);
         request.setStartTimeMinute(Constants.BOOKING_DEFAULT_VALID_FROM_MINUTE);
         LocalTime endTime = request.getStartTime().plusMinutes(Constants.BOOKING_DEFAULT_DURATION);
@@ -163,18 +164,19 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                                         booking.setBookingTime(reservationRequest.getStartTime());
                                         booking.setBookingType(BookingType.reservation);
                                         booking.setComment(reservationRequest.getComment());
-                                        booking.setConfirmed(reservationRequest.getPaymentConfirmed());
+                                        booking.setConfirmed(Boolean.TRUE);
                                         booking.setCurrency(Currency.EUR);
                                         int minutes = Minutes.minutesBetween(reservationRequest.getStartTime(), reservationRequest.getEndTime()).getMinutes(); 
                                         if (minutes < calendarConfig.getMinDuration()){
                                             throw new Exception(msg.get("MinDurationIs", new Object[]{calendarConfig.getMinDuration()}));
                                         }
                                         booking.setDuration(Long.valueOf(minutes));
-                                        booking.setPaymentConfirmed(true);
+                                        booking.setPaymentConfirmed(reservationRequest.getPaymentConfirmed());
                                         booking.setPaymentMethod(PaymentMethod.Reservation);
                                         booking.setPlayer(player);
                                         booking.setUUID(BookingUtil.generateUUID());
                                         booking.setOffer(offer);
+                                        booking.setPublicBooking(reservationRequest.getPublicBooking());
 
                                         List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(date);
                                         TimeSlot timeSlot = new TimeSlot();

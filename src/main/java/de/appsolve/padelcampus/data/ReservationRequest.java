@@ -45,6 +45,8 @@ public class ReservationRequest extends CustomerEntity{
     
     private Boolean paymentConfirmed;
     
+    private Boolean publicBooking;
+    
     @NotEmpty(message = "{NotEmpty.offers}")
     private Set<Offer> offers;
     
@@ -148,6 +150,14 @@ public class ReservationRequest extends CustomerEntity{
 
     public void setPaymentConfirmed(Boolean paymentConfirmed) {
         this.paymentConfirmed = paymentConfirmed;
+    }
+
+    public Boolean getPublicBooking() {
+        return publicBooking == null ? Boolean.FALSE : publicBooking;
+    }
+
+    public void setPublicBooking(Boolean publicBooking) {
+        this.publicBooking = publicBooking;
     }
     
     @Override

@@ -16,6 +16,7 @@
                     <c:otherwise>
                         <spf:form method="POST" class="form-signin" role="form" modelAttribute="Booking">
                             <spf:input type="hidden" path="bookingType"/>
+                            <spf:input type="hidden" path="publicBooking" value="true"/>
                             
                             <div class="row">
                                 <div class="col-xs-4 booking-cell"><fmt:message key="GameDate"/>:</div>

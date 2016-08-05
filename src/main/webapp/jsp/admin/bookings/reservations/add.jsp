@@ -105,6 +105,10 @@
                         <spf:checkbox path="paymentConfirmed" id="paymentConfirmed"/>
                         <label class="checkbox" for="paymentConfirmed"><fmt:message key="Paid"/></label>
                     </span>
+                    <span class="unit">
+                        <spf:checkbox path="publicBooking" id="publicBooking"/>
+                        <label class="checkbox" for="publicBooking"><fmt:message key="PublicBooking"/></label>
+                    </span>
                     
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
                     <a href="/admin/bookings" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="Cancel"/></a>
