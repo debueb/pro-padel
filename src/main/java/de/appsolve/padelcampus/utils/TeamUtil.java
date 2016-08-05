@@ -7,6 +7,11 @@ package de.appsolve.padelcampus.utils;
 
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -17,12 +22,22 @@ public class TeamUtil {
     public static String getTeamName(Team model) {
         StringBuilder name = new StringBuilder();
         int i=0;
-        for (Player player: model.getPlayers()){
-            name.append(player.getLastName());
-            if (i<model.getPlayers().size()-1){
-                name.append(" / ");
+        Set<Player> players = model.getPlayers();
+        if (players != null){
+            List<Player> sortedPlayers = new ArrayList<>(players);
+            Collections.sort(sortedPlayers, new Comparator<Player>(){
+                @Override
+                public int compare(Player o1, Player o2) {
+                    return o1.getLastName().compareTo(o2.getLastName());
+                }
+            });
+            for (Player player: sortedPlayers){
+                name.append(player.getLastName());
+                if (i<model.getPlayers().size()-1){
+                    name.append(" / ");
+                }
+                i++;
             }
-            i++;
         }
         return name.toString();
     }

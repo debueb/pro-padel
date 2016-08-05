@@ -17,19 +17,13 @@
                 <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
-                    <div class="alert alert-info" role="alert"><fmt:message key="LeaveTeamNameEmptyForGeneratedTeamName"/></div>
                     
                     <div class="unit">
-                        <div class="relative">
-                            <spf:input path="name" type="text" class="form-control form-top-element"/>
-                            <div class="explanation"><fmt:message key="TeamName"/></div>
-                        </div>
-
                         <c:if test="${not empty Communities}">
                             <div class="relative">
                                 <spf:select 
                                     path="community" 
-                                    class="form-control select-simple form-center-element"
+                                    class="form-control select-simple form-top-element"
                                     data-container="body" 
                                     >
                                     <fmt:message key="None" var="None"/>

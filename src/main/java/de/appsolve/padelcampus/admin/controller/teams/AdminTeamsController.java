@@ -81,6 +81,7 @@ public class AdminTeamsController extends AdminBaseController<Team> {
         if (StringUtils.isEmpty(model.getName())){
             model.setName(TeamUtil.getTeamName(model));
         }
+        model.setName(model.getName());
         
         validator.validate(model, result);
         if (result.hasErrors()){

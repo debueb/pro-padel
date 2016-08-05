@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import de.appsolve.padelcampus.utils.TeamUtil;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -42,6 +44,10 @@ public class Team extends Participant{
     private Community community;
 
     public String getName() {
+        String teamName = TeamUtil.getTeamName(this);
+        if (!StringUtils.isEmpty(teamName)){
+            return teamName;
+        }
         return name;
     }
 
