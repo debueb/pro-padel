@@ -541,7 +541,9 @@ app.main = {};
     };
     
     self.enableTooltips = function(){
-        $('[data-toggle="tooltip"]').tooltip({html: true});
+        $('[data-toggle="tooltip"]').livequery(function(){
+            $(this).tooltip({html: true});
+        });
     };
     
     return app;
