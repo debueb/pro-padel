@@ -11,6 +11,10 @@
         url('/css/fonts/fontawesome-webfont.ttf?v=4.6.3') format('truetype'),
         url('/css/fonts/fontawesome-webfont.svg?v=4.6.3#fontawesomeregular') format('svg');
 }
+@font-face{
+    font-family: 'MavenPro';
+    src:url('/css/fonts/MavenPro-Regular.ttf') format('truetype')
+}
 
 .navbar-toggle{
     margin-top: 0;
@@ -47,7 +51,8 @@ html, body {
     height: 100%;
 }
 body {
-    background-color: @bgColor; 
+    background-color: @bgColor;
+    font-family: 'Maven', 'Helvetica', 'Verdana', 'Arial';
 }
 .background{
     background: url('/images/bg.jpg');
