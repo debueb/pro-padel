@@ -32,7 +32,7 @@ $(document).ready(function () {
                 ['fontsize', ['fontsize']],
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['template', 'map', 'link', 'picture', 'video', 'hr']],
+                ['insert', ['template', 'link', 'picture', 'video', 'hr']],
                 ['view', ['fullscreen', 'codeview']]
             ],
             template: {
@@ -48,15 +48,6 @@ $(document).ready(function () {
                     'AlertWarning',
                     'AlertDanger'
                 ]
-            },
-            map: {
-                apiKey: 'AIzaSyBu3x1GrcboxPru4-Rq9wvdYeyXIyVKS-s',
-                // This will be used when map is initialized in the dialog.
-                center: {
-                  lat: 50.9573771,
-                  lng: 6.8268944
-                },
-                zoom: 13
             },
             callbacks: {
                 onImageUpload: function (files, editor, welEditable) {
