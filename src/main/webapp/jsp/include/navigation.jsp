@@ -24,11 +24,12 @@
             <jsp:param name="title" value="${title}"/>
             <jsp:param name="url" value="/account"/>
         </jsp:include>
-        <a href="/logout" class="menu-item"><fmt:message key="Logout"/>
-            <span class="list-menu-item-icon">
-                <div class="fa fa-sign-out"></div>
-            </span>
-        </a>
+        <fmt:message key="Logout" var="title"/>
+        <jsp:include page="/jsp/include/list-menu-item.jsp">
+            <jsp:param name="image" value="sign-out"/>
+            <jsp:param name="title" value="${title}"/>
+            <jsp:param name="url" value="/logout"/>
+        </jsp:include>
     </c:when>
     <c:otherwise>
         <fmt:message key="LoginSignup" var="title"/>
