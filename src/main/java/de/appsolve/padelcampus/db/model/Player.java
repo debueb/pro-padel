@@ -26,6 +26,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,12 +44,14 @@ public class Player extends Participant implements EmailContact{
     
     @Column
     @NotEmpty(message = "{NotEmpty.firstName}")
+    @Length(min = 2, max = 255, message = "${Length.firstName}")
     @JsonIgnore
     private String firstName;
     
     @Column
     @NotEmpty(message = "{NotEmpty.lastName}")
     @JsonIgnore
+    @Length(min = 2, max = 255, message = "${Length.lastName}")
     private String lastName;
     
     @Column
