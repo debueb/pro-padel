@@ -10,7 +10,8 @@
                 <h4><fmt:message key="AllContacts"/></h4>
             </div>
             <div class="panel-body">
-                <div class="table-responsive">
+                <div class="alert alert-info"><fmt:message key="ContactFormInfo"/></div>
+                <div class="table-responsive unit-2">
                     <table class="table table-striped table-bordered">
                         <thead>
                         <th><fmt:message key="Name"/></th>

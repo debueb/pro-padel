@@ -55,8 +55,8 @@
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/contact"/>
-                        <jsp:param name="key" value="Contact"/>
-                        <jsp:param name="icon" value="envelope"/>
+                        <jsp:param name="key" value="ContactForm"/>
+                        <jsp:param name="icon" value="at"/>
                     </jsp:include>
                 </div>
             </div>
