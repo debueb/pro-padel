@@ -45,10 +45,6 @@ public class Team extends Participant{
     private Community community;
 
     public String getName() {
-        String teamName = TeamUtil.getTeamName(this);
-        if (!StringUtils.isEmpty(teamName)){
-            return teamName;
-        }
         return name;
     }
 

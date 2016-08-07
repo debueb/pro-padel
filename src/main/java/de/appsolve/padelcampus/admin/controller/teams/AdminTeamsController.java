@@ -77,11 +77,7 @@ public class AdminTeamsController extends AdminBaseController<Team> {
     
     @Override
     public ModelAndView postEditView(@ModelAttribute("Model") Team model, HttpServletRequest request, BindingResult result){
-        //derive team name from players if it is empty
-        if (StringUtils.isEmpty(model.getName())){
-            model.setName(TeamUtil.getTeamName(model));
-        }
-        model.setName(model.getName());
+        model.setName(TeamUtil.getTeamName(model));
         
         validator.validate(model, result);
         if (result.hasErrors()){
