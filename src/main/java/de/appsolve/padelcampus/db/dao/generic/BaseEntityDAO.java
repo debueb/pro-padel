@@ -5,7 +5,6 @@
  */
 package de.appsolve.padelcampus.db.dao.generic;
 
-import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.model.BaseEntityI;
 import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.utils.CustomerUtil;
@@ -19,8 +18,6 @@ import java.util.Map;
 import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -33,14 +30,13 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  *
@@ -52,6 +48,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils<T> implements BaseEntityDAOI<T>  {
    
     private static final Logger LOG = Logger.getLogger(BaseEntityDAO.class);
+    public static final String ALIAS_PREFIX = "alias_";
 
     @PersistenceContext
     protected EntityManager entityManager;
@@ -135,7 +132,7 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     public Page<T> findAllByFuzzySearch(String search, String... associations){
         Criteria criteria = getCriteria();
         for (String association: associations){
-            criteria.setFetchMode(association, FetchMode.JOIN);
+            criteria.createAlias(association, ALIAS_PREFIX+association, JoinType.INNER_JOIN);
         }
         List<Criterion> predicates = new ArrayList<>();
         for (String indexedPropery: getIndexedProperties()){

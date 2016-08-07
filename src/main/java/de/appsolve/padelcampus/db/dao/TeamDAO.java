@@ -97,7 +97,17 @@ public class TeamDAO extends SortedBaseDAO<Team> implements TeamDAOI{
     }
     
     @Override
+    public Page<Team> findAllByFuzzySearch(String search){
+        Page<Team> teams = findAllByFuzzySearch(search, new String[]{"players"});
+        //by querying the size of the players we force jpa proxy to initialize the lazy relation
+        for (Team team: teams){
+            team.getPlayers().size();
+        }
+        return teams;
+    }
+    
+    @Override
     protected Set<String> getIndexedProperties(){
-       return new HashSet<>(Arrays.asList("name")); 
+       return new HashSet<>(Arrays.asList("name", ALIAS_PREFIX+"players.lastName", ALIAS_PREFIX+"players.firstName")); 
     }
 }

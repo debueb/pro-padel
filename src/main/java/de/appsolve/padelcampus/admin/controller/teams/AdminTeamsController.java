@@ -117,11 +117,6 @@ public class AdminTeamsController extends AdminBaseController<Team> {
     }
     
     @Override
-    protected Page<Team> findAllByFuzzySearch(String search) {
-        return teamDAO.findAllByFuzzySearch(search, "players");
-    }
-
-    @Override
     protected Team findById(Long modelId) {
         return teamDAO.findByIdFetchWithPlayers(modelId);
     }
