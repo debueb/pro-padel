@@ -73,6 +73,6 @@ public class Team extends Participant{
 
     @Override
     public String toString() {
-        return name;
+        return getName();
     }
 }
