@@ -18,7 +18,8 @@
                         <th><fmt:message key="LastName"/></th>
                         <th><fmt:message key="EmailAddress"/></th>
                         <th><fmt:message key="PhoneNumber"/></th>
-                        <th><fmt:message key="Registered"/></th>
+                        <th class="text-center"><fmt:message key="SendMail"/></th>
+                        <th class="text-center"><fmt:message key="Registered"/></th>
                         <th class="delete"><fmt:message key="Delete"/></th>
                         </thead>
                         <tbody>
@@ -29,6 +30,7 @@
                                     <td><a class="block ajaxify" href="${editUrl}">${Player.lastName}</a></td>
                                     <td><a class="block ajaxify" href="${editUrl}">${Player.email}</a></td>
                                     <td><a class="block ajaxify" href="${editUrl}">${Player.phone}</a></td>
+                                    <td><a class="block text-center" href="mailto:${Player.email}"><i class="fa fa-envelope"></i></a></td>
                                     <td class="text-center"><a type="btn btn-primary" class="fa ajaxify ${empty Player.passwordHash ? 'fa-close' : 'fa-check'}" href="${editUrl}"></a></td>
                                     <td class="delete"><a href="/admin/players/${Player.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
                                 </tr>
@@ -38,6 +40,7 @@
                 </div>
                 <jsp:include page="/jsp/admin/include/pagination.jsp"/>
                 <a href="/admin/players/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewPlayer"/></a>
+                <a href="/admin/players/mail" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="MailAllPlayers"/></a>
             </div>
         </div>
     </div>

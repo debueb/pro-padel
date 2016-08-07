@@ -15,10 +15,12 @@ import com.sparkpost.resources.ResourceTransmissions;
 import com.sparkpost.transport.RestConnection;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
+import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.exceptions.MailException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.apache.log4j.Logger;
 
 /**
@@ -75,5 +77,18 @@ public class MailUtils {
             recipients.add(contact.getEmailAddress());
         }
         return recipients;
+    }
+
+    public static String getMailTo(Set<? extends EmailContact> emailContacts) {
+        StringBuilder emails = new StringBuilder();
+        int i=0;
+        for (EmailContact p: emailContacts){
+            emails.append(p.getEmailAddress());
+            if (i<emailContacts.size()-1){
+                emails.append(",");
+            }
+            i++;
+        }
+        return emails.toString();
     }
 }

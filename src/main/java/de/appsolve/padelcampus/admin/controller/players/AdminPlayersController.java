@@ -10,8 +10,13 @@ import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.utils.MailUtils;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -64,6 +69,28 @@ public class AdminPlayersController extends AdminBaseController<Player> {
         player.setGender(model.getGender());
         playerDAO.saveOrUpdate(player);
         return redirectToIndex(request);
+    }
+    
+    @RequestMapping("mail")
+    public ModelAndView mailAll(){
+        int page = 0;
+        int size = 50;
+        Set<Player> allPlayers = new TreeSet<>();
+        while (true){
+            Pageable pageable = new PageRequest(page, size);
+            Page<Player> pageResponse = playerDAO.findAll(pageable);
+            if (pageResponse != null && pageResponse.hasContent()){
+                allPlayers.addAll(pageResponse.getContent());
+                if (!pageResponse.hasNext()){
+                    break;
+                }
+                page++;
+            } else {
+                break;
+            }
+        }
+        ModelAndView mav = new ModelAndView("redirect:mailto:"+MailUtils.getMailTo(allPlayers));
+        return mav;
     }
     
     @Override

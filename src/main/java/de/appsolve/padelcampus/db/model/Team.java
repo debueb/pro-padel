@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.TeamUtil;
 import java.util.HashSet;
 import java.util.Set;
@@ -74,5 +75,10 @@ public class Team extends Participant{
     @Override
     public String toString() {
         return getName();
+    }
+    
+    @Transient
+    public String getMailTo(){
+        return MailUtils.getMailTo(getPlayers());
     }
 }
