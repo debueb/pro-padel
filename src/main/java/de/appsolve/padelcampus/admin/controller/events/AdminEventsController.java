@@ -115,11 +115,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
     }
     
     @Override
-    public ModelAndView showIndex(HttpServletRequest request, @PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable, @RequestParam(required = false, name = "search") String search){
-        return super.showIndex(request, pageable, search);
-    }
-    
-    @Override
     @RequestMapping(value={"add", "edit/{modelId}"}, method=POST)
     public ModelAndView postEditView(@ModelAttribute("Model") Event model, HttpServletRequest request, BindingResult result){
         validator.validate(model, result);
