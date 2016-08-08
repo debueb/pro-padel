@@ -131,7 +131,7 @@ public class BookingsPayPalController extends BookingsPaymentController{
         } catch (Exception e){
             log.error("Error while executing paypal payment", e);
             ModelAndView bookingConfirmView = BookingsController.getBookingConfirmView(booking);
-            bookingConfirmView.addObject("error", e.getMessage());
+            bookingConfirmView.addObject("error", msg.get("PayPalError", new String[]{e.getMessage()}));
             return bookingConfirmView;
         }
     }
