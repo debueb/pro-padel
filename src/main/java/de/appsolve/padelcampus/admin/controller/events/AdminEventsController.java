@@ -51,8 +51,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -500,7 +498,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
     }
     
     @Override
-    public BaseEntityDAOI<Event> getDAO() {
+    public EventDAOI getDAO() {
         return eventDAO;
     }
 
@@ -511,7 +509,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
     
     @Override
     public Page<Event> findAll(Pageable pageable){
-        return eventDAO.findAllFetchWithParticipants(pageable);
+        return eventDAO.findAllFetchWithParticipantsAndPlayers(pageable);
     }
     
     @Override

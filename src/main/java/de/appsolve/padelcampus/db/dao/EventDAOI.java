@@ -33,7 +33,7 @@ public interface EventDAOI extends BaseEntityDAOI<Event>{
     
     public List<Event> findAllFetchWithParticipants();
     
-    Page<Event> findAllFetchWithParticipants(Pageable pageable);
+    Page<Event> findAllFetchWithParticipantsAndPlayers(Pageable pageable);
     
     List<Event> findAllFetchWithParticipantsAndPlayers();
     

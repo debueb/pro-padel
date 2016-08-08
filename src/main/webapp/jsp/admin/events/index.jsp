@@ -17,6 +17,7 @@
                         <th><fmt:message key="Name"/></th>
                         <th><fmt:message key="EventType"/></th>
                         <th class="text-center"><fmt:message key="Participants"/></th>
+                        <th class="text-center"><fmt:message key="SendMail"/></th>
                         <th class="text-center"><fmt:message key="Active"/></th>
                         <th class="delete"><fmt:message key="Delete"/></th>
                         </thead>
@@ -29,6 +30,7 @@
                                     <td class="text-center">
                                         ${fn:length(Event.participants)}
                                     </td>
+                                    <td><a class="block text-center" href="mailto:${Event.mailTo}"><i class="fa fa-envelope"></i></a></td>
                                     <td class="text-center"><a class="ajaxify" href="${url}"><i class="fa fa-${Event.active ? 'check' : 'close'}"/></a></td>
                                     <td class="delete"><a href="/admin/events/${Event.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
                                 </tr>

@@ -8,6 +8,8 @@ package de.appsolve.padelcampus.db.model;
 
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
+import de.appsolve.padelcampus.utils.MailUtils;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -241,5 +243,14 @@ public class Event extends ComparableEntity{
     @Override
     public String toString() {
         return name;
+    }
+    
+    @Transient
+    public String getMailTo(){
+        Set<Player> players = new TreeSet<>(getPlayers());
+        for (Team team: getTeams()){
+            players.addAll(team.getPlayers());
+        }
+        return MailUtils.getMailTo(players);
     }
 }

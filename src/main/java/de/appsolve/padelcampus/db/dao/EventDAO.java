@@ -91,8 +91,8 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI{
     }
     
     @Override
-    public Page<Event> findAllFetchWithParticipants(Pageable pageable) {
-        return super.findAllFetchEagerly(pageable, "participants");
+    public Page<Event> findAllFetchWithParticipantsAndPlayers(Pageable pageable) {
+        return super.findAllFetchEagerly(pageable, "participants", "participants.players");
     }
     
     @Override
