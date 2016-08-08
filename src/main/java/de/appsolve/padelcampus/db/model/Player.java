@@ -7,6 +7,7 @@
 package de.appsolve.padelcampus.db.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.appsolve.padelcampus.annotations.EmailWithTld;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.data.EmailContact;
@@ -25,7 +26,6 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
@@ -56,7 +56,7 @@ public class Player extends Participant implements EmailContact{
     
     @Column
     @NotEmpty(message = "{NotEmpty.email}")
-    @Email(message = "{Email}")
+    @EmailWithTld
     @JsonIgnore
     private String email;
     
@@ -141,7 +141,7 @@ public class Player extends Participant implements EmailContact{
     }
 
     public Boolean getAllowEmailContact() {
-        return allowEmailContact == null ? Boolean.FALSE : allowEmailContact;
+        return allowEmailContact == null ? Boolean.TRUE : allowEmailContact;
     }
 
     public void setAllowEmailContact(Boolean allowEmailContact) {

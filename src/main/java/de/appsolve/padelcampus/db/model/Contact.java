@@ -6,11 +6,11 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import de.appsolve.padelcampus.annotations.EmailWithTld;
 import de.appsolve.padelcampus.data.EmailContact;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -24,7 +24,7 @@ public class Contact extends CustomerEntity implements EmailContact{
     private static final long serialVersionUID = 1L;
     
     @Column
-    @Email(message = "{Email}")
+    @EmailWithTld
     @NotEmpty(message = "{NotEmpty.email}")
     private String emailAddress;
     

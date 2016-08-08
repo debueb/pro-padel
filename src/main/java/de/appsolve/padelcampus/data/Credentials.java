@@ -6,7 +6,7 @@
 
 package de.appsolve.padelcampus.data;
 
-import org.hibernate.validator.constraints.Email;
+import de.appsolve.padelcampus.annotations.EmailWithTld;
 
 /**
  *
@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.Email;
  */
 public class Credentials {
     
-    @Email(message = "{Email}")
+    @EmailWithTld
     private String email;
     
     private String password;

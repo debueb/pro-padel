@@ -5,11 +5,11 @@
  */
 package de.appsolve.padelcampus.data;
 
+import de.appsolve.padelcampus.annotations.EmailWithTld;
 import static de.appsolve.padelcampus.constants.Constants.MAIL_NOREPLY_SENDER_NAME;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -33,10 +33,10 @@ public class Mail {
     }
     
     @NotEmpty(message = "{NotEmpty.email}")
-    @Email(message = "{Email}")
+    @EmailWithTld
     private String from;
     
-    @Email(message = "{Email}")
+    @EmailWithTld
     private String replyTo;
     
     @NotEmpty(message = "{NotEmpty.subject}")
