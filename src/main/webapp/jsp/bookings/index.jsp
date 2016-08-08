@@ -94,7 +94,8 @@
                                                                     <c:when test="${not empty TimeSlot.bookings}">
                                                                         <c:forEach var="Booking" items="${TimeSlot.bookings}">
                                                                             <c:if test="${Booking.offer eq Offer and Booking.publicBooking}">
-                                                                                <i class="fa fa-info-circle text-center" data-toggle="tooltip" data-placement="top" title="${Booking.player}<br /> <joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/><br />${Booking.comment}"></i>
+                                                                                <fmt:message key="BookingPending" var="BookingPendingMsg"/>
+                                                                                <i class="fa fa-info-circle text-center" data-toggle="tooltip" data-placement="top" title="${Booking.player}<br /> <joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/><br/>${Booking.confirmed ? '' : BookingPendingMsg}<br />${Booking.comment}"></i>
                                                                             </c:if>
                                                                         </c:forEach>
                                                                     </c:when>
