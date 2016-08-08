@@ -15,7 +15,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,6 +37,10 @@ public class RootController extends BaseController{
     
     @RequestMapping("/")
     public ModelAndView getIndex(HttpServletRequest request){
+        String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
+        if (!StringUtils.isEmpty(userAgent) && userAgent.startsWith("ProPadel")){
+            return getHomePage();
+        }
         HttpSession session = request.getSession(true);
         Object landingPageChecked = session.getAttribute("LANDINGPAGE_PAGE_CHECKED");
         if (landingPageChecked == null){
