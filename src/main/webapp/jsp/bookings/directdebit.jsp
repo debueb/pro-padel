@@ -23,7 +23,7 @@
                     <fmt:message key="BIC" var="placeholder"/>
                     <input class="bic form-control form-bottom-element" type="text" placeholder="${placeholder}"/>
 
-                    <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Book"/></button>
+                    <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Book"/></button>
                     <a class="btn btn-primary btn-block unit ajaxify" href="/bookings/booking/${Booking.UUID}/abort"><fmt:message key="Cancel"/></a>
                 </form>
             </div>
