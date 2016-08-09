@@ -12,6 +12,7 @@ import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import java.math.BigDecimal;
+import java.util.Iterator;
 import java.util.SortedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,7 +46,7 @@ public class RankingController extends BaseController {
         ModelAndView mav = new ModelAndView("ranking/ranking");
         mav.addObject("gender", gender);
         mav.addObject("category", category);
-        SortedMap<? extends Participant, BigDecimal> rankings = null;
+        SortedMap<Participant, BigDecimal> rankings = null;
         switch (category){
             case "individual":
                 rankings = rankingUtil.getRanking(gender);
@@ -54,6 +55,17 @@ public class RankingController extends BaseController {
                 rankings = rankingUtil.getTeamRanking(gender);
                 break;
         }
+        BigDecimal hundred = new BigDecimal("100");
+        if (rankings != null){
+            Iterator<? extends Participant> iterator = rankings.keySet().iterator();
+            while (iterator.hasNext()){
+                Participant p = iterator.next();
+                BigDecimal ranking = rankings.get(p);
+                ranking = ranking.divide(hundred);
+                rankings.put(p, ranking);
+            }
+        }
+        
         mav.addObject("Rankings", rankings);
         mav.addObject("path", getPath());
         return mav;
