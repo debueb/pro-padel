@@ -14,11 +14,6 @@
             <div class="panel-body">
                 <div class="list-group">
                     <jsp:include page="/jsp/include/list-group-item.jsp">
-                        <jsp:param name="href" value="/admin/customers"/>
-                        <jsp:param name="key" value="Customers"/>
-                        <jsp:param name="icon" value="building"/>
-                    </jsp:include>
-                    <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/general"/>
                         <jsp:param name="key" value="General"/>
                         <jsp:param name="icon" value="gears"/>
