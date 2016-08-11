@@ -22,12 +22,13 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/pro/contact")
 public class ProContactController extends ContactController {
     
-   @Override
-   public String getPath(){
+    @Override
+    public String getPath(){
        return "pro/";
-   }
+    }    
    
-   @RequestMapping(method=POST)
+    @RequestMapping(method=POST)
+    @Override
     public ModelAndView postIndex(@ModelAttribute("Model") Mail mail, BindingResult bindingResult){
         ModelAndView defaultView = super.getIndexView(mail);
         mail.addRecipient(getDefaultContact());

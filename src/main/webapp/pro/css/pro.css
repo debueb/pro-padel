@@ -172,3 +172,26 @@ h1, .h1, h2, .h2, h3, .h3{
 .cross:after{
     content: "\2718";
 }
+.navbar-default .navbar-toggle .icon-bar{
+    background-color: #fff;
+}
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+    background-color: #6f6f6f;
+}
+.form-top-element, .form-top-element .btn{
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: 0;
+}
+.form-center-element{
+    border-radius: 0;
+    border-bottom: 0;
+}
+
+.form-bottom-element, .form-bottom-element button{
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.unit{
+    margin-top: 10px;
+}

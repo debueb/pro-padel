@@ -7,12 +7,16 @@
 package de.appsolve.padelcampus.controller.ranking;
 
 import de.appsolve.padelcampus.constants.Gender;
+import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.controller.BaseController;
+import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
+import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import java.math.BigDecimal;
 import java.util.Iterator;
+import java.util.List;
 import java.util.SortedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,11 +38,14 @@ public class RankingController extends BaseController {
     @Autowired
     TeamDAOI teamDAO;
     
+    @Autowired
+    ModuleDAOI moduleDAO;
+    
     @RequestMapping
     public ModelAndView getIndex(){
-        ModelAndView mav = new ModelAndView("ranking/index");
-        mav.addObject("path", getPath());
-        return mav;
+        List<Module> modules = moduleDAO.findByModuleType(ModuleType.Ranking);
+        Module module = modules.get(0);
+        return getIndexView(module.getTitle(), module.getDescription());
     }
     
     @RequestMapping("{gender}/{category}")
@@ -68,6 +75,14 @@ public class RankingController extends BaseController {
         
         mav.addObject("Rankings", rankings);
         mav.addObject("path", getPath());
+        return mav;
+    }
+    
+    protected ModelAndView getIndexView(String title, String description){
+        ModelAndView mav = new ModelAndView("ranking/index");
+        mav.addObject("path", getPath());
+        mav.addObject("title", title);
+        mav.addObject("description", description);
         return mav;
     }
 }

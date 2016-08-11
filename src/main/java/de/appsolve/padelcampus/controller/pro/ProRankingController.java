@@ -8,6 +8,7 @@ package de.appsolve.padelcampus.controller.pro;
 import de.appsolve.padelcampus.controller.ranking.RankingController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  *
@@ -17,8 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/pro/ranking")
 public class ProRankingController extends RankingController {
     
-   @Override
-   public String getPath(){
-       return "pro/";
-   }
+    @RequestMapping
+    @Override
+    public ModelAndView getIndex(){
+        return getIndexView(msg.get("Ranking"), msg.get("RankingDesc"));
+    }
+    
+    @Override
+    public String getPath(){
+        return "pro/";
+    }
 }

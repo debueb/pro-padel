@@ -45,6 +45,14 @@
                 </div>
                 <div class="panel flex-item panel-default">
                     <div class="panel-heading">
+                        <h3 class="panel-title text-center"><fmt:message key="ContentManagementSystem"/></h3>
+                    </div>
+                    <div class="panel-body">
+                        <fmt:message key="ContentManagementSystemDesc"/>
+                    </div>
+                </div>
+                <div class="panel flex-item panel-default">
+                    <div class="panel-heading">
                         <h3 class="panel-title text-center"><fmt:message key="AdaptiveDesign"/></h3>
                     </div>
                     <div class="panel-body">
@@ -65,14 +73,6 @@
                     </div>
                     <div class="panel-body">
                         <fmt:message key="BookingSystemDesc"/>
-                    </div>
-                </div>
-                <div class="panel flex-item panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title text-center"><fmt:message key="ContentManagementSystem"/></h3>
-                    </div>
-                    <div class="panel-body">
-                        <fmt:message key="ContentManagementSystemDesc"/>
                     </div>
                 </div>
             </div>
@@ -107,8 +107,8 @@
                 <div class="panel-heading">
                     <h3 class="panel-title text-center"><fmt:message key="PricingTable"/></h3>
                 </div>
-                <div class="panel-body">
-                    <table class="table table-striped">
+                <div class="panel-body table-responsive" style="padding: 0">
+                    <table class="table table-striped table-condensed">
                         <thead>
                         <th></th>
                         <th class="text-center">Basic</th>
@@ -141,6 +141,12 @@
                                 <td class="text-center check"></td>
                             </tr>
                             <tr>
+                                <td><fmt:message key="ContentManagementSystem"/></td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
+                                <td class="text-center check"></td>
+                            </tr>
+                            <tr>
                                 <td><fmt:message key="MatchOffers"/></td>
                                 <td class="text-center cross"></td>
                                 <td class="text-center check"></td>
@@ -148,12 +154,6 @@
                             </tr>
                             <tr>
                                 <td><fmt:message key="BookingSystem"/></td>
-                                <td class="text-center cross"></td>
-                                <td class="text-center check"></td>
-                                <td class="text-center check"></td>
-                            </tr>
-                            <tr>
-                                <td><fmt:message key="ContentManagementSystem"/></td>
                                 <td class="text-center cross"></td>
                                 <td class="text-center check"></td>
                                 <td class="text-center check"></td>
