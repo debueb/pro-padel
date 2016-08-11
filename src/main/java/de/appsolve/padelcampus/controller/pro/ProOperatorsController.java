@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.controller.pro;
 
+import static de.appsolve.padelcampus.constants.Constants.CONTACT_FORM_RECIPIENT_MAIL;
 import de.appsolve.padelcampus.constants.Privilege;
 import de.appsolve.padelcampus.data.CustomerRegistrationModel;
 import de.appsolve.padelcampus.data.Mail;
@@ -170,7 +171,7 @@ public class ProOperatorsController implements ServletContextAware{
     private void sendMail(HttpServletRequest request, CustomerRegistrationModel customerAccount, String message) {
         try {
             Contact contact = new Contact();
-            contact.setEmailAddress("d.wisskirchen@gmail.com");
+            contact.setEmailAddress(CONTACT_FORM_RECIPIENT_MAIL);
             Mail mail = new Mail(request);
             mail.addRecipient(contact);
             mail.setReplyTo("noreply@"+CLOUDFLARE_URL);
