@@ -1,6 +1,5 @@
 package de.appsolve.padelcampus.db.dao;
 
-import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
 import de.appsolve.padelcampus.db.dao.generic.SortedBaseDAO;
 import de.appsolve.padelcampus.db.model.MatchOffer;
 import de.appsolve.padelcampus.db.model.Player;
@@ -12,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.jadira.usertype.spi.utils.lang.StringUtils;
