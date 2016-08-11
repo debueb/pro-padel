@@ -7,6 +7,7 @@
 package de.appsolve.padelcampus.db.model;
 
 import de.appsolve.padelcampus.constants.Privilege;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -59,7 +60,7 @@ public class AdminGroup extends CustomerEntity{
     }
 
     public Set<Privilege> getPrivileges() {
-        return privileges == null ? new HashSet<Privilege>() : privileges;
+        return privileges == null ? Collections.<Privilege>emptySet() : privileges;
     }
 
     public void setPrivileges(Set<Privilege> privileges) {
