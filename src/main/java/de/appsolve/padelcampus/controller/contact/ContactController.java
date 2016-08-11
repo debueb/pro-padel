@@ -24,8 +24,6 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/contact")
 public class ContactController extends BaseController{
     
-    private static final Logger log = Logger.getLogger(ContactController.class);
-    
     @RequestMapping()
     public ModelAndView getIndex(){
         return getIndexView(new Mail());
