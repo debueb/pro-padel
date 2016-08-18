@@ -7,19 +7,16 @@
         <jsp:include page="/jsp/events/include/info.jsp"/>
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4>${Title}</h4>
+                <h4>${title}</h4>
+                <c:if test="${not empty subtitle}">
+                    <h4>${subtitle}</h4>
+                </c:if>
             </div>
             <div class="panel-body">
-                <div class="list-group">
-                    <c:forEach var="Participant" items="${Teams}">
-                        <a href="/teams/team/${Participant.UUID}" class="list-group-item ajaxify">
-                            <div class="list-item-text">${Participant}</div>
-                        </a>
-                    </c:forEach>
-                </div>
+                <c:set var="redirectUrl" value="games/event/${Model.id}" scope="request"/>
+                <jsp:include page="/jsp/events/include/matchtable.jsp"/>
             </div>
         </div>
-
     </div>
 </div>
 

@@ -2,12 +2,11 @@
 <jsp:include page="/jsp/include/head.jsp"/>
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
-        <jsp:include page="/jsp/include/back.jsp"/>
         <div class="page-header"></div>
-
+        <jsp:include page="/jsp/events/include/info.jsp"/>
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4><fmt:message key="ResultsIn"><fmt:param>${Event.name}</fmt:param></fmt:message></h4>
+                <h4><fmt:message key="ResultsIn"><fmt:param>${Model.name}</fmt:param></fmt:message></h4>
                     </div>
                     <div class="panel-body">
                         <div class="table-responsive">
@@ -35,14 +34,6 @@
                             </c:forEach>
                         </tbody>
                     </table>
-                </div>
-                <div class="list-group unit">
-                    <fmt:message key="AllGamesIn" var="msg"><fmt:param value="${Event.name}"/></fmt:message>
-                    <jsp:include page="/jsp/include/list-badge-item.jsp">
-                        <jsp:param name="msg" value="${msg}"/>
-                        <jsp:param name="url" value="/games/event/${Event.id}/all"/>
-                        <jsp:param name="badge" value=""/>
-                    </jsp:include>
                 </div>
             </div>
         </div>

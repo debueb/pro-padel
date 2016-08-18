@@ -11,7 +11,6 @@ import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Event;
-import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.ParticipantI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,30 +49,6 @@ public class PlayersController extends BaseController {
     
     @Autowired
     SessionUtil sessionUtil;
-    
-    @RequestMapping()
-    public ModelAndView getIndex(){
-        return getIndexView();
-    }
-    
-    @RequestMapping("/all")
-    public ModelAndView getAll(){
-        List<Event> allEvents = eventDAO.findAllActiveFetchWithParticipantsAndPlayers();
-        Set<Player> players = new TreeSet<>();
-        for(Event event: allEvents){
-            Set<Participant> participants = event.getParticipants();
-            for (Participant participant : participants) {
-                if (participant instanceof Player){
-                    Player player = (Player) participant;
-                    players.add(player);
-                } else if (participant instanceof Team){
-                    Team team = (Team) participant;
-                    players.addAll(team.getPlayers());
-                }
-            }
-        }
-        return getPlayersView(new ArrayList<>(players), msg.get("AllPlayers"));
-    }
     
     @RequestMapping("/player/{UUID}")
     public ModelAndView getPlayer(@PathVariable("UUID") String UUID, HttpServletRequest request){
@@ -112,23 +86,18 @@ public class PlayersController extends BaseController {
             Set<Player> players = team.getPlayers();
             participants.addAll(players);
         }
-        return getPlayersView(new ArrayList<>(participants), msg.get("PlayersIn", new Object[]{event.getName()}));
+        return getPlayersView(event, new ArrayList<>(participants), msg.get("PlayersIn", new Object[]{event.getName()}));
     }
 
-    private ModelAndView getPlayersView(List<? extends ParticipantI> players, String title){
+    private ModelAndView getPlayersView(Event event, List<? extends ParticipantI> players, String title){
         ModelAndView mav = new ModelAndView("players/players", "Players", players);
         mav.addObject("title", title);
+        mav.addObject("Model", event);
         return mav;
     }
 
     private ModelAndView getPlayerView(Player player) {
         ModelAndView mav = new ModelAndView("players/player", "Player", player);
-        return mav;
-    }
-
-    private ModelAndView getIndexView() {
-        ModelAndView mav = new ModelAndView("players/index");
-        mav.addObject("Events", eventDAO.findAllActive());
         return mav;
     }
 }

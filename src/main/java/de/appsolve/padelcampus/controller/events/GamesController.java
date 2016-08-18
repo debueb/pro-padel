@@ -27,11 +27,13 @@ import de.appsolve.padelcampus.utils.SessionUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,16 +193,17 @@ public class GamesController extends BaseController{
     @RequestMapping("/event/{eventId}")
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipants(eventId);
-        ModelAndView mav = new ModelAndView("games/event", "Event", event);
+        ModelAndView mav = new ModelAndView("games/event", "Model", event);
         return mav;
     }
  
     @RequestMapping("/event/{eventId}/all")
     public ModelAndView getAllGamesForEvent(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithGames(eventId);
-        ModelAndView mav = new ModelAndView("games/games", "Games", event.getGames());
-        mav.addObject("title", msg.get("GamesIn", new Object[]{event.getName()}));
-        gameUtil.addGameResultMap(mav, event.getGames());
+        Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(event.getGames());
+        ModelAndView mav = new ModelAndView("games/all", "ParticipantGameResultMap", participantGameResultMap);
+        mav.addObject("title", msg.get("AllGamesIn", new Object[]{event.getName()}));
+        mav.addObject("Model", event);
         return mav;
     }
  
@@ -209,10 +212,18 @@ public class GamesController extends BaseController{
         Event event = eventDAO.findById(eventId);
         Team team = teamDAO.findByUUID(teamUUID);
         List<Game> games = gameDAO.findByParticipantAndEvent(team, event);
-        ModelAndView mav = new ModelAndView("games/games", "Games", games);
-        mav.addObject("title", event.getName());
-        mav.addObject("subtitle", team.toString());
-        gameUtil.addGameResultMap(mav, games);
+        
+        Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(games);
+        Iterator<Participant> iterator = participantGameResultMap.keySet().iterator();
+        while (iterator.hasNext()){
+            Participant p = iterator.next();
+            if (!p.equals(team)){
+                iterator.remove();
+            }
+        }
+        ModelAndView mav = new ModelAndView("games/teamgames", "ParticipantGameResultMap", participantGameResultMap);
+        mav.addObject("title", msg.get("GamesWith", new Object[]{team.toString()}));
+        mav.addObject("Model", event);
         return mav;
     }
     

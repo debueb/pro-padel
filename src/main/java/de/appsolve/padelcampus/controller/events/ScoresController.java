@@ -54,7 +54,7 @@ public class ScoresController extends BaseController{
         List<Game> eventGames = gameDAO.findByEvent(event);
         List<ScoreEntry> scoreEntries = rankingUtil.getScores(event.getParticipants(), eventGames);
         
-        ModelAndView mav = new ModelAndView("scores/event", "Event", event);
+        ModelAndView mav = new ModelAndView("scores/event", "Model", event);
         mav.addObject("ScoreEntries", scoreEntries);
         return mav;
     }

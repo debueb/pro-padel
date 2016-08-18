@@ -69,7 +69,7 @@ public class TeamsController extends BaseController{
             }
         }
         Collections.sort(teams);
-        return getTeamsView("Alle Teams", teams);
+        return getTeamsView(null, "Alle Teams", teams);
     }
     
      @RequestMapping("/team/{teamUUID}")
@@ -81,18 +81,19 @@ public class TeamsController extends BaseController{
     public ModelAndView getAllTeamsForEvent(@PathVariable("id") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipants(eventId);
         Set<Team> participants = event.getTeams();
-        return getTeamsView(msg.get("TeamsIn", new Object[]{event.getName()}), participants);
+        return getTeamsView(event, msg.get("TeamsIn", new Object[]{event.getName()}), participants);
     }
        
     @RequestMapping("/player/{playerUUID}")
     public ModelAndView getTeamsForPlayer(@PathVariable("playerUUID") String playerUUID){
         Player player = playerDAO.findByUUID(playerUUID);
         List<Team> participants = teamDAO.findByPlayer(player);
-        return getTeamsView(msg.get("TeamsWith", new Object[]{player.toString()}), participants);
+        return getTeamsView(null, msg.get("TeamsWith", new Object[]{player.toString()}), participants);
     }
 
-    private ModelAndView getTeamsView(String title, Collection<? extends Participant> teams) {
+    private ModelAndView getTeamsView(Event event, String title, Collection<? extends Participant> teams) {
         ModelAndView mav = new ModelAndView("teams/teams", "Teams", teams);
+        mav.addObject("Model", event);
         mav.addObject("Title", title);
         return mav;
     }

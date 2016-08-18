@@ -130,4 +130,20 @@ public class GameUtil {
             }
         }
     }
+    
+    public Map<Participant, Map<Game, String>> getParticipantGameResultMap(Collection<Game> games) {
+        Map<Participant, Map<Game, String>> participantGameResultMap = new HashMap<>();
+        for (Game game: games){
+            for (Participant p: game.getParticipants()){
+                Map<Game, String> gameResultMap = participantGameResultMap.get(p);
+                if (gameResultMap == null){
+                    gameResultMap = new HashMap<>();
+                }
+                String result = getGameResult(game, p);
+                gameResultMap.put(game, result);
+                participantGameResultMap.put(p, gameResultMap);
+            }
+        }
+        return participantGameResultMap;
+    }
 }

@@ -156,7 +156,7 @@ public class EventsController extends BaseController{
         //Community // Participant // Game // GameResult
         SortedMap<Community, Map<Participant, Map<Game, String>>> communityParticipantGameResultMap = new TreeMap<>();
         
-        Map<Participant, Map<Game, String>> participantGameResultMap = getParticipantGameResultMap(event.getGames());
+        Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(event.getGames());
         for (Participant p: participantGameResultMap.keySet()){
             if (p instanceof Team){
                 Team team = (Team) p;
@@ -188,7 +188,7 @@ public class EventsController extends BaseController{
         Iterator<Map.Entry<Integer, List<Game>>> iterator = groupGameMap.entrySet().iterator();
         while (iterator.hasNext()){
             Map.Entry<Integer, List<Game>> entry = iterator.next();
-            Map<Participant, Map<Game, String>> participantGameResultMap = getParticipantGameResultMap(entry.getValue());
+            Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(entry.getValue());
             Integer group = entry.getKey();
             groupParticipantGameResultMap.put(group, participantGameResultMap);
         }
@@ -351,22 +351,6 @@ public class EventsController extends BaseController{
                 throw new Exception(msg.get("AlreadyParticipatesInThisEvent", new Object[]{user}));
             }
         }
-    }
-
-    private Map<Participant, Map<Game, String>> getParticipantGameResultMap(Collection<Game> games) {
-        Map<Participant, Map<Game, String>> participantGameResultMap = new HashMap<>();
-        for (Game game: games){
-            for (Participant p: game.getParticipants()){
-                Map<Game, String> gameResultMap = participantGameResultMap.get(p);
-                if (gameResultMap == null){
-                    gameResultMap = new HashMap<>();
-                }
-                String result = gameUtil.getGameResult(game, p);
-                gameResultMap.put(game, result);
-                participantGameResultMap.put(p, gameResultMap);
-            }
-        }
-        return participantGameResultMap;
     }
 
 }
