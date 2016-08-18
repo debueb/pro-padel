@@ -74,7 +74,7 @@ public class Constants {
     public static final Integer SUMMERNOTE_IMAGE_HEIGHT      = 800;
     
     public static final String DATA_DIR_COMPANY_LOGO_IMAGES  = "companyLogoImages";
-    public static final Integer COMPANY_LOGO_HEIGHT          = 200;
+    public static final Integer COMPANY_LOGO_HEIGHT          = 100;
     
     public static final String DATA_DIR_TOUCH_ICON_IMAGE     = "touchIconImages";
     public static final Integer TOUCH_ICON_WIDTH             = 192;
