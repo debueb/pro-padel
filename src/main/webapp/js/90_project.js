@@ -232,9 +232,8 @@ app.main = {};
             }
         };
 
-        $('.navbar-toggle, #site-shadow, #site-menu a').livequery(function(){
-            $(this).on('tap click', function () {
-                var btn = $('.navbar-toggle');
+        var toggleNavbarToggle = function(){
+            var btn = $('.navbar-toggle');
                 if (btn.hasClass('active')){
                     btn.removeClass('active');
                 } else {
@@ -242,8 +241,25 @@ app.main = {};
                 }
                 toggleMenu();
                 return true;
+        };
+
+        $('.navbar-toggle, #site-shadow, #site-menu a').livequery(function(){
+            $(this).on('tap click', function () {
+                return toggleNavbarToggle();
             });
         });
+        
+        var onResizeEnd = function(){
+            if ($('.navbar-collapse').is(':visible') && isOpen()){
+                toggleNavbarToggle();
+            }
+        };
+
+        var doit;
+        window.onresize = function(){
+          clearTimeout(doit);
+          doit = setTimeout(onResizeEnd, 100);
+        };
     };
 
     self.enableAccordion = function () {
@@ -570,5 +586,4 @@ $(document).ready(function () {
     app.main.enableSelectToggle();
     app.main.enableAutoSearch();
     app.main.enableTooltips();
-    
 });
