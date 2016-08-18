@@ -38,19 +38,19 @@ public class GameUtil {
 
     public void addGameResultMap(ModelAndView mav, Game game) {
         Map<Game, String> map = new HashMap<>();
-        map.put(game, getGameResult(game, null));
+        map.put(game, getGameResult(game, null, false));
         mav.addObject("GameResultMap", map);
     }
     
     public void addGameResultMap(ModelAndView mav, Collection<Game> games) {
         Map<Game, String> map = new HashMap<>();
         for (Game game : games) {
-            map.put(game, getGameResult(game, null));
+            map.put(game, getGameResult(game, null, false));
         }
         mav.addObject("GameResultMap", map);
     }
 
-    public String getGameResult(Game game, final Participant sortByParticipant) {
+    public String getGameResult(Game game, final Participant sortByParticipant, final Boolean reverseGameResult) {
         StringBuilder result = new StringBuilder();
 
         List<GameSet> gameSets = new ArrayList<>(game.getGameSets());
@@ -68,9 +68,9 @@ public class GameUtil {
                             return 0;
                         }
                         if (o1.equals(sortByParticipant)){
-                            return -1;
+                            return reverseGameResult ? 1 : -1;
                         }
-                        return 1;
+                        return reverseGameResult ? -1 : 1;
                     }
                 });
                 sortedParticipants.addAll(participants);
@@ -131,7 +131,7 @@ public class GameUtil {
         }
     }
     
-    public Map<Participant, Map<Game, String>> getParticipantGameResultMap(Collection<Game> games) {
+    public Map<Participant, Map<Game, String>> getParticipantGameResultMap(Collection<Game> games, Boolean reverseGameResult) {
         Map<Participant, Map<Game, String>> participantGameResultMap = new HashMap<>();
         for (Game game: games){
             for (Participant p: game.getParticipants()){
@@ -139,7 +139,7 @@ public class GameUtil {
                 if (gameResultMap == null){
                     gameResultMap = new HashMap<>();
                 }
-                String result = getGameResult(game, p);
+                String result = getGameResult(game, p, reverseGameResult);
                 gameResultMap.put(game, result);
                 participantGameResultMap.put(p, gameResultMap);
             }

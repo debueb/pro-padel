@@ -33,7 +33,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -200,7 +199,7 @@ public class GamesController extends BaseController{
     @RequestMapping("/event/{eventId}/all")
     public ModelAndView getAllGamesForEvent(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithGames(eventId);
-        Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(event.getGames());
+        Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(event.getGames(), false);
         ModelAndView mav = new ModelAndView("games/all", "ParticipantGameResultMap", participantGameResultMap);
         mav.addObject("title", msg.get("AllGamesIn", new Object[]{event.getName()}));
         mav.addObject("Model", event);
@@ -213,7 +212,7 @@ public class GamesController extends BaseController{
         Team team = teamDAO.findByUUID(teamUUID);
         List<Game> games = gameDAO.findByParticipantAndEvent(team, event);
         
-        Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(games);
+        Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(games, true);
         Iterator<Participant> iterator = participantGameResultMap.keySet().iterator();
         while (iterator.hasNext()){
             Participant p = iterator.next();

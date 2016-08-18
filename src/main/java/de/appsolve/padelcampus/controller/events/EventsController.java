@@ -156,7 +156,7 @@ public class EventsController extends BaseController{
         //Community // Participant // Game // GameResult
         SortedMap<Community, Map<Participant, Map<Game, String>>> communityParticipantGameResultMap = new TreeMap<>();
         
-        Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(event.getGames());
+        Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(event.getGames(), false);
         for (Participant p: participantGameResultMap.keySet()){
             if (p instanceof Team){
                 Team team = (Team) p;
@@ -188,7 +188,7 @@ public class EventsController extends BaseController{
         Iterator<Map.Entry<Integer, List<Game>>> iterator = groupGameMap.entrySet().iterator();
         while (iterator.hasNext()){
             Map.Entry<Integer, List<Game>> entry = iterator.next();
-            Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(entry.getValue());
+            Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(entry.getValue(), false);
             Integer group = entry.getKey();
             groupParticipantGameResultMap.put(group, participantGameResultMap);
         }

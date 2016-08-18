@@ -31,28 +31,28 @@
                                     <c:forEach var="GameResultMapEntry" items="${GameResultMap}">
                                         <c:set var="Game" value="${GameResultMapEntry.key}"/>
                                         <c:set var="Result" value="${GameResultMapEntry.value}"/>
-                                            <tr>
-                                                <c:forEach var="GameParticipant" items="${Game.participants}">
-                                                    <c:if test="${GameParticipant ne Participant}">
-                                                        <td class="text-right vertical-align-middle">${GameParticipant}</td>
-                                                    </c:if>
-                                                </c:forEach>
-                                                <td class="vertical-align-middle">
-                                                    <a href="/games/game/${Game.id}/edit?redirectUrl=games/event/${Model.id}" class="ajaxify">
-                                                    <c:choose>
-                                                        <c:when test="${not empty Result}">
-                                                            ${Result}
-                                                        </c:when>
-                                                        <c:when test="${Game.startTime ne null}">
-                                                            <c:if test="${Game.startDate ne Model.startDate}">
-                                                                <joda:format value="${Game.startDate}" pattern="dd. MMM" /> 
-                                                            </c:if>
-                                                            <joda:format value="${Game.startTime}" pattern="HH:mm" /> <fmt:message key="oClock"/>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            -:- -:-
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                        <tr>
+                                            <c:forEach var="GameParticipant" items="${Game.participants}">
+                                                <c:if test="${GameParticipant ne Participant}">
+                                                    <td class="text-right vertical-align-middle">${GameParticipant}</td>
+                                                </c:if>
+                                            </c:forEach>
+                                            <td class="vertical-align-middle">
+                                                <a href="/games/game/${Game.id}/edit?redirectUrl=games/event/${Model.id}" class="ajaxify">
+                                                <c:choose>
+                                                    <c:when test="${not empty Result}">
+                                                        ${Result}
+                                                    </c:when>
+                                                    <c:when test="${Game.startTime ne null}">
+                                                        <c:if test="${Game.startDate ne Model.startDate}">
+                                                            <joda:format value="${Game.startDate}" pattern="dd. MMM" /> 
+                                                        </c:if>
+                                                        <joda:format value="${Game.startTime}" pattern="HH:mm" /> <fmt:message key="oClock"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                           -:- -:-
+                                                    </c:otherwise>
+                                                </c:choose>
                                                 </a>
                                             </td>
                                         </tr>
