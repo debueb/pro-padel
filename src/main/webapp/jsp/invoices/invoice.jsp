@@ -63,7 +63,7 @@
             <joda:format value="${Booking.bookingDate}" pattern="EEE, dd. MMM. YYYY"/>
         </div>
         <div class="clearfix"></div>
-        <div class="margin-bottom-2"><fmt:message key="InvoiceNumber"/>: ${Booking.UUID}</div>
+        <div class="margin-bottom-2"><fmt:message key="InvoiceNumber"/>: <joda:format value="${Booking.bookingDate}" pattern="YYYY"/>-<fmt:formatNumber value="${Booking.id}" minIntegerDigits="5" groupingUsed="false"/>-P</div>
         <div class="margin-bottom"><fmt:message key="Title_${Booking.player.gender}"><fmt:param value="${Booking.player}"/></fmt:message>,</div>
         <div class="margin-bottom-2"><fmt:message key="InvoiceText"/>:</div>
         <div class="margin-bottom">
