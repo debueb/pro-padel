@@ -189,7 +189,7 @@ public class EventsUtil {
         }
 
         //remove games that have not been played yet
-        gameUtil.removeGamesWithoutGameSets(model, teams);
+        gameUtil.removeObsoleteGames(model, teams);
 
         //create matches
         gameUtil.createMissingPullGames(model, teams);

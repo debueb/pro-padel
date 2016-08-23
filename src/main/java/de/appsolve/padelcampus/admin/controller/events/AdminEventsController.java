@@ -156,7 +156,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 model = getDAO().saveOrUpdate(model);
                 
                 //remove games that have not been played yet
-                gameUtil.removeGamesWithoutGameSets(model);
+                gameUtil.removeObsoleteGames(model);
                 
                 gameUtil.createMissingGames(model, model.getParticipants());
                 return redirectToIndex(request);
@@ -193,7 +193,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
                     model = getDAO().saveOrUpdate(model);
                     
                     //clean
-                    gameUtil.removeGamesWithoutGameSets(model);
+                    gameUtil.removeObsoleteGames(model);
                     
                     //generate games
                     Collection<Set<Team>> teamSets = communityTeamMap.values();
@@ -350,7 +350,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
         }
         
         //remove games that have not been played yet
-        gameUtil.removeGamesWithoutGameSets(event);
+        gameUtil.removeObsoleteGames(event);
         
         //remove games with teams that are no longer part of a group
         Iterator<Game> gameIterator = event.getGames().iterator();
