@@ -37,7 +37,7 @@
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/51_slick-theme.css.stylesheet">
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/52_slick_project.css.stylesheet">
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/90_project.css.stylesheet">
-                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/96_tennisball.css.stylesheet">
+                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/96_loader.css.stylesheet">
                 <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/99_addtohomescreen.css.stylesheet">
             </c:otherwise>
         </c:choose>

@@ -65,6 +65,8 @@ public class HtmlResourceUtil {
     private static final String VARIABLES_LESS  = "/less/variables.less";
     private static final String PROJECT_LESS    = "/less/90_project.less";
     private static final String PROJECT_CSS     = "/css/90_project.css";
+    private static final String LOADER_LESS     = "/less/96_loader.less";
+    private static final String LOADER_CSS      = "/css/96_loader.css";
     private static final String BOOTSTRAP_LESS  = "/less/10_bootstrap.less"; 
     private static final String BOOTSTRAP_CSS   = "/css/10_bootstrap.css";
 
@@ -133,9 +135,10 @@ public class HtmlResourceUtil {
             //copy less sortedFiles
             copyResources(context, FOLDER_LESS, destDir);
 
-            //replace variables in variables.less, 90_project.less
+            //replace variables in variables.less, 90_project.less, 96_loader.less
             replaceVariables(context, cssAttributes, VARIABLES_LESS, destDir);
             replaceVariables(context, cssAttributes, PROJECT_LESS, destDir);
+            replaceVariables(context, cssAttributes, LOADER_LESS, destDir);
 
 
             //compile less and overwrite css sortedFiles in data directory
@@ -144,7 +147,8 @@ public class HtmlResourceUtil {
             }
             lessCompiler.compile(new File(destDir, PROJECT_LESS), new File(destDir, PROJECT_CSS));
             lessCompiler.compile(new File(destDir, BOOTSTRAP_LESS), new File(destDir, BOOTSTRAP_CSS));
-
+            lessCompiler.compile(new File(destDir, LOADER_LESS), new File(destDir, LOADER_CSS));
+            
             Path allMinCssPath = new File(destDir, ALL_MIN_CSS).toPath();
             //concatenate all sortedFiles into all.min.css
             concatenateCss(new File(destDir, FOLDER_CSS).toPath(), allMinCssPath);
@@ -270,6 +274,7 @@ public class HtmlResourceUtil {
         atts.add(getCssAttribute("backgroundImage", "url\\('\\/images\\/bg\\.jpg'\\)", "url('/images/bg.jpg')"));
         atts.add(getCssAttribute("backgroundRepeat", "no-repeat", "no-repeat"));
         atts.add(getCssAttribute("backgroundSize", "cover", "cover"));
+        atts.add(getCssAttribute("loaderOpacity", "@loaderOpacity: 1", "@loaderOpacity: 1"));
         return atts;
     }
 

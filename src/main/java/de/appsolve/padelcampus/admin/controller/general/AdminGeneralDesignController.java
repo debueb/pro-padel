@@ -74,6 +74,7 @@ public class AdminGeneralDesignController extends BaseController{
             @RequestParam("backgroundImage") MultipartFile backgroundImage, 
             @RequestParam(value = "backgroundImageRepeat", required = false, defaultValue = "false") Boolean backgroundImageRepeat, 
             @RequestParam(value = "backgroundSizeCover", required = false, defaultValue = "false") Boolean backgroundSizeCover, 
+            @RequestParam(value = "loaderOpacity", required = false, defaultValue = "false") Boolean loaderOpacity, 
             @RequestParam("companyLogo") MultipartFile companyLogo, 
             @RequestParam("touchIcon") MultipartFile touchIcon) throws Exception {
         List<CssAttribute> atts = getCssAttributes();
@@ -103,13 +104,20 @@ public class AdminGeneralDesignController extends BaseController{
                         att.setCssValue("inherit");
                     }
                     break;
+                case "loaderOpacity":
+                    if (loaderOpacity){
+                        att.setCssValue("@loaderOpacity: 1");
+                    } else {
+                        att.setCssValue("@loaderOpacity: 0");
+                    }
+                    break;
                 default:
                     att.setCssValue(request.getParameter(att.getId()+""));
             }
             cssAttributeDAO.saveOrUpdate(att);
         }
+        Customer customer = (Customer) sessionUtil.getCustomer(request);
         if (!companyLogo.isEmpty()){
-            Customer customer = (Customer) sessionUtil.getCustomer(request);
             
             //delete old picture from FS if it exists. will be removed from DB automatically due to orphanRemoval=true
             deleteImage(customer.getCompanyLogo());
@@ -122,8 +130,6 @@ public class AdminGeneralDesignController extends BaseController{
             sessionUtil.setCustomer(request, customer);
         }
         if (!touchIcon.isEmpty()){
-            Customer customer = (Customer) sessionUtil.getCustomer(request);
-            
             //delete old picture from FS
             deleteImage(customer.getTouchIcon());
             customer.setTouchIcon(null);
@@ -135,7 +141,7 @@ public class AdminGeneralDesignController extends BaseController{
             sessionUtil.setCustomer(request, customer);
         }
         
-        htmlResourceUtil.updateCss(request.getServletContext());
+        htmlResourceUtil.updateCss(request.getServletContext(), customer);
         return getIndexView(atts);
     }
 

@@ -37,6 +37,13 @@
                                     <label for="backgroundSizeCover"><fmt:message key="BackgroundSizeCover"/></label>
                                 </div>
                             </c:when>
+                            <c:when test="${Attribute.name eq 'loaderOpacity'}">
+                            <hr/>
+                            <div class="text-center unit">
+                                <input type="checkbox" name="loaderOpacity" id="loaderOpacity" ${Attribute.cssValue eq '@loaderOpacity: 1' ? 'checked' : ''}/>
+                                <label for="loaderOpacity"><fmt:message key="ShowLoadingAnimation"/></label>
+                            </div>   
+                            </c:when>
                             <c:otherwise>
                                 <hr/>
                                 <figure class="picture unit">
@@ -68,8 +75,7 @@
                     </figure>
                     <input type="file" capture="camera" accept="image/*" name="companyLogo" class="picture-input hidden"/>
                     
-                    
-                    <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
+                    <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
                 </form>
             </div>
         </div>
