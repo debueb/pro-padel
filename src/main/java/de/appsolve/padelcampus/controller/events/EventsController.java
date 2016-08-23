@@ -148,8 +148,6 @@ public class EventsController extends BaseController{
         Event event = eventDAO.findByIdFetchWithGames(eventId);
         ModelAndView mav = new ModelAndView("events/communityroundrobin/communitygames", "Model", event);
         
-        event = eventDAO.findByIdFetchWithGames(eventId);
-        
         //Community // Participant // Game // GameResult
         SortedMap<Community, Map<Participant, Map<Game, String>>> communityParticipantGameResultMap = new TreeMap<>();
         
@@ -166,6 +164,14 @@ public class EventsController extends BaseController{
             }
         }
         mav.addObject("GroupParticipantGameResultMap", communityParticipantGameResultMap);
+        gameUtil.addGameResultMap(mav, event.getGames());
+        return mav;
+    }
+    
+    @RequestMapping("event/{eventId}/pullgames")
+    public ModelAndView getEventPullGames(@PathVariable("eventId") Long eventId){
+        Event event = eventDAO.findByIdFetchWithGames(eventId);
+        ModelAndView mav = new ModelAndView("events/pullroundrobin/pullgames", "Model", event);
         gameUtil.addGameResultMap(mav, event.getGames());
         return mav;
     }
