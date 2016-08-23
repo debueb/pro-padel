@@ -9,12 +9,14 @@ package de.appsolve.padelcampus.db.model;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.ModuleType;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -57,6 +59,9 @@ public class Module extends SortableEntity{
     @NotEmpty(message = "{NotEmpty.description}")
     @Column(length = 8000)
     private String description;
+    
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Module> subModules;
     
     public ModuleType getModuleType() {
         return moduleType;
@@ -132,6 +137,14 @@ public class Module extends SortableEntity{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<Module> getSubModules() {
+        return subModules;
+    }
+
+    public void setSubModules(Set<Module> subModules) {
+        this.subModules = subModules;
     }
 
     @Override

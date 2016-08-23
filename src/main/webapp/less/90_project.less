@@ -70,7 +70,7 @@ body {
 }
 .wrapper:before{
     display:block;
-    height: 50px;
+    height: @navbar-height;
     content: ' ';
 }
 .wrapper {
@@ -78,7 +78,7 @@ body {
     height: 100%;
 }
 .footer{
-    height: 50px;
+    height: @navbar-height;
     display: table-cell;
     vertical-align: middle;
     text-align: center;
@@ -123,12 +123,12 @@ textarea, input[type="text"], input[type="email"], input[type="submit"], input[t
 }
 #site-menu {
     overflow-y: auto;
-    width: 200px;
+    width: @sidebarWidth;
     height: 100%;
     position: fixed;
-    right: -200px;
+    right: -@sidebarWidth;
     opacity: .9;
-    padding-bottom: 50px;
+    padding-bottom: @navbar-height;
     background-color: @navBarColor2;
     #gradient > .vertical(@navBarColor2, @navBarColor);
 }
@@ -141,8 +141,8 @@ textarea, input[type="text"], input[type="email"], input[type="submit"], input[t
     z-index: 4;
 }
 #site-canvas.show-nav,  #site-shadow.show-nav, #site-menu.show-nav, .footer.show-nav{
-    -webkit-transform: translateX(-200px);
-    transform: translateX(-200px);
+    -webkit-transform: translateX(-@sidebarWidth);
+    transform: translateX(-@sidebarWidth);
 }
 /* end off canvas side menu */
 .form-control, .form-control:focus{
@@ -197,7 +197,13 @@ input[type="checkbox"]:checked ~ label:before{
 }
 .panel-heading{
     border-bottom: 0;
-    padding: 5px 10px;
+    padding: 0px 10px;
+    height: @navbar-height;
+    line-height: @navbar-height;
+}
+.panel-heading h4{
+    margin: 0;
+    line-height: inherit;
 }
 #shadow{
     display: none;
@@ -231,7 +237,7 @@ a.list-group-item .list-group-item-heading{
     border-top: 1px solid gray;
     border-bottom: 1px solid gray;
     display: inline-block;
-    width: 50px;
+    width: 38px;
     text-align: center;
     font-size: 14px;
 }
@@ -308,7 +314,7 @@ table.table-scores tbody tr td{
     border: 0;
     display:inline-block;
     text-decoration: none;
-    padding: 15px;
+    padding: 8px;
     cursor: pointer;
 }
 .navbar-toggle .icon-bar{
@@ -318,8 +324,8 @@ table.table-scores tbody tr td{
     display: inline-block;
     float: none;
     padding: 0;
-    height: 50px;
-    line-height: 50px;
+    height: @navbar-height;
+    line-height: @navbar-height;
 }
 img.navbar-brand{
     padding: 5px;
@@ -332,12 +338,12 @@ img.navbar-brand{
     padding: 5px 15px;
     text-overflow: ellipsis;
     overflow: hidden;
-    height: 50px;
-    max-height: 50px;
+    height: @navbar-height;
+    max-height: @navbar-height;
     white-space: nowrap;
 }
 .navbar-default{
-    max-height: 50px;
+    max-height: @navbar-height;
 }
 .navbar-default .navbar-brand, .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus{
     color: @white;
@@ -750,7 +756,7 @@ table.table-round > tbody > tr > td{
   left: 50%;
   z-index: 4;
   margin-left: -80px;
-  margin-top: -50px;
+  margin-top: -@navbar-height;
   display: none;
 }
 .table-responsive-booking{
@@ -1362,7 +1368,7 @@ th.normal{
     border-radius: 10px;
     transform: translate(-50%, 0);
     z-index: 100;
-    margin-top: -50px;
+    margin-top: -@navbar-height;
     font-weight: bold;
 }
 /* jquery-ui fixes */
@@ -1522,6 +1528,7 @@ a.menu-item{
     padding-left: 10px;
     padding-right: 10px;
     display: inline-block;
+    overflow: hidden;
 }
 a.menu-item:hover{
     color: @primaryColor;
@@ -1529,8 +1536,8 @@ a.menu-item:hover{
     text-decoration: none;
 }
 a.menu-item{
-    height: 50px;
-    line-height: 50px;
+    height: @navbar-height;
+    line-height: @navbar-height;
     text-align: center;
 }
 @media (min-width: @grid-float-breakpoint){
@@ -1692,3 +1699,40 @@ a.menu-item{
 .table-responsive > .table > tbody > tr > td{
     overflow: hidden;
 }
+.subModules{
+    display: none;
+    top: @navbar-height;
+    left: 0;
+    width: 100%;
+    background: #1fa9ea;
+    text-align: center;
+    position: absolute;
+ }
+ .subModule{
+    display: inline-block;
+    position: relative;
+    text-align: left;
+ }
+ @media (max-width: @grid-float-breakpoint){
+     .subModules{
+         position: relative;
+         top: 0;
+     }
+     .subModules::after{
+         display: block;
+         height: 1px;
+         width: 100%;
+         background: #fff;
+         content: '';
+     }
+     .subModule{
+        width: 100%;
+        padding-left: 20px;
+     }
+     .subModule a.menu-item:first-child{
+         border-top: 0;
+     }
+     .subModule:last-child a.menu-item:last-child{
+         border-bottom: 0;
+     }
+ }

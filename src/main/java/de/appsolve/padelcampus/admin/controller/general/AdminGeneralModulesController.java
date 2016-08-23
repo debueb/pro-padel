@@ -16,10 +16,15 @@ import de.appsolve.padelcampus.utils.FileUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.ModuleUtil;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -28,6 +33,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -59,33 +67,25 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         return "admin/general/modules";
     }
     
+    
+    @Override
+    public ModelAndView showIndex(HttpServletRequest request, Pageable pageable, @RequestParam(required = false, name = "search") String search){
+        Page<Module> all = new PageImpl(moduleDAO.findAllRootModules());
+        return getIndexView(all);
+    }
+    
     @Override
     protected ModelAndView getEditView(Module model){
         ModelAndView mav = super.getEditView(model);
-        mav.addObject("ModuleTypes", ModuleType.values());
-        mav.addObject("EventTypes", EventType.values());
-        try {
-            String fileContents = FileUtil.getFileContents("font-awesome-icon-names.txt");
-            String[] iconNames = fileContents.split("\n");
-            mav.addObject("FontAwesomeIconNames", iconNames);
-        } catch (IOException ex) {
-            LOG.warn("Unable to get list of font-aweseome icon names");
-        }
+        addEditObjects(mav);
         return mav;
     }
     
     @Override
     public ModelAndView postEditView(@ModelAttribute("Model") Module model, HttpServletRequest request, BindingResult result){
+        checkTitleRequirements(model, result);
         if (result.hasErrors()){
             return super.getEditView(model);
-        }
-        if (model.getId() == null){
-            Module existingPageEntry = moduleDAO.findByTitle(model.getTitle());
-            if (existingPageEntry != null){
-                ModelAndView editView = getEditView(model);
-                result.rejectValue("title", "ModuleWithTitleAlreadyExists", new Object[]{model.getTitle()}, "ModuleWithTitleAlreadyExists");
-                return editView;
-            }
         }
         
         ModelAndView mav = super.postEditView(model, request, result);
@@ -105,8 +105,86 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         super.updateSortOrder(request, model, orderedIds);
         reloadModules(request);
     }
-
+    
+    @RequestMapping("/edit/{id}/submodules")
+    public ModelAndView showSubmodules(@PathVariable("id") Long id){
+        Module module = moduleDAO.findById(id);
+        return getSubmoduleView(module);
+    }
+    
+    @RequestMapping(value={"/edit/{id}/submodules/add"}, method=GET)
+    public ModelAndView showSubModuleAddView(@PathVariable("id") Long id){
+        return getSubmoduleEditView(id, createNewInstance());
+    }
+    
+    @RequestMapping(value="/edit/{id}/submodules/edit/{modelId}", method=GET)
+    public ModelAndView showSubmoduleEditView(@PathVariable("id") Long id, @PathVariable("modelId") Long modelId){
+        return getSubmoduleEditView(id, findById(modelId));
+    }
+    
+    @RequestMapping(value={"/edit/{id}/submodules/add", "/edit/{id}/submodules/edit/{modelId}"}, method=POST)
+    public ModelAndView postSubmoduleEditView(@PathVariable("id") Long parentModuleId, @ModelAttribute("Model") Module model, HttpServletRequest request, BindingResult result){
+        validator.validate(model, result);
+        checkTitleRequirements(model, result);
+        if (result.hasErrors()){
+            return getEditView(model);
+        }
+        model.setShowInMenu(Boolean.TRUE);
+        model.setShowInFooter(Boolean.FALSE);
+        model.setShowOnHomepage(Boolean.FALSE);
+        moduleDAO.saveOrUpdate(model);
+        Module parent = moduleDAO.findById(parentModuleId);
+        Set<Module> subModules = parent.getSubModules();
+        if (subModules == null){
+            subModules = new HashSet<>();
+        }
+        subModules.add(model);
+        parent.setSubModules(subModules);
+        moduleDAO.saveOrUpdate(parent);
+        reloadModules(request);
+        return redirectToIndex(request);
+    }
+    
+    protected ModelAndView getSubmoduleView(Module module){
+        ModelAndView mav = new ModelAndView(getModuleName()+"/submodules/index");
+        mav.addObject("Parent", module);
+        mav.addObject("Models", module.getSubModules());
+        mav.addObject("moduleName", getModuleName());
+        return mav;
+    }
+    
+    protected ModelAndView getSubmoduleEditView(Long parentModuleId, Module model){
+        ModelAndView mav =  new ModelAndView("/"+getModuleName()+"/submodules/edit");
+        mav.addObject("Parent", moduleDAO.findById(parentModuleId));
+        mav.addObject("Model", model);
+        mav.addObject("moduleName", getModuleName());
+        addEditObjects(mav);
+        return mav;
+    }
+    
     private void reloadModules(HttpServletRequest request) {
         moduleUtil.reloadModules(request);
+    }
+
+    private void addEditObjects(ModelAndView mav) {
+        mav.addObject("ModuleTypes", ModuleType.values());
+        mav.addObject("EventTypes", EventType.values());
+        try {
+            String fileContents = FileUtil.getFileContents("font-awesome-icon-names.txt");
+            String[] iconNames = fileContents.split("\n");
+            mav.addObject("FontAwesomeIconNames", iconNames);
+        } catch (IOException ex) {
+            LOG.warn("Unable to get list of font-aweseome icon names");
+        }
+    }
+
+    private void checkTitleRequirements(Module module, BindingResult result) {
+        if (result.hasErrors()){
+            return;
+        }
+        Module existingModule = moduleDAO.findByTitle(module.getTitle());
+        if (existingModule != null && !existingModule.equals(module)){
+            result.rejectValue("title", "ModuleWithTitleAlreadyExists", new Object[]{module.getTitle()}, "ModuleWithTitleAlreadyExists");
+        }
     }
 }

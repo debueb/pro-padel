@@ -87,7 +87,7 @@
                         </c:if>
                         <c:choose>
                             <c:when test="${not empty sessionScope.customer.companyLogo}">
-                                <a class="navbar-icon navbar-hover ajaxify" href="/"><img src="${sessionScope.customer.companyLogoPath}" height="18px" width="auto" style="vertical-align: top;"/></a>
+                                <a class="ajaxify" href="/"><img src="${sessionScope.customer.companyLogoPath}" height="18px" width="auto" style="vertical-align: top;"/></a>
                             </c:when>
                             <c:otherwise>
                                 <a class="navbar-icon navbar-hover home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>

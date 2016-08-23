@@ -245,7 +245,9 @@ app.main = {};
 
         $('.navbar-toggle, #site-shadow, #site-menu a').livequery(function(){
             $(this).on('tap click', function () {
-                return toggleNavbarToggle();
+                if (!$(this).hasClass('hasSubmodules')){
+                    return toggleNavbarToggle();
+                }
             });
         });
         
@@ -567,6 +569,17 @@ app.main = {};
         });
     };
     
+    self.enableSubmodules = function(){
+        $('a.hasSubmodules').livequery(function(){
+            $(this).on('click tap', function(){
+                var id = $(this).attr('id');
+                console.log($(this).parent().find($('.'+id+'-subModules')));
+                $(this).parent().find($('.'+id+'-subModules')).slideToggle(200);
+                return false;
+            });
+        });
+    };
+    
     return app;
 }).apply(app.main);
 
@@ -591,4 +604,5 @@ $(document).ready(function () {
     app.main.enableSelectToggle();
     app.main.enableAutoSearch();
     app.main.enableTooltips();
+    app.main.enableSubmodules();
 });

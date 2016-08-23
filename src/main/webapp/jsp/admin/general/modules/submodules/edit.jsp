@@ -7,9 +7,9 @@
         <div class="page-header"></div>
         <div class="panel panel-info">
             <div class="panel-heading">
-                <fmt:message var="AddModule" key="AddModule"/>
-                <fmt:message var="EditModule" key="EditModule"/>
-                <h4>${empty Model.id ? AddModule : EditModule}</h4>
+                <fmt:message var="AddSubModule" key="AddSubModule"/>
+                <fmt:message var="EditSubModule" key="EditSubModule"/>
+                <h4>${Parent.title} ${empty Model.id ? AddSubModule : EditSubModule}</h4>
             </div>
             <div class="panel-body">
                 <spf:form method="POST" class="form-signin summernote-form" role="form" modelAttribute="Model" id="news-form">
@@ -55,18 +55,6 @@
                         </c:forEach>
                     </spf:select>
                     
-                    <div>
-                        <spf:checkbox path="showOnHomepage" />
-                        <label class="checkbox" for="showOnHomepage1"><fmt:message key="ShowOnHomepage"/></label>
-                    </div>
-                    <div>
-                        <spf:checkbox path="showInMenu" />
-                        <label class="checkbox" for="showInMenu1"><fmt:message key="ShowInMenu"/></label>
-                    </div>
-                    <div>
-                        <spf:checkbox path="showInFooter" />
-                        <label class="checkbox" for="showInFooter1"><fmt:message key="ShowInFooter"/></label>
-                    </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
                     <c:if test="${not empty Model.id}">
                         <a href="/admin/general/modules/edit/${Model.id}/submodules" class="btn btn-primary btn-block unit-2 ajaxify"><fmt:message key="ManageSubmodules"/></a>

@@ -6,7 +6,6 @@
 package de.appsolve.padelcampus.utils;
 
 import de.appsolve.padelcampus.constants.Constants;
-import de.appsolve.padelcampus.data.CustomerI;
 import de.appsolve.padelcampus.db.model.Customer;
 import java.io.File;
 import javax.servlet.http.HttpServletRequest;

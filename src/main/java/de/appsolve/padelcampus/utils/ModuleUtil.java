@@ -41,7 +41,7 @@ public class ModuleUtil {
         }
         String customerName = customer.getName();
         if (!customerModules.containsKey(customerName)){
-            List<Module> modules = moduleDAO.findAll();
+            List<Module> modules = moduleDAO.findAllRootModules();
             customerModules.put(customerName, modules);
             context.setAttribute(Constants.APPLICATION_CUSTOMER_MODULES, customerModules);
         }
