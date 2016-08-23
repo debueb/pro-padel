@@ -142,8 +142,8 @@
                         <span class="explanation"><fmt:message key="Price"/></span>
                     </div>
                     <spf:input type="hidden" path="currency" value="EUR"/>
-
-                    <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
+ 
+                    <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
                 </spf:form>
             </div>
         </div>

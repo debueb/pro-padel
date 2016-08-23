@@ -6,9 +6,12 @@
 package de.appsolve.padelcampus.utils;
 
 import de.appsolve.padelcampus.db.dao.GameDAOI;
+import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
+import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.db.model.Team;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +30,12 @@ public class EventsUtil {
     
     @Autowired
     GameDAOI gameDAO;
+    
+    @Autowired
+    TeamDAOI teamDAO;
+    
+    @Autowired
+    GameUtil gameUtil;
 
     public SortedMap<Integer, List<Game>> getRoundGameMap(Event event) {
         SortedMap<Integer, List<Game>> roundGames= new TreeMap<>();
@@ -153,6 +162,37 @@ public class EventsUtil {
             seedingPositions = newSeeedingPositions;
         }
         return seedingPositions;
+    }
+
+    public void createPullGames(Event model) {
+        //create teams which do not exist yet
+        Set<Team> teams = new HashSet<>();
+        for (Player player1: model.getPlayers()){
+            for (Player player2: model.getPlayers()){
+                if (!player1.equals(player2)){
+                    Set<Player> players = new HashSet<>();
+                    players.add(player1);
+                    players.add(player2);
+                    Team team = teamDAO.findByPlayers(players);
+                    if (team == null){
+                        team = new Team();
+                        team.setPlayers(players);
+                        team.setName(TeamUtil.getTeamName(team));
+                        team = teamDAO.saveOrUpdate(team);
+                    } else {
+                        //findByPlayers does not set players
+                        team.setPlayers(players);
+                    }
+                    teams.add(team);
+                }
+            }
+        }
+
+        //remove games that have not been played yet
+        gameUtil.removeGamesWithoutGameSets(model, teams);
+
+        //create matches
+        gameUtil.createMissingPullGames(model, teams);
     }
     
 }

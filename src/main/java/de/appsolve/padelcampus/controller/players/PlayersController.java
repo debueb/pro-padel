@@ -86,6 +86,8 @@ public class PlayersController extends BaseController {
             Set<Player> players = team.getPlayers();
             participants.addAll(players);
         }
+        participants.addAll(event.getPlayers());
+        
         return getPlayersView(event, new ArrayList<>(participants), msg.get("PlayersIn", new Object[]{event.getName()}));
     }
 

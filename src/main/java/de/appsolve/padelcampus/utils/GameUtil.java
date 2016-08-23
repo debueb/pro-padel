@@ -11,17 +11,21 @@ import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Participant;
+import de.appsolve.padelcampus.db.model.ParticipantI;
+import de.appsolve.padelcampus.db.model.Team;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import jersey.repackaged.com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -98,11 +102,31 @@ public class GameUtil {
         return result.toString();
     }
     
-    public void createMissingGames(Event event, Collection<Game> existingGames, Set<Participant> participants) {
-        createMissingGames(event, existingGames, participants, null);
+    public void removeGamesWithoutGameSets(Event event) {
+        removeGamesWithoutGameSets(event, event.getParticipants());
     }
     
-    public void createMissingGames(Event event, Collection<Game> existingGames, Set<Participant> participants, Integer groupNumber) {
+    public void removeGamesWithoutGameSets(Event event, Set<? extends ParticipantI> newParticipants) {
+        List<Game> eventGames = gameDAO.findByEvent(event);
+        Iterator<Game> eventGameIterator = eventGames.iterator();
+        while (eventGameIterator.hasNext()){
+            Game game = eventGameIterator.next();
+            if (game.getGameSets().isEmpty()){
+                //only remove if game participant no longer participates in event
+                if (!newParticipants.containsAll(game.getParticipants())){
+                    eventGameIterator.remove();
+                    gameDAO.deleteById(game.getId());
+                }
+            }
+        }
+    }
+    
+    public void createMissingGames(Event event, Set<Participant> participants) {
+        createMissingGames(event, participants, null);
+    }
+    
+    public void createMissingGames(Event event, Set<Participant> participants, Integer groupNumber) {
+        List<Game> existingGames = gameDAO.findByEvent(event);
         for (Participant firstParticipant: participants){
             for (Participant secondParticipant: participants){
                 if (!firstParticipant.equals(secondParticipant)){
@@ -114,17 +138,23 @@ public class GameUtil {
                         }
                     }
                     if (!gameExists){
-                        Game game = new Game();
-                        game.setEvent(event);
-                        if (groupNumber != null){
-                            game.setGroupNumber(groupNumber);
+                        existingGames.add(createGame(event, firstParticipant, secondParticipant, groupNumber));
+                    }
+                }
+            }
+        }
+    }
+    
+    public void createMissingPullGames(Event event, Set<Team> participants) {
+        List<Game> existingGames = gameDAO.findByEvent(event);
+        for (Team team1: participants){
+            for (Team team2: participants){
+                if (!team1.equals(team2)){
+                    if (!hasMatch(existingGames, team1) && !hasMatch(existingGames, team2)){
+                        //make sure that players are distinct
+                        if (Sets.intersection(team1.getPlayers(), team2.getPlayers()).isEmpty()){
+                            existingGames.add(createGame(event, team1, team2, null));
                         }
-                        Set<Participant> gameParticipants = new LinkedHashSet<>();
-                        gameParticipants.add(firstParticipant);
-                        gameParticipants.add(secondParticipant);
-                        game.setParticipants(gameParticipants);
-                        gameDAO.saveOrUpdate(game);
-                        existingGames.add(game);
                     }
                 }
             }
@@ -145,5 +175,28 @@ public class GameUtil {
             }
         }
         return participantGameResultMap;
+    }
+
+    private Game createGame(Event event, Participant firstParticipant, Participant secondParticipant, Integer groupNumber) {
+        Game game = new Game();
+        game.setEvent(event);
+        if (groupNumber != null){
+            game.setGroupNumber(groupNumber);
+        }
+        Set<Participant> gameParticipants = new LinkedHashSet<>();
+        gameParticipants.add(firstParticipant);
+        gameParticipants.add(secondParticipant);
+        game.setParticipants(gameParticipants);
+        game = gameDAO.saveOrUpdate(game);
+        return game;
+    }
+
+    private boolean hasMatch(Collection<Game> existingGames, Team team) {
+        for (Game game: existingGames){
+            if (game.getParticipants().contains(team)){
+                return true;
+            }
+        }
+        return false;
     }
 }

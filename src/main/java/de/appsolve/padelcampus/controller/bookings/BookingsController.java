@@ -36,6 +36,7 @@ import de.appsolve.padelcampus.db.model.Voucher;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.utils.BookingUtil;
+import de.appsolve.padelcampus.utils.EventsUtil;
 import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
 import de.appsolve.padelcampus.utils.GameUtil;
@@ -135,6 +136,9 @@ public class BookingsController extends BaseController {
     
     @Autowired
     GameUtil gameUtil;
+    
+    @Autowired
+    EventsUtil eventsUtil;
 
     @RequestMapping()
     public ModelAndView getToday(
@@ -321,28 +325,37 @@ public class BookingsController extends BaseController {
             }
             
             //in case the booking was for an event, add the participants to the event
-            if (booking.getEvent() != null && !booking.getPlayers().isEmpty()){
+            if (booking.getEvent() != null){
                 Event event = eventDAO.findByIdFetchWithParticipantsAndGames(booking.getEvent().getId());
                 
-                Set<Player> players = new HashSet<>();
-                players.add(booking.getPlayer());
-                players.addAll(booking.getPlayers());
-                //figure out if team already exists
-                Team team = teamDAO.findByPlayers(players);
-                
-                //create team if it does not exist
-                if (team == null){
-                    team = new Team();
-                    team.setPlayers(booking.getPlayers());
-                    team.setName(TeamUtil.getTeamName(team));
-                }
-                
-                //add team to participant list
-                event.getParticipants().add(team);
-                event = eventDAO.saveOrUpdate(event);
-                
-                if (event.getEventType().equals(EventType.SingleRoundRobin)){
-                    gameUtil.createMissingGames(event, event.getGames(), event.getParticipants());
+                switch (event.getEventType()){
+                    case PullRoundRobin:
+                        event.getParticipants().add(booking.getPlayer());
+                        event = eventDAO.saveOrUpdate(event);
+                        
+                        eventsUtil.createPullGames(event);
+                        break;
+                    default:
+                        Set<Player> players = new HashSet<>();
+                        players.add(booking.getPlayer());
+                        players.addAll(booking.getPlayers());
+                        //figure out if team already exists
+                        Team team = teamDAO.findByPlayers(players);
+
+                        //create team if it does not exist
+                        if (team == null){
+                            team = new Team();
+                            team.setPlayers(booking.getPlayers());
+                            team.setName(TeamUtil.getTeamName(team));
+                        }
+
+                        //add team to participant list
+                        event.getParticipants().add(team);
+                        event = eventDAO.saveOrUpdate(event);
+
+                        if (event.getEventType().equals(EventType.SingleRoundRobin)){
+                            gameUtil.createMissingGames(event, event.getParticipants());
+                        }  
                 }
             }
             

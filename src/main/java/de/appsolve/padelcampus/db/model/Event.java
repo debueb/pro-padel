@@ -222,7 +222,7 @@ public class Event extends ComparableEntity{
     
     public Set<Team> getTeams(){
         Set<Team> teams = new TreeSet<>();
-        for (Participant participant: participants){
+        for (Participant participant: getParticipants()){
             if (participant instanceof Team){
                 teams.add((Team)participant);
             }
@@ -232,7 +232,7 @@ public class Event extends ComparableEntity{
     
     public Set<Player> getPlayers(){
         Set<Player> players = new TreeSet<>();
-        for (Participant participant: participants){
+        for (Participant participant: getParticipants()){
             if (participant instanceof Player){
                 players.add((Player)participant);
             }

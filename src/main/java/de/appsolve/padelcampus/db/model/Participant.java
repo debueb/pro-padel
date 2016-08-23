@@ -36,6 +36,7 @@ public abstract class Participant extends ComparableEntity implements Participan
         return val == null ? null : val.value();
     }
     
+    @Override
     public String getUUID() {
         return UUID;
     }

@@ -3,8 +3,8 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
+        <div class="page-header"></div>
         <jsp:include page="/jsp/events/include/info.jsp"/>
-
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4><fmt:message key="ParticipateChoosePartner"/></h4>
@@ -14,7 +14,7 @@
                 <div class="alert alert-info"><fmt:message key="ParticipateChoosePartnerDesc"/></div>
                 <div class="alert alert-danger unit"><spf:errors path="*"/></div>
                 
-                <div class="relative unit">
+                <div class="relative unit-2">
                         <select class="form-control select-simple" name="paymentMethod">
                     <c:forEach var="PaymentMethod" items="${Model.calendarConfig.paymentMethods}">
                         <option value="${PaymentMethod}"><fmt:message key="${PaymentMethod}"/></option>
@@ -23,7 +23,7 @@
                     <span class="explanation-select"><fmt:message key="PaymentMethod"/></span>
                 </div>
                 
-                    <div class="accordion unit">
+                    <div class="accordion unit-2">
                         <div><fmt:message key="ChooseExistingPlayer"/></div>
                         <div>
                             <fmt:message key="CurrentlySelected" var="CurrentlySelected"/>
@@ -59,7 +59,7 @@
                         </div>
                     </div>
                     <div>
-                        <button class="btn btn-primary btn-block unit" type="submit"><fmt:message key="Participate"/></button>
+                        <button class="btn btn-primary btn-block unit-2" type="submit"><fmt:message key="Participate"/></button>
                     </div>
                 </spf:form>         
             </div>

@@ -92,33 +92,40 @@
                         <div class="explanation"><fmt:message key="Location"/></div>
                     </div>
                     
-                    <div class="select-toggle-GroupKnockout relative">
+                    <div class="relative">
                         <spf:input path="numberOfSets" type="number" class="form-control form-center-element"/>
                         <div class="explanation-select"><fmt:message key="MaxNumberOfSets"/></div>
                     </div>
                     
-                    <div class="select-toggle-GroupKnockout relative">
+                    <div class="relative">
                         
                         <spf:input path="numberOfGamesPerSet" type="number" class="form-control form-center-element"/>
                         <div class="explanation-select"><fmt:message key="MaxNumberOfGamesPerSet"/></div>
                     </div>
                     
-                    <div class="select-toggle-GroupKnockout relative">
+                    <div class="relative">
                         <spf:input path="numberOfGamesInFinalSet" type="number" class="form-control form-center-element"/>
                         <div class="explanation-select"><fmt:message key="MaxNumberOfGamesInFinalSet"/></div>
                     </div>
 
-                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-Knockout relative">
+                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-Knockout select-toggle-PullRoundRobin relative">
                         <spf:select path="calendarConfig" class="select-simple form-control" data-style="form-center-element" data-container="body">
                             <option value=""><fmt:message key="None"/></option>
                             <spf:options itemValue="id" items="${CalendarConfigs}"/>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="CalendarConfigOffer"/></span>
                     
-                        <div class="alert alert-info" style="border-radius: 0"><fmt:message key="NewEventDesc"/></div>
+                        <div class="alert alert-info" style="border-radius: 0">
+                            <span class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-Knockout">
+                                <fmt:message key="NewEventDesc"/>
+                            </span>
+                            <span class="select-toggle-PullRoundRobin">
+                                <fmt:message key="NewEventDescPlayer"/>
+                            </span>
+                        </div>
                     </div>
                     
-                    <div class="relative">
+                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-Knockout select-toggle-CommunityRoundRobin select-toggle-PullRoundRobin relative">
                         <fmt:message key="CurrentlySelected" var="CurrentlySelected"/>
                         <fmt:message key="PleaseChoose" var="EmptyTitle"/>
                         <fmt:message key="ErrorText" var="ErrorText"/>
@@ -139,7 +146,8 @@
                             data-abs-locale-status-initialized='${StatusInitialized}'
                             data-abs-locale-search-no-results='${SearchNoResults}'
                             data-abs-locale-status-searching='${StatusSearching}'
-                            data-abs-ajax-url="/api/teams/options">
+                            data-abs-param-type-source="#eventType"
+                            data-abs-ajax-url="/api/participants/options">
                             <fmt:message key="PleaseChoose" var="PleaseChoose"/>
                             <spf:options items="${Model.participants}" itemValue="UUID"/>
                         </spf:select>
@@ -155,7 +163,10 @@
                     </c:if>
                     <c:if test="${not empty Model.id and (Model.eventType eq 'GroupKnockout')}">
                         <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/groupdraws"><fmt:message key="ToGroupDraws"/></a>
-                        <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/gameschedule"><fmt:message key="ToGameSchedule"/></a>
+                        <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/groupschedule"><fmt:message key="ToGameSchedule"/></a>
+                    </c:if>
+                    <c:if test="${not empty Model.id and (Model.eventType eq 'PullRoundRobin')}">
+                        <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/pullschedule"><fmt:message key="ToGameSchedule"/></a>
                     </c:if>
                 </spf:form>
             </div>

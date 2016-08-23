@@ -12,7 +12,7 @@
                     <h4>${subtitle}</h4>
                 </c:if>
             </div>
-            <div class="panel-body">
+            <div class="panel-body" style="padding: 0;">
                 <div class="table-responsive">
                     <table class="table table-fixed table-striped table-hover table-condensed">
                         <thead>

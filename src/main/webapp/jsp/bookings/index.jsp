@@ -72,13 +72,15 @@
                                 <thead>
                                     <tr>
                                         <c:forEach var="Offer" items="${SelectedOffers}">
-                                            <th style="background-color: ${Offer.hexColor};">
-                                                <div    data-toggle="tooltip" 
-                                                        data-placement="top"
-                                                        title="${Offer}">
-                                                    ${Offer.shortName}
-                                                </div>
-                                            </th>
+                                            <c:if test="${Offer.showInCalendar}">
+                                                <th style="background-color: ${Offer.hexColor};">
+                                                    <div    data-toggle="tooltip" 
+                                                            data-placement="top"
+                                                            title="${Offer}">
+                                                        ${Offer.shortName}
+                                                    </div>
+                                                </th>
+                                            </c:if>
                                         </c:forEach>
                                     </tr>
                                 </thead>
@@ -86,6 +88,7 @@
                                     <c:forEach var="TimeRange" items="${RangeMap}">
                                         <tr>
                                             <c:forEach var="Offer" items="${SelectedOffers}">
+                                                <c:if test="${Offer.showInCalendar}">
                                                     <td>
                                                         <c:set var="containsTimeSlot" value="false"/>
                                                         <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
@@ -110,18 +113,21 @@
                                                             </c:if>
                                                         </c:forEach>
                                                     </td>
+                                                </c:if>
                                             </c:forEach>
                                         </tr>
                                     </c:forEach>
                                     <tr>
                                         <c:forEach var="Offer" items="${SelectedOffers}">
-                                            <td style="background-color: ${Offer.hexColor};">
-                                                <div    data-toggle="tooltip" 
-                                                        data-placement="bottom"
-                                                        title="${Offer}">
-                                                    ${Offer.shortName}
-                                                </div>
-                                            </td>
+                                            <c:if test="${Offer.showInCalendar}">
+                                                <td style="background-color: ${Offer.hexColor};">
+                                                    <div    data-toggle="tooltip" 
+                                                            data-placement="bottom"
+                                                            title="${Offer}">
+                                                        ${Offer.shortName}
+                                                    </div>
+                                                </td>
+                                            </c:if>
                                         </c:forEach>
                                     </tr>
                                 </tbody>

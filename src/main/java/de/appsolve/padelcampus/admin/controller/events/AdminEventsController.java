@@ -25,13 +25,16 @@ import de.appsolve.padelcampus.db.model.Community;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
+import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
-import de.appsolve.padelcampus.spring.TeamCollectionEditor;
+import de.appsolve.padelcampus.spring.ParticipantCollectionEditor;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
+import de.appsolve.padelcampus.utils.SessionUtil;
+import de.appsolve.padelcampus.utils.TeamUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -100,7 +103,10 @@ public class AdminEventsController extends AdminBaseController<Event>{
     GameUtil gameUtil;
     
     @Autowired
-    TeamCollectionEditor teamCollectionEditor;
+    SessionUtil sessionUtil;
+    
+    @Autowired
+    ParticipantCollectionEditor participantCollectionEditor;
     
     @Autowired
     CalendarConfigPropertyEditor calendarConfigPropertyEditor;
@@ -108,7 +114,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
-        binder.registerCustomEditor(Set.class, teamCollectionEditor);
+        binder.registerCustomEditor(Set.class, participantCollectionEditor);
         binder.registerCustomEditor(CalendarConfig.class, calendarConfigPropertyEditor);
     }
     
@@ -148,12 +154,11 @@ public class AdminEventsController extends AdminBaseController<Event>{
             
             case SingleRoundRobin:
                 model = getDAO().saveOrUpdate(model);
-                List<Game> eventGames = gameDAO.findByEvent(model);
                 
                 //remove games that have not been played yet
-                removeGamesWithoutGameSets(eventGames);
+                gameUtil.removeGamesWithoutGameSets(model);
                 
-                gameUtil.createMissingGames(model, eventGames, model.getParticipants());
+                gameUtil.createMissingGames(model, model.getParticipants());
                 return redirectToIndex(request);
             
             case CommunityRoundRobin:
@@ -187,10 +192,8 @@ public class AdminEventsController extends AdminBaseController<Event>{
                     }
                     model = getDAO().saveOrUpdate(model);
                     
-                    List<Game> existingGames = gameDAO.findByEvent(model);
-                    
                     //clean
-                    removeGamesWithoutGameSets(existingGames);
+                    gameUtil.removeGamesWithoutGameSets(model);
                     
                     //generate games
                     Collection<Set<Team>> teamSets = communityTeamMap.values();
@@ -202,7 +205,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
                                         Set<Participant> participants = new HashSet<>();
                                         participants.add(team);
                                         participants.add(team2);
-                                        gameUtil.createMissingGames(model, existingGames, participants);
+                                        gameUtil.createMissingGames(model, participants);
                                     }
                                 }
                             }
@@ -224,6 +227,14 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 model = getDAO().saveOrUpdate(model);
                 if (model.getCalendarConfig() == null && !model.getParticipants().isEmpty()){
                     return redirectToDraws(model);
+                } else {
+                    return redirectToIndex(request);
+                }
+            case PullRoundRobin:
+                model = getDAO().saveOrUpdate(model);
+                eventsUtil.createPullGames(model);
+                if (model.getCalendarConfig() == null && !model.getParticipants().isEmpty()){
+                    return redirectToPullSchedule(model);
                 } else {
                     return redirectToIndex(request);
                 }
@@ -339,7 +350,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
         }
         
         //remove games that have not been played yet
-        removeGamesWithoutGameSets(event.getGames());
+        gameUtil.removeGamesWithoutGameSets(event);
         
         //remove games with teams that are no longer part of a group
         Iterator<Game> gameIterator = event.getGames().iterator();
@@ -350,7 +361,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 Set<Participant> groupParticipants = eventGroups.getGroupParticipants().get(groupNumber);
                 if (!groupParticipants.containsAll(game.getParticipants())){
                     gameIterator.remove();
-                    gameDAO.deleteById(eventId);
+                    gameDAO.deleteById(game.getId());
                 }
             }
         }
@@ -358,23 +369,35 @@ public class AdminEventsController extends AdminBaseController<Event>{
         //create missing games
         for (int groupNumber=0; groupNumber<event.getNumberOfGroups(); groupNumber++){
             Set<Participant> groupParticipants = eventGroups.getGroupParticipants().get(groupNumber);
-            gameUtil.createMissingGames(event, event.getGames(), groupParticipants, groupNumber);
+            gameUtil.createMissingGames(event, groupParticipants, groupNumber);
         }
         
-        return new ModelAndView("redirect:/admin/events/edit/"+eventId+"/gameschedule");
+        return new ModelAndView("redirect:/admin/events/edit/"+eventId+"/groupschedule");
     }
     
-    @RequestMapping(value={"edit/{eventId}/gameschedule"}, method=GET)
-    public ModelAndView getGameSchedule(@PathVariable("eventId") Long eventId){
+    @RequestMapping(value={"edit/{eventId}/groupschedule"}, method=GET)
+    public ModelAndView getGroupSchedule(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
-        return getGameScheduleView(event);
+        return getGroupScheduleView(event);
     }
     
-    @RequestMapping(value={"edit/{eventId}/gameschedule"}, method=POST)
-    public ModelAndView postGameSchedule(@PathVariable("eventId") Long eventId, @ModelAttribute("Model") GameList gameList, BindingResult bindingResult, HttpServletRequest request){
+    @RequestMapping(value={"edit/{eventId}/pullschedule"}, method=GET)
+    public ModelAndView getPullSchedule(@PathVariable("eventId") Long eventId){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        return getPullScheduleView(event);
+    }
+    
+    @RequestMapping(value={"edit/{eventId}/schedule/{scheduleName}"}, method=POST)
+    public ModelAndView postGroupSchedule(@PathVariable("eventId") Long eventId, @PathVariable("scheduleName") String scheduleName, @ModelAttribute("Model") GameList gameList, BindingResult bindingResult, HttpServletRequest request){
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
         if (bindingResult.hasErrors()){
-            return getGameScheduleView(event);
+            switch (scheduleName){
+                case "groupschedule":
+                    return getGroupScheduleView(event);
+                case "pullschedule":
+                default:
+                    return getPullScheduleView(event);
+            }
         }
         for (Game game: gameList.getList()){
             Game existingGame = gameDAO.findById(game.getId());
@@ -526,17 +549,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
         return new ModelAndView("redirect:/admin/events/edit/"+model.getId()+"/draws");
     }
 
-    private void removeGamesWithoutGameSets(Collection<Game> eventGames) {
-        Iterator<Game> eventGameIterator = eventGames.iterator();
-        while (eventGameIterator.hasNext()){
-            Game game = eventGameIterator.next();
-            if (game.getGameSets().isEmpty()){                
-                eventGameIterator.remove();
-                gameDAO.deleteById(game.getId());
-            }
-        }
-    }
-
     private ModelAndView getDrawsView(Long eventId) {
         Event event = eventDAO.findByIdFetchWithGames(eventId);
         SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGameMap(event);
@@ -565,8 +577,8 @@ public class AdminEventsController extends AdminBaseController<Event>{
         return mav;
     }
 
-    private ModelAndView getGameScheduleView(Event event) {
-        ModelAndView mav = new ModelAndView("admin/events/gameschedule");
+    private ModelAndView getGroupScheduleView(Event event) {
+        ModelAndView mav = new ModelAndView("admin/events/groupschedule");
         mav.addObject("Event", event);
         SortedMap<Integer, List<Game>> groupGameMap = eventsUtil.getGroupGameMap(event);
         mav.addObject("GroupGameMap", groupGameMap);
@@ -574,6 +586,17 @@ public class AdminEventsController extends AdminBaseController<Event>{
         for (List<Game> list: groupGameMap.values()){
             games.addAll(list);
         }
+        GameList formList = new GameList();
+        formList.setList(games);
+        mav.addObject("Model", formList);
+        return mav;
+    }
+    
+    private ModelAndView getPullScheduleView(Event event) {
+        ModelAndView mav = new ModelAndView("admin/events/pullschedule");
+        mav.addObject("Event", event);
+        List<Game> games = new ArrayList<>();
+        games.addAll(event.getGames());
         GameList formList = new GameList();
         formList.setList(games);
         mav.addObject("Model", formList);
@@ -603,5 +626,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
         EventGroups eventGroups = new EventGroups();
         eventGroups.setGroupParticipants(participantMap);
         return eventGroups;
+    }
+
+    private ModelAndView redirectToPullSchedule(Event model) {
+        return new ModelAndView("redirect:/admin/events/edit/"+model.getId()+"/pullschedule");
     }
 }

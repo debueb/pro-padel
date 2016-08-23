@@ -12,7 +12,7 @@
                     <h4>${subtitle}</h4>
                 </c:if>
             </div>
-            <div class="panel-body">
+            <div class="panel-body" style="padding: 0;">
                 <c:set var="redirectUrl" value="games/event/${Model.id}" scope="request"/>
                 <jsp:include page="/jsp/events/include/matchtable.jsp"/>
             </div>

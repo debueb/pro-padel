@@ -33,7 +33,6 @@ import de.appsolve.padelcampus.utils.SessionUtil;
 import de.appsolve.padelcampus.utils.SortUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -116,9 +115,7 @@ public class EventsController extends BaseController{
     @RequestMapping("event/{eventId}/participants")
     public ModelAndView getEventParticipants(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
-        SortedMap<Participant, BigDecimal> rankedParticipants = rankingUtil.getRankedParticipants(event);
         ModelAndView mav = new ModelAndView("events/participants", "Model", event);
-        mav.addObject("RankedParticipants", rankedParticipants);
         return mav;
     }
     
@@ -228,33 +225,10 @@ public class EventsController extends BaseController{
             if (user == null){
                 return getLoginRequiredView(request, msg.get("Participate"));
             }
-            Player partner;
-            if (player.getUUID()==null){
-                validator.validate(player, bindingResult);
-                if (bindingResult.hasErrors()){
-                    return participateView;
-                }
-                if (playerDAO.findByEmail(player.getEmail()) != null){
-                    throw new Exception(msg.get("EmailAlreadyRegistered"));
-                }
-                partner = playerDAO.saveOrUpdate(player);
-            } else {
-                partner = playerDAO.findByUUID(player.getUUID());
-                if (partner == null){
-                    throw new Exception(msg.get("ChoosePartner"));
-                }
-            }
-
-            Event event = eventDAO.findByIdFetchWithParticipantsAndCalendarConfig(eventId);
             
-            checkPlayerNotParticipating(event, user);
-            checkPlayerNotParticipating(event, partner);
-
+            Event event = eventDAO.findByIdFetchWithParticipantsAndCalendarConfig(eventId);
             CalendarConfig calendarConfig = event.getCalendarConfig();
             Offer offer = calendarConfig.getOffers().iterator().next();
-            Set<Player> participants = new HashSet<>();
-            //do not add user as this would cause duplicate key (player and players go into the same table)
-            participants.add(partner);
 
             Booking booking = new Booking();
             booking.setPlayer(user);
@@ -266,11 +240,40 @@ public class EventsController extends BaseController{
             booking.setDuration(0L+Minutes.minutesBetween(calendarConfig.getStartTime(), calendarConfig.getEndTime()).getMinutes());
             booking.setPaymentMethod(PaymentMethod.valueOf(request.getParameter("paymentMethod")));
             booking.setBookingType(BookingType.loggedIn);
-
-            //extra fields
             booking.setEvent(event);
-            booking.setPlayers(participants);
+            
+            switch (event.getEventType()){
+                case PullRoundRobin:
+                    break;
+                default:
+                    Player partner;
+                    if (player.getUUID()==null){
+                        validator.validate(player, bindingResult);
+                        if (bindingResult.hasErrors()){
+                            return participateView;
+                        }
+                        if (playerDAO.findByEmail(player.getEmail()) != null){
+                            throw new Exception(msg.get("EmailAlreadyRegistered"));
+                        }
+                        partner = playerDAO.saveOrUpdate(player);
+                    } else {
+                        partner = playerDAO.findByUUID(player.getUUID());
+                        if (partner == null){
+                            throw new Exception(msg.get("ChoosePartner"));
+                        }
+                    }
 
+                    Set<Player> participants = new HashSet<>();
+                    //do not add user as this would cause duplicate key (player and players go into the same table)
+                    participants.add(partner);
+                    
+                    //extra fields
+                    booking.setPlayers(participants);
+                    
+                    checkPlayerNotParticipating(event, partner);
+            }
+            checkPlayerNotParticipating(event, user);
+            
             sessionUtil.setBooking(request, booking);
             return new ModelAndView("redirect:/bookings/"+DATE_HUMAN_READABLE.print(calendarConfig.getStartDate())+"/"+TIME_HUMAN_READABLE.print(calendarConfig.getStartTime())+"/confirm");
         } catch (Exception e){
@@ -339,16 +342,31 @@ public class EventsController extends BaseController{
     }
 
     private ModelAndView participateView(Long eventId, Player player) {
-        ModelAndView mav = new ModelAndView("events/participate/index");
-        mav.addObject("Model", eventDAO.findByIdFetchWithCalendarConfig(eventId));
+        Event event = eventDAO.findByIdFetchWithCalendarConfig(eventId);
+        ModelAndView mav;
+        switch (event.getEventType()){
+            case PullRoundRobin:
+                mav = new ModelAndView("events/participate/pull");       
+                break;
+            default:
+                mav = new ModelAndView("events/participate/index");
+        }
+        mav.addObject("Model", event);
         mav.addObject("Player", player);
         return mav;
     }
 
     private void checkPlayerNotParticipating(Event event, Player user) throws Exception {
-        for (Team team: event.getTeams()){
-            if (team.getPlayers().contains(user)){
-                throw new Exception(msg.get("AlreadyParticipatesInThisEvent", new Object[]{user}));
+        for (Participant p: event.getParticipants()){
+            if (p instanceof Team){
+                Team team = (Team) p;
+                if (team.getPlayers().contains(user)){
+                    throw new Exception(msg.get("AlreadyParticipatesInThisEvent", new Object[]{user}));
+                }
+            } else {
+                if (p.equals(user)){
+                    throw new Exception(msg.get("AlreadyParticipatesInThisEvent", new Object[]{user}));
+                }
             }
         }
     }

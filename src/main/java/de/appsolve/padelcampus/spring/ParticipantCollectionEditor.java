@@ -5,7 +5,8 @@
  */
 package de.appsolve.padelcampus.spring;
 
-import de.appsolve.padelcampus.db.dao.TeamDAOI;
+import de.appsolve.padelcampus.db.dao.ParticipantDAOI;
+import de.appsolve.padelcampus.db.model.Participant;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
@@ -16,12 +17,12 @@ import org.springframework.stereotype.Component;
  * @author dominik
  */
 @Component
-public class TeamCollectionEditor extends CustomCollectionEditor{
+public class ParticipantCollectionEditor extends CustomCollectionEditor{
     
     @Autowired
-    TeamDAOI teamDAO;
+    ParticipantDAOI participantDAO;
     
-    public TeamCollectionEditor() {
+    public ParticipantCollectionEditor() {
         super(Set.class);
     }
     
@@ -30,6 +31,7 @@ public class TeamCollectionEditor extends CustomCollectionEditor{
         if (element == null || !(element instanceof String)){
             return null;
         }
-        return teamDAO.findByUUID((String)element);
+        Participant p = participantDAO.findByUUID((String)element);
+        return p;
     }
 }

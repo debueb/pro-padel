@@ -254,9 +254,12 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     
     @Override
     public List<T> findAllFetchEagerlyWithAttributes(Map<String,Object> attributeMap, String... associations){
-        Criteria crit = getCriteria();
+        Criteria crit = getCriteria();      
         for (String association: associations){
             crit.setFetchMode(association, FetchMode.JOIN);
+        }
+        for (Map.Entry<String, Object> entry : attributeMap.entrySet()) {
+            crit.add(Restrictions.eq(entry.getKey(), entry.getValue()));
         }
         //we only want unique results
         //see http://stackoverflow.com/questions/18753245/one-to-many-relationship-gets-duplicate-objects-whithout-using-distinct-why

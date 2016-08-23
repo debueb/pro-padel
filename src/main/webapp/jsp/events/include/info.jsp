@@ -96,6 +96,24 @@
                                 <jsp:param name="icon" value="trophy"/>
                             </jsp:include>
                         </c:when>
+                        
+                        <c:when test="${Model.eventType eq 'PullRoundRobin'}">
+                            <jsp:include page="/jsp/include/list-group-item.jsp">
+                                <jsp:param name="href" value="/players/event/${Model.id}"/>
+                                <jsp:param name="key" value="Players"/>
+                                <jsp:param name="icon" value="user"/>
+                            </jsp:include>
+                            <jsp:include page="/jsp/include/list-group-item.jsp">
+                                <jsp:param name="href" value="/games/event/${Model.id}/all"/>
+                                <jsp:param name="key" value="Games"/>
+                                <jsp:param name="icon" value="dot-circle-o"/>
+                            </jsp:include>
+                            <jsp:include page="/jsp/include/list-group-item.jsp">
+                                <jsp:param name="href" value="/scores/event/${Model.id}"/>
+                                <jsp:param name="key" value="Score"/>
+                                <jsp:param name="icon" value="list-ol"/>
+                            </jsp:include>
+                        </c:when>
 
                         <c:when test="${Model.eventType eq 'Knockout'}">
                             <jsp:include page="/jsp/include/list-group-item.jsp">

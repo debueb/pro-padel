@@ -291,6 +291,7 @@ app.main = {};
         });
         
         $('.select-ajax-search').livequery(function(){
+            var typeSource = $(this).attr('data-abs-param-type-source');
             $(this).selectpicker({
                 liveSearch: true
             });
@@ -299,10 +300,14 @@ app.main = {};
                     ajax: {
                         method: 'GET',
                         data: function () {
-                            var params = {
-                                q: '{{{q}}}'
+                            var typeValue;
+                            if (typeSource){
+                                typeValue = $(typeSource).val();
+                            }
+                            return {
+                                q: '{{{q}}}',
+                                type: typeValue
                             };
-                            return params;
                         }
                     },
                     cache: false,

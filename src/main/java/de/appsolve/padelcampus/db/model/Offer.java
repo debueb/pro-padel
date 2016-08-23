@@ -38,6 +38,9 @@ public class Offer extends SortableEntity{
     @Column
     private String hexColor;
     
+    @Column
+    private Boolean showInCalendar;
+    
     public String getName() {
         return name;
     }
@@ -68,6 +71,14 @@ public class Offer extends SortableEntity{
 
     public void setHexColor(String hexColor) {
         this.hexColor = hexColor;
+    }
+
+    public Boolean getShowInCalendar() {
+        return showInCalendar == null ? Boolean.TRUE : showInCalendar;
+    }
+
+    public void setShowInCalendar(Boolean showInCalendar) {
+        this.showInCalendar = showInCalendar;
     }
 
     @Override

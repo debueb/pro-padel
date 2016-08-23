@@ -17,7 +17,7 @@
                 <div class="alert alert-info"><fmt:message key="ConfigureGroupDrawsFirst"/></div>
             </c:when>
             <c:otherwise>
-                <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
+                <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model" action="/admin/events/edit/${Event.id}/schedule/groupschedule">
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
                     <c:forEach var="GroupGameMapEntry" items="${GroupGameMap}">
                         <c:set var="GroupNumber" value="${GroupGameMapEntry.key}"/>

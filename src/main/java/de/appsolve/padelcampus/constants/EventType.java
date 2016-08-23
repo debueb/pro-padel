@@ -13,6 +13,7 @@ public enum EventType {
     
     SingleRoundRobin,
     CommunityRoundRobin,
+    PullRoundRobin,
     Knockout,
     GroupKnockout
 }

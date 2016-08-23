@@ -11,6 +11,7 @@ import de.appsolve.padelcampus.utils.CryptUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -195,6 +196,19 @@ public class Game extends CustomerEntity{
             return builder.toString();
         }
         return "";
+    }
+    
+    public Set<Player> getPlayers(){
+        Set<Player> players = new HashSet<>();
+        for (Participant p: getParticipants()){
+            if (p instanceof Player){
+                players.add((Player)p);
+            } else if (p instanceof Team){
+                Team team = (Team) p;
+                players.addAll(team.getPlayers());
+            }
+        }
+        return players;
     }
     
     @Override

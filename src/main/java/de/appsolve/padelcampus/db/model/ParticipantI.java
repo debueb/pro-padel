@@ -11,5 +11,6 @@ package de.appsolve.padelcampus.db.model;
  */
 public interface ParticipantI {
     
+    String getUUID();
     String toString();
 }

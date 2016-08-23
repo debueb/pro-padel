@@ -12,15 +12,13 @@
             </div>
             <div class="panel-body">
                 <div class="list-group">
-                <c:if test="${empty RankedParticipants}">
+                <c:if test="${empty Model.participants}">
                     <div class="alert alert-info"><fmt:message key="NoParticipants"/></div>
                 </c:if>
-                    <c:forEach var="RankedParticipant" items="${RankedParticipants}">
-                        <c:set var="Participant" value="${RankedParticipant.key}"/>
+                    <c:forEach var="Participant" items="${Model.participants}">
                         <jsp:include page="/jsp/include/list-badge-item.jsp">
                             <jsp:param name="url" value="${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}"/>
                             <jsp:param name="msg" value="${Participant}"/>
-                            <jsp:param name="badge" value="${RankedParticipant.value}"/>
                         </jsp:include>
                     </c:forEach>
                 </div>

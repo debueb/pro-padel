@@ -14,7 +14,7 @@
                 <div class="panel-heading">
                     <h4><fmt:message key="Group"/> ${GroupNumber+1}</h4>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" style="padding: 0;">
                     <div class="list-group">
                         <c:set var="redirectUrl" value="events/event/${Model.id}/groupgames" scope="request"/>
                         <jsp:include page="/jsp/events/include/matchtable.jsp"/>
