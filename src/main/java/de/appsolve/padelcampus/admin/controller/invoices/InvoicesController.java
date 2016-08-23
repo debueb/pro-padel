@@ -35,7 +35,7 @@ public class InvoicesController {
     Msg msg;
     
     @RequestMapping(method = GET, value = "booking/{bookingUUID}")
-    public ModelAndView getInvoid(@PathVariable("bookingUUID") String uuid){
+    public ModelAndView getInvoice(@PathVariable("bookingUUID") String uuid){
         MasterData masterData = masterDataDAO.findFirst();
         if (masterData == null){
             return new ModelAndView("invoices/masterdata_missing");

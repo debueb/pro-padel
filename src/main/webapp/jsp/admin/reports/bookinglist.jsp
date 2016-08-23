@@ -49,11 +49,14 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="unit">
+                <div class="unit-2">
                     <fmt:message key="TotalAmount">
                         <fmt:param value="${Total}"/>
                     </fmt:message>
                 </div>
+                        <div class="unit-2">
+                            <a class="btn btn-primary btn-block" href="/admin/reports/bookinglist/print/${DateRange.startDate}/${DateRange.endDate}"><fmt:message key="PrintAll"/></a>
+                        </div>
             </div>
         </div>
     </div>

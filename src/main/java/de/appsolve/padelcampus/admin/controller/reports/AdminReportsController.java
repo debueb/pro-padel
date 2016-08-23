@@ -11,7 +11,9 @@ package de.appsolve.padelcampus.admin.controller.reports;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.DateRange;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
+import de.appsolve.padelcampus.db.dao.MasterDataDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
+import de.appsolve.padelcampus.db.model.MasterData;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.SessionUtil;
@@ -49,6 +51,9 @@ public class AdminReportsController extends BaseController{
     
     @Autowired
     SessionUtil sessionUtil;
+    
+    @Autowired
+    MasterDataDAOI masterDataDAO;
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -90,6 +95,24 @@ public class AdminReportsController extends BaseController{
         sessionUtil.setBookingListStartDate(request, dateRange.getStartDate());
         sessionUtil.setBookingListEndDate(request, dateRange.getEndDate());
         return getBookingListView(dateRange); 
+    }
+    
+    @RequestMapping("bookinglist/print/{start}/{end}")
+    public ModelAndView getPrintInvoices(@PathVariable("start") String start, @PathVariable("end") String end){
+        MasterData masterData = masterDataDAO.findFirst();
+        if (masterData == null){
+            return new ModelAndView("invoices/masterdata_missing");
+        }
+        LocalDate startDate = new LocalDate(start);
+        LocalDate endDate = new LocalDate(end);
+        DateRange dateRange = new DateRange();
+        dateRange.setStartDate(startDate);
+        dateRange.setEndDate(endDate);
+        List<Booking> bookings = bookingDAO.findActiveBookingsBetween(dateRange.getStartDate(), dateRange.getEndDate());
+        ModelAndView mav = new ModelAndView("admin/reports/printinvoices");
+        mav.addObject("MasterData", masterData);
+        mav.addObject("Bookings", bookings);
+        return mav;
     }
     
     @RequestMapping(method = GET, value="booking/{bookingId}")
