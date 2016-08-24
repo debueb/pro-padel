@@ -582,15 +582,16 @@ app.main = {};
     self.enableFadeInOnScroll = function(){
         
         var fadeIn = function(){
-            $('.fadeIn').each( function(i){
-                    var topOfObject = $(this).offset().top;
-                    var bottomOfWindow = $(window).scrollTop() + $(window).height();
+            $('.fadeIn:not(.fadedIn)').each( function(i){
+                var topOfObject = $(this).offset().top;
+                var bottomOfWindow = $(window).scrollTop() + $(window).height();
 
-                    /* If the object is completely visible in the window, fade it it */
-                    if( bottomOfWindow > topOfObject ){
-                        $(this).animate({'opacity':'1'}, 300);
-                    }
-                });
+                /* If the object is completely visible in the window, fade it it */
+                if( bottomOfWindow > topOfObject ){
+                    $(this).css({'opacity':'1'});
+                    $(this).addClass('fadedIn');
+                }
+            });
         };
         
         fadeIn();
