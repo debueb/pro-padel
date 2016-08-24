@@ -82,14 +82,21 @@
                             </c:if>
                         </c:if>
                         --%>
-                        <c:if test="${not isHomepage}">
-                            <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a>
-                        </c:if>
                         <c:choose>
                             <c:when test="${not empty sessionScope.customer.companyLogo}">
-                                <a class="ajaxify" href="/"><img src="${sessionScope.customer.companyLogoPath}" height="18px" width="auto" style="vertical-align: top;"/></a>
+                                <span class="navbar-logo">
+                                    <c:if test="${not isHomepage}">
+                                        <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a>
+                                    </c:if>
+                                    <a class="ajaxify" href="/">
+                                        <img src="${sessionScope.customer.companyLogoPath}" class="customerLogo"/>
+                                    </a>
+                                </span>
                             </c:when>
                             <c:otherwise>
+                                <c:if test="${not isHomepage}">
+                                    <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a>
+                                </c:if>
                                 <a class="navbar-icon navbar-hover home-icon ajaxify" href="/"><span class="fa fa-lg fa-home"></span></a>
                             </c:otherwise>
                         </c:choose>

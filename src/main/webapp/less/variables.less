@@ -20,8 +20,10 @@
 @selectedBgColor: darken(@bgColor, 10%);
 @sidebarWidth: 240px;
 
-@navBarColor: lighten(@primaryColor, 0%);
-@navBarColor2: lighten(@navBarColor, 10%);
+@headerColor: #613816;
+/*@headerColor2: lighten(@headerColor, 10%);*/
+@headerColor2: @headerColor;
+@footerColor: #613814;
 @borderColor: #C5DBEC;
 @gray: #ccc;
 @white: #fff;
@@ -350,7 +352,7 @@
 //##
 
 // Basics of a navbar
-@navbar-height:                    38px;
+@navbar-height:                    36px;
 @navbar-margin-bottom:             @line-height-computed;
 @navbar-border-radius:             @border-radius-base;
 @navbar-padding-horizontal:        floor((@grid-gutter-width / 2));
