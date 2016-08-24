@@ -74,14 +74,6 @@
                 <c:if test="${empty skipNavbar}">
                     <c:set var="isHomepage" value="${pageContext.request.requestURI == '/jsp/index.jsp'}"/>
                     <div class="navbar navbar-default navbar-fixed-top">
-                        <%--
-                        <c:if test="${isHomepage}">
-                            <img class="navbar-brand" src="${sessionScope.customer.companyLogoPath}" class="customerLogo"/>
-                            <c:if test="${empty sessionScope.customer.companyLogo}">
-                                <div class="navbar-brand">${sessionScope.customer}</div>
-                            </c:if>
-                        </c:if>
-                        --%>
                         <c:choose>
                             <c:when test="${not empty sessionScope.customer.companyLogo}">
                                 <span class="navbar-logo">

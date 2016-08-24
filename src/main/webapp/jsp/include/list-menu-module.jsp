@@ -9,7 +9,12 @@
     </a>
     <c:if test="${not empty CustomerModule.subModules}">
         <span class="subModules Module-${CustomerModule.id}-subModules">
+            <c:set var="firstSubmodule" value="true"/>
             <c:forEach var="SubModule" items="${CustomerModule.subModules}">
+                <c:if test="${not firstSubmodule}">
+                    <div class="menu-separator"></div>
+                </c:if>
+                <c:set var="firstSubmodule" value="false"/>
                 <c:set var="CustomerModule" value="${SubModule}" scope="request"/>
                 <div class="subModule" style="position: relative">
                     <jsp:include page="/jsp/include/list-menu-module.jsp"/>

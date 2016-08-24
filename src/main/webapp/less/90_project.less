@@ -1768,3 +1768,17 @@ a.menu-item{
  .text-bold{
      font-weight: bold;
  }
+ .menu-separator{
+    display: inline-block;
+    color: white;
+    vertical-align: top;
+    width: 1px;
+    height: 16px;
+    margin-top: 10px;
+    background: white;
+}
+@media (max-width: @grid-float-breakpoint){
+    .menu-separator{
+        display:none;
+    }
+}
