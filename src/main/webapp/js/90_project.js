@@ -583,13 +583,15 @@ app.main = {};
         
         var fadeIn = function(){
             $('.fadeIn:not(.fadedIn)').each( function(i){
-                var topOfObject = $(this).offset().top;
-                var bottomOfWindow = $(window).scrollTop() + $(window).height();
+                if (!($(this).parents('.summernote-form').length)){ //do not initialize when inside editor
+                    var topOfObject = $(this).offset().top;
+                    var bottomOfWindow = $(window).scrollTop() + $(window).height();
 
-                /* If the object is completely visible in the window, fade it it */
-                if( bottomOfWindow > topOfObject ){
-                    $(this).css({'opacity':'1'});
-                    $(this).addClass('fadedIn');
+                    /* If the object is completely visible in the window, fade it it */
+                    if( bottomOfWindow > topOfObject ){
+                        $(this).css({'opacity':'1'});
+                        $(this).addClass('fadedIn');
+                    }
                 }
             });
         };
