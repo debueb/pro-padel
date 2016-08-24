@@ -1,6 +1,6 @@
 <%@include file="/jsp/include/include.jsp"%>
-<c:forEach var="Module" items="${customerModules[sessionScope.customer.name]}" varStatus="status">
-    <c:set var="Module" value="${Module}" scope="request"/>
+<c:forEach var="CustomerModule" items="${customerModules[sessionScope.customer.name]}" varStatus="status">
+    <c:set var="CustomerModule" value="${CustomerModule}" scope="request"/>
     <jsp:include page="/jsp/include/list-menu-module.jsp"/>
 </c:forEach> 
 <c:if test="${not empty privileges}">
