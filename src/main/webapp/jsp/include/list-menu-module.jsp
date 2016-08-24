@@ -1,16 +1,16 @@
 <%@include file="/jsp/include/include.jsp"%>
-<c:if test="${Module.showInMenu}">
-    <a href="${Module.url}" class="menu-item ${empty Module.subModules ? 'ajaxify' : 'hasSubmodules'}" id="Module-${Module.id}">${Module.title}
-        <c:if test="${not empty Module.iconName}">
+<c:if test="${CustomerModule.showInMenu}">
+    <a href="${CustomerModule.url}" class="menu-item ${empty CustomerModule.subModules ? 'ajaxify' : 'hasSubmodules'}" id="Module-${CustomerModule.id}">${CustomerModule.title}
+        <c:if test="${not empty CustomerModule.iconName}">
             <span class="list-menu-item-icon">
-                <div class="fa fa-${Module.iconName}"></div>
+                <div class="fa fa-${CustomerModule.iconName}"></div>
             </span> 
         </c:if>
     </a>
-    <c:if test="${not empty Module.subModules}">
-        <span class="subModules Module-${Module.id}-subModules">
-            <c:forEach var="SubModule" items="${Module.subModules}">
-                <c:set var="Module" value="${SubModule}" scope="request"/>
+    <c:if test="${not empty CustomerModule.subModules}">
+        <span class="subModules Module-${CustomerModule.id}-subModules">
+            <c:forEach var="SubModule" items="${CustomerModule.subModules}">
+                <c:set var="CustomerModule" value="${SubModule}" scope="request"/>
                 <div class="subModule" style="position: relative">
                     <jsp:include page="/jsp/include/list-menu-module.jsp"/>
                 </div>
