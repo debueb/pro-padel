@@ -8,7 +8,7 @@
         <div class="page-header"></div>
 
         <div class="panel panel-info unit">
-            <div class="panel-heading"><h4><fmt:message key="Login"/></h4></div>
+            <div class="panel-heading"><h4><fmt:message key="LoginSignup"/></h4></div>
             <div class="panel-body">
                 <spf:form class="ajaxify" modelAttribute="Model" method="POST">
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
