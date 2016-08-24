@@ -90,7 +90,8 @@ body {
     background-color: @footerColor;
     opacity: .9;
     font-weight: bold;
-    padding: 10px;
+    padding: 5px;
+    font-size: small;
 }
 textarea, input[type="text"], input[type="email"], input[type="submit"], input[type="password"], input[type="tel"], input[type="number"]{
     -webkit-appearance: none;
@@ -128,8 +129,7 @@ textarea, input[type="text"], input[type="email"], input[type="submit"], input[t
     right: -@sidebarWidth;
     opacity: .9;
     padding-bottom: @navbar-height;
-    background-color: @headerColor2;
-    #gradient > .vertical(@headerColor2, @headerColor);
+    background-color: @headerColor;
 }
 #site-shadow{
     background-color: rgba(0,0,0,0.5);
@@ -352,10 +352,6 @@ img.navbar-brand{
 }
 a.navbar-icon{
     color: @white;
-}
-a.navbar-hover:hover {
-    background-color: @white;
-    color: @primaryColor;
 }
 .navbar-default .navbar-toggle .icon-bar{
     background-color: @white;
@@ -1732,6 +1728,12 @@ a.menu-item{
     position: relative;
     text-align: left;
  }
+ .subModule a.menu-item{
+    color: #000;
+ }
+ .subModule a.menu-item:hover{
+    color: @white;
+ }
  @media (max-width: @grid-float-breakpoint){
      .subModules{
          position: relative;
@@ -1780,5 +1782,15 @@ a.menu-item{
 @media (max-width: @grid-float-breakpoint){
     .menu-separator{
         display:none;
+    }
+}
+a.menu-item:hover, a.menu-item:active, a.menu-item.active {
+    background-color: @primaryColor;
+    color: @headerColor;
+}
+& when (@headerColor = @primaryColor) {
+    a.menu-item:hover {
+        background-color: @white;
+        color: @primaryColor;
     }
 }

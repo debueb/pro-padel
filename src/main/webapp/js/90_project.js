@@ -574,6 +574,7 @@ app.main = {};
             $(this).on('click tap', function(){
                 var id = $(this).attr('id');
                 $(this).parent().find($('.'+id+'-subModules')).slideToggle(200);
+                $(this).toggleClass("active");
                 return false;
             });
         });
