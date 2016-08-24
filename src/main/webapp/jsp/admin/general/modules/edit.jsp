@@ -68,14 +68,14 @@
                         <label class="checkbox" for="showInFooter1"><fmt:message key="ShowInFooter"/></label>
                     </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
+                    <c:if test="${Model.moduleType == 'Page'}">
+                        <a class="btn btn-primary btn-block ajaxify" href="/admin/general/modules/page/${Model.id}"><fmt:message key="ManageEntries"/></a>
+                    </c:if>
                     <c:if test="${not empty Model.id}">
                         <a href="/admin/general/modules/edit/${Model.id}/submodules" class="btn btn-primary btn-block unit-2 ajaxify"><fmt:message key="ManageSubmodules"/></a>
                     </c:if>
                     <a class="btn btn-primary btn-block btn-back unit-2 ajaxify"><fmt:message key="Cancel"/></a>
 
-                    <c:if test="${Model.moduleType == 'Page'}">
-                        <a class="btn btn-primary btn-block ajaxify" href="/admin/general/modules/page/${Model.id}"><fmt:message key="ManageEntries"/></a>
-                    </c:if>
                 </spf:form>
             </div>
         </div>
