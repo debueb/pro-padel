@@ -87,6 +87,7 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         if (result.hasErrors()){
             return super.getEditView(model);
         }
+        keepSubModules(model);
         
         ModelAndView mav = super.postEditView(model, request, result);
         reloadModules(request);
@@ -132,6 +133,7 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         model.setShowInMenu(Boolean.TRUE);
         model.setShowInFooter(Boolean.FALSE);
         model.setShowOnHomepage(Boolean.FALSE);
+        keepSubModules(model);
         moduleDAO.saveOrUpdate(model);
         Module parent = moduleDAO.findById(parentModuleId);
         Set<Module> subModules = parent.getSubModules();
@@ -185,6 +187,13 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         Module existingModule = moduleDAO.findByTitle(module.getTitle());
         if (existingModule != null && !existingModule.equals(module)){
             result.rejectValue("title", "ModuleWithTitleAlreadyExists", new Object[]{module.getTitle()}, "ModuleWithTitleAlreadyExists");
+        }
+    }
+
+    private void keepSubModules(Module model) {
+        if (model.getId() != null){
+            Module existing = moduleDAO.findById(model.getId());
+            model.setSubModules(existing.getSubModules());
         }
     }
 }
