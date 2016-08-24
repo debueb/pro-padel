@@ -504,22 +504,6 @@ app.main = {};
 	});
     };
     
-    self.enableGalleryAutoPlay = function(){
-        $('.gallery-autoplay').livequery(function(){
-            if (!($(this).parents('.summernote-form').length)){ //do not initialize when inside editor
-                $(this).slick({
-                    "dots": true,
-                    "accessibility": true,
-                    "autoplay": true,
-                    "autoplaySpeed": 3000,
-                    "arrows": true,
-                    "adaptiveHeight": false,
-                    "lazyLoad": "progressive"
-                });
-            }
-        });
-    };
-    
     self.enableSelectToggle = function () {
         
         var showSelect = function(){
@@ -584,14 +568,15 @@ app.main = {};
         
         var fadeIn = function(){
             $('.fadeIn:not(.fadedIn)').each( function(i){
-                if (!($(this).parents('.summernote-form').length)){ //do not initialize when inside editor
-                    var topOfObject = $(this).offset().top;
+                var $elem = $(this);
+                if (!($elem.parents('.summernote-form').length)){ //do not initialize when inside editor
+                    var topOfObject = $elem.offset().top;
                     var bottomOfWindow = $(window).scrollTop() + $(window).height();
 
                     /* If the object is completely visible in the window, fade it it */
                     if( bottomOfWindow > topOfObject ){
-                        $(this).css({'opacity':'1'});
-                        $(this).addClass('fadedIn');
+                        $elem.css({'opacity':'1'});
+                        $elem.addClass('fadedIn');
                     }
                 }
             });
@@ -602,6 +587,29 @@ app.main = {};
              fadeIn();
         });
         $(window).on('statechangecomplete', fadeIn);
+        $(window).on('slickinitialized', fadeIn);
+    };
+    
+    self.enableSlick = function(){
+        $('.gallery-autoplay').livequery(function(){
+            if (!($(this).parents('.summernote-form').length)){ //do not initialize when inside editor
+                var $elem = $(this);
+                $elem.on('init', function(event, slick){
+                    window.setTimeout(function(){$(window).trigger('slickinitialized');}, 300);
+                    
+                });
+                
+                $elem.slick({
+                    "dots": true,
+                    "accessibility": true,
+                    "autoplay": true,
+                    "autoplaySpeed": 3000,
+                    "arrows": true,
+                    "adaptiveHeight": false,
+                    "lazyLoad": "progressive"
+                });
+            }
+        });
     };
     
     return app;
@@ -624,10 +632,10 @@ $(document).ready(function () {
     app.main.enableRegexChecksOnInputs();
     app.main.enablePayMill();
     app.main.enableAdvancedProfile();
-    app.main.enableGalleryAutoPlay();
     app.main.enableSelectToggle();
     app.main.enableAutoSearch();
     app.main.enableTooltips();
     app.main.enableSubmodules();
     app.main.enableFadeInOnScroll();
+    app.main.enableSlick();
 });
