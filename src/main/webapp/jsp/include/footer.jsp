@@ -13,12 +13,14 @@
                 <c:if test="${not empty sessionScope.customer.footerPrefix}">
                     ${sessionScope.customer.footerPrefix}&nbsp;
                 </c:if>
-                <c:forEach var="Module" items="${customerModules[sessionScope.customer.name]}" varStatus="status">
-                    <c:if test="${Module.showInFooter}">
-                        <a href="${Module.url}" class="ajaxify">${Module.title}</a> | 
+                <c:set var="first" value="true"/>
+                <c:forEach var="CustomerModule" items="${customerModules[sessionScope.customer.name]}">
+                    <c:if test="${CustomerModule.showInFooter}">
+                        <c:if test="${not first}"> | </c:if><a href="${CustomerModule.url}" class="ajaxify">${CustomerModule.title}</a>
+                        <c:set var="first" value="false"/>
                     </c:if>
                 </c:forEach>
-                    powered by <a href="http://pro-padel.de">pro-padel.de</a> 
+                <div>powered by <a href="http://pro-padel.de">pro-padel.de</a></div>
             </div>
         </c:if>
     </div><!-- background -->
