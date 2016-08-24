@@ -573,11 +573,31 @@ app.main = {};
         $('a.hasSubmodules').livequery(function(){
             $(this).on('click tap', function(){
                 var id = $(this).attr('id');
-                console.log($(this).parent().find($('.'+id+'-subModules')));
                 $(this).parent().find($('.'+id+'-subModules')).slideToggle(200);
                 return false;
             });
         });
+    };
+    
+    self.enableFadeInOnScroll = function(){
+        
+        var fadeIn = function(){
+            $('.fadeIn').each( function(i){
+                    var topOfObject = $(this).offset().top;
+                    var bottomOfWindow = $(window).scrollTop() + $(window).height();
+
+                    /* If the object is completely visible in the window, fade it it */
+                    if( bottomOfWindow > topOfObject ){
+                        $(this).animate({'opacity':'1'}, 300);
+                    }
+                });
+        };
+        
+        fadeIn();
+        $(window).scroll( function(){
+             fadeIn();
+        });
+        $(window).on('statechangecomplete', fadeIn);
     };
     
     return app;
@@ -605,4 +625,5 @@ $(document).ready(function () {
     app.main.enableAutoSearch();
     app.main.enableTooltips();
     app.main.enableSubmodules();
+    app.main.enableFadeInOnScroll();
 });

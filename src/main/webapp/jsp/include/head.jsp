@@ -117,4 +117,4 @@
                 </div>
                 <div id="site-shadow"></div>
                 <div id="site-canvas">
-                    <div class="container-fluid" id="content">
+                    <div class="container-fluid fadeIn" id="content">
