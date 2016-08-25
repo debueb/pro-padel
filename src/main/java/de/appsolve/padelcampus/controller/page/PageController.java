@@ -70,7 +70,6 @@ public class PageController extends BaseController{
     }
 
     private Module getModule(String moduleTitle) {
-        LOG.info("Displaying page "+moduleTitle);
         Module module;
         try {
             Long id = Long.parseLong(moduleTitle);
