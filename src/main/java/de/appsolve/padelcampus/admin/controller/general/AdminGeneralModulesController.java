@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import static org.springframework.http.HttpStatus.OK;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -145,6 +147,13 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         moduleDAO.saveOrUpdate(parent);
         reloadModules(request);
         return redirectToIndex(request);
+    }
+    
+    @RequestMapping(value="/edit/{moduleId}/submodules/updatesortorder", method=POST)
+    @ResponseStatus(OK)
+    public void updateSubmoduleSortOrder(HttpServletRequest request, @ModelAttribute("Model") Module model, @RequestBody List<Long> orderedIds){
+        super.updateSortOrder(request, model, orderedIds);
+        reloadModules(request);
     }
     
     protected ModelAndView getSubmoduleView(Module module){
