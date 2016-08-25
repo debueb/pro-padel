@@ -77,6 +77,14 @@ body {
     display:block;
     height: @navbar-height;
     content: ' ';
+    -webkit-transition: height 0.2s ease;
+    -moz-transition: height 0.2s ease;
+    -ms-transition: height 0.2s ease; /* IE10 is actually unprefixed */
+    -o-transition: height 0.2s ease;
+    transition: height 0.2s ease;
+}
+.wrapper.expanded:before{
+    height: @navbar-height*2;
 }
 .wrapper {
     display: table-row;
@@ -1733,7 +1741,7 @@ a.menu-item{
  .subModule a.menu-item{
     color: #000;
  }
- .subModule a.menu-item:hover{
+ .subModule a.menu-item:hover, .subModule a.menu-item.active{
     color: @white;
  }
  @media (max-width: @grid-float-breakpoint){
