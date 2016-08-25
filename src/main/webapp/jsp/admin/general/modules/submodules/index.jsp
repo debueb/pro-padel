@@ -31,7 +31,7 @@
                         </tbody>
                     </table>
                 </div>
-                <a href="/admin/general/modules/edit/${Model.id}/submodules/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="Add"/></a>
+                <a href="/admin/general/modules/edit/${Parent.id}/submodules/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="Add"/></a>
             </div>
         </div>
     </div>
