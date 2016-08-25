@@ -557,6 +557,14 @@ app.main = {};
         $('a.menu-item.hasSubmodules').livequery(function(){
             $(this).on('click tap', function () {
                 var id = $(this).attr('id');
+                $('a.menu-item.hasSubmodules.active').each(function(){
+                   var otherId = $(this).attr('id');
+                   if (otherId !== id){
+                        $(this).parent().find($('.' + otherId + '-subModules')).hide();
+                        $('.wrapper').removeClass('expanded');
+                        $(this).removeClass('active');
+                   }
+                });
                 $(this).parent().find($('.' + id + '-subModules')).slideToggle(200);
                 $('.wrapper').toggleClass('expanded');
                 $(this).toggleClass('active');
