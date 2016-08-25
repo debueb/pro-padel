@@ -20,7 +20,7 @@
                                 <div class="input-group color-picker unit">
                                     <span class="input-group-addon"><i></i></span>
                                     <span class="relative">
-                                        <input type="text" name="${Attribute.id}" class="form-control" value="${empty Attribute.cssValue ? Attribute.cssDefaultValue : Attribute.cssValue}" />
+                                        <input type="text" name="${Attribute.name}" class="form-control" value="${empty Attribute.cssValue ? Attribute.cssDefaultValue : Attribute.cssValue}" />
                                         <span class="explanation"><fmt:message key="${Attribute.name}"/></span>
                                     </span>
                                 </div>
@@ -38,11 +38,20 @@
                                 </div>
                             </c:when>
                             <c:when test="${Attribute.name eq 'loaderOpacity'}">
-                            <hr/>
-                            <div class="text-center unit">
-                                <input type="checkbox" name="loaderOpacity" id="loaderOpacity" ${Attribute.cssValue eq '@loaderOpacity: 1' ? 'checked' : ''}/>
-                                <label for="loaderOpacity"><fmt:message key="ShowLoadingAnimation"/></label>
-                            </div>   
+                                <hr/>
+                                <div class="text-center unit">
+                                    <input type="checkbox" name="loaderOpacity" id="loaderOpacity" ${Attribute.cssValue eq '@loaderOpacity: 1' ? 'checked' : ''}/>
+                                    <label for="loaderOpacity"><fmt:message key="ShowLoadingAnimation"/></label>
+                                </div>   
+                            </c:when>
+                            <c:when test="${Attribute.name eq 'customCss'}">
+                                <hr/>
+                                <div class="unit">
+                                    <div class="text-center"><fmt:message key="CustomCss"/></div>
+                                    <!--new line break required by html spec :(-->
+                                    <textarea name="customCss" class="unit" style="width: 100%; height: 300px;">
+${Attribute.cssValue}</textarea>
+                                </div>   
                             </c:when>
                             <c:otherwise>
                                 <hr/>

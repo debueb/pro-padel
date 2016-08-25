@@ -277,6 +277,7 @@ public class HtmlResourceUtil {
         atts.add(getCssAttribute("backgroundRepeat", "no-repeat", "no-repeat"));
         atts.add(getCssAttribute("backgroundSize", "cover", "cover"));
         atts.add(getCssAttribute("loaderOpacity", "@loaderOpacity: 1", "@loaderOpacity: 1"));
+        atts.add(getCssAttribute("customCss", "/\\*customCss\\*/", ""));
         return atts;
     }
 

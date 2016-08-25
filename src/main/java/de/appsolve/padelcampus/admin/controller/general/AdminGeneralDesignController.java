@@ -112,7 +112,7 @@ public class AdminGeneralDesignController extends BaseController{
                     }
                     break;
                 default:
-                    att.setCssValue(request.getParameter(att.getId()+""));
+                    att.setCssValue(request.getParameter(att.getName()+""));
             }
             cssAttributeDAO.saveOrUpdate(att);
         }
@@ -170,6 +170,9 @@ public class AdminGeneralDesignController extends BaseController{
 
             @Override
             public int compare(CssAttribute o1, CssAttribute o2) {
+                if (o1.getName().equals("customCss")){
+                    return o2.getName().endsWith("Color") ? 1 : -1;
+                }
                 Boolean endsWith1 = o1.getName().endsWith("Color");
                 Boolean endsWith2 = o2.getName().endsWith("Color");
                 return endsWith2.compareTo(endsWith1);
