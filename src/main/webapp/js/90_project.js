@@ -559,6 +559,7 @@ app.main = {};
                 var id = $(this).attr('id');
                 $(this).parent().find($('.' + id + '-subModules')).slideToggle(200);
                 $('.wrapper').toggleClass('expanded');
+                $(this).toggleClass('active');
                 return false;
             });
         });
