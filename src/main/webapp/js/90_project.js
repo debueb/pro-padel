@@ -556,18 +556,22 @@ app.main = {};
     self.enableSubmodules = function(){
         $('a.menu-item.hasSubmodules').livequery(function(){
             $(this).on('click tap', function () {
-                var id = $(this).attr('id');
+                var $a = $(this);
+                var id = $a.attr('id');
                 $('a.menu-item.hasSubmodules.active').each(function(){
-                   var otherId = $(this).attr('id');
-                   if (otherId !== id){
-                        $(this).parent().find($('.' + otherId + '-subModules')).hide();
-                        $('.wrapper').removeClass('expanded');
-                        $(this).removeClass('active');
-                   }
+                    $b = $(this);
+                    var otherId = $b.attr('id');
+                    if (otherId !== id){
+                         $b.parent().find($('.' + otherId + '-subModules')).hide();
+                         $('.wrapper').removeClass('expanded');
+                         $b.removeClass('active');
+                    }
                 });
-                $(this).parent().find($('.' + id + '-subModules')).slideToggle(200);
-                $('.wrapper').toggleClass('expanded');
-                $(this).toggleClass('active');
+                $a.parent().find($('.' + id + '-subModules')).slideToggle(200);
+                $a.toggleClass('active');
+                if (!$a.closest('#site-menu').length){
+                    $('.wrapper').toggleClass('expanded');
+                }
                 return false;
             });
         });
