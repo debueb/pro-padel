@@ -27,7 +27,7 @@
                                 <tr data-id="${Model.id}">
                                     <td class="sortable-handle"><i class="fa fa-arrows-v"></i></td>
                                     <td><a class="ajaxify" href="${editUrl}">${Model.title}</a></td>
-                                    <td class="text-center"><a class="ajaxify" href="${editUrl}">${Model.moduleType}</a></td>
+                                    <td class="text-center"><a class="ajaxify" href="${editUrl}"><fmt:message key="${Model.moduleType}"/></a></td>
                                     <td class="text-center"><a class="ajaxify" href="${editUrl}"><i class="fa fa-${Model.showOnHomepage ? 'check' : 'remove'}"/></a></td>
                                     <td class="text-center"><a class="ajaxify" href="${editUrl}"><i class="fa fa-${Model.showInMenu ? 'check' : 'remove'}"/></a></td>
                                     <td class="text-center"><a class="ajaxify" href="${editUrl}"><i class="fa fa-${Model.showInFooter ? 'check' : 'remove'}"/></a></td>
