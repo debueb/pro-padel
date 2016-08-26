@@ -19,9 +19,9 @@ import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +80,7 @@ public class PlayersController extends BaseController {
     @RequestMapping("/event/{id}")
     public ModelAndView getByEvent(@PathVariable("id") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(eventId);
-        Set<ParticipantI> participants = new LinkedHashSet<>();
+        Set<ParticipantI> participants = new TreeSet<>();
         Set<Team> teams = event.getTeams();
         for (Team team: teams){
             Set<Player> players = team.getPlayers();
