@@ -18,6 +18,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
+import org.hibernate.annotations.SortNatural;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -36,6 +37,7 @@ public class AdminGroup extends CustomerEntity{
     
     @NotEmpty(message = "{NotEmpty.members}")
     @ManyToMany(fetch=FetchType.EAGER)
+    @SortNatural
     private Set<Player> players;
     
     @NotEmpty(message = "{NotEmpty.privileges}")
