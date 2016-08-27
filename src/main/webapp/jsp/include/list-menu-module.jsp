@@ -1,11 +1,6 @@
 <%@include file="/jsp/include/include.jsp"%>
 <c:if test="${CustomerModule.showInMenu}">
     <a href="${CustomerModule.url}" class="menu-item ${empty CustomerModule.subModules ? 'ajaxify' : 'hasSubmodules'}" id="Module-${CustomerModule.id}">${CustomerModule.title}
-        <c:if test="${not empty CustomerModule.iconName}">
-            <span class="list-menu-item-icon">
-                <div class="fa fa-${CustomerModule.iconName}"></div>
-            </span> 
-        </c:if>
     </a>
     <c:if test="${not empty CustomerModule.subModules}">
         <span class="subModules Module-${CustomerModule.id}-subModules">
