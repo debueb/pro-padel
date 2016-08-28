@@ -90,6 +90,7 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
             return super.getEditView(model);
         }
         keepSubModules(model);
+        checkPosition(model);
         
         ModelAndView mav = super.postEditView(model, request, result);
         reloadModules(request);
@@ -130,6 +131,7 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         model.setShowInFooter(Boolean.FALSE);
         model.setShowOnHomepage(Boolean.FALSE);
         keepSubModules(model);
+        checkPosition(model);
         model = moduleDAO.saveOrUpdate(model);
         Module parent = moduleDAO.findById(parentModuleId);
         Set<Module> subModules = parent.getSubModules();
@@ -225,6 +227,20 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         } else {
             position++;
             updateModulePosition(id, position);
+        }
+    }
+
+    private void checkPosition(Module module) {
+        if (module.getPosition() == null){
+            Long position = 0L;
+            List<Module> modules = moduleDAO.findAll();
+            for (Module existing: modules){
+                if (existing.getPosition() != null){
+                    position = Math.max(position, existing.getPosition());
+                }
+            }
+            position++;
+            module.setPosition(position);
         }
     }
 }
