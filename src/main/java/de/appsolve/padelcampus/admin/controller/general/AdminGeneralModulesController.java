@@ -130,7 +130,7 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         model.setShowInFooter(Boolean.FALSE);
         model.setShowOnHomepage(Boolean.FALSE);
         keepSubModules(model);
-        moduleDAO.saveOrUpdate(model);
+        model = moduleDAO.saveOrUpdate(model);
         Module parent = moduleDAO.findById(parentModuleId);
         Set<Module> subModules = parent.getSubModules();
         if (subModules == null){
@@ -138,9 +138,9 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         }
         subModules.add(model);
         parent.setSubModules(subModules);
-        moduleDAO.saveOrUpdate(parent);
+        parent = moduleDAO.saveOrUpdate(parent);
         reloadModules(request);
-        return redirectToIndex(request);
+        return new ModelAndView("redirect:/admin/general/modules/edit/"+parent.getId()+"/submodules");
     }
     
     @Override
