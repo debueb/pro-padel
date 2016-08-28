@@ -38,7 +38,7 @@ public class FileUtil {
     @Autowired
     ImageDAOI imageDAO;
   
-    public Image save(byte[] byteArray, String folderName) throws IOException, ImageProcessingException{
+    public Image save(byte[] byteArray, String folderName, Integer width, Integer height) throws IOException, ImageProcessingException{
         //generate file path based on checksum of byte array
         String checksum = DigestUtils.sha256Hex(byteArray);
 
@@ -57,6 +57,8 @@ public class FileUtil {
         Image image = new Image();
         image.setFilePath(filePath);
         image.setSha256(checksum);
+        image.setWidth(width);
+        image.setHeight(height);
         imageDAO.saveOrUpdate(image);
         return image;
     }
@@ -69,7 +71,7 @@ public class FileUtil {
             baos.flush();
             byte[] byteArray = baos.toByteArray();
             
-            return save(byteArray, folderName);
+            return save(byteArray, folderName,bufferedImage.getWidth(), bufferedImage.getHeight());
         }
     }
     

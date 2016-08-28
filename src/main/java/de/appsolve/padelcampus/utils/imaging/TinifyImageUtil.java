@@ -12,6 +12,7 @@ import com.tinify.Source;
 import com.tinify.Tinify;
 import de.appsolve.padelcampus.db.model.Image;
 import de.appsolve.padelcampus.utils.FileUtil;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Qualifier("TinifyImageUtil")
-public class TinifyImageUtil implements ImageUtilI{
+public class TinifyImageUtil extends AbstractImageUtil{
     
     private static final List<String> TINIFY_KEYS = Arrays.asList(new String[]{"Iq3g1wY5w0-Lq9Fyp1nZNMYr4T-neSvv", "lT9aSwA6Jr5ywk58oeDALdL34b4k9hc_"});
     
@@ -44,8 +45,9 @@ public class TinifyImageUtil implements ImageUtilI{
     @Override
     public Image saveImage(byte[] bytes, String folderName) throws IOException, ImageProcessingException {
         try {
+            BufferedImage image = readImage(bytes);
             byte[] resizedBytes = Tinify.fromBuffer(bytes).toBuffer();
-            return fileUtil.save(resizedBytes, folderName);
+            return fileUtil.save(resizedBytes, folderName, image.getWidth(), image.getHeight());
         } catch (AccountException e){
             if (recoverAccountException(e)){
                 return saveImage(bytes, folderName);
@@ -55,17 +57,21 @@ public class TinifyImageUtil implements ImageUtilI{
     }
 
     @Override
-    public Image saveImage(byte[] bytes, int maxWidth, int maxHeight, String folderName) throws IOException, ImageProcessingException {
+    public Image saveImage(byte[] bytes, Integer maxWidth, Integer maxHeight, String folderName) throws IOException, ImageProcessingException {
         try {
             Source source = Tinify.fromBuffer(bytes);
             Options options = new Options()
-                .with("method", "fit")
-                .with("width", maxWidth)
-                .with("height", maxHeight)
-                    ;
+                .with("method", "fit");
+            if (maxWidth != null){
+                options.with("width", maxWidth);
+            }
+            if (maxHeight != null){
+                options.with("height", maxHeight);
+            }
             Source resized = source.resize(options);
             byte[] resizedBytes = resized.toBuffer();
-            return fileUtil.save(resizedBytes, folderName);
+            BufferedImage image = readImage(resizedBytes);
+            return fileUtil.save(resizedBytes, folderName, image.getWidth(), image.getHeight());
         } catch (AccountException e){
             if (recoverAccountException(e)){
                 return saveImage(bytes, maxWidth, maxHeight, folderName);
@@ -75,22 +81,8 @@ public class TinifyImageUtil implements ImageUtilI{
     }
     
     @Override
-    public Image saveImage(byte[] bytes, int maxHeight, String folderName) throws IOException, ImageProcessingException {
-        try {
-            Source source = Tinify.fromBuffer(bytes);
-            Options options = new Options()
-                .with("method", "scale")
-                .with("height", maxHeight)
-                    ;
-            Source resized = source.resize(options);
-            byte[] resizedBytes = resized.toBuffer();
-            return fileUtil.save(resizedBytes, folderName);
-        } catch (AccountException e){
-            if (recoverAccountException(e)){
-                return saveImage(bytes, maxHeight, folderName);
-            }
-            throw e;
-        }
+    public Image saveImage(byte[] bytes, Integer maxHeight, String folderName) throws IOException, ImageProcessingException {
+        return saveImage(bytes, null, maxHeight, folderName);
     }
 
     private boolean recoverAccountException(AccountException e) {
