@@ -73,18 +73,17 @@
             <div class="wrapper">
                 <c:if test="${empty skipNavbar}">
                     <c:set var="isHomepage" value="${pageContext.request.requestURI == '/jsp/index.jsp'}"/>
-                    <c:set var="isApp" value="${fn:contains(header['User-Agent'], 'ProPadel')}"/>
                     <div class="navbar navbar-default navbar-fixed-top">
                         <c:choose>
                             <c:when test="${empty sessionScope.customer.companyLogo}">
-                                <c:if test="${isApp and not isHomepage}">
+                                <c:if test="${not isHomepage}">
                                     <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a>
                                 </c:if>
                                 <a class="navbar-icon navbar-hover home-icon ajaxify" href="/home"><span class="fa fa-lg fa-home"></span></a>
                             </c:when>
                             <c:otherwise>
                                 <span class="navbar-logo">
-                                    <c:if test="${isApp and not isHomepage}">
+                                    <c:if test="${not isHomepage}">
                                         <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a>
                                     </c:if>
                                     <c:set var="logo" value="${sessionScope.customer.companyLogo}"/>

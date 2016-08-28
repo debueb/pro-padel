@@ -28,11 +28,14 @@ app.main = {};
     };
 
     self.enableBackButton = function () {
-        $('.btn-back').livequery(function(){
-            $(this).on('click tap', function () {
-                window.History.back();
+        if (("standalone" in window.navigator && window.navigator.standalone) || window.navigator.userAgent.indexOf('ProPadel') >= 0){
+            $('.btn-back').livequery(function(){
+                $(this).show();
+                $(this).on('click tap', function () {
+                    window.History.back();
+                });
             });
-        });
+        }
     };
 
     self.enableForms = function () {
