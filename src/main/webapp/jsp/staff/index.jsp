@@ -17,13 +17,13 @@
                     <div class="staff-front staff-bg">
                         <img src="/images/image/${StaffMember.profileImage.sha256}">
                         <div class="text">
-                            <div class="btn btn-primary" style="display: inline;">${StaffMember.name}</div>
+                            <div class="btn btn-primary btn-large" style="display: inline;">${StaffMember.name}</div>
                             <div class="unit-2">${StaffMember.teaser}</div>
                         </div>
                     </div>
                     <div class="staff-back staff-bg">
                         <div class="text">
-                            <div class="btn btn-primary" style="display: inline;">${StaffMember.name}</div>
+                            <div class="btn btn-primary btn-large" style="display: inline;">${StaffMember.name}</div>
                             <div class="unit-2">${StaffMember.description}</div>
                         </div>
                     </div>
