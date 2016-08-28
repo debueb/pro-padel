@@ -9,15 +9,16 @@ package de.appsolve.padelcampus.controller.ranking;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.controller.BaseController;
-import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.Participant;
+import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedMap;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,12 +40,11 @@ public class RankingController extends BaseController {
     TeamDAOI teamDAO;
     
     @Autowired
-    ModuleDAOI moduleDAO;
+    ModuleUtil moduleUtil;
     
     @RequestMapping
-    public ModelAndView getIndex(){
-        List<Module> modules = moduleDAO.findByModuleType(ModuleType.Ranking);
-        Module module = modules.get(0);
+    public ModelAndView getIndex(HttpServletRequest request){
+        Module module = moduleUtil.getCustomerModule(request, ModuleType.Ranking);
         return getIndexView(module.getTitle(), module.getDescription());
     }
     

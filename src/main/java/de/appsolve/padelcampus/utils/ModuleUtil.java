@@ -6,6 +6,7 @@
 package de.appsolve.padelcampus.utils;
 
 import de.appsolve.padelcampus.constants.Constants;
+import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.data.CustomerI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.model.Module;
@@ -54,9 +55,31 @@ public class ModuleUtil {
         initModules(request);
     }
 
-    public Collection<Module> getCustomerModules(HttpServletRequest request) {
+    
+    public Module getCustomerModule(HttpServletRequest request, ModuleType moduleType) {
+        Collection<Module> modules = getCustomerModules(request);
+        return getModule(modules, moduleType);
+    }
+
+    private Collection<Module> getCustomerModules(HttpServletRequest request) {
         Map<String, List<Module>> customerModules = (Map<String, List<Module>>) request.getServletContext().getAttribute(Constants.APPLICATION_CUSTOMER_MODULES);
         CustomerI customer = sessionUtil.getCustomer(request);
         return customerModules.get(customer.getName());
+    }
+
+    private Module getModule(Collection<Module> modules, ModuleType moduleType) {
+        if (modules != null){
+            for (Module module: modules){
+                if (module.getModuleType().equals(moduleType)){
+                    return module;
+                } else {
+                    Module subModule = getModule(module.getSubModules(), moduleType);
+                    if (subModule != null && subModule.getModuleType().equals(moduleType)){
+                        return subModule;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

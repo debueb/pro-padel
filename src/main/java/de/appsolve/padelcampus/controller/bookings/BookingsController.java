@@ -491,7 +491,7 @@ public class BookingsController extends BaseController {
 
     private ModelAndView getIndexView(HttpServletRequest request, String day, List<Facility> facilities) throws JsonProcessingException {
         LocalDate selectedDate = DATE_HUMAN_READABLE.parseLocalDate(day);
-        Module bookingModule = getBookingModule(moduleUtil.getCustomerModules(request));       
+        Module bookingModule = moduleUtil.getCustomerModule(request, ModuleType.Bookings);       
         ModelAndView indexView = new ModelAndView("bookings/index");
         indexView.addObject("BookingModule", bookingModule);
         bookingUtil.addWeekView(selectedDate, facilities, indexView, true);       
@@ -731,21 +731,5 @@ public class BookingsController extends BaseController {
             }
         }
         return offerDurationPrices;
-    }
-
-    private Module getBookingModule(Collection<Module> modules) {
-        if (modules != null){
-            for (Module module: modules){
-                if (module.getModuleType().equals(ModuleType.Bookings)){
-                    return module;
-                } else {
-                    Module subModule = getBookingModule(module.getSubModules());
-                    if (subModule != null && subModule.getModuleType().equals(ModuleType.Bookings)){
-                        return subModule;
-                    }
-                }
-            }
-        }
-        return null;
     }
 }

@@ -6,13 +6,16 @@
         <jsp:include page="/jsp/include/back.jsp"/>
 
         <div class="page-header"></div>
+        
+        <c:if test="${not empty description}">
+            ${description}
+        </c:if>
 
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4>${title}</h4>
+                <h4><fmt:message key="Ranking"/></h4>
             </div>
             <div class="panel-body">
-                ${description}
                 <div class="unit-2">
                     <jsp:include page="/jsp/ranking/include/links.jsp"/>
                 </div>
