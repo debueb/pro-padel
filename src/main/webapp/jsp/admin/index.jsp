@@ -53,6 +53,11 @@
                         <jsp:param name="key" value="ContactForm"/>
                         <jsp:param name="icon" value="at"/>
                     </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/staff"/>
+                        <jsp:param name="key" value="Staff"/>
+                        <jsp:param name="icon" value="male"/>
+                    </jsp:include>
                 </div>
             </div>
         </div>  

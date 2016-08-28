@@ -80,5 +80,9 @@ public class Constants {
     public static final Integer TOUCH_ICON_WIDTH             = 192;
     public static final Integer TOUCH_ICON_HEIGHT            = 192;
     
+    public static final String DATA_DIR_STAFF_IMAGES         = "staffImages";
+    public static final Integer STAFF_IMAGE_WIDTH             = 300;
+    public static final Integer STAFF_IMAGE_HEIGHT            = 300;
+    
     public static final String OPENSHIFT_DATA_DIR                  = "OPENSHIFT_DATA_DIR";
 }

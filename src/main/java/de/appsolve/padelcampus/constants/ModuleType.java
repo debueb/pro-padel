@@ -15,5 +15,6 @@ public enum ModuleType {
     Ranking,
     Bookings,
     MatchOffers,
-    Page
+    Page,
+    Staff
 }

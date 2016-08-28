@@ -22,6 +22,7 @@ public enum Privilege {
     ManageTeams("/admin/teams.*"),
     ManageBookings("/admin/bookings.*"),
     ManageContact("/admin/contact.*"),
+    ManageStaff("/admin/staff.*"),
     ViewReports("/admin/reports.*");
     
     private final Pattern pathPattern;
