@@ -9,6 +9,7 @@ import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.data.CustomerI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.model.Module;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,5 +52,11 @@ public class ModuleUtil {
         ServletContext context = request.getServletContext();
         context.setAttribute(Constants.APPLICATION_CUSTOMER_MODULES, null);
         initModules(request);
+    }
+
+    public Collection<Module> getCustomerModules(HttpServletRequest request) {
+        Map<String, List<Module>> customerModules = (Map<String, List<Module>>) request.getServletContext().getAttribute(Constants.APPLICATION_CUSTOMER_MODULES);
+        CustomerI customer = sessionUtil.getCustomer(request);
+        return customerModules.get(customer.getName());
     }
 }

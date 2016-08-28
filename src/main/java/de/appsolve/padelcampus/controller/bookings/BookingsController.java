@@ -11,6 +11,7 @@ import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.CANCELLATION_POLICY_DEADLINE;
 import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
 import de.appsolve.padelcampus.constants.EventType;
+import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.Mail;
@@ -29,6 +30,7 @@ import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Contact;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Facility;
+import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
@@ -41,6 +43,7 @@ import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.MailUtils;
+import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import de.appsolve.padelcampus.utils.TeamUtil;
@@ -52,6 +55,7 @@ import java.math.RoundingMode;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -139,9 +143,13 @@ public class BookingsController extends BaseController {
     
     @Autowired
     EventsUtil eventsUtil;
-
+    
+    @Autowired
+    ModuleUtil moduleUtil;
+    
     @RequestMapping()
     public ModelAndView getToday(
+            HttpServletRequest request,
             @RequestParam(value="date", required = false) String date,
             @RequestParam(value="facilities", required = false) List<Long> facilityIds
     ) throws JsonProcessingException {
@@ -154,7 +162,7 @@ public class BookingsController extends BaseController {
         } else {
             facilities = facilityDAO.findAll(facilityIds);
         } 
-        return getIndexView(date, facilities);
+        return getIndexView(request, date, facilities);
     }
     
     @RequestMapping("{day}/{time}/offer/{offerId}")
@@ -481,10 +489,12 @@ public class BookingsController extends BaseController {
         return getCancellationSuccessView(booking);
     }
 
-    private ModelAndView getIndexView(String day, List<Facility> facilities) throws JsonProcessingException {
+    private ModelAndView getIndexView(HttpServletRequest request, String day, List<Facility> facilities) throws JsonProcessingException {
         LocalDate selectedDate = DATE_HUMAN_READABLE.parseLocalDate(day);
+        Module bookingModule = getBookingModule(moduleUtil.getCustomerModules(request));       
         ModelAndView indexView = new ModelAndView("bookings/index");
-        bookingUtil.addWeekView(selectedDate, facilities, indexView, true);
+        indexView.addObject("BookingModule", bookingModule);
+        bookingUtil.addWeekView(selectedDate, facilities, indexView, true);       
         return indexView;
     }
 
@@ -721,5 +731,21 @@ public class BookingsController extends BaseController {
             }
         }
         return offerDurationPrices;
+    }
+
+    private Module getBookingModule(Collection<Module> modules) {
+        if (modules != null){
+            for (Module module: modules){
+                if (module.getModuleType().equals(ModuleType.Bookings)){
+                    return module;
+                } else {
+                    Module subModule = getBookingModule(module.getSubModules());
+                    if (subModule != null && subModule.getModuleType().equals(ModuleType.Bookings)){
+                        return subModule;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }
