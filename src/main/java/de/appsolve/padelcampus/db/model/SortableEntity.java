@@ -33,6 +33,15 @@ public abstract class SortableEntity extends ComparableEntity implements Compara
             if (getPosition() != null && other.getPosition() != null){
                 return getPosition().compareTo(other.getPosition());
             }
+            if (getPosition() == null && other.getPosition() == null){
+                return 0;
+            }
+            if (getPosition() == null){
+                return 1;
+            }
+            if (other.getPosition() == null){
+                return -1;
+            }
         }
         return super.compareTo(o);
     }
