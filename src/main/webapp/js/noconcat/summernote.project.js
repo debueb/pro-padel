@@ -46,7 +46,10 @@ $(document).ready(function () {
                     'Jumbotron',
                     'AlertInfo',
                     'AlertWarning',
-                    'AlertDanger'
+                    'AlertDanger',
+                    'ContentOnly',
+                    'ContentLeftImageRight',
+                    'ContentRightImageLeft'
                 ]
             },
             callbacks: {
