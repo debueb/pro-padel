@@ -1,0 +1,2 @@
+echo "Purging cloudflare cache"
+python ${OPENSHIFT_DATA_DIR}cloudflare/clearcache.py
