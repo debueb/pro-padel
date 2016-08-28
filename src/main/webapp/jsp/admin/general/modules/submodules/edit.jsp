@@ -18,7 +18,10 @@
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
 
                     <div class="relative">
-                        <spf:select path="moduleType" type="text" class="form-control form-top-element select-simple select-toggle" data-container="body">
+                        <c:if test="${not empty Model.id}">
+                            <spf:input type="hidden" path="moduleType"/>
+                        </c:if>
+                        <spf:select disabled="${not empty Model.id}" path="moduleType" type="text" class="form-control form-top-element select-simple select-toggle" data-container="body">
                             <c:forEach var="ModuleType" items="${ModuleTypes}">
                                 <spf:option value="${ModuleType}"><fmt:message key="${ModuleType}"/></spf:option>
                             </c:forEach>
@@ -32,7 +35,7 @@
                         <div class="explanation"><fmt:message key="Title"/></div>
                     </div>
                     
-                    <div class="relative">
+                    <div class="select-toggle-Events select-toggle-Bookings select-toggle-Ranking select-toggle-MatchOffers select-toggle-Staff relative">
                         <spf:input path="description" type="hidden" id="summernote-input"/>
                         <div class="form-cotrol form-center-element">
                             <div id="summernote">${Model.description}</div>
