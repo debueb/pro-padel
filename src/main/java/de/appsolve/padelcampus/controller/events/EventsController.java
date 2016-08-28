@@ -99,10 +99,9 @@ public class EventsController extends BaseController{
                 iterator.remove();
             }
         }
-        if (events.size()==1){
-            return new ModelAndView("redirect:/events/event/"+events.get(0).getId());
-        }
-        return new ModelAndView("events/index", "Models", events);
+        ModelAndView mav = new ModelAndView("events/index", "Models", events);
+        mav.addObject("Module", module);
+        return mav;
     }
     
     @RequestMapping("event/{eventId}")
