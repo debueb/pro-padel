@@ -6,7 +6,7 @@
 </c:forEach>
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
-        <div class="container-flex flex-wrap stretch" id="container-home">
+        <div class="container-flex stretch" id="container-home">
             <c:forEach var="Module" items="${customerModules[sessionScope.customer.name]}" varStatus="status">
                 <c:if test="${Module.showOnHomepage}">
                     <jsp:include page="/jsp/include/flip-item.jsp">
