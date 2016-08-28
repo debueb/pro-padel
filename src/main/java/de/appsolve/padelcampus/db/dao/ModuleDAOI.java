@@ -17,6 +17,7 @@ import java.util.List;
  */
 public interface ModuleDAOI extends BaseEntityDAOI<Module>{
     
+    public Module findByPosition(Long position);
     public Module findByTitle(String title);
     public List<Module> findByModuleType(ModuleType moduleType);
     public List<Module> findAllRootModules();

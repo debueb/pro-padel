@@ -103,12 +103,6 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         return mav;
     }
     
-    @Override
-    public void updateSortOrder(HttpServletRequest request, @ModelAttribute("Model") Module model, @RequestBody List<Long> orderedIds){
-        super.updateSortOrder(request, model, orderedIds);
-        reloadModules(request);
-    }
-    
     @RequestMapping("/edit/{id}/submodules")
     public ModelAndView showSubmodules(@PathVariable("id") Long id){
         Module module = moduleDAO.findById(id);
@@ -149,10 +143,25 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         return redirectToIndex(request);
     }
     
+    @Override
+    public void updateSortOrder(HttpServletRequest request, @ModelAttribute("Model") Module model, @RequestBody List<Long> orderedIds){
+        //zero out positions first
+        for (Long id: orderedIds){
+            Module object = (Module) moduleDAO.findById(id);
+            object.setPosition(null);
+            moduleDAO.saveOrUpdate(object);
+        }
+        Long position = 0L;
+        for (Long id: orderedIds){
+            updateModulePosition(id, position);
+        }
+        reloadModules(request);
+    }
+    
     @RequestMapping(value="/edit/{moduleId}/submodules/updatesortorder", method=POST)
     @ResponseStatus(OK)
     public void updateSubmoduleSortOrder(HttpServletRequest request, @ModelAttribute("Model") Module model, @RequestBody List<Long> orderedIds){
-        super.updateSortOrder(request, model, orderedIds);
+        updateSortOrder(request, model, orderedIds);
         reloadModules(request);
     }
     
@@ -203,6 +212,19 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         if (model.getId() != null){
             Module existing = moduleDAO.findById(model.getId());
             model.setSubModules(existing.getSubModules());
+        }
+    }
+
+    private void updateModulePosition(Long id, Long position) {
+        Module object = (Module) moduleDAO.findById(id);
+        Module existingObject = moduleDAO.findByPosition(position);
+        if (existingObject == null){
+            object.setPosition(position);
+            moduleDAO.saveOrUpdate(object);
+            position++;
+        } else {
+            position++;
+            updateModulePosition(id, position);
         }
     }
 }

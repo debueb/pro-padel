@@ -13,6 +13,10 @@ public abstract class SortedGenericDAO<T extends ComparableEntity> extends Gener
 
     private static final Logger log = Logger.getLogger(SortedGenericDAO.class);
 
+    public T findByPosition(Long position){
+        return super.findByAttribute("position", position);
+    }
+    
     @Override
     public void sort(List<T> list){
         Collections.sort(list);
