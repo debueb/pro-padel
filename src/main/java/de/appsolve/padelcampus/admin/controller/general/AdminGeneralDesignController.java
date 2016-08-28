@@ -124,7 +124,7 @@ public class AdminGeneralDesignController extends BaseController{
             customer.setCompanyLogo(null);
             customerDAO.saveOrUpdate(customer);
             
-            Image newImage = imageUtil.saveImage(companyLogo.getBytes(), Constants.COMPANY_LOGO_HEIGHT, Constants.DATA_DIR_COMPANY_LOGO_IMAGES);
+            Image newImage = imageUtil.saveImage(companyLogo.getBytes(), Constants.DATA_DIR_COMPANY_LOGO_IMAGES);
             customer.setCompanyLogo(newImage);
             customer = customerDAO.saveOrUpdate(customer);
             sessionUtil.setCustomer(request, customer);
