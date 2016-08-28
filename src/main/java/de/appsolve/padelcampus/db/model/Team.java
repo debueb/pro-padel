@@ -7,7 +7,6 @@
 package de.appsolve.padelcampus.db.model;
 
 import de.appsolve.padelcampus.utils.MailUtils;
-import de.appsolve.padelcampus.utils.TeamUtil;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -18,7 +17,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
