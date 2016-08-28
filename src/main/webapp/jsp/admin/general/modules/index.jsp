@@ -19,11 +19,13 @@
                         <th class="text-center"><fmt:message key="ShowOnHomepage"/></th>
                         <th class="text-center"><fmt:message key="ShowInMenu"/></th>
                         <th class="text-center"><fmt:message key="ShowInFooter"/></th>
+                        <th class="text-center"><fmt:message key="HasSubmodules"/></th>
                         <th class="delete"><fmt:message key="Delete"/></th>
                         </thead>
                         <tbody class="table-sortable">
                             <c:forEach var="Model" items="${Models}">
                                 <c:set var="editUrl" value="/admin/general/modules/edit/${Model.id}"/>
+                                <c:set var="subModulesUrl" value="/admin/general/modules/edit/${Model.id}/submodules"/>
                                 <tr data-id="${Model.id}">
                                     <td class="sortable-handle"><i class="fa fa-arrows-v"></i></td>
                                     <td><a class="ajaxify" href="${editUrl}">${Model.title}</a></td>
@@ -31,6 +33,7 @@
                                     <td class="text-center"><a class="ajaxify" href="${editUrl}"><i class="fa fa-${Model.showOnHomepage ? 'check' : 'remove'}"/></a></td>
                                     <td class="text-center"><a class="ajaxify" href="${editUrl}"><i class="fa fa-${Model.showInMenu ? 'check' : 'remove'}"/></a></td>
                                     <td class="text-center"><a class="ajaxify" href="${editUrl}"><i class="fa fa-${Model.showInFooter ? 'check' : 'remove'}"/></a></td>
+                                    <td class="text-center"><a class="ajaxify" href="${subModulesUrl}"><i class="fa fa-${empty Model.subModules ? 'remove' : 'check'}"/></a></td>
                                     <td class="delete"><a href="/admin/general/modules/${Model.id}/delete" class="fa fa-minus-circle ajaxify"></a></td>
                                 </tr>
                             </c:forEach>
