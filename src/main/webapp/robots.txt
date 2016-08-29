@@ -1,5 +1,5 @@
+User-agent: Browsershots
+Disallow: 
 User-Agent: *
 Disallow: /players/
 Disallow: /teams/
-User-agent: Browsershots
-Disallow: 
