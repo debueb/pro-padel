@@ -53,6 +53,7 @@
                     </div>
                     
                     <spf:select path="iconName" type="text" class="form-control form-bottom-element select-simple" data-live-search="true" data-container="body">
+                        <option value=""><fmt:message key="NoIcon"/></option>
                         <c:forEach var="IconName" items="${FontAwesomeIconNames}">
                             <spf:option data-icon="fa-${IconName}" value="${IconName}">${IconName}</spf:option>
                         </c:forEach>
