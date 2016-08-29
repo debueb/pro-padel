@@ -31,11 +31,12 @@ app.main = {};
         if (("standalone" in window.navigator && window.navigator.standalone) || window.navigator.userAgent.indexOf('ProPadel') >= 0){
             $('.btn-back').livequery(function(){
                 $(this).show();
-                $(this).on('click tap', function () {
-                    window.History.back();
-                });
             });
         }
+        //btn-back is used not only in header
+        $('.btn-back').on('click tap', function () {
+            window.History.back();
+        });
     };
 
     self.enableForms = function () {
