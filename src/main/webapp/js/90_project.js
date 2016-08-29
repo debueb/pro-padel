@@ -585,52 +585,6 @@ app.main = {};
         });
     };
     
-//        var removeActiveClass = function(){
-//            $('a.menu-item.active').each(function(){
-//                $(this).removeClass('active');
-//             });
-//        };
-//        var closeOpenSubmodules = function(){
-//            if ($('.subModules:visible').length){
-//                $('.subModules:visible').hide();
-//                $('.wrapper').toggleClass('expanded');
-//            }
-//        };
-//        
-//        $('a.ajaxify:not(.menu-item').on('click tap', function(){
-//            removeActiveClass();
-//            closeOpenSubmodules();
-//        });
-//        
-//        $('a.menu-item').on('click tap', function(){
-//            //if this is a submodule link
-//            if ($(this).parent().hasClass('subModule')){
-//               //remove active on all other subModule links
-//               $('.subModule a.menu-item').removeClass('active'); 
-//            } else {
-//                //this is a top-level link
-//                //remove the active class on all other links
-//                removeActiveClass();
-//                
-//                //if this link has subModules, display them
-//                if ($(this).hasClass('hasSubmodules')){ 
-//                    var id = $(this).attr('id');
-//                    $(this).parent().find($('.'+id+'-subModules')).slideToggle(200);
-//                    $('.wrapper').toggleClass('expanded');
-//                    return false;
-//                } else { //if this is a top level link, 
-//                    //close all open subModules
-//                    closeOpenSubmodules();
-//                }
-//            }
-//            //make this link active
-//            $(this).addClass('active');
-//            
-//            //do not bubble events
-//            return false;
-//        });
-//    };
-    
     self.enableFadeInOnScroll = function(){
         
         var fadeIn = function(){
