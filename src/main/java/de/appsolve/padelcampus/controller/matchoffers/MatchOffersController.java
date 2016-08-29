@@ -7,6 +7,7 @@ package de.appsolve.padelcampus.controller.matchoffers;
 
 import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_FROM_HOUR;
+import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.controller.BaseEntityController;
 import de.appsolve.padelcampus.data.EmailContact;
@@ -21,6 +22,7 @@ import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.MailUtils;
+import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
@@ -68,6 +70,9 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
     @Autowired
     Validator validator;
     
+    @Autowired
+    ModuleUtil moduleUtil;
+    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
@@ -85,6 +90,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
     public ModelAndView getIndex(HttpServletRequest request){
         ModelAndView mav = new ModelAndView("matchoffers/index");
         mav.addObject("Models", matchOfferDAO.findCurrent());
+        mav.addObject("Module", moduleUtil.getCustomerModule(request, ModuleType.MatchOffers));
         Player user = sessionUtil.getUser(request);
         if (user!=null){
             mav.addObject("PersonalOffers", matchOfferDAO.findBy(user));

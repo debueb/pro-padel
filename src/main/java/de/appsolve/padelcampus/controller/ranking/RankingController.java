@@ -16,7 +16,6 @@ import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import java.math.BigDecimal;
 import java.util.Iterator;
-import java.util.List;
 import java.util.SortedMap;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

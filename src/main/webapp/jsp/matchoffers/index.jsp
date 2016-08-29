@@ -2,9 +2,10 @@
 <jsp:include page="/jsp/include/head.jsp"/>
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
+        <jsp:include page="/jsp/include/module-description.jsp"/>
         <div class="panel panel-info unit-2">
             <div class="panel-heading"><h4><fmt:message key="MatchOffers"/></h4></div>
-            <div class="panel-body"><fmt:message key="MatchOffersInfo"/>
+            <div class="panel-body">
                 <div class="list-group unit">
                     <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/matchoffers/profile"/>

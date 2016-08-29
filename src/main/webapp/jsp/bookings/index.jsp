@@ -4,9 +4,7 @@
     <div class="col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
         <div class="page-header"></div>
 
-        <c:if test="${not empty BookingModule}">
-            ${BookingModule.description}
-        </c:if>
+        <jsp:include page="/jsp/include/module-description.jsp"/>
         
         <div class="panel panel-info unit">
             <div class="panel-heading"><h4><fmt:message key="Date"/></h4></div>
