@@ -8,7 +8,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
 /**
@@ -57,4 +59,19 @@ public class ModuleDAO extends SortedGenericDAO<Module> implements ModuleDAOI{
         modules.removeAll(modulesToRemove);
         return modules;
     }
+    
+    @Override
+    @SuppressWarnings("unchecked")
+    public Module findParent(Module module) {
+        Criteria criteria = getCriteria();
+        criteria.createAlias("subModules", "s");
+        criteria.add(Restrictions.eq("s.id", module.getId()));
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        List<Module> parentModules = (List<Module>) criteria.list();
+        if (parentModules.isEmpty()){
+            return null;
+        }
+        return parentModules.get(0);
+    }
+
 }

@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,6 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         return "admin/general/modules";
     }
     
-    
     @Override
     public ModelAndView showIndex(HttpServletRequest request, Pageable pageable, @RequestParam(required = false, name = "search") String search){
         Page<Module> all = new PageImpl(moduleDAO.findAllRootModules());
@@ -99,6 +99,20 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
     
     @Override
     public ModelAndView postDelete(HttpServletRequest request, @PathVariable("id") Long id){
+        Module module = moduleDAO.findById(id);
+        Module parent = moduleDAO.findParent(module);
+        if (parent != null){
+            //load again from DB because findParent() does not load all submodules
+            parent = moduleDAO.findById(parent.getId());
+            //causes IllegalArgumentException: Removing a detached instance Module
+            //parent.getSubModules().remove(module);
+            //same goes for: removeIf predicate and removing via iterator
+
+            Set<Module> subModules = new TreeSet<>(parent.getSubModules());
+            subModules.remove(module);
+            parent.setSubModules(subModules);
+            moduleDAO.saveOrUpdate(parent);
+        }
         ModelAndView mav = super.postDelete(request, id);
         reloadModules(request);
         return mav;

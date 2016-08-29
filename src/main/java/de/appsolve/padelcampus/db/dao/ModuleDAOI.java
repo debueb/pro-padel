@@ -21,4 +21,5 @@ public interface ModuleDAOI extends BaseEntityDAOI<Module>{
     public Module findByTitle(String title);
     public List<Module> findByModuleType(ModuleType moduleType);
     public List<Module> findAllRootModules();
+    public Module findParent(Module module);
 }
