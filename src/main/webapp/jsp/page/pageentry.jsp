@@ -36,7 +36,7 @@
                                 <fmt:message key="Message"/>
                             </div>
                         </div>
-                        <button class="btn btn-primary btn-block unit" type="submit"><fmt:message key="Send"/></button>
+                        <button class="btn btn-primary btn-block unit-2" type="submit"><fmt:message key="Send"/></button>
                     </spf:form>
                 </div>
             </div>
