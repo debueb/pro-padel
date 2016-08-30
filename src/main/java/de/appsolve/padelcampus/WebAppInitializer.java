@@ -5,14 +5,11 @@
  */
 package de.appsolve.padelcampus;
 
-import de.appsolve.padelcampus.filter.AdminFilter;
-import de.appsolve.padelcampus.filter.LoginFilter;
 import de.appsolve.padelcampus.filter.WhitespaceFilter;
 import de.appsolve.padelcampus.filter.XSSFilter;
 import de.appsolve.padelcampus.listener.SessionEventListener;
 import de.appsolve.padelcampus.listener.TomcatUndeployListener;
 import java.util.regex.Pattern;
-import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
