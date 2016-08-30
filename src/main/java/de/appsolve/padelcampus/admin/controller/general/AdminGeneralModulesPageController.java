@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -74,6 +75,13 @@ public class AdminGeneralModulesPageController extends AdminSortableController<P
         return new ModelAndView("redirect:/"+getModuleName()+"/"+getModule(request).getId());
     }
 
+    @Override
+    public ModelAndView showEditView(HttpServletRequest request, @PathVariable("modelId") Long modelId){
+        ModelAndView mav = getEditView(findById(modelId));
+        mav.addObject("Parent", getModule(request));
+        return mav;
+    }
+    
     @Override
     public ModelAndView postEditView(@ModelAttribute("Model") PageEntry model, HttpServletRequest request, BindingResult result){
         Module module = getModule(request);

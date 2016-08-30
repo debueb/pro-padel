@@ -4,11 +4,19 @@
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <jsp:include page="/jsp/include/back.jsp"/>
 
+        <fmt:message var="AddModule" key="AddModule"/>
+        <fmt:message var="EditModule" key="EditModule"/>
+                
+        <ol class="unit-2 breadcrumb">
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/general"><fmt:message key="General"/></a></li>
+            <li><a href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
+            <li class="active">${empty Model.id ? AddModule : EditModule}</li>
+        </ol>
+        
         <div class="page-header"></div>
         <div class="panel panel-info">
             <div class="panel-heading">
-                <fmt:message var="AddModule" key="AddModule"/>
-                <fmt:message var="EditModule" key="EditModule"/>
                 <h4>${empty Model.id ? AddModule : EditModule}</h4>
             </div>
             <div class="panel-body">

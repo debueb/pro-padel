@@ -5,10 +5,20 @@
         <jsp:include page="/jsp/include/back.jsp"/>
 
         <div class="page-header"></div>
+        
+        <fmt:message var="AddSubModule" key="AddSubModule"/>
+        <fmt:message var="EditSubModule" key="EditSubModule"/>
+        <ol class="unit-2 breadcrumb">
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/general"><fmt:message key="General"/></a></li>
+            <li><a href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
+            <li><a href="/admin/general/modules/edit/${Parent.id}">${Parent.title}</a></li>
+            <li><a href="/admin/general/modules/edit/${Parent.id}/submodules"><fmt:message key="Submodules"/></a></li>
+            <li class="active">${empty Model.id ? AddSubModule : EditSubModule}</li>
+        </ol>
+        
         <div class="panel panel-info">
             <div class="panel-heading">
-                <fmt:message var="AddSubModule" key="AddSubModule"/>
-                <fmt:message var="EditSubModule" key="EditSubModule"/>
                 <h4>${Parent.title} ${empty Model.id ? AddSubModule : EditSubModule}</h4>
             </div>
             <div class="panel-body">

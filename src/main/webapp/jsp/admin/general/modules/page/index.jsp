@@ -3,6 +3,15 @@
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <jsp:include page="/jsp/include/back.jsp"/>
+        
+        <ol class="unit-2 breadcrumb">
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/general"><fmt:message key="General"/></a></li>
+            <li><a href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
+            <li><a href="/admin/general/modules/edit/${Module.id}">${Module.title}</a></li>
+            <li class="active"><fmt:message key="Entries"/></li>
+        </ol>
+        
         <div class="page-header"></div>
         <div class="panel panel-info">
             <div class="panel-heading">
