@@ -5,21 +5,20 @@
  */
 package de.appsolve.padelcampus.test.tournaments;
 
-import com.google.gson.JsonObject;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.Privilege;
 import de.appsolve.padelcampus.db.model.AdminGroup;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.test.*;
-import de.appsolve.padelcampus.test.matchers.ModelAttributeToStringEquals;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.TreeSet;
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -56,7 +55,7 @@ public class TestGroupKnockoutTournament extends TestBase {
         adminGroup.setName("admins");
         adminGroup.setPrivileges(new HashSet<>(Arrays.asList(new Privilege[]{Privilege.AccessAdminInterface, Privilege.ManagePlayers, Privilege.ManageTeams})));
         Player admin = playerDAO.findByEmail(ADMIN_EMAIL);
-        adminGroup.setPlayers(new HashSet<>(Arrays.asList(new Player[]{admin})));
+        adminGroup.setPlayers(new TreeSet<>(Arrays.asList(new Player[]{admin})));
         adminGroupDAO.saveOrUpdate(adminGroup);
         
         LOG.info("login to admin account");
@@ -87,7 +86,6 @@ public class TestGroupKnockoutTournament extends TestBase {
             Player second = playerDAO.findByEmail("testplayer"+(i+1)+"@appsolve.de");
             mockMvc.perform(post("/admin/teams/add")
                 .session(session)
-                .param("name", "Team "+i)
                 .param("players", first.getUUID(), second.getUUID()))
                 .andExpect(status().is3xxRedirection());
                      
@@ -95,7 +93,10 @@ public class TestGroupKnockoutTournament extends TestBase {
         
         List<String> teamUUIDs = new ArrayList<>();
         for (long i=0; i<NUM_PLAYERS; i=i+2){
-            teamUUIDs.add(teamDAO.findByAttribute("name", "Team "+i).getUUID());
+            String teamName = "Test "+i+" / Test "+(i+1);
+            Team team = teamDAO.findByAttribute("name", teamName);
+            Assert.assertNotNull(team);
+            teamUUIDs.add(team.getUUID());
         }
         
         LOG.info("creating new tournament");
