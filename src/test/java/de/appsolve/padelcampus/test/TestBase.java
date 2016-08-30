@@ -12,14 +12,17 @@ import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.db.dao.AdminGroupDAOI;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
+import de.appsolve.padelcampus.db.dao.CustomerDAOI;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.dao.VoucherDAOI;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
+import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Voucher;
+import de.appsolve.padelcampus.utils.SessionUtil;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -36,9 +39,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -49,15 +52,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = {"/testContext.xml"})
+@ContextConfiguration(classes = TestConfig.class, loader = AnnotationConfigWebContextLoader.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class TestBase  {
     
     protected MockMvc mockMvc;
-    
-//    protected WebClient webClient;
-    
-    protected MockHttpSession session;
     
     protected SortedSet<Offer> offers;
     
@@ -71,7 +70,7 @@ public abstract class TestBase  {
     protected WebApplicationContext wac;
     
     @Autowired
-    private MockHttpSession _session;
+    protected MockHttpSession session;
     
     @Autowired
     private OfferDAOI offerDAO;
@@ -97,12 +96,14 @@ public abstract class TestBase  {
     @Autowired
     protected EventDAOI eventDAO;
     
+    @Autowired
+    protected CustomerDAOI customerDAO;
+    
+    @Autowired
+    protected SessionUtil sessionUtil;
+    
     @Before
     public void setUp() {
-        
-        
-        
-        
         if (mockMvc == null){
             eventDAO.delete(eventDAO.findAll());
             
@@ -124,6 +125,14 @@ public abstract class TestBase  {
             for (Offer offer: offerDAO.findAll()){
                 offerDAO.deleteById(offer.getId());
             }
+            
+            customerDAO.delete(customerDAO.findAll());
+            
+            Customer customer = new Customer();
+            customer.setName("testCustomer");
+            customer.setDomainNames(new HashSet<>(Arrays.asList(new String[]{"localhost"})));
+            customer  = customerDAO.saveOrUpdate(customer);
+            session.setAttribute(Constants.SESSION_CUSTOMER, customer);
             
             offers = new TreeSet<>();
             offer1 = new Offer();
@@ -158,8 +167,6 @@ public abstract class TestBase  {
             mockMvc =   webAppContextSetup(this.wac)
                         .alwaysDo(print())
                         .build();
-            
-            session = _session;
         }
     }
     
