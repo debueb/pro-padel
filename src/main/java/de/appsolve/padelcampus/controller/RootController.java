@@ -49,6 +49,7 @@ public class RootController extends BaseController{
                 List<PageEntry> rootEntries = pageEntryDAO.findByModule(rootModule);
                 if (!rootEntries.isEmpty()){
                     ModelAndView mav = new ModelAndView("index");
+                    mav.addObject("Module", rootModule);
                     mav.addObject("PageEntries", rootEntries);
                     mav.addObject("skipNavbar", true);
                     mav.addObject("skipFooter", true);
