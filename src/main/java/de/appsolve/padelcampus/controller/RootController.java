@@ -70,6 +70,7 @@ public class RootController extends BaseController{
         ModelAndView mav = new ModelAndView("index");
         mav.addObject("Mail", new Mail());
         List<PageEntry> pageEntries = pageEntryDAO.findForHomePage();
+        mav.addObject("Module", moduleDAO.findByTitle("HOMEPAGE"));
         mav.addObject("PageEntries", pageEntries);
         return mav;
     }
