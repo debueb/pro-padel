@@ -11,6 +11,7 @@ import de.appsolve.padelcampus.data.CustomerI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.model.Module;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,9 @@ public class ModuleUtil {
     private Collection<Module> getCustomerModules(HttpServletRequest request) {
         Map<String, List<Module>> customerModules = (Map<String, List<Module>>) request.getServletContext().getAttribute(Constants.APPLICATION_CUSTOMER_MODULES);
         CustomerI customer = sessionUtil.getCustomer(request);
+        if (customer == null){
+            return Collections.EMPTY_LIST;
+        }
         return customerModules.get(customer.getName());
     }
 
