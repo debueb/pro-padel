@@ -3,10 +3,8 @@
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <div class="page-header"></div>
-        <c:if test="${not empty Module}">
-            ${Module.description}
-        </c:if>
-
+        <jsp:include page="/jsp/include/module-description.jsp"/>
+     
         <c:if test="${empty Models}">
             <div class="alert alert-info">
                 <fmt:message key="NoActiveEvents"/>
