@@ -16,6 +16,6 @@ import java.util.List;
  */
 public interface BookingBaseDAOI extends BaseEntityDAOI<Booking>{
     
-    public List<Booking> findBlockedBookings();
+    public List<Booking> findUnpaidBlockingBookings();
     public void cancelBooking(Booking booking);
 }
