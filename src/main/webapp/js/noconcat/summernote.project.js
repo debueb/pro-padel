@@ -7,8 +7,6 @@ $(document).ready(function () {
     }
     
     function progressHandlingFunction(e){
-        console.log(e);
-        console.log(e.lengthComputable);
         if(e.lengthComputable){
             $('#shadow').show();
             $('progress').show();
