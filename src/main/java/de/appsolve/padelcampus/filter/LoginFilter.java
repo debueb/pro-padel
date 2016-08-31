@@ -114,15 +114,19 @@ public class LoginFilter implements Filter {
                                     if (loginCookie == null){
                                         loginUtil.deleteLoginCookie(httpRequest, httpResponse);
                                     } else {
-                                        Player player = playerDAO.findByUUID(loginCookie.getPlayerUUID());
-                                        if (player == null){
+                                        if (cookie.getDomain()==null || !cookie.getDomain().equals(httpRequest.getServerName())){
                                             loginUtil.deleteLoginCookie(httpRequest, httpResponse);
-                                        }
-                                        //log user in
-                                        sessionUtil.setUser(httpRequest, player);
+                                        } else {
+                                            Player player = playerDAO.findByUUID(loginCookie.getPlayerUUID());
+                                            if (player == null){
+                                                loginUtil.deleteLoginCookie(httpRequest, httpResponse);
+                                            }
+                                            //log user in
+                                            sessionUtil.setUser(httpRequest, player);
 
-                                        //update loginCookieHash
-                                        loginUtil.updateLoginCookie(httpRequest, httpResponse);
+                                            //update loginCookieHash
+                                            loginUtil.updateLoginCookie(httpRequest, httpResponse);
+                                        }
                                     }
                                     break;
                                 }

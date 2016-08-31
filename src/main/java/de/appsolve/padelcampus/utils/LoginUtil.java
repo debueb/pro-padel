@@ -47,6 +47,7 @@ public class LoginUtil {
             loginCookie.setValidUntil(new LocalDate().plusYears(1));
             loginCookieDAO.saveOrUpdate(loginCookie);
             Cookie cookie = new Cookie(COOKIE_LOGIN_TOKEN, cookieUUID.toString()+":"+cookieValue.toString());
+            cookie.setDomain(request.getServerName());
             cookie.setMaxAge(ONE_YEAR_SECONDS);
             response.addCookie(cookie);
         }
