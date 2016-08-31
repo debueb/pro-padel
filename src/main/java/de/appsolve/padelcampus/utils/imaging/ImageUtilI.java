@@ -15,10 +15,10 @@ import java.io.IOException;
  */
 public interface ImageUtilI {
 
-    Image saveImage(byte[] bytes, String folderName) throws IOException, ImageProcessingException;
+    Image saveImage(String contentType, byte[] bytes, String folderName) throws IOException, ImageProcessingException;
 
-    Image saveImage(byte[] bytes, Integer width, Integer height, String folderName) throws IOException, ImageProcessingException;
+    Image saveImage(String contentType, byte[] bytes, Integer width, Integer height, String folderName) throws IOException, ImageProcessingException;
     
-    Image saveImage(byte[] bytes, Integer maxHeight, String folderName) throws IOException, ImageProcessingException;
+    Image saveImage(String contentType, byte[] bytes, Integer maxHeight, String folderName) throws IOException, ImageProcessingException;
     
 }

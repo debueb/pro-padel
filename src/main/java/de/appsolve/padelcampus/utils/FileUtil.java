@@ -38,7 +38,7 @@ public class FileUtil {
     @Autowired
     ImageDAOI imageDAO;
   
-    public Image save(byte[] byteArray, String folderName, Integer width, Integer height) throws IOException, ImageProcessingException{
+    public Image save(String contentType, byte[] byteArray, String folderName, Integer width, Integer height) throws IOException, ImageProcessingException{
         //generate file path based on checksum of byte array
         String checksum = DigestUtils.sha256Hex(byteArray);
 
@@ -59,11 +59,12 @@ public class FileUtil {
         image.setSha256(checksum);
         image.setWidth(width);
         image.setHeight(height);
+        image.setContentType(contentType);
         imageDAO.saveOrUpdate(image);
         return image;
     }
     
-    public Image save(BufferedImage bufferedImage, String folderName) throws IOException, ImageProcessingException{
+    public Image save(String contentType, BufferedImage bufferedImage, String folderName) throws IOException, ImageProcessingException{
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             
             //convert buffered image to byte array
@@ -71,7 +72,7 @@ public class FileUtil {
             baos.flush();
             byte[] byteArray = baos.toByteArray();
             
-            return save(byteArray, folderName,bufferedImage.getWidth(), bufferedImage.getHeight());
+            return save(contentType, byteArray, folderName,bufferedImage.getWidth(), bufferedImage.getHeight());
         }
     }
     

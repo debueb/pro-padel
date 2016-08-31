@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,12 +57,15 @@ public class ImagesController extends BaseController{
         Image image = imageDAO.findBySha256(sha256);
         if (image!=null){
             byte[] byteArray = fileUtil.getByteArray(image.getFilePath());
-            return ResponseEntity
+            ResponseEntity.BodyBuilder builder = ResponseEntity
                     .ok()
                     .cacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
-                    .contentLength(byteArray.length)
-                    .body(byteArray);
+                    .contentLength(byteArray.length);
                     
+            if (!StringUtils.isEmpty(image.getContentType())){
+                builder = builder.header("Content-Type", "image/svg+xml");
+            }
+            return builder.body(byteArray);
         }
         LOG.warn(String.format("Unable to display image %s", sha256));
         return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -70,7 +74,7 @@ public class ImagesController extends BaseController{
     @ResponseBody
     @RequestMapping(value="upload", method = POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
     public String postImage(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException, ImageProcessingException {
-        Image image = imageUtil.saveImage(file.getBytes(), Constants.DATA_DIR_SUMMERNOTE_IMAGES);
+        Image image = imageUtil.saveImage(file.getContentType(), file.getBytes(), Constants.DATA_DIR_SUMMERNOTE_IMAGES);
         return "/images/image/"+image.getSha256();
     }
 }

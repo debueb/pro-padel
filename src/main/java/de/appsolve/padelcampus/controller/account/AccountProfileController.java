@@ -109,9 +109,7 @@ public class AccountProfileController extends BaseController {
                         }
                     }
                     
-                    byte[] bytes = pictureMultipartFile.getBytes();
-
-                    Image image = imageUtil.saveImage(bytes, PROFILE_PICTURE_WIDTH, PROFILE_PICTURE_HEIGHT, DATA_DIR_PROFILE_PICTURES);
+                    Image image = imageUtil.saveImage(pictureMultipartFile.getContentType(), pictureMultipartFile.getBytes(), PROFILE_PICTURE_WIDTH, PROFILE_PICTURE_HEIGHT, DATA_DIR_PROFILE_PICTURES);
                     persistedPlayer.setProfileImage(image);
                 }
             } catch (IOException | ImageProcessingException e) {

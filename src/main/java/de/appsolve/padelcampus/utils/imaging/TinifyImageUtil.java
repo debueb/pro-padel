@@ -10,6 +10,7 @@ import com.tinify.AccountException;
 import com.tinify.Options;
 import com.tinify.Source;
 import com.tinify.Tinify;
+import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.model.Image;
 import de.appsolve.padelcampus.utils.FileUtil;
 import java.awt.image.BufferedImage;
@@ -43,48 +44,62 @@ public class TinifyImageUtil extends AbstractImageUtil{
     }
     
     @Override
-    public Image saveImage(byte[] bytes, String folderName) throws IOException, ImageProcessingException {
-        try {
-            BufferedImage image = readImage(bytes);
-            byte[] resizedBytes = Tinify.fromBuffer(bytes).toBuffer();
-            return fileUtil.save(resizedBytes, folderName, image.getWidth(), image.getHeight());
-        } catch (AccountException e){
-            if (recoverAccountException(e)){
-                return saveImage(bytes, folderName);
-            }
-            throw e;
-        }
+    public Image saveImage(String contentType, byte[] bytes, String folderName) throws IOException, ImageProcessingException {
+        return saveImage(contentType, bytes, null, null, folderName);
     }
 
     @Override
-    public Image saveImage(byte[] bytes, Integer maxWidth, Integer maxHeight, String folderName) throws IOException, ImageProcessingException {
+    public Image saveImage(String contentType, byte[] bytes, Integer maxHeight, String folderName) throws IOException, ImageProcessingException {
+        return saveImage(contentType, bytes, null, maxHeight, folderName);
+    }
+
+    @Override
+    public Image saveImage(String contentType, byte[] bytes, Integer maxWidth, Integer maxHeight, String folderName) throws IOException, ImageProcessingException {
+        
         try {
-            Source source = Tinify.fromBuffer(bytes);
-            Options options = new Options()
-                .with("method", "fit");
-            if (maxWidth != null){
-                options.with("width", maxWidth);
+            if (bytes == null || bytes.length == 0 || StringUtils.isEmpty(contentType)){
+                throw new IOException(msg.get("FileIsNotAValidImage"));
             }
-            if (maxHeight != null){
-                options.with("height", maxHeight);
+            switch (contentType){
+                case "image/svg+xml":
+                    return fileUtil.save(contentType, bytes, Constants.DATA_DIR_SUMMERNOTE_IMAGES, null, null);
+                case "image/jpeg":
+                case "image/jpg":
+                case "image/png":
+                case "image/pjpeg"://M$
+                case "x-png"://M$
+                    byte[] resizedBytes;
+                    BufferedImage image;
+                    //NO RESIZING
+                    if (maxWidth == null && maxHeight == null){
+                        image = readImage(bytes);
+                        resizedBytes = Tinify.fromBuffer(bytes).toBuffer();
+                    } else {
+                        Source source = Tinify.fromBuffer(bytes);
+                        Options options = new Options()
+                            .with("method", "fit");
+                        if (maxWidth != null){
+                            options.with("width", maxWidth);
+                        }
+                        if (maxHeight != null){
+                            options.with("height", maxHeight);
+                        }
+                        Source resized = source.resize(options);
+                        resizedBytes = resized.toBuffer();
+                        image = readImage(resizedBytes);
+                    }
+                    return fileUtil.save(contentType, resizedBytes, folderName, image.getWidth(), image.getHeight());
+                default:
+                    throw new IOException(msg.get("FileIsNotAValidImage"));
             }
-            Source resized = source.resize(options);
-            byte[] resizedBytes = resized.toBuffer();
-            BufferedImage image = readImage(resizedBytes);
-            return fileUtil.save(resizedBytes, folderName, image.getWidth(), image.getHeight());
         } catch (AccountException e){
             if (recoverAccountException(e)){
-                return saveImage(bytes, maxWidth, maxHeight, folderName);
+                return saveImage(contentType, bytes, folderName);
             }
             throw e;
         }
     }
     
-    @Override
-    public Image saveImage(byte[] bytes, Integer maxHeight, String folderName) throws IOException, ImageProcessingException {
-        return saveImage(bytes, null, maxHeight, folderName);
-    }
-
     private boolean recoverAccountException(AccountException e) {
         if (!StringUtils.isEmpty(e.getMessage()) && e.getMessage().equalsIgnoreCase("Your monthly limit has been exceeded (HTTP 429/TooManyRequests)")){
             Integer keyPosition = TINIFY_KEYS.indexOf(Tinify.key());

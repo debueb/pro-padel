@@ -11,7 +11,6 @@ import de.appsolve.padelcampus.admin.controller.general.AdminSortableController;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.dao.StaffMemberDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
-import de.appsolve.padelcampus.db.model.Image;
 import de.appsolve.padelcampus.db.model.StaffMember;
 import de.appsolve.padelcampus.utils.imaging.ImageUtilI;
 import java.io.IOException;
@@ -60,7 +59,7 @@ public class AdminStaffMemberController extends AdminSortableController<StaffMem
         }
         if (model.getProfileImageFile() != null && !model.getProfileImageFile().isEmpty()){
             try {
-                model.setProfileImage(imageUtil.saveImage(model.getProfileImageFile().getBytes(), Constants.STAFF_IMAGE_WIDTH, Constants.STAFF_IMAGE_HEIGHT, Constants.DATA_DIR_STAFF_IMAGES));
+                model.setProfileImage(imageUtil.saveImage(model.getProfileImageFile().getContentType(), model.getProfileImageFile().getBytes(), Constants.STAFF_IMAGE_WIDTH, Constants.STAFF_IMAGE_HEIGHT, Constants.DATA_DIR_STAFF_IMAGES));
             } catch (IOException | ImageProcessingException ex) {
                 LOG.error(ex);
             }

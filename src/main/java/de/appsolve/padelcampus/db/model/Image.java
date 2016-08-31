@@ -22,6 +22,8 @@ public class Image extends CustomerEntity {
     
     private Integer height;
     
+    private String contentType;
+    
     public String getFilePath() {
         return filePath;
     }
@@ -52,5 +54,13 @@ public class Image extends CustomerEntity {
 
     public void setHeight(Integer height) {
         this.height = height;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }

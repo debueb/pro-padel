@@ -31,13 +31,13 @@ public class ImageUtil extends AbstractImageUtil {
     FileUtil fileUtil;
     
     @Override
-    public Image saveImage(byte[] bytes, String folderName) throws IOException, ImageProcessingException{
+    public Image saveImage(String contentType, byte[] bytes, String folderName) throws IOException, ImageProcessingException{
          BufferedImage image = readImage(bytes); //throws Exception if invalid image
-         return fileUtil.save(bytes, folderName, image.getWidth(), image.getHeight());
+         return fileUtil.save(contentType, bytes, folderName, image.getWidth(), image.getHeight());
     }
     
     @Override
-    public Image saveImage(byte[] bytes, Integer width, Integer height, String folderName) throws IOException, ImageProcessingException{
+    public Image saveImage(String contentType, byte[] bytes, Integer width, Integer height, String folderName) throws IOException, ImageProcessingException{
         BufferedImage originalImage = null;
         BufferedImage resizedImage = null;
                     
@@ -68,7 +68,7 @@ public class ImageUtil extends AbstractImageUtil {
                 }
             }
 
-            Image image = fileUtil.save(resizedImage, folderName);
+            Image image = fileUtil.save(contentType, resizedImage, folderName);
             return image;
         } finally {
             if (originalImage!=null){
@@ -81,7 +81,7 @@ public class ImageUtil extends AbstractImageUtil {
     }
     
     @Override
-    public Image saveImage(byte[] bytes, Integer maxHeight, String folderName) throws IOException, ImageProcessingException {
+    public Image saveImage(String contentType, byte[] bytes, Integer maxHeight, String folderName) throws IOException, ImageProcessingException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
