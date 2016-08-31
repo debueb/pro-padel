@@ -617,14 +617,15 @@ app.main = {};
                 var $elem = $(this);
                 $elem.on('init', function(event, slick){
                     window.setTimeout(function(){$(window).trigger('slickinitialized');}, 300);
-                    
                 });
+                
+                var autoplaySpeed = $elem.attr('data-autoplay-speed') || 5000;
                 
                 $elem.slick({
                     "dots": true,
                     "accessibility": true,
                     "autoplay": true,
-                    "autoplaySpeed": 3000,
+                    "autoplaySpeed": autoplaySpeed,
                     "arrows": true,
                     "adaptiveHeight": false,
                     "lazyLoad": "progressive"
