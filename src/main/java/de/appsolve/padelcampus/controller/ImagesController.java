@@ -63,7 +63,7 @@ public class ImagesController extends BaseController{
                     .contentLength(byteArray.length);
                     
             if (!StringUtils.isEmpty(image.getContentType())){
-                builder = builder.header("Content-Type", "image/svg+xml");
+                builder = builder.header("Content-Type", image.getContentType());
             }
             return builder.body(byteArray);
         }
