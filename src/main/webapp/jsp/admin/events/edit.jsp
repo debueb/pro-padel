@@ -24,10 +24,7 @@
                     </div>
                     
                     <div class="relative">
-                        <spf:input path="description" type="hidden" id="summernote-input"/>
-                        <div class="form-center-element">
-                            <div id="summernote">${Model.description}</div>
-                        </div>
+                        <spf:textarea path="description" class="form-control form-center-element text-editor"/>
                         <div class="explanation"><fmt:message key="Description"/></div>
                     </div>
                     
