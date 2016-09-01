@@ -590,15 +590,13 @@ app.main = {};
         var fadeIn = function(){
             $('.fadeIn:not(.fadedIn)').each( function(i){
                 var $elem = $(this);
-                if (!($elem.parents('.summernote-form').length)){ //do not initialize when inside editor
-                    var topOfObject = $elem.offset().top;
-                    var bottomOfWindow = $(window).scrollTop() + $(window).height();
+                var topOfObject = $elem.offset().top;
+                var bottomOfWindow = $(window).scrollTop() + $(window).height();
 
-                    /* If the object is completely visible in the window, fade it it */
-                    if( bottomOfWindow > topOfObject ){
-                        $elem.css({'opacity':'1'});
-                        $elem.addClass('fadedIn');
-                    }
+                /* If the object is completely visible in the window, fade it it */
+                if( bottomOfWindow > topOfObject ){
+                    $elem.css({'opacity':'1'});
+                    $elem.addClass('fadedIn');
                 }
             });
         };
@@ -613,24 +611,22 @@ app.main = {};
     
     self.enableSlick = function(){
         $('.gallery-autoplay').livequery(function(){
-            if (!($(this).parents('.summernote-form').length)){ //do not initialize when inside editor
-                var $elem = $(this);
-                $elem.on('init', function(event, slick){
-                    window.setTimeout(function(){$(window).trigger('slickinitialized');}, 300);
-                });
-                
-                var autoplaySpeed = $elem.attr('data-autoplay-speed') || 5000;
-                
-                $elem.slick({
-                    "dots": true,
-                    "accessibility": true,
-                    "autoplay": true,
-                    "autoplaySpeed": autoplaySpeed,
-                    "arrows": true,
-                    "adaptiveHeight": false,
-                    "lazyLoad": "progressive"
-                });
-            }
+            var $elem = $(this);
+            $elem.on('init', function(event, slick){
+                window.setTimeout(function(){$(window).trigger('slickinitialized');}, 300);
+            });
+
+            var autoplaySpeed = $elem.attr('data-autoplay-speed') || 5000;
+
+            $elem.slick({
+                "dots": true,
+                "accessibility": true,
+                "autoplay": true,
+                "autoplaySpeed": autoplaySpeed,
+                "arrows": true,
+                "adaptiveHeight": false,
+                "lazyLoad": "progressive"
+            });
         });
     };
     

@@ -23,7 +23,7 @@
             </div>
             <div class="panel-body">
 
-                <spf:form method="POST" class="form-signin summernote-form" role="form" modelAttribute="Model">
+                <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>
                     <spf:input type="hidden" path="position"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
@@ -39,9 +39,9 @@
                     </div>
                     <fmt:message var="Title" key="Title"/>
                     <spf:input path="title" type="text" class="form-control form-center-element" placeholder="${Title}"/>
-                    <spf:input path="message" type="hidden" id="summernote-input"/>
-                    <div class="form-bottom-element">
-                        <div id="summernote">${Model.message}</div>
+                    <div class="relative">
+                        <spf:textarea path="message" class="form-control form-bottom-element text-editor"/>
+                        <div class="explanation"><fmt:message key="Description"/></div>
                     </div>
                     <div class="unit">
                         <spf:checkbox path="fullWidth" id="fullWidth"/><label for="fullWidth"><fmt:message key="FullWidth"/></label>
@@ -58,4 +58,4 @@
         </div>
     </div>
 </div>
-<jsp:include page="/jsp/admin/include/summernote.jsp"/>
+<jsp:include page="/jsp/admin/include/text-editor.jsp"/>

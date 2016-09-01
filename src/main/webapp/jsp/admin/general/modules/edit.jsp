@@ -20,7 +20,7 @@
                 <h4>${empty Model.id ? AddModule : EditModule}</h4>
             </div>
             <div class="panel-body">
-                <spf:form method="POST" class="form-signin summernote-form" role="form" modelAttribute="Model" id="news-form">
+                <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model" id="news-form">
                     <spf:input type="hidden" path="id"/>
                     <spf:input type="hidden" path="position"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
@@ -44,11 +44,10 @@
                     </div>
                     
                     <div class="select-toggle-Events select-toggle-Bookings select-toggle-Ranking select-toggle-MatchOffers select-toggle-Staff relative">
-                        <spf:input path="description" type="hidden" id="summernote-input"/>
-                        <div class="form-cotrol form-center-element">
-                            <div id="summernote">${Model.description}</div>
+                        <div class="relative">
+                            <spf:textarea path="description" class="form-control form-center-element text-editor"/>
+                            <div class="explanation"><fmt:message key="Description"/></div>
                         </div>
-                        <div class="explanation"><fmt:message key="Description"/></div>
                     </div>
                     
                     <div class="select-toggle-Link relative">
@@ -98,5 +97,5 @@
         </div>
     </div></div>
 
-<jsp:include page="/jsp/admin/include/summernote.jsp"/>
+<jsp:include page="/jsp/admin/include/text-editor.jsp"/>
 <jsp:include page="/jsp/include/footer.jsp"/>

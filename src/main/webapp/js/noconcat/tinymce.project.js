@@ -79,6 +79,8 @@ $(document).ready(function () {
         file_picker_types: 'image',
         relative_urls: false,
         remove_script_host: true,
-        document_base_url: location.hostname
+        document_base_url: location.hostname,
+        extended_valid_elements: 'script,style,svg',
+        inline_styles: true
     });
 });

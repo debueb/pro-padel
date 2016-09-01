@@ -8,7 +8,6 @@ package de.appsolve.padelcampus.utils;
 import com.drew.imaging.ImageProcessingException;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.dao.ImageDAOI;
 import de.appsolve.padelcampus.db.model.Image;
 import java.awt.image.BufferedImage;
