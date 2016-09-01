@@ -43,7 +43,7 @@ public class FileUtil {
         String checksum = DigestUtils.sha256Hex(byteArray);
 
         Image existingImage = imageDAO.findBySha256(checksum);
-        String filePath = environment.getProperty(folderName) + File.separator + folderName + File.separator + checksum;
+        String filePath = environment.getProperty(Constants.OPENSHIFT_DATA_DIR) + File.separator + folderName + File.separator + checksum;
 
         File file = new File(filePath);
         if (existingImage != null && file.exists()){
