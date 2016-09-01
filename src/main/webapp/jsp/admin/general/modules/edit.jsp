@@ -51,6 +51,11 @@
                         <div class="explanation"><fmt:message key="Description"/></div>
                     </div>
                     
+                    <div class="select-toggle-Link relative">
+                        <spf:input path="url" type="text" class="form-control form-center-element" placeholder="http://www.google.de"/>
+                        <div class="explanation"><fmt:message key="URL"/></div>
+                    </div>
+                    
                     <div class="select-toggle-Events relative">
                         <spf:select path="eventTypes" type="text" class="form-control form-center-element select-multiple" multiple="multiple" data-container="body">
                             <c:forEach var="EventType" items="${EventTypes}">

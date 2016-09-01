@@ -21,6 +21,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
 import org.hibernate.annotations.SortNatural;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.URL;
 
 /**
  *
@@ -60,6 +61,10 @@ public class Module extends SortableEntity{
     @NotEmpty(message = "{NotEmpty.description}")
     @Column(length = 8000)
     private String description;
+    
+    @Column
+    @URL
+    private String url;
     
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @SortNatural
@@ -122,8 +127,13 @@ public class Module extends SortableEntity{
     }
     
     public String getUrl(){
-        String moduleName = "/" + getModuleType().name().toLowerCase();
-        switch (getModuleType()){
+        if (moduleType == null){
+            return null;
+        }
+        String moduleName = "/" + moduleType.name().toLowerCase();
+        switch (moduleType){
+            case Link:
+                return url;
             case Page:
             case Events:
                 moduleName += "/" + getTitle();
@@ -131,6 +141,10 @@ public class Module extends SortableEntity{
         }
         moduleName = moduleName.replace(" ", "-");
         return moduleName;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getDescription() {

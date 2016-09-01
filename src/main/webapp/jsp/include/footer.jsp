@@ -16,7 +16,7 @@
                 <c:set var="first" value="true"/>
                 <c:forEach var="CustomerModule" items="${customerModules[sessionScope.customer.name]}">
                     <c:if test="${CustomerModule.showInFooter}">
-                        <c:if test="${not first}"> | </c:if><a href="${CustomerModule.url}" class="ajaxify">${CustomerModule.title}</a>
+                        <c:if test="${not first}"> | </c:if><a href="${CustomerModule.url}" ${CustomerModule.moduleType == 'Link' ? 'target="blank"' : 'class="ajaxify"'}>${CustomerModule.title}</a>
                         <c:set var="first" value="false"/>
                     </c:if>
                 </c:forEach>
