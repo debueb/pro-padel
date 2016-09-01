@@ -1,4 +1,4 @@
-$(document).ready(function () {
+var initTinyMce = function () {
     
     window.app = app || {};
     app.imageHandler = {};
@@ -77,10 +77,43 @@ $(document).ready(function () {
             }
         },
         file_picker_types: 'image',
+        //make sure image urls are always absolute to the hostname, e.g. start with /images/image
         relative_urls: false,
         remove_script_host: true,
         document_base_url: location.hostname,
-        extended_valid_elements: 'script,style,svg',
-        inline_styles: true
+        //allow custom html elements
+        custom_elements: 'svg,clippath,polygon',
+        //allow script and style tag attributes and svg attributes
+        extended_valid_elements: 'script[src|async|defer|type],style,svg[width|height],clippath[id],polygon[points]',
+        //allow style and script elements as body children
+        valid_children : '+body[style],+body[script]',
+        //void removal of empty elements
+        verify_html: false,
+        //avoid CDATA comments, as Whitespacefilter will remove all line breaks, causing everything after the opening CDATA tag to be a comment
+        init_instance_callback : function(editor) {
+            editor.serializer.addNodeFilter('script,style', function(nodes, name) {
+                var i = nodes.length, node, value, type;
+
+                function trim(value) {
+                    /*jshint maxlen:255 */
+                    /*eslint max-len:0 */
+                    return value.replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n')
+                            .replace(/^[\r\n]*|[\r\n]*$/g, '')
+                            .replace(/^\s*((<!--)?(\s*\/\/)?\s*<!\[CDATA\[|(<!--\s*)?\/\*\s*<!\[CDATA\[\s*\*\/|(\/\/)?\s*<!--|\/\*\s*<!--\s*\*\/)\s*[\r\n]*/gi, '')
+                            .replace(/\s*(\/\*\s*\]\]>\s*\*\/(-->)?|\s*\/\/\s*\]\]>(-->)?|\/\/\s*(-->)?|\]\]>|\/\*\s*-->\s*\*\/|\s*-->\s*)\s*$/g, '');
+                }
+                while (i--) {
+                    node = nodes[i];
+                    value = node.firstChild ? node.firstChild.value : '';
+
+                    if (value.length > 0) {
+                        node.firstChild.value = trim(value);
+                    }
+                }
+            });
+        }
     });
-});
+};
+
+$(window).on('statechangecomplete', initTinyMce());
+$(document).ready(initTinyMce()); 
