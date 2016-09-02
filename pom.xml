@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.appsolve</groupId>
-    <artifactId>padelcampus</artifactId>
+    <artifactId>pro-padel</artifactId>
     <version>1.0.1</version>
     <packaging>war</packaging>
 
-    <name>PadelCampus</name>
+    <name>pro-padel</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
