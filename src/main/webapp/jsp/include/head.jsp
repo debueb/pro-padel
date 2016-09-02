@@ -36,14 +36,14 @@
         <c:set var="compressJS" value="${compress.js}"/>
         <c:choose>
             <c:when test="${compressJS and empty param.debug}">
-                <script src="//code.jquery.com/jquery-1.11.1.min.js" integrity="sha384-UM1JrZIpBwVf5jj9dTKVvGiiZPZTLVoq4sfdvIe9SBumsvCuv6AHDNtEiIb5h1kU" crossorigin="anonymous"></script>
-                <script>window.jQuery || document.write('<script src="/js/noconcat/10_jquery-1.11.1.min.js">\x3C/script>');</script>
+                <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+                <script>window.jQuery || document.write('<script src="/js/noconcat/10_jquery-1.12.4.min.js">\x3C/script>');</script>
                 <script src="/js/all.min.js"></script>
                 <script src="/js/noconcat/31_datepicker-de.js"></script>
             </c:when>
             <c:otherwise>
                 <%-- we use jquery 1.x instead of 2.x to support older Android browsers. Specifically, jQuery.on() does not work on Android 2.1 --%>
-                <script src="/js/noconcat/10_jquery-1.11.1.min.js"></script>
+                <script src="/js/noconcat/10_jquery-1.12.4.min.js"></script>
                 <script src="/js/20_bootstrap.min.js"></script>
                 <script src="/js/25_bootstrap-select.js"></script>
                 <script src="/js/26_ajax-bootstrap-select.js"></script>
