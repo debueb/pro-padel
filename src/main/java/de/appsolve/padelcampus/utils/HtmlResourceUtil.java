@@ -83,7 +83,7 @@ public class HtmlResourceUtil {
             lessCompiler = new LessCompiler();
             lessCompiler.init();
             int availableProcessors = Runtime.getRuntime().availableProcessors();
-            LOG.info(String.format("Compiling less with %s processors", availableProcessors));
+            LOG.info(String.format("Compiling less with %s cores", availableProcessors));
             ExecutorService executor = Executors.newFixedThreadPool(availableProcessors);
             List<FutureTask<Void>> taskList = new ArrayList<>();
 
