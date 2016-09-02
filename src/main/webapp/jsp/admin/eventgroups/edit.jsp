@@ -8,9 +8,9 @@
         <div class="page-header"></div>
         <div class="panel panel-info">
             <div class="panel-heading">
-                <fmt:message key="NewCommunity" var="NewCommunity"/>
-                <fmt:message key="EditCommunity" var="EditCommunity"/>
-                    <h4>${empty Model.name ? NewCommunity : EditCommunity}</h4>
+                <fmt:message key="AddEventGroup" var="AddEventGroup"/>
+                <fmt:message key="EditEventGroup" var="EditEventGroup"/>
+                    <h4>${empty Model.name ? AddEventGroup : EditEventGroup}</h4>
             </div>
             <div class="panel-body">
 

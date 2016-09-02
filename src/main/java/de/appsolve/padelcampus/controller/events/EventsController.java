@@ -95,7 +95,7 @@ public class EventsController extends BaseController{
         Iterator<Event> iterator = events.iterator();
         while (iterator.hasNext()){
             Event event = iterator.next();
-            if (!module.getEventTypes().contains(event.getEventType())){
+            if (event.getEventGroup() == null || !module.getEventGroups().contains(event.getEventGroup())){
                 iterator.remove();
             }
         }

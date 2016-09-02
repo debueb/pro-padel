@@ -8,9 +8,12 @@ package de.appsolve.padelcampus.admin.controller.general;
 
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.ModuleType;
+import de.appsolve.padelcampus.db.dao.EventGroupDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
+import de.appsolve.padelcampus.db.model.EventGroup;
 import de.appsolve.padelcampus.db.model.Module;
+import de.appsolve.padelcampus.spring.EventGroupPropertyEditor;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.utils.FileUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
@@ -55,9 +58,16 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
     @Autowired
     ModuleUtil moduleUtil;
     
+    @Autowired
+    EventGroupDAOI eventGroupDAO;
+    
+    @Autowired
+    EventGroupPropertyEditor eventGroupPropertyEditor;
+    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
+        binder.registerCustomEditor(EventGroup.class, eventGroupPropertyEditor);
     }
     
     @Override
@@ -204,7 +214,7 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
 
     private void addEditObjects(ModelAndView mav) {
         mav.addObject("ModuleTypes", ModuleType.values());
-        mav.addObject("EventTypes", EventType.values());
+        mav.addObject("EventGroups", eventGroupDAO.findAll());
         try {
             String fileContents = FileUtil.getFileContents("font-awesome-icon-names.txt");
             String[] iconNames = fileContents.split("\n");

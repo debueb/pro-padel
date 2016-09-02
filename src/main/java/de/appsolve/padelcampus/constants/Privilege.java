@@ -16,7 +16,7 @@ public enum Privilege {
     AccessAdminInterface("/admin"),
     ManageCustomers("/admin/customers.*"),
     ManageGeneral("/admin/general.*"),
-    ManageEvents("/admin/events.*"),
+    ManageEvents("/admin/event.*"),
     ManageCommunities("/admin/communities.*"),
     ManagePlayers("/admin/players.*"),
     ManageTeams("/admin/teams.*"),

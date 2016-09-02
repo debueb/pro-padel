@@ -6,12 +6,10 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.ModuleType;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -53,9 +51,8 @@ public class Module extends SortableEntity{
     @Column
     private Boolean showOnHomepage;
     
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
-    private Set<EventType> eventTypes;
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<EventGroup> eventGroups;
     
     @Column
     private String shortDescription;
@@ -118,12 +115,12 @@ public class Module extends SortableEntity{
         this.showInFooter = showInFooter;
     }
 
-    public Set<EventType> getEventTypes() {
-        return eventTypes;
+    public Set<EventGroup> getEventGroups() {
+        return eventGroups;
     }
 
-    public void setEventTypes(Set<EventType> eventTypes) {
-        this.eventTypes = eventTypes;
+    public void setEventGroups(Set<EventGroup> eventGroups) {
+        this.eventGroups = eventGroups;
     }
     
     public String getUrl(){

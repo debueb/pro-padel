@@ -16,6 +16,7 @@ import de.appsolve.padelcampus.data.GameData;
 import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
+import de.appsolve.padelcampus.db.dao.EventGroupDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
@@ -23,10 +24,11 @@ import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Community;
 import de.appsolve.padelcampus.db.model.Event;
+import de.appsolve.padelcampus.db.model.EventGroup;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
-import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.spring.EventGroupPropertyEditor;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.spring.ParticipantCollectionEditor;
 import de.appsolve.padelcampus.utils.EventsUtil;
@@ -34,7 +36,6 @@ import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATT
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
-import de.appsolve.padelcampus.utils.TeamUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -92,6 +93,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
     
     @Autowired
     CalendarConfigDAOI calendarConfigDAO;
+        
+    @Autowired
+    EventGroupDAOI eventGroupDAO;
     
     @Autowired
     RankingUtil rankingUtil;
@@ -111,11 +115,15 @@ public class AdminEventsController extends AdminBaseController<Event>{
     @Autowired
     CalendarConfigPropertyEditor calendarConfigPropertyEditor;
     
+    @Autowired
+    EventGroupPropertyEditor eventGroupPropertyEditor;
+    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
         binder.registerCustomEditor(Set.class, participantCollectionEditor);
         binder.registerCustomEditor(CalendarConfig.class, calendarConfigPropertyEditor);
+        binder.registerCustomEditor(EventGroup.class, eventGroupPropertyEditor);
     }
     
     @Override
@@ -517,6 +525,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
         mav.addObject("EventTypes", EventType.values());
         mav.addObject("Genders", Gender.values());
         mav.addObject("CalendarConfigs", calendarConfigDAO.findAll());
+        mav.addObject("EventGroups", eventGroupDAO.findAll());
         return mav;
     }
     

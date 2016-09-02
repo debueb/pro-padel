@@ -9,7 +9,6 @@ package de.appsolve.padelcampus.db.model;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.utils.MailUtils;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -20,6 +19,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -91,6 +91,9 @@ public class Event extends ComparableEntity{
     
     @OneToOne(fetch = FetchType.LAZY)
     private CalendarConfig calendarConfig;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    private EventGroup eventGroup;
 
     public String getName() {
         return name;
@@ -218,6 +221,14 @@ public class Event extends ComparableEntity{
 
     public void setCalendarConfig(CalendarConfig calendarConfig) {
         this.calendarConfig = calendarConfig;
+    }
+
+    public EventGroup getEventGroup() {
+        return eventGroup;
+    }
+
+    public void setEventGroup(EventGroup eventGroup) {
+        this.eventGroup = eventGroup;
     }
     
     public Set<Team> getTeams(){

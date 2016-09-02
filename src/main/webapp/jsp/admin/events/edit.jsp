@@ -24,6 +24,13 @@
                     </div>
                     
                     <div class="relative">
+                        <spf:select path="eventGroup" class="select-simple form-control" data-style="form-center-element" data-container="body">
+                            <spf:options items="${EventGroups}" itemLabel="name" itemValue="id"/>
+                        </spf:select>
+                        <span class="explanation-select"><fmt:message key="EventGroup"/></span>
+                    </div>
+                    
+                    <div class="relative">
                         <spf:textarea path="description" class="form-control form-center-element text-editor"/>
                         <div class="explanation"><fmt:message key="Description"/></div>
                     </div>

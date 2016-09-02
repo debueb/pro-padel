@@ -61,12 +61,10 @@
                     </div>
                     
                     <div class="select-toggle-Events relative">
-                        <spf:select path="eventTypes" type="text" class="form-control form-center-element select-multiple" multiple="multiple" data-container="body">
-                            <c:forEach var="EventType" items="${EventTypes}">
-                                <spf:option value="${EventType}"><fmt:message key="${EventType}"/></spf:option>
-                            </c:forEach>
+                        <spf:select path="eventGroups" type="text" class="form-control form-center-element select-multiple" multiple="multiple" data-container="body">
+                            <spf:options items="${EventGroups}" itemLabel="name" itemValue="id"/>
                         </spf:select>
-                        <div class="explanation-select"><fmt:message key="EventType"/></div>
+                        <div class="explanation-select"><fmt:message key="EventGroups"/></div>
                     </div>
                     
                     <spf:select path="iconName" type="text" class="form-control form-bottom-element select-simple" data-live-search="true" data-container="body">

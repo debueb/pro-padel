@@ -44,9 +44,14 @@
                         <jsp:param name="icon" value="users"/>
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/eventgroups"/>
+                        <jsp:param name="key" value="EventGroups"/>
+                        <jsp:param name="icon" value="sitemap"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/events"/>
                         <jsp:param name="key" value="Events"/>
-                        <jsp:param name="icon" value="sitemap"/>
+                        <jsp:param name="icon" value="square"/>
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/contact"/>
