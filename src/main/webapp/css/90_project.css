@@ -1842,27 +1842,25 @@ a.menu-item {
     display: none;
   }
 }
-a.menu-item:hover,
-a.menu-item:active,
-a.menu-item.active {
-  background-color: #613815;
-  color: #613816;
-}
 h1 {
   font-weight: bold;
   margin-top: 10px;
 }
 .staff-col {
-  padding: 5px;
-  width: 310px;
-  max-width: 310px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  min-width: 310px;
   height: 350px;
-  max-height: 350px;
+  min-height: 350px;
+  text-align: center;
+}
+.staff-container-flex {
+  width: calc(100% + 10px);
 }
 .staff-container {
-  perspective: 500px;
-  width: 100%;
+  perspective: 1000px;
   height: 100%;
+  width: 100%;
 }
 .staff-container:hover .staff-flipper,
 .flip-container.hover .staff-flipper {
@@ -1904,12 +1902,29 @@ h1 {
   background: -o-linear-gradient(-45deg, #613815 0%, #613816 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#613815, endColorstr=#dc442c, GradientType=1);
 }
+.staff-image {
+  min-width: 300px;
+  min-height: 240px;
+  max-height: 240px;
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-position: center;
+}
 .staff-back {
   display: table;
   transform: rotateY(-180deg);
 }
 .text-editor-iframe .fadeIn {
   opacity: 1;
+}
+a.menu-item:hover,
+a.menu-item:active,
+a.menu-item.active {
+  background-color: #613815;
+  color: #613816;
 }
 /*DO NOT REMOVE THE FOLLOWING LINE. WILL BE REPLACED BY CUSTOMER SPECIFIC CSS*/
 /*customCss*/
