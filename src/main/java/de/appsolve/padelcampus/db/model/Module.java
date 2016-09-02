@@ -57,7 +57,9 @@ public class Module extends SortableEntity{
     @Enumerated(EnumType.STRING)
     private Set<EventType> eventTypes;
     
-    @NotEmpty(message = "{NotEmpty.description}")
+    @Column
+    private String shortDescription;
+    
     @Column(length = 8000)
     private String description;
     
@@ -143,6 +145,14 @@ public class Module extends SortableEntity{
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
     }
 
     public String getDescription() {

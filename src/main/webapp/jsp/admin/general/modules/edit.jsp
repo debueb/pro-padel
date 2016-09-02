@@ -43,6 +43,11 @@
                         <div class="explanation"><fmt:message key="Title"/></div>
                     </div>
                     
+                    <div class="relative">
+                        <spf:input type="text" path="shortDescription" class="form-control form-center-element"/>
+                        <div class="explanation"><fmt:message key="ShortDescription"/></div>
+                    </div>
+                        
                     <div class="select-toggle-Events select-toggle-Bookings select-toggle-Ranking select-toggle-MatchOffers select-toggle-Staff relative">
                         <div class="relative">
                             <spf:textarea path="description" class="form-control form-center-element text-editor"/>

@@ -13,7 +13,7 @@
                         <jsp:param name="url" value="${Module.url}"/>
                         <jsp:param name="title" value="${Module.title}"/>
                         <jsp:param name="iconName" value="${Module.iconName}"/>
-                        <jsp:param name="desc" value="${Module.description}"/>
+                        <jsp:param name="desc" value="${Module.shortDescription}"/>
                     </jsp:include>
                 </c:if>
             </c:forEach>

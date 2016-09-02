@@ -6,22 +6,30 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
-        <meta name="description" content="">
-        <meta name="author" content="anon">
-
+        
         <meta name="mobile-web-app-capable" content="yes"> <%-- Chrome M31 and up --%>
         <meta name="apple-mobile-web-app-capable" content="yes" /> <%-- Mobile Safari --%>
         <meta name="format-detection" content="telephone=no">
         
         <meta name="google-site-verification" content="zV4l09W2NsrN2uP1MCLQNG5mR8FPsmIPocAQiYGLaHs" />
         
+        <c:choose>
+            <c:when test="${empty Module}">
+                <title>${sessionScope.customer}</title>
+            </c:when>
+            <c:otherwise>
+                <title>${sessionScope.customer} - ${Module.title}</title>
+                <c:if test="${not empty Module.shortDescription}">
+                    <meta name="description" content="${Module.shortDescription}">
+                </c:if>
+            </c:otherwise>
+        </c:choose>
+
         <%-- https://mathiasbynens.be/notes/touch-icons --%>
         <%-- we only use one touch-icon as it will be downscaled if necessary and the touch-icon has the same ratio on all devices --%>
         <link rel="apple-touch-icon" href="${sessionScope.customer.touchIconPath}">
         <link rel="icon" sizes="192x192" href="${sessionScope.customer.touchIconPath}">
-
-        <title>${sessionScope.customer}</title>
-
+        
         <c:set var="compressCSS" value="${compress.css}"/>
         <c:choose>
             <c:when test="${compressCSS and empty param.debug}">
