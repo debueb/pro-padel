@@ -21,7 +21,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
 import org.hibernate.annotations.SortNatural;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.hibernate.validator.constraints.URL;
 
 /**
  *
@@ -63,7 +62,6 @@ public class Module extends SortableEntity{
     private String description;
     
     @Column
-    @URL
     private String url;
     
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
