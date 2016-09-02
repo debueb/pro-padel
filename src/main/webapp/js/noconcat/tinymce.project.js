@@ -29,7 +29,13 @@ var initTinyMce = function () {
         });
     };
     
+    var cssLinks =  $('link[title="project_css"]').map(function(i, link) {
+                        return $(link).attr('href');
+                    }).toArray().join(',');
+    
     tinymce.init({
+        content_css: cssLinks,
+        body_class: 'text-editor-iframe',
         selector:'.text-editor', 
         min_height: 300,
         theme: 'modern',
@@ -51,7 +57,6 @@ var initTinyMce = function () {
         toolbar2: 'print preview | forecolor backcolor emoticons',
         fontsize_formats: '8px 10px 12px 14px 16px 18px 24px 36px',
         image_advtab: true,
-        content_css: $($('link[rel=stylesheet]').get(0)).attr('href'),
         templates: [
           { title: 'Alert Danger', url: '/templates/AlertDanger.html' },
           { title: 'Alert Info', url: '/templates/AlertInfo.html' },

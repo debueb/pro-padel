@@ -31,25 +31,8 @@
         <link rel="icon" sizes="192x192" href="${sessionScope.customer.touchIconPath}">
         
         <c:set var="compressCSS" value="${compress.css}"/>
-        <c:choose>
-            <c:when test="${compressCSS and empty param.debug}">
-                <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet">
-            </c:when>
-            <c:otherwise>
-                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/10_bootstrap.css.stylesheet">
-                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/20_bootstrap-select.css.stylesheet">
-                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/21_ajax-bootstrap-select.css.stylesheet">
-                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/30_font-awesome.min.css.stylesheet">
-                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/40_jquery-ui.min.css.stylesheet">
-                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/50_slick.css.stylesheet">
-                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/51_slick-theme.css.stylesheet">
-                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/52_slick_project.css.stylesheet">
-                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/90_project.css.stylesheet">
-                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/96_loader.css.stylesheet">
-                <link rel="stylesheet" href="/css/dev/${sessionScope.customer}/99_addtohomescreen.css.stylesheet">
-            </c:otherwise>
-        </c:choose>
-                
+        <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet" title="project_css">
+
         <c:set var="compressJS" value="${compress.js}"/>
         <c:choose>
             <c:when test="${compressJS and empty param.debug}">
