@@ -17,7 +17,7 @@
                             <span class="fa fa-calendar datepicker-icon"></span>
                             <div class="datepicker-text"></div>
                         </div>
-                        <input type="hidden" name="date" class="datepicker-input auto-submit" class="form-control" value="${Day}" />
+                        <input type="hidden" name="date" class="datepicker-input auto-submit" class="form-control" value="${Day}" data-prev-sunday="${PrevSunday}" data-next-monday="${NextMonday}"/>
                         <div class="datepicker" data-show-on-init="false" data-redirect-on-select="/bookings/{date}/{time}" data-day-config='${dayConfigs}' data-max-date='${maxDate}'></div>
                     </div>
                     <c:if test="${not empty RangeMap}">
@@ -166,6 +166,16 @@
                                     slidesToShow: 1
                                 }
                             }]
+                    });
+                    $('.slick-next.slick-disabled').livequery(function(){
+                        $(this).on('click tap', function(){
+                            $('input[name="date"]').val($('input[name="date"]').attr('data-next-monday'));
+                        });
+                    });
+                    $('.slick-prev.slick-disabled').livequery(function(){
+                        $(this).on('click tap', function(){
+                            $('input[name="date"]').val($('input[name="date"]').attr('data-prev-sunday'));
+                        });
                     });
                 });
             </script>

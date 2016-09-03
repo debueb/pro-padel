@@ -310,6 +310,8 @@ public class BookingUtil {
         mav.addObject("dayConfigs", objectMapper.writeValueAsString(dayConfigs));
         mav.addObject("maxDate", lastDay.toString());
         mav.addObject("Day", selectedDate);
+        mav.addObject("NextMonday", selectedDate.plusDays(8-selectedDate.getDayOfWeek()));
+        mav.addObject("PrevSunday", selectedDate.minusDays(selectedDate.getDayOfWeek()));
         mav.addObject("WeekDays", weekDays);
         mav.addObject("RangeMap", rangeList);
         mav.addObject("Offers", offers);
