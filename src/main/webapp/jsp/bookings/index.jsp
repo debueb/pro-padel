@@ -167,16 +167,6 @@
                                 }
                             }]
                     });
-                    $('.slick-next.slick-disabled').livequery(function(){
-                        $(this).on('click tap', function(){
-                            $('input[name="date"]').val($('input[name="date"]').attr('data-next-monday'));
-                        });
-                    });
-                    $('.slick-prev.slick-disabled').livequery(function(){
-                        $(this).on('click tap', function(){
-                            $('input[name="date"]').val($('input[name="date"]').attr('data-prev-sunday'));
-                        });
-                    });
                 });
             </script>
             <div class="unit-2"></div>

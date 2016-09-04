@@ -1926,13 +1926,13 @@ a.menu-item.active {
   background-color: #613815;
   color: #613816;
 }
-.booking-gallery .slick-prev.slick-disabled:before {
-  content: "\f048";
-  opacity: 0.75;
+/*.booking-gallery .slick-prev.slick-disabled:before{
+    content: "\f048";
+    opacity: 0.75;
 }
-.booking-gallery .slick-next.slick-disabled:before {
-  content: "\f051";
-  opacity: 0.75;
-}
+.booking-gallery .slick-next.slick-disabled:before{
+    content: "\f051";
+    opacity: 0.75;
+}*/
 /*DO NOT REMOVE THE FOLLOWING LINE. WILL BE REPLACED BY CUSTOMER SPECIFIC CSS*/
 /*customCss*/
