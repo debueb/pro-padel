@@ -34,6 +34,7 @@ var initTinyMce = function () {
                     }).toArray().join(',');
     
     tinymce.init({
+        entity_encoding: 'raw',
         content_css: cssLinks,
         body_class: 'text-editor-iframe',
         selector:'.text-editor', 
