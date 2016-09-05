@@ -15,6 +15,10 @@
                 <div class="container-fluid">
                     <spf:form modelAttribute="Model">
                         <div class="alert alert-danger"><spf:errors path="*"/></div>
+                        <div class="row">
+                            <div class="col-xs-4 booking-cell"><fmt:message key="Player"/>:</div>
+                            <div class="col-xs-8 booking-cell">${Booking.player}</div>
+                        </div>  
                         <jsp:include page="/jsp/bookings/include/booking-data.jsp"/>
                         <div class="row">
                             <div class="col-xs-4 booking-cell">
