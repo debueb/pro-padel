@@ -529,7 +529,7 @@ public class BookingsController extends BaseController {
         }
 
         //create a list of possible booking durations taking into account calendar configurations and confirmed bookings
-        Set<OfferDurationPrice> offerDurationPrices = getOfferDurationPrices(selectedDate, selectedTime);
+        Set<OfferDurationPrice> offerDurationPrices = getOfferDurationPrices(selectedDate, selectedTime, offer);
         
         //notify the user in case there are no durations bookable
         if (offerDurationPrices.isEmpty()){
@@ -629,7 +629,7 @@ public class BookingsController extends BaseController {
         return new ModelAndView("redirect:/bookings/booking/" + booking.getUUID() + "/success");
     }
 
-    private Set<OfferDurationPrice> getOfferDurationPrices(LocalDate selectedDate, LocalTime selectedTime) throws CalendarConfigException {
+    private Set<OfferDurationPrice> getOfferDurationPrices(LocalDate selectedDate, LocalTime selectedTime, Offer selectedOffer) throws CalendarConfigException {
         List<CalendarConfig> configs = calendarConfigDAO.findFor(selectedDate);
         List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(selectedDate);
 
@@ -637,15 +637,17 @@ public class BookingsController extends BaseController {
         Map<Offer, List<CalendarConfig>> offerConfigMap = new HashMap<>();
         for (CalendarConfig config: configs){
             for (Offer offer: config.getOffers()){
-                List<CalendarConfig> list = offerConfigMap.get(offer);
-                if (list==null){
-                    list = new ArrayList<>();
+                if (offer.equals(selectedOffer)){
+                    List<CalendarConfig> list = offerConfigMap.get(offer);
+                    if (list==null){
+                        list = new ArrayList<>();
+                    }
+                    list.add(config);
+
+                    //sort by start time
+                    Collections.sort(list);
+                    offerConfigMap.put(offer, list);
                 }
-                list.add(config);
-                
-                //sort by start time
-                Collections.sort(list);
-                offerConfigMap.put(offer, list);
             }
         }
         
