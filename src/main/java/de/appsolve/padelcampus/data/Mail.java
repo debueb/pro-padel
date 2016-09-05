@@ -83,11 +83,12 @@ public class Mail {
         return recipients == null ? new ArrayList<EmailContact>() : recipients;
     }
 
-    public void setRecipients(List<EmailContact> contacts) {
-        this.recipients = contacts;
+    public void setRecipients(List<? extends EmailContact> contacts) {
+        List<EmailContact> list = new ArrayList<>(contacts);
+        this.recipients = list;
     }
-
-    public void addRecipient(EmailContact contact) {
+    
+    public <T extends EmailContact> void addRecipient(T contact) {
         List<EmailContact> contacts = getRecipients();
         contacts.add(contact);
         setRecipients(contacts);

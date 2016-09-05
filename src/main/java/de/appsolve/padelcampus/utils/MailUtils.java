@@ -15,7 +15,6 @@ import com.sparkpost.resources.ResourceTransmissions;
 import com.sparkpost.transport.RestConnection;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
-import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.exceptions.MailException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,7 +40,9 @@ public class MailUtils {
             TransmissionWithRecipientArray transmission = new TransmissionWithRecipientArray();
 
             List<RecipientAttributes> recipientArray = new ArrayList<>();
-            for (String recpient : getRecipients(mail)) {
+            
+            List<String> recipients = getRecipients(mail);
+            for (String recpient : recipients) {
                 RecipientAttributes recipientAttribs = new RecipientAttributes();
                 recipientAttribs.setAddress(new AddressAttributes(recpient));
                 recipientArray.add(recipientAttribs);

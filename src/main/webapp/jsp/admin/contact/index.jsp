@@ -7,22 +7,28 @@
 
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4><fmt:message key="AllContacts"/></h4>
+                <h4><fmt:message key="ContactSettings"/></h4>
             </div>
             <div class="panel-body">
-                <div class="alert alert-info"><fmt:message key="ContactFormInfo"/></div>
                 <div class="table-responsive unit-2">
                     <table class="table table-striped table-bordered">
                         <thead>
                         <th><fmt:message key="Name"/></th>
                         <th><fmt:message key="EmailAddress"/></th>
+                        <th class="text-center"><fmt:message key="NotifyOnContactForm"/></th>
+                        <th class="text-center"><fmt:message key="NotifyOnBooking"/></th>
+                        <th class="text-center"><fmt:message key="NotifyOnBookingCancellation"/></th>
                         <th class="delete"><fmt:message key="Delete"/></th>
                         </thead>
                         <tbody>
                             <c:forEach var="Contact" items="${Models}">
+                                <c:set var="url" value="/admin/contact/edit/${Contact.id}"/>
                                 <tr>
-                                    <td><a class="ajaxify" href="/admin/contact/edit/${Contact.id}">${Contact.emailDisplayName}</a></td>
-                                    <td><a class="ajaxify" href="/admin/contact/edit/${Contact.id}">${Contact.emailAddress}</a></td>
+                                    <td><a class="ajaxify" href="${url}">${Contact.emailDisplayName}</a></td>
+                                    <td><a class="ajaxify" href="${url}">${Contact.emailAddress}</a></td>
+                                    <td class="text-center"><a class="ajaxify" href="${url}"><i class="fa fa-${Contact.notifyOnContactForm ? 'check' : 'remove'}"/></a></td>
+                                    <td class="text-center"><a class="ajaxify" href="${url}"><i class="fa fa-${Contact.notifyOnBooking ? 'check' : 'remove'}"/></a></td>
+                                    <td class="text-center"><a class="ajaxify" href="${url}"><i class="fa fa-${Contact.notifyOnBookingCancellation ? 'check' : 'remove'}"/></a></td>
                                     <td class="delete"><a href="/admin/contact/${Contact.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
                                 </tr>
                             </c:forEach>

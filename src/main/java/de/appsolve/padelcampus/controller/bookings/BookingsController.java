@@ -19,6 +19,7 @@ import de.appsolve.padelcampus.data.OfferDurationPrice;
 import de.appsolve.padelcampus.data.TimeSlot;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
+import de.appsolve.padelcampus.db.dao.ContactDAOI;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.FacilityDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
@@ -120,6 +121,9 @@ public class BookingsController extends BaseController {
     
     @Autowired
     TeamDAOI teamDAO;
+    
+    @Autowired
+    ContactDAOI contactDAO;
     
     @Autowired
     BookingsPayPalController bookingsPayPalController;
@@ -383,13 +387,23 @@ public class BookingsController extends BaseController {
                 RequestUtil.getBaseURL(request) + "/bookings/booking/" + booking.getUUID() + "/cancel",
                 RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
                 RequestUtil.getBaseURL(request)}));
-            Contact contact = new Contact();
-            contact.setEmailAddress(booking.getPlayer().getEmail());
-            contact.setEmailDisplayName(booking.getPlayer().toString());
-            mail.addRecipient(contact);
+            mail.addRecipient(booking.getPlayer());
             MailUtils.send(mail);
             booking.setConfirmationMailSent(true);
             bookingDAO.saveOrUpdate(booking);
+            
+            List<Contact> contactsToNotifyOnBooking = contactDAO.findAllForBookings();
+            if (!contactsToNotifyOnBooking.isEmpty()){
+                mail = new Mail(request);
+                mail.setSubject(msg.get("BookingSuccessfulMailSubjectAdmin", new Object[]{
+                    FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
+                    FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
+                    booking.getPlayer().toString()
+                }));
+                mail.setBody(msg.get("BookingSuccessfulMailBodyAdmin", getDetailBody(request, booking)));
+                mail.setRecipients(contactsToNotifyOnBooking);
+                MailUtils.send(mail);
+            }
         } catch (MailException | IOException ex) {
             LOG.error("Error while sending booking confirmation email", ex);
             mav.addObject("error", msg.get("FailedToSendBookingConfirmationEmail", new Object[]{FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()), FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime())}));
@@ -465,18 +479,23 @@ public class BookingsController extends BaseController {
                 FormatUtils.DATE_MEDIUM.print(voucher.getValidUntil()),
                 voucher.getUUID(),
                 RequestUtil.getBaseURL(request)}));
-            Contact contact = new Contact();
-            contact.setEmailAddress(booking.getPlayer().getEmail());
-            contact.setEmailDisplayName(booking.getPlayer().toString());
-            mail.addRecipient(contact);
-            try {
+            mail.addRecipient(booking.getPlayer());
                 MailUtils.send(mail);
                 booking.setCancelled(true);
                 booking.setCancelReason("cancellation with replacement voucher");
                 bookingDAO.saveOrUpdate(booking);
-            } catch (MailException | IOException ex) {
-                LOG.error("Error while sending booking cancellation success email", ex);
-                throw (ex);
+                
+            List<Contact> contactsToNotifyOnBookingCancellation = contactDAO.findAllForBookingCancellations();
+            if (!contactsToNotifyOnBookingCancellation.isEmpty()){
+                mail = new Mail(request);
+                mail.setSubject(msg.get("BookingCancelledAdminMailSubject", new Object[]{
+                    FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
+                    FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
+                    booking.getPlayer().toString()
+                }));
+                mail.setBody(msg.get("BookingCancelledAdminMailBody", getDetailBody(request, booking)));
+                mail.addRecipient(booking.getPlayer());
+                    MailUtils.send(mail);
             }
         } catch (Exception e) {
             LOG.error("Error during booking cancellation", e);
@@ -728,5 +747,20 @@ public class BookingsController extends BaseController {
             }
         }
         return offerDurationPrices;
+    }
+
+    private Object[] getDetailBody(HttpServletRequest request, Booking booking) {
+        return new Object[]{
+            booking.getPlayer().toString(),
+            FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
+            FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
+            booking.getDuration() + " " + msg.get("Minutes"),
+            booking.getOffer().toString(),
+            msg.get(booking.getPaymentMethod().toString()),
+            booking.getAmount(),
+            booking.getCurrency(),
+            RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
+            RequestUtil.getBaseURL(request) + "/admin/reports/booking/" + booking.getId()
+        };
     }
 }

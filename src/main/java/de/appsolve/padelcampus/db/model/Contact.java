@@ -31,6 +31,15 @@ public class Contact extends CustomerEntity implements EmailContact{
     @Column
     @NotEmpty(message = "{NotEmpty.name}")
     private String emailDisplayName;
+    
+    @Column
+    private Boolean notifyOnContactForm;
+    
+    @Column
+    private Boolean notifyOnBooking;
+    
+    @Column
+    private Boolean notifyOnBookingCancellation;
 
     @Override
     public String getEmailAddress() {
@@ -48,6 +57,30 @@ public class Contact extends CustomerEntity implements EmailContact{
 
     public void setEmailDisplayName(String emailDisplayName) {
         this.emailDisplayName = emailDisplayName;
+    }
+
+    public Boolean getNotifyOnContactForm() {
+        return notifyOnContactForm;
+    }
+
+    public void setNotifyOnContactForm(Boolean notifyOnContactForm) {
+        this.notifyOnContactForm = notifyOnContactForm;
+    }
+
+    public Boolean getNotifyOnBooking() {
+        return notifyOnBooking;
+    }
+
+    public void setNotifyOnBooking(Boolean notifyOnBooking) {
+        this.notifyOnBooking = notifyOnBooking;
+    }
+
+    public Boolean getNotifyOnBookingCancellation() {
+        return notifyOnBookingCancellation;
+    }
+
+    public void setNotifyOnBookingCancellation(Boolean notifyOnBookingCancellation) {
+        this.notifyOnBookingCancellation = notifyOnBookingCancellation;
     }
     
     @Override

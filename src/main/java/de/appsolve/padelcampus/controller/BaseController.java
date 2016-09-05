@@ -70,11 +70,11 @@ public abstract class BaseController {
         }
         try {
             if (mail.getRecipients().isEmpty()){
-                List<Contact> contacts = contactDAO.findAll();
+                List<Contact> contacts = contactDAO.findAllForContactForm();
                 if (contacts.isEmpty()){
                     contacts.add(getDefaultContact());
                 }
-                mail.setRecipients(new ArrayList<EmailContact>(contacts));
+                mail.setRecipients(contacts);
             }
             mail.setSubject("[Feedback] "+mail.getSubject());
             MailUtils.send(mail);
