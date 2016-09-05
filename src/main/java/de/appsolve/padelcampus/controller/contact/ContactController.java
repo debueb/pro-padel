@@ -8,7 +8,6 @@ package de.appsolve.padelcampus.controller.contact;
 
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.Mail;
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
