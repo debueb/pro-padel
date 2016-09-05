@@ -65,7 +65,11 @@ public class SitemapXmlGenerator {
                 }
                 switch (module.getModuleType()){
                     case HomePage:
+                        options = new WebSitemapUrl.Options(baseUrl + "/home");
                         options = options.priority(1.0);
+                        break;
+                    case LandingPage:
+                        options = new WebSitemapUrl.Options(baseUrl + "/");
                         break;
                     case Bookings:
                         options.priority(0.8);
