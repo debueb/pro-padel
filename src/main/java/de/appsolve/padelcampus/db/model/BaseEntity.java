@@ -12,6 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PreUpdate;
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDateTime;
 
 /**
  *
@@ -24,6 +27,10 @@ public abstract class BaseEntity implements BaseEntityI{
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
     private Long id;
+    
+    @Column
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+    private LocalDateTime lastUpdated;
 
     @Override
     public Long getId() {
@@ -32,6 +39,14 @@ public abstract class BaseEntity implements BaseEntityI{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     @Override
@@ -56,5 +71,10 @@ public abstract class BaseEntity implements BaseEntityI{
     @Override
     public int compareTo(BaseEntityI o) {
         return toString().compareToIgnoreCase(o.toString());
+    }
+    
+    @PreUpdate
+    public void updateLastUpdated() { 
+        setLastUpdated(new LocalDateTime());
     }
 }
