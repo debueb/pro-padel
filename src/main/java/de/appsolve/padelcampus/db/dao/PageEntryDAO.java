@@ -21,11 +21,4 @@ public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEnt
         attributes.put("module", module);
         return findByAttributes(attributes);
     }
-
-    @Override
-    public List<PageEntry> findForHomePage() {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("showOnHomepage", true);
-        return findByAttributes(attributes);
-    }
 }

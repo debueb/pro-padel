@@ -42,9 +42,6 @@ public class PageEntry extends SortableEntity{
     private Boolean fullWidth;
     
     @Column
-    private Boolean showOnHomepage;
-    
-    @Column
     private Boolean showContactForm;
     
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Module.class, fetch = FetchType.EAGER)
@@ -80,14 +77,6 @@ public class PageEntry extends SortableEntity{
 
     public void setFullWidth(Boolean fullWidth) {
         this.fullWidth = fullWidth;
-    }
-
-    public Boolean getShowOnHomepage() {
-        return showOnHomepage == null ? Boolean.FALSE : showOnHomepage;
-    }
-
-    public void setShowOnHomepage(Boolean showOnHomepage) {
-        this.showOnHomepage = showOnHomepage;
     }
 
     public Boolean getShowContactForm() {

@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.controller;
 
+import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.dao.PageEntryDAOI;
@@ -44,12 +45,13 @@ public class RootController extends BaseController{
         HttpSession session = request.getSession(true);
         Object landingPageChecked = session.getAttribute("LANDINGPAGE_PAGE_CHECKED");
         if (landingPageChecked == null){
-            Module rootModule = moduleDAO.findByTitle("LANDINGPAGE");
-            if (rootModule!=null){
-                List<PageEntry> rootEntries = pageEntryDAO.findByModule(rootModule);
+            List<Module> modules = moduleDAO.findByModuleType(ModuleType.LandingPage);
+            if (!modules.isEmpty()){
+                Module landingPageModule = modules.get(0);
+                List<PageEntry> rootEntries = pageEntryDAO.findByModule(landingPageModule);
                 if (!rootEntries.isEmpty()){
                     ModelAndView mav = new ModelAndView("root");
-                    mav.addObject("Module", rootModule);
+                    mav.addObject("Module", landingPageModule);
                     mav.addObject("PageEntries", rootEntries);
                     mav.addObject("skipNavbar", true);
                     mav.addObject("skipFooter", true);
@@ -70,9 +72,13 @@ public class RootController extends BaseController{
     private ModelAndView getHomePage() {
         ModelAndView mav = new ModelAndView("index");
         mav.addObject("Mail", new Mail());
-        List<PageEntry> pageEntries = pageEntryDAO.findForHomePage();
-        mav.addObject("Module", moduleDAO.findByTitle("HOMEPAGE"));
-        mav.addObject("PageEntries", pageEntries);
+        List<Module> modules = moduleDAO.findByModuleType(ModuleType.HomePage);
+        if (!modules.isEmpty()){
+            Module homePageModule = modules.get(0);
+            mav.addObject("Module", homePageModule);
+            List<PageEntry> pageEntries = pageEntryDAO.findByModule(homePageModule);
+            mav.addObject("PageEntries", pageEntries);
+        }
         return mav;
     }
 }

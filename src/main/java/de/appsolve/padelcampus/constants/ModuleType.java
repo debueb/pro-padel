@@ -12,10 +12,12 @@ package de.appsolve.padelcampus.constants;
 public enum ModuleType {
     
     Page,
+    HomePage,
+    LandingPage,
+    Link,
     Events,
     Ranking,
     Bookings,
     MatchOffers,
     Staff,
-    Link
 }

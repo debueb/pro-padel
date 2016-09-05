@@ -46,9 +46,6 @@ public class SitemapXmlGenerator {
         String baseUrl      = RequestUtil.getBaseURL(request);
         File dataDir        = new File(directory);
         File sitemapFile    = new File(dataDir, "sitemap.xml");
-//        if (sitemapFile.exists() && sitemapFile.isFile()){
-//            sitemapFile.delete();
-//        }
         WebSitemapGenerator generator = WebSitemapGenerator.builder(baseUrl, dataDir).build(); // enable gzipped output
         List<Module> rootModules = moduleDAO.findAllRootModules();
         addUrls(generator, rootModules, baseUrl);
@@ -67,12 +64,8 @@ public class SitemapXmlGenerator {
                     options.lastMod(module.getLastUpdated().toDate());
                 }
                 switch (module.getModuleType()){
-                    case Page:
-                        switch (module.getTitle().toLowerCase()){
-                            case "homepage":
-                                options = options.priority(1.0);
-                                break;
-                        }
+                    case HomePage:
+                        options = options.priority(1.0);
                         break;
                     case Bookings:
                         options.priority(0.8);
@@ -84,8 +77,6 @@ public class SitemapXmlGenerator {
                     case Ranking:
                         break;
                 }
-                
-                
                 generator.addUrl(options.build());
             }
         }

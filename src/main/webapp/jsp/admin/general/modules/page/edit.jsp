@@ -47,9 +47,6 @@
                         <spf:checkbox path="fullWidth" id="fullWidth"/><label for="fullWidth"><fmt:message key="FullWidth"/></label>
                     </div>
                     <div class="unit">
-                        <spf:checkbox path="showOnHomepage" id="showOnHomepage"/><label for="showOnHomepage"><fmt:message key="ShowOnHomepage"/></label>
-                    </div>
-                    <div class="unit">
                         <spf:checkbox path="showContactForm" id="showContactForm"/><label for="showContactForm"><fmt:message key="ShowContactForm"/></label>
                     </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>

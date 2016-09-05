@@ -18,5 +18,4 @@ import java.util.List;
 public interface PageEntryDAOI extends BaseEntityDAOI<PageEntry>{
     
     public List<PageEntry> findByModule(Module module);
-    public List<PageEntry> findForHomePage();
 }
