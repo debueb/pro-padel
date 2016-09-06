@@ -13,6 +13,8 @@ import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.SessionUtil;
+import java.util.Iterator;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -57,7 +59,15 @@ public class AccountBookingsController extends BaseController {
             return getLoginRequiredView(request, msg.get("MyBookings"));
         }
         ModelAndView view = new ModelAndView("account/bookings/index", "Model", user);
-        view.addObject("Bookings", bookingDAO.findByPlayer(user));
+        List<Booking> bookings = bookingDAO.findByPlayer(user);
+        Iterator<Booking> iterator = bookings.iterator();
+        while (iterator.hasNext()){
+            Booking booking = iterator.next();
+            if (booking.getCancelled()){
+                iterator.remove();
+            }
+        }
+        view.addObject("Bookings", bookings);
         return view;
     }
 
