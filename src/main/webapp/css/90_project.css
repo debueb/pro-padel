@@ -1356,7 +1356,7 @@ th.normal {
 }
 .booking-gallery .slick-prev {
   left: 10px;
-  z-index: 9999;
+  z-index: 999;
 }
 .booking-gallery .slick-next {
   right: 0px;
