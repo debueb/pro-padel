@@ -31,9 +31,6 @@
             <a id="offline-msg-btn" class="btn btn-default unit" href="#">OK</i></a>
         </div>
     </div>
-    <c:if test="${fn:contains(pageContext.request.requestURI, '/admin/')}">
-        <jsp:include page="/jsp/include/datatables.jsp"/>
-    </c:if>
     <c:if test="${not empty sessionScope.customer and not empty sessionScope.customer.googleAnalyticsTrackingId}">
         <script type="text/javascript" data-id="ga">
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
