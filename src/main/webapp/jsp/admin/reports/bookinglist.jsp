@@ -38,7 +38,7 @@
                                     <td><a href="${url}"><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></a></td>
                                     <td><a href="${url}"><joda:format value="${Booking.blockingTime}" pattern="yyyy-MM-dd"/></a></td>
                                     <td><a href="${url}">${Booking.offer}</a></td>
-                                    <td><a href="${url}">${Booking.player}</a></td>
+                                    <td><a href="/admin/players/edit/${Booking.player.id}">${Booking.player}</a></td>
                                     <td><a href="${url}">${Booking.comment}</a></td>
                                     <td><a href="${url}"><fmt:message key="${Booking.paymentMethod}"/></a></td>
                                     <td data-sort="${Booking.paymentConfirmed}"><a href="${url}"><i class="fa fa-${Booking.paymentConfirmed ? 'check' : 'close'}"></i></a></td>
