@@ -12,20 +12,25 @@ import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
 import static de.appsolve.padelcampus.constants.Constants.NO_HOLIDAY_KEY;
 import de.appsolve.padelcampus.data.DatePickerDayConfig;
+import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.data.TimeRange;
 import de.appsolve.padelcampus.data.TimeSlot;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
+import de.appsolve.padelcampus.db.dao.ContactDAOI;
 import de.appsolve.padelcampus.db.dao.FacilityDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
+import de.appsolve.padelcampus.db.model.Contact;
 import de.appsolve.padelcampus.db.model.Facility;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
+import de.appsolve.padelcampus.exceptions.MailException;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
 import de.jollyday.ManagerParameters;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -39,6 +44,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -67,6 +73,9 @@ public class BookingUtil {
     
     @Autowired
     BookingDAOI bookingDAO;
+    
+    @Autowired
+    ContactDAOI contactDAO;
     
     @Autowired
     CalendarConfigDAOI calendarConfigDAO;
@@ -359,5 +368,50 @@ public class BookingUtil {
 
     public BigDecimal getPricePerMinute(CalendarConfig config) {
         return config.getBasePrice().divide(new BigDecimal(config.getMinDuration().toString()), MathContext.DECIMAL128);
+    }
+    
+    public void sendBookingCancellationNotification(HttpServletRequest request, Booking booking) throws MailException, IOException{
+        List<Contact> contactsToNotifyOnBookingCancellation = contactDAO.findAllForBookingCancellations();
+        if (!contactsToNotifyOnBookingCancellation.isEmpty()){
+            Mail mail = new Mail(request);
+            mail.setSubject(msg.get("BookingCancelledAdminMailSubject", new Object[]{
+                FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
+                FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
+                booking.getPlayer().toString()
+            }));
+            mail.setBody(msg.get("BookingCancelledAdminMailBody", getDetailBody(request, booking)));
+            mail.addRecipient(booking.getPlayer());
+                MailUtils.send(mail);
+        }
+    }
+    
+    public void sendNewBookingNotification(HttpServletRequest request, Booking booking) throws MailException, IOException{
+        List<Contact> contactsToNotifyOnBooking = contactDAO.findAllForBookings();
+        if (!contactsToNotifyOnBooking.isEmpty()){
+            Mail mail = new Mail(request);
+            mail.setSubject(msg.get("BookingSuccessfulMailSubjectAdmin", new Object[]{
+                FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
+                FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
+                booking.getPlayer().toString()
+            }));
+            mail.setBody(msg.get("BookingSuccessfulMailBodyAdmin", getDetailBody(request, booking)));
+            mail.setRecipients(contactsToNotifyOnBooking);
+            MailUtils.send(mail);
+        }
+    }
+
+    private Object[] getDetailBody(HttpServletRequest request, Booking booking) {
+        return new Object[]{
+            booking.getPlayer().toString(),
+            FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
+            FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
+            booking.getDuration() + " " + msg.get("Minutes"),
+            booking.getOffer().toString(),
+            msg.get(booking.getPaymentMethod().toString()),
+            booking.getAmount(),
+            booking.getCurrency(),
+            RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
+            RequestUtil.getBaseURL(request) + "/admin/reports/booking/" + booking.getId()
+        };
     }
 }

@@ -19,7 +19,6 @@ import de.appsolve.padelcampus.data.OfferDurationPrice;
 import de.appsolve.padelcampus.data.TimeSlot;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
-import de.appsolve.padelcampus.db.dao.ContactDAOI;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.FacilityDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
@@ -28,7 +27,6 @@ import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.dao.VoucherDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
-import de.appsolve.padelcampus.db.model.Contact;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Facility;
 import de.appsolve.padelcampus.db.model.Offer;
@@ -121,9 +119,6 @@ public class BookingsController extends BaseController {
     
     @Autowired
     TeamDAOI teamDAO;
-    
-    @Autowired
-    ContactDAOI contactDAO;
     
     @Autowired
     BookingsPayPalController bookingsPayPalController;
@@ -395,18 +390,7 @@ public class BookingsController extends BaseController {
             booking.setConfirmationMailSent(true);
             bookingDAO.saveOrUpdate(booking);
             
-            List<Contact> contactsToNotifyOnBooking = contactDAO.findAllForBookings();
-            if (!contactsToNotifyOnBooking.isEmpty()){
-                mail = new Mail(request);
-                mail.setSubject(msg.get("BookingSuccessfulMailSubjectAdmin", new Object[]{
-                    FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
-                    FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
-                    booking.getPlayer().toString()
-                }));
-                mail.setBody(msg.get("BookingSuccessfulMailBodyAdmin", getDetailBody(request, booking)));
-                mail.setRecipients(contactsToNotifyOnBooking);
-                MailUtils.send(mail);
-            }
+            bookingUtil.sendNewBookingNotification(request, booking);
         } catch (MailException | IOException ex) {
             LOG.error("Error while sending booking confirmation email", ex);
             mav.addObject("error", msg.get("FailedToSendBookingConfirmationEmail", new Object[]{FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()), FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime())}));
@@ -446,60 +430,62 @@ public class BookingsController extends BaseController {
         Booking booking = bookingDAO.findByUUID(UUID);
         try {
             validateBookingCancellation(booking);
-            Long maxDuration;
-            LocalDate validUntilDate;
-            LocalTime validFromTime;
-            LocalTime validUntilTime;
-            Set<Offer> offers;
-            Set<CalendarWeekDay> weekDays;
-            Voucher oldVoucher = booking.getVoucher();
-            if (oldVoucher!=null){
-                maxDuration     = oldVoucher.getDuration();
-                offers          = oldVoucher.getOffers();
-                validUntilDate  = oldVoucher.getValidUntil();
-                validFromTime   = oldVoucher.getValidFromTime();
-                validUntilTime  = oldVoucher.getValidUntilTime();
-                weekDays        = oldVoucher.getCalendarWeekDays();
-            } else {
-                maxDuration     = booking.getDuration();
-                offers          = new HashSet<>(Arrays.asList(booking.getOffer()));
-                validUntilDate  = booking.getBookingDate().plusYears(1);
-                validFromTime   = new LocalTime().withHourOfDay(Constants.BOOKING_DEFAULT_VALID_FROM_HOUR).withMinuteOfHour(Constants.BOOKING_DEFAULT_VALID_FROM_MINUTE);
-                validUntilTime  = new LocalTime().withHourOfDay(Constants.BOOKING_DEFAULT_VALID_UNTIL_HOUR).withMinuteOfHour(Constants.BOOKING_DEFAULT_VALID_UNTIL_MINUTE);
-                weekDays        = new HashSet<>(Arrays.asList(CalendarWeekDay.values()));
-            }
             
-            String comment              = "Replacement voucher for Booking ["+booking.toString()+"]";
-            Voucher voucher = VoucherUtil.createNewVoucher(comment, maxDuration, validUntilDate, validFromTime, validUntilTime, weekDays, offers);
-            voucherDAO.saveOrUpdate(voucher);
+            //send replacement voucher only for valid payments
+            if (booking.getPaymentMethod() != null &&
+                !booking.getPaymentMethod().equals(PaymentMethod.Reservation) &&
+                booking.getConfirmed() &&
+                booking.getPaymentConfirmed()
+            ){
+                Long maxDuration;
+                LocalDate validUntilDate;
+                LocalTime validFromTime;
+                LocalTime validUntilTime;
+                Set<Offer> offers;
+                Set<CalendarWeekDay> weekDays;
+                Voucher oldVoucher = booking.getVoucher();
+                if (oldVoucher!=null){
+                    maxDuration     = oldVoucher.getDuration();
+                    offers          = oldVoucher.getOffers();
+                    validUntilDate  = oldVoucher.getValidUntil();
+                    validFromTime   = oldVoucher.getValidFromTime();
+                    validUntilTime  = oldVoucher.getValidUntilTime();
+                    weekDays        = oldVoucher.getCalendarWeekDays();
+                } else {
+                    maxDuration     = booking.getDuration();
+                    offers          = new HashSet<>(Arrays.asList(booking.getOffer()));
+                    validUntilDate  = booking.getBookingDate().plusYears(1);
+                    validFromTime   = new LocalTime().withHourOfDay(Constants.BOOKING_DEFAULT_VALID_FROM_HOUR).withMinuteOfHour(Constants.BOOKING_DEFAULT_VALID_FROM_MINUTE);
+                    validUntilTime  = new LocalTime().withHourOfDay(Constants.BOOKING_DEFAULT_VALID_UNTIL_HOUR).withMinuteOfHour(Constants.BOOKING_DEFAULT_VALID_UNTIL_MINUTE);
+                    weekDays        = new HashSet<>(Arrays.asList(CalendarWeekDay.values()));
+                }
 
-            Mail mail = new Mail(request);
-            mail.setSubject(msg.get("VoucherMailSubject"));
-            mail.setBody(msg.get("VoucherMailBody", new Object[]{
-                booking.getPlayer().toString(),
-                RequestUtil.getBaseURL(request),
-                voucher.getDuration(),
-                FormatUtils.DATE_MEDIUM.print(voucher.getValidUntil()),
-                voucher.getUUID(),
-                RequestUtil.getBaseURL(request)}));
-            mail.addRecipient(booking.getPlayer());
+                String comment              = "Replacement voucher for Booking ["+booking.toString()+"]";
+                Voucher voucher = VoucherUtil.createNewVoucher(comment, maxDuration, validUntilDate, validFromTime, validUntilTime, weekDays, offers);
+                voucherDAO.saveOrUpdate(voucher);
+
+                Mail mail = new Mail(request);
+                mail.setSubject(msg.get("VoucherMailSubject"));
+                mail.setBody(msg.get("VoucherMailBody", new Object[]{
+                    booking.getPlayer().toString(),
+                    RequestUtil.getBaseURL(request),
+                    voucher.getDuration(),
+                    FormatUtils.DATE_MEDIUM.print(voucher.getValidUntil()),
+                    voucher.getUUID(),
+                    RequestUtil.getBaseURL(request)}));
+                mail.addRecipient(booking.getPlayer());
                 MailUtils.send(mail);
+                
                 booking.setCancelled(true);
                 booking.setCancelReason("cancellation with replacement voucher");
                 bookingDAO.saveOrUpdate(booking);
-                
-            List<Contact> contactsToNotifyOnBookingCancellation = contactDAO.findAllForBookingCancellations();
-            if (!contactsToNotifyOnBookingCancellation.isEmpty()){
-                mail = new Mail(request);
-                mail.setSubject(msg.get("BookingCancelledAdminMailSubject", new Object[]{
-                    FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
-                    FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
-                    booking.getPlayer().toString()
-                }));
-                mail.setBody(msg.get("BookingCancelledAdminMailBody", getDetailBody(request, booking)));
-                mail.addRecipient(booking.getPlayer());
-                    MailUtils.send(mail);
+            } else {
+                booking.setCancelled(true);
+                booking.setCancelReason("cancellation by user");
+                bookingDAO.saveOrUpdate(booking);
             }
+                
+            bookingUtil.sendBookingCancellationNotification(request, booking);
         } catch (Exception e) {
             LOG.error("Error during booking cancellation", e);
             ModelAndView cancellationView = getCancellationView(booking);
@@ -752,20 +738,5 @@ public class BookingsController extends BaseController {
             }
         }
         return offerDurationPrices;
-    }
-
-    private Object[] getDetailBody(HttpServletRequest request, Booking booking) {
-        return new Object[]{
-            booking.getPlayer().toString(),
-            FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
-            FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
-            booking.getDuration() + " " + msg.get("Minutes"),
-            booking.getOffer().toString(),
-            msg.get(booking.getPaymentMethod().toString()),
-            booking.getAmount(),
-            booking.getCurrency(),
-            RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
-            RequestUtil.getBaseURL(request) + "/admin/reports/booking/" + booking.getId()
-        };
     }
 }
