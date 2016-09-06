@@ -101,7 +101,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         }
         LocalDate endDate = sessionUtil.getBookingListEndDate(request);
         if (endDate == null){
-            endDate = startDate.plusMonths(4);
+            endDate = startDate;
         }
         DateRange dateRange = new DateRange();
         dateRange.setStartDate(startDate);
