@@ -17,7 +17,7 @@
                             <span class="fa fa-calendar datepicker-icon"></span>
                             <div class="datepicker-text"></div>
                         </div>
-                        <input type="hidden" name="date" class="datepicker-input auto-submit" class="form-control" value="${Day}" data-prev-sunday="${PrevSunday}" data-next-monday="${NextMonday}"/>
+                        <input type="hidden" name="date" class="datepicker-input auto-submit" class="form-control" value="${Day}"/>
                         <div class="datepicker" data-show-on-init="false" data-redirect-on-select="/bookings/{date}/{time}" data-day-config='${dayConfigs}' data-max-date='${maxDate}'></div>
                     </div>
                     <c:if test="${not empty RangeMap}">
@@ -143,8 +143,24 @@
             <joda:parseDateTime var="jodaDate" pattern="yyyy-MM-dd" value="${Day}"/>
             <script type="text/javascript">
                 $(document).ready(function () {
+                    $('.booking-slick').on('beforeChange', function(event, slick, currentSlide, nextSlide){
+                        if (currentSlide === 6 && nextSlide === 0){
+                            /*from sunday to monday: load next week*/
+                            /* event.preventDefault() does not (yet) work - see https://github.com/kenwheeler/slick/pull/2104 */
+                            $('.booking-slick').slick('unslick');
+                            $('input[name="date"]').val('${NextMonday}');
+                            return false;
+                        } else if (currentSlide === 0 && nextSlide === 6){
+                            /*from monday to sunday: load prev week*/
+                            $('.booking-slick').slick('unslick');
+                            $('input[name="date"]').val('${PrevSunday}');
+                            return false;
+                        }
+                    });
+        
+                    
                     $('.booking-slick').slick({
-                        infinite: false,
+                        infinite: true,
                         mobileFirst: true,
                         arrows: true,
                         adaptiveHeight: true,
