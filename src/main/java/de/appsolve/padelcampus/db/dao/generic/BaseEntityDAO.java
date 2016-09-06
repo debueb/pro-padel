@@ -30,7 +30,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -48,8 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils<T> implements BaseEntityDAOI<T>  {
    
     private static final Logger LOG = Logger.getLogger(BaseEntityDAO.class);
-    public static final String ALIAS_PREFIX = "alias_";
-
+    
     @PersistenceContext
     protected EntityManager entityManager;
 

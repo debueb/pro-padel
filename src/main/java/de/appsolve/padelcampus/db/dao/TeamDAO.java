@@ -15,8 +15,13 @@ import java.util.Set;
 import java.util.UUID;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +31,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TeamDAO extends SortedBaseDAO<Team> implements TeamDAOI{
+
+    private static final String ALIAS_PREFIX = "alias_";
 
     @Override
     public Team findByUUID(String UUID){
@@ -94,6 +101,28 @@ public class TeamDAO extends SortedBaseDAO<Team> implements TeamDAOI{
             team.setUUID(UUID.randomUUID().toString());
         }
         return super.saveOrUpdate(team);
+    }
+    
+    
+    @Override
+    public Page<Team> findAllByFuzzySearch(String search, String... associations){
+        Criteria criteria = getCriteria();
+        for (String association: associations){
+            criteria.createAlias(association, ALIAS_PREFIX+association, JoinType.INNER_JOIN);
+        }
+        List<Criterion> predicates = new ArrayList<>();
+        for (String indexedPropery: getIndexedProperties()){
+            predicates.add(Restrictions.ilike(indexedPropery, search, MatchMode.ANYWHERE));
+        }
+        if (!predicates.isEmpty()){
+            criteria.add(Restrictions.or(predicates.toArray(new Criterion[predicates.size()])));
+        }
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        @SuppressWarnings("unchecked")
+        List<Team> objects = criteria.list();
+        sort(objects);
+        PageImpl<Team> page = new PageImpl<>(objects);
+        return page;
     }
     
     @Override
