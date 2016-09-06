@@ -13,7 +13,7 @@
             </div>
             <div class="panel-body">
                 <div class="container-fluid">
-                    <spf:form modelAttribute="Model">
+                    <spf:form modelAttribute="Booking">
                         <div class="alert alert-danger"><spf:errors path="*"/></div>
                         <div class="row">
                             <div class="col-xs-4 booking-cell"><fmt:message key="Player"/>:</div>
@@ -46,6 +46,9 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <button type="submit" class="btn btn-primary btn-block"><fmt:message key="Save"/></button>
+                            </div>
+                            <div class="col-xs-12 unit-2">
+                                <a href="/admin/reports/booking/${Booking.id}/delete" class="btn btn-danger btn-block"><fmt:message key="Delete"/></a>
                             </div>
                         </div>
                     </spf:form>

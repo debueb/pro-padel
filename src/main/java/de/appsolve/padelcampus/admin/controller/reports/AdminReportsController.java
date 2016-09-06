@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
@@ -118,25 +119,37 @@ public class AdminReportsController extends BaseController{
     @RequestMapping(method = GET, value="booking/{bookingId}")
     public ModelAndView getBooking(@PathVariable("bookingId") Long bookingId){
         Booking booking = bookingDAO.findById(bookingId);
-        return getBookingEditView(booking, booking);
+        return getBookingEditView(booking);
     }
     
     @RequestMapping(method = POST, value="booking/{bookingId}")
     public ModelAndView postBooking(@PathVariable("bookingId") Long bookingId, @Valid @ModelAttribute("Model") Booking model, BindingResult bindingResult){
-        Booking booking = bookingDAO.findById(bookingId);
         if (bindingResult.hasErrors()){
-            return getBookingEditView(model, booking);
+            return getBookingEditView(model);
         }
+        Booking booking = bookingDAO.findById(bookingId);
         try {
             booking.setComment(model.getComment());
             booking.setPaymentConfirmed(model.getPaymentConfirmed());
             bookingDAO.saveOrUpdate(booking);
-            return new ModelAndView("redirect:/admin/reports/bookinglist");
+            return redirectToBookingList();
         }catch (Exception e){
             LOG.error(e);
             bindingResult.addError(new ObjectError("id", e.getMessage()));
-            return getBookingEditView(model, booking);
+            return getBookingEditView(booking);
         }
+    }
+    
+    @RequestMapping(method = GET, value="booking/{bookingId}/delete")
+    public ModelAndView getBookingDelete(@PathVariable("bookingId") Long bookingId){
+        Booking booking = bookingDAO.findById(bookingId);
+        return getBookingDeleteView(booking);
+    }
+    
+    @RequestMapping(method = POST, value="booking/{bookingId}/delete")
+    public ModelAndView postBookingDelete(@PathVariable("bookingId") Long bookingId){
+        bookingDAO.deleteById(bookingId);
+        return redirectToBookingList();
     }
 
     private ModelAndView getBookingListView(DateRange dateRange) {
@@ -153,10 +166,19 @@ public class AdminReportsController extends BaseController{
         return listView;
     }
 
-    private ModelAndView getBookingEditView(Booking model, Booking booking) {
+    private ModelAndView getBookingEditView(Booking booking) {
         ModelAndView mav = new ModelAndView("admin/reports/booking");
-        mav.addObject("Model", model);
         mav.addObject("Booking", booking);
         return mav;
+    }
+    
+    private ModelAndView getBookingDeleteView(Booking booking) {
+        ModelAndView mav = new ModelAndView("include/delete");
+        mav.addObject("Model", booking);
+        return mav;
+    }
+
+    private ModelAndView redirectToBookingList() {
+        return new ModelAndView("redirect:/admin/reports/bookinglist");
     }
 }

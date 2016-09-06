@@ -16,7 +16,7 @@
 
                     <form method="POST">
                         <a class="btn btn-primary btn-back unit ajaxify"><fmt:message key="Cancel"/></a>
-                    <button class="btn btn-primary unit" style="margin-left: 10px;"><fmt:message key="Delete"/></button>
+                    <button class="btn btn-danger unit" style="margin-left: 10px;"><fmt:message key="Delete"/></button>
                 </form>
             </div>
         </div>
