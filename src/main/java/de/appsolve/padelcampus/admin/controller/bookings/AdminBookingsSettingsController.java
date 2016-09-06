@@ -211,7 +211,7 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
         CalendarConfig calendarConfig = new CalendarConfig();
         LocalDate now = new LocalDate(Constants.DEFAULT_TIMEZONE);
         calendarConfig.setStartDate(now);
-        calendarConfig.setEndDate(now.plusYears(1));
+        calendarConfig.setEndDate(now.plusMonths(1));
         calendarConfig.setHolidayKey(Constants.DEFAULT_HOLIDAY_KEY);
         calendarConfig.setStartTimeHour(Constants.BOOKING_DEFAULT_VALID_FROM_HOUR);
         calendarConfig.setStartTimeMinute(Constants.BOOKING_DEFAULT_VALID_FROM_MINUTE);
