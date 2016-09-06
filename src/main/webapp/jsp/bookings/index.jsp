@@ -143,24 +143,43 @@
             <joda:parseDateTime var="jodaDate" pattern="yyyy-MM-dd" value="${Day}"/>
             <script type="text/javascript">
                 $(document).ready(function () {
-                    $('.booking-slick').on('beforeChange', function(event, slick, currentSlide, nextSlide){
-                        if (currentSlide === 6 && nextSlide === 0){
-                            /*from sunday to monday: load next week*/
-                            /* event.preventDefault() does not (yet) work - see https://github.com/kenwheeler/slick/pull/2104 */
-                            $('.booking-slick').slick('unslick');
-                            $('input[name="date"]').val('${NextMonday}');
-                            return false;
-                        } else if (currentSlide === 0 && nextSlide === 6){
-                            /*from monday to sunday: load prev week*/
-                            $('.booking-slick').slick('unslick');
-                            $('input[name="date"]').val('${PrevSunday}');
-                            return false;
-                        }
+                    $('.booking-slick').on('init', function(event, slick, currentSlide){
+                        var prevEnabled = false,
+                            nextEnabled = false,
+                            checkSlideStatus = function(slick, currentSlide){
+                                var lastSlide = currentSlide + slick.slickGetOption('slidesToShow');
+                                if (currentSlide === 0){
+                                    prevEnabled = true;
+                                } else if (lastSlide === 7){
+                                    nextEnabled = true;
+                                } else {
+                                    prevEnabled = false;
+                                    nextEnabled = false;
+                                }
+                            };
+                        checkSlideStatus(slick, slick.slickCurrentSlide());
+                        
+                        $('.booking-slick').on('afterChange', function(event, slick, currentSlide){
+                            checkSlideStatus(slick, currentSlide);
+                        });
+        
+                        $('.slick-next').on('click tap', function(){
+                            if (nextEnabled){
+                                nextEnabled = false;
+                                $('input[name="date"]').val('${NextMonday}');
+                            }
+                        });
+                        $('.slick-prev').on('click tap', function(){
+                            if (prevEnabled){
+                                prevEnabled = false;
+                                $('input[name="date"]').val('${PrevSunday}');
+                            }
+                        });
                     });
         
                     
                     $('.booking-slick').slick({
-                        infinite: true,
+                        infinite: false,
                         mobileFirst: true,
                         arrows: true,
                         adaptiveHeight: true,
