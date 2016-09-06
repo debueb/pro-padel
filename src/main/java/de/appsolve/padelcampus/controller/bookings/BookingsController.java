@@ -230,9 +230,12 @@ public class BookingsController extends BaseController {
             return noLoginView;
         }
         Player existingPlayer = playerDAO.findByEmail(player.getEmail());
-        if (existingPlayer != null && !StringUtils.isEmpty(existingPlayer.getPasswordHash())) {
-            result.addError(new ObjectError("id", msg.get("EmailAlreadyRegistered")));
-            return noLoginView;
+        if (existingPlayer != null){
+            if(!StringUtils.isEmpty(existingPlayer.getPasswordHash())) {
+                result.addError(new ObjectError("id", msg.get("EmailAlreadyRegistered")));
+                return noLoginView;
+            }
+            player.setId(existingPlayer.getId());
         }
         playerDAO.saveOrUpdate(player);
         booking.setPlayer(player);
