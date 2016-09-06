@@ -11,7 +11,7 @@
             </div>
             <div class="panel-body">
 
-                <div class="unit">
+                <div class="unit table-responsive">
                     <table class="table table-bordered table-centered datatable">
                         <thead>
                             <tr>
