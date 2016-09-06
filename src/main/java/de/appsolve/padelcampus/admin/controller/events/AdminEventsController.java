@@ -546,7 +546,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
     
     @Override
     protected Page<Event> findAllByFuzzySearch(String search) {
-        return eventDAO.findAllByFuzzySearch(search, "participants");
+        return eventDAO.findAllByFuzzySearch(search, "participants", "participants.players");
     }
     
     @Override

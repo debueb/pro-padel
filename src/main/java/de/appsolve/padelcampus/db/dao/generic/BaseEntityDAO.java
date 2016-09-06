@@ -132,7 +132,7 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     public Page<T> findAllByFuzzySearch(String search, String... associations){
         Criteria criteria = getCriteria();
         for (String association: associations){
-            criteria.createAlias(association, ALIAS_PREFIX+association, JoinType.INNER_JOIN);
+            criteria.setFetchMode(association, FetchMode.JOIN);
         }
         List<Criterion> predicates = new ArrayList<>();
         for (String indexedPropery: getIndexedProperties()){
