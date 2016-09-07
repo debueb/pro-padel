@@ -353,8 +353,9 @@ public class BookingsController extends BaseController {
                         //create team if it does not exist
                         if (team == null){
                             team = new Team();
-                            team.setPlayers(booking.getPlayers());
+                            team.setPlayers(players);
                             team.setName(TeamUtil.getTeamName(team));
+                            teamDAO.saveOrUpdate(team);
                         }
 
                         //add team to participant list
