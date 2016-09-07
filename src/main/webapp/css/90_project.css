@@ -1934,5 +1934,10 @@ a.menu-item.active {
   content: "\f051";
   opacity: 0.75;
 }
+.webui-popover .webui-popover-content {
+  padding: 5px;
+  font-size: 12px;
+  text-align: center;
+}
 /*DO NOT REMOVE THE FOLLOWING LINE. WILL BE REPLACED BY CUSTOMER SPECIFIC CSS*/
 /*customCss*/

@@ -30,7 +30,6 @@
         <link rel="apple-touch-icon" href="${sessionScope.customer.touchIconPath}">
         <link rel="icon" sizes="192x192" href="${sessionScope.customer.touchIconPath}">
         
-        <c:set var="compressCSS" value="${compress.css}"/>
         <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet" title="project_css">
 
         <c:set var="compressJS" value="${compress.js}"/>
@@ -48,6 +47,7 @@
                 <script src="/js/25_bootstrap-select.js"></script>
                 <script src="/js/26_ajax-bootstrap-select.js"></script>
                 <script src="/js/30_jquery-ui.min.js"></script>
+                <script src="/js/40_jquery.webui-popover.min.js"></script>
                 <script src="/js/noconcat/31_datepicker-de.js"></script>
                 <script src="/js/50_slick.min.js"></script>
                 <script src="/js/80_jquery.livequery.min.js"></script>

@@ -71,7 +71,7 @@
                                                                                     <c:otherwise>
                                                                                         <c:forEach var="Booking" items="${TimeSlot.bookings}">
                                                                                             <a class="ajaxify booking-gallery-offer" href="${urlDetail}" style="background-color: ${Booking.offer.hexColor};">
-                                                                                                <i class="fa fa-info-circle text-center" data-toggle="tooltip" data-placement="top" title="${Booking.player}<br /> ${Booking.duration} min<br />${Booking.comment}"></i>
+                                                                                                <i class="fa fa-info-circle text-center" data-toggle="tooltip" data-placement="top" data-content="${Booking.player}<br /> ${Booking.duration} min<br />${Booking.comment}"></i>
                                                                                             </a>
                                                                                         </c:forEach>
                                                                                     </c:otherwise>
