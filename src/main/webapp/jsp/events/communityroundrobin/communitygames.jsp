@@ -57,10 +57,7 @@
                                                                                         ${Result}
                                                                                     </c:when>
                                                                                     <c:when test="${Game.startTime ne null}">
-                                                                                        <c:if test="${Game.startDate ne Model.startDate}">
-                                                                                            <joda:format value="${Game.startDate}" pattern="dd. MMM" /> 
-                                                                                        </c:if>
-                                                                                        <joda:format value="${Game.startTime}" pattern="HH:mm" /> <fmt:message key="oClock"/>
+                                                                                        <joda:format value="${Game.startDate}" pattern="dd. MMM" /><joda:format value="${Game.startTime}" pattern="HH:mm" /> <fmt:message key="oClock"/>
                                                                                     </c:when>
                                                                                     <c:otherwise>
                                                                                         -:- -:-
