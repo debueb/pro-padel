@@ -21,7 +21,9 @@ import org.joda.time.LocalDate;
 public interface GameDAOI extends BaseEntityDAOI<Game>{
     
     Game findByIdFetchWithNextGame(Long id);
+    Game findByIdFetchWithEventAndNextGame(Long id);
     Game findByIdFetchWithTeamsAndScoreReporter(Long id);
+    Game findByIdFetchWithEventAndTeamsAndScoreReporter(Long id);
     List<Game> findByEvent(Event event);
     List<Game> findByEventWithPlayers(Event event);
     List<Game> findByParticipant(Participant participant);

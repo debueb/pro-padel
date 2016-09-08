@@ -33,7 +33,7 @@
                                             <select name="${key}" class="select-simple form-control" data-container="body">
                                                 <option value="-1">-</option>
                                                 <c:choose>
-                                                    <c:when test="${status.last}">
+                                                    <c:when test="${Game.event.numberOfSets > 1 && status.last}">
                                                         <c:set var="end" value="${Game.event.numberOfGamesInFinalSet}"/>
                                                     </c:when>
                                                     <c:otherwise>

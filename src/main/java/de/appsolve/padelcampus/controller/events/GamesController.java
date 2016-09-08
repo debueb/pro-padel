@@ -7,7 +7,6 @@
 package de.appsolve.padelcampus.controller.events;
 
 import static de.appsolve.padelcampus.constants.Constants.FIRST_SET;
-import static de.appsolve.padelcampus.constants.Constants.NUMBER_OF_SETS;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
@@ -106,10 +105,10 @@ public class GamesController extends BaseController{
         if (user == null){
             return getLoginView(request);
         }
-        Game game = gameDAO.findByIdFetchWithNextGame(gameId);
+        Game game = gameDAO.findByIdFetchWithEventAndNextGame(gameId);
         List<GameSet> gameSets = new ArrayList<>();
         Set<GameSet> gameSetsToRemove = new HashSet<>();
-        for (int set=FIRST_SET; set<=NUMBER_OF_SETS; set++){
+        for (int set=FIRST_SET; set<=game.getEvent().getNumberOfSets(); set++){
             for (Participant participant: game.getParticipants()){
                 String setGames = request.getParameter(getKey(game, participant, set));
                 Integer numSetGames = Integer.parseInt(setGames);
@@ -250,7 +249,7 @@ public class GamesController extends BaseController{
         return mav;
     }
     private ModelAndView getEditView(Long gameId) {
-        Game game = gameDAO.findByIdFetchWithTeamsAndScoreReporter(gameId);
+        Game game = gameDAO.findByIdFetchWithEventAndTeamsAndScoreReporter(gameId);
         ModelAndView mav = new ModelAndView("games/edit", "Game", game);
         mav.addObject("GamesMap", getGamesMap(game));
         return mav;
@@ -263,7 +262,7 @@ public class GamesController extends BaseController{
     private Map<String, GameSet> getGamesMap(Game game) {
         Map<String, GameSet> gamesMap = new LinkedHashMap<>();
         for (Participant participant: game.getParticipants()){
-            for (int set=FIRST_SET; set<=NUMBER_OF_SETS; set++){
+            for (int set=FIRST_SET; set<=game.getEvent().getNumberOfSets(); set++){
                 GameSet gameSet = gameSetDAO.findBy(game, participant, set);
                 if (gameSet!=null){
                     gamesMap.put(getKey(game, participant, set), gameSet);
