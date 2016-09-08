@@ -13,6 +13,7 @@ import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
 import static de.appsolve.padelcampus.constants.Constants.NO_HOLIDAY_KEY;
 import de.appsolve.padelcampus.data.DatePickerDayConfig;
 import de.appsolve.padelcampus.data.Mail;
+import de.appsolve.padelcampus.data.OfferDurationPrice;
 import de.appsolve.padelcampus.data.TimeRange;
 import de.appsolve.padelcampus.data.TimeSlot;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
@@ -42,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
@@ -413,5 +415,127 @@ public class BookingUtil {
             RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
             RequestUtil.getBaseURL(request) + "/admin/reports/booking/" + booking.getId()
         };
+    }
+    
+    public OfferDurationPrice getOfferDurationPrice(LocalDate selectedDate, LocalTime selectedTime, Offer selectedOffer) throws CalendarConfigException {
+        List<CalendarConfig> configs = calendarConfigDAO.findFor(selectedDate);
+        List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(selectedDate);
+
+        //convert to required data structure
+        Map<Offer, List<CalendarConfig>> offerConfigMap = new HashMap<>();
+        for (CalendarConfig config: configs){
+            for (Offer offer: config.getOffers()){
+                if (offer.equals(selectedOffer)){
+                    List<CalendarConfig> list = offerConfigMap.get(offer);
+                    if (list==null){
+                        list = new ArrayList<>();
+                    }
+                    list.add(config);
+
+                    //sort by start time
+                    Collections.sort(list);
+                    offerConfigMap.put(offer, list);
+                }
+            }
+        }
+        
+        OfferDurationPrice offerDurationPrices = null;
+        
+        Iterator<Map.Entry<Offer, List<CalendarConfig>>> iterator = offerConfigMap.entrySet().iterator();
+        //for every offer
+        while (iterator.hasNext()){
+            Map.Entry<Offer, List<CalendarConfig>> entry = iterator.next();
+            Offer offer = entry.getKey();
+            List<CalendarConfig> configsForOffer = entry.getValue();
+            
+            //make sure the first configuration starts before the requested booking time
+            if (selectedTime.compareTo(configsForOffer.get(0).getStartTime()) < 0){
+                continue;
+            }
+            
+            LocalDateTime endTime = null;
+            Integer duration = configsForOffer.get(0).getMinDuration();
+            BigDecimal pricePerMinute;
+            BigDecimal price = null;
+            CalendarConfig previousConfig = null;
+            Map<Integer, BigDecimal> durationPriceMap = new TreeMap<>();
+            Boolean isContiguous = true;
+            for (CalendarConfig config: configsForOffer){
+                
+                //make sure there is no gap between calendar configurations
+                if (endTime == null){
+                    //first run
+                    endTime = getLocalDateTime(selectedDate, selectedTime).plusMinutes(config.getMinDuration());
+                } else {
+                    //break if there are durations available and calendar configs are not contiguous
+                    if (!durationPriceMap.isEmpty()){
+                        //we substract min interval before the comparison as it has been added during the last iteration
+                        LocalDateTime configStartDateTime = getLocalDateTime(selectedDate, config.getStartTime());
+                        if (!endTime.minusMinutes(config.getMinInterval()).equals(configStartDateTime)){
+                            break;
+                        }
+                    }
+                }
+                
+                
+                Integer interval = config.getMinInterval();
+            
+                pricePerMinute = getPricePerMinute(config);
+                
+                //as long as the endTime is before the end time configured in the calendar
+                LocalDateTime configEndDateTime = getLocalDateTime(selectedDate, config.getEndTime());
+                while (endTime.compareTo(configEndDateTime) <= 0) {
+                    TimeSlot timeSlot = new TimeSlot();
+                    timeSlot.setDate(selectedDate);
+                    timeSlot.setStartTime(selectedTime);
+                    timeSlot.setEndTime(endTime.toLocalTime());
+                    timeSlot.setConfig(config);
+                    Long bookingSlotsLeft = getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
+
+                    //we only allow contiguous bookings for any given offer
+                    if (bookingSlotsLeft<1){
+                        isContiguous = false;
+                        break;
+                    }
+                    
+                    if (price == null){
+                        //see if previousConfig endTime - minInterval matches the selected time. if so, take half of the previous config price as a basis
+                        if (previousConfig != null && previousConfig.getEndTime().minusMinutes(previousConfig.getMinInterval()).equals(selectedTime)){
+                            BigDecimal previousConfigPricePerMinute = getPricePerMinute(previousConfig);
+                            price = previousConfigPricePerMinute.multiply(new BigDecimal(previousConfig.getMinInterval()), MathContext.DECIMAL128);
+                            price = price.add(pricePerMinute.multiply(new BigDecimal(duration-previousConfig.getMinInterval()), MathContext.DECIMAL128));
+                        } else {
+                            price = pricePerMinute.multiply(new BigDecimal(duration.toString()), MathContext.DECIMAL128);
+                        }
+                    } else {
+                        //add price for additional interval
+                        price = price.add(pricePerMinute.multiply(new BigDecimal(interval.toString()), MathContext.DECIMAL128));
+                    }
+                    price = price.setScale(2, RoundingMode.HALF_EVEN);
+                    durationPriceMap.put(duration, price);
+
+                    //increase the duration by the configured minimum interval and determine the new end time for the next iteration
+                    duration += interval;
+                    endTime = endTime.plusMinutes(interval);
+                }
+                
+                if (!durationPriceMap.isEmpty()){
+                    OfferDurationPrice odp = new OfferDurationPrice();
+                    odp.setOffer(offer);
+                    odp.setDurationPriceMap(durationPriceMap);
+                    odp.setConfig(config);
+                    offerDurationPrices = odp;
+                }
+                
+                if (!isContiguous){
+                    //we only allow coniguous bookings for one offer. process next offer
+//                    previousConfig = null;
+                    break;
+                } 
+                previousConfig = config;
+                
+            }
+        }
+        return offerDurationPrices;
     }
 }

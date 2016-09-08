@@ -12,11 +12,12 @@
             <div class="panel-body">
 
                 <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
-                    <div class="alert alert-danger"><spf:errors path="*" cssClass="error" htmlEscape="false"/></div>
+                    <div class="alert alert-info"><fmt:message key="CourtReservationDesc"/></div>
+                    <div class="alert alert-danger unit-2"><spf:errors path="*" cssClass="error" htmlEscape="false"/></div>
                     <spf:input path="id" type="hidden"/>
 
                     <fmt:message key="Comment" var="CommentPlaceholder"/>
-                    <div class="relative">
+                    <div class="relative unit-2">
                         <spf:input type="text" path="comment" class="form-control form-top-element" />
                         <div class="explanation">${CommentPlaceholder}</div>
                     </div>

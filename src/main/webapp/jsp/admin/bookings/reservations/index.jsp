@@ -19,6 +19,7 @@
                         <th><fmt:message key="Day"/></th>
                         <th><fmt:message key="Time"/></th>
                         <th><fmt:message key="Offer"/></th>
+                        <th><fmt:message key="Price"/></th>
                         <th><fmt:message key="Comment"/></th>
                         <th><fmt:message key="ReservedBy"/></th>
                         <th class="text-center"><fmt:message key="Delete"/></th>
@@ -30,6 +31,7 @@
                                     <td><joda:format value="${Booking.bookingDate}" pattern="EE"/></td>
                                     <td><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></td>
                                     <td>${Booking.offer}</td>
+                                    <td>${Booking.amount}</td>
                                     <td>${Booking.comment}</td>
                                     <td><a href="${contextPath}/players/player/${Booking.player.UUID}" class="ajaxify">${Booking.player}</a></td>
                                     <td class="text-center"><a class="ajaxify fa fa-minus-circle" href="/admin/bookings/reservations/${Booking.id}/delete"></a></td>

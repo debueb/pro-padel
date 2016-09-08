@@ -13,6 +13,7 @@ import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.Currency;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.data.DateRange;
+import de.appsolve.padelcampus.data.OfferDurationPrice;
 import de.appsolve.padelcampus.data.ReservationRequest;
 import de.appsolve.padelcampus.data.TimeSlot;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
@@ -150,7 +151,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                 for (CalendarWeekDay calendarWeekDay: calendarWeekDays) {
                     if (calendarWeekDay.ordinal()+1 == date.getDayOfWeek()){
                         try {
-                            List<CalendarConfig> calendarConfigsForDate = calendarConfigDAO.findFor(date);
+                            List<CalendarConfig> calendarConfigsForDate = calendarConfigDAO.findFor(date); //throws CalendarConfigException
                             Iterator<CalendarConfig> iterator = calendarConfigsForDate.iterator();
                             while(iterator.hasNext()){
                                 CalendarConfig calendarConfig = iterator.next();
@@ -177,6 +178,15 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                                         booking.setUUID(BookingUtil.generateUUID());
                                         booking.setOffer(offer);
                                         booking.setPublicBooking(reservationRequest.getPublicBooking());
+                                        
+                                        OfferDurationPrice offerDurationPrice = bookingUtil.getOfferDurationPrice(booking.getBookingDate(), booking.getBookingTime(), offer);
+                                        if (offerDurationPrice == null){
+                                            failedBookings.add(booking);
+                                            continue;
+                                        } else {
+                                            BigDecimal price = offerDurationPrice.getDurationPriceMap().get(booking.getDuration().intValue());
+                                            booking.setAmount(price);
+                                        }
 
                                         List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(date);
                                         TimeSlot timeSlot = new TimeSlot();
@@ -201,6 +211,11 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                             break;
                         } catch (CalendarConfigException e){
                             LOG.warn("Caught calendar config exception during add reservation request. This may be normal (for holidays)", e);
+                            Booking failedBooking = new Booking();
+                            failedBooking.setPlayer(player);
+                            failedBooking.setBookingDate(date);
+                            failedBooking.setBookingTime(reservationRequest.getStartTime());
+                            failedBookings.add(failedBooking);
                         }
                     }
                 }

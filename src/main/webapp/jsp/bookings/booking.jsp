@@ -31,50 +31,46 @@
                                 <div class="col-xs-4 booking-cell"><fmt:message key="Offer"/>:</div>
                                 <div class="col-xs-8">
                                     <spf:select path="offer" class="form-control select-simple" id="booking-court" data-container="body">
-                                        <c:forEach items="${OfferDurationPrices}" var="OfferDurationPrice">
-                                            <c:choose>
-                                                <c:when test="${not empty SelectedOffer and SelectedOffer.id == OfferDurationPrice.offer.id}">
-                                                    <spf:option selected="true" value="${OfferDurationPrice.offer.id}" data-target="#booking-duration-container-${OfferDurationPrice.offer.id}">${OfferDurationPrice.offer}</spf:option>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <spf:option value="${OfferDurationPrice.offer.id}" data-target="#booking-duration-container-${OfferDurationPrice.offer.id}">${OfferDurationPrice.offer}</spf:option>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:forEach>
+                                        <c:choose>
+                                            <c:when test="${not empty SelectedOffer and SelectedOffer.id == OfferDurationPrice.offer.id}">
+                                                <spf:option selected="true" value="${OfferDurationPrice.offer.id}" data-target="#booking-duration-container-${OfferDurationPrice.offer.id}">${OfferDurationPrice.offer}</spf:option>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <spf:option value="${OfferDurationPrice.offer.id}" data-target="#booking-duration-container-${OfferDurationPrice.offer.id}">${OfferDurationPrice.offer}</spf:option>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </spf:select>
                                 </div>
                             </div>
 
-                            <c:forEach items="${OfferDurationPrices}" var="OfferDurationPrice">
-                                <div id="booking-duration-container-${OfferDurationPrice.offer.id}" class="booking-duration-container">
-                                    <div class="row unit">
-                                        <div class="col-xs-4 booking-cell"><fmt:message key="GameDuration"/>:</div>
-                                        <div class="col-xs-8">
-                                            <spf:select path="duration" class="form-control select-simple booking-duration" data-container="body">
-                                                <c:forEach var="DurationPrice" items="${OfferDurationPrice.durationPriceMap}">
-                                                    <fmt:formatNumber var="price" value="${DurationPrice['value']}" minFractionDigits="2" maxFractionDigits="2"/>
-                                                    <spf:option value="${DurationPrice['key']}" data-price="${price} ${OfferDurationPrice.config.currency.symbol}">${DurationPrice['key']} <fmt:message key="Minutes"/></spf:option>
-                                                </c:forEach>
-                                            </spf:select>
-                                        </div>
-                                    </div>
-
-                                    <div class="row unit">
-                                        <div class="col-xs-4 booking-cell"><fmt:message key="PaymentMethod"/>:</div>
-                                        <div class="col-xs-8">
-                                            <spf:select path="paymentMethod" class="form-control select-simple" data-container="body">
-                                                <c:forEach var="PaymentMethod" items="${OfferDurationPrice.config.paymentMethods}">
-                                                    <div>
-                                                        <span class="input-group-addon">
-                                                            <spf:option value="${PaymentMethod}"><fmt:message key="${PaymentMethod}"/></spf:option>
-                                                            </span>
-                                                        </div>
-                                                </c:forEach>
-                                            </spf:select>
-                                        </div>
+                            <div id="booking-duration-container-${OfferDurationPrice.offer.id}" class="booking-duration-container">
+                                <div class="row unit">
+                                    <div class="col-xs-4 booking-cell"><fmt:message key="GameDuration"/>:</div>
+                                    <div class="col-xs-8">
+                                        <spf:select path="duration" class="form-control select-simple booking-duration" data-container="body">
+                                            <c:forEach var="DurationPrice" items="${OfferDurationPrice.durationPriceMap}">
+                                                <fmt:formatNumber var="price" value="${DurationPrice['value']}" minFractionDigits="2" maxFractionDigits="2"/>
+                                                <spf:option value="${DurationPrice['key']}" data-price="${price} ${OfferDurationPrice.config.currency.symbol}">${DurationPrice['key']} <fmt:message key="Minutes"/></spf:option>
+                                            </c:forEach>
+                                        </spf:select>
                                     </div>
                                 </div>
-                            </c:forEach>
+
+                                <div class="row unit">
+                                    <div class="col-xs-4 booking-cell"><fmt:message key="PaymentMethod"/>:</div>
+                                    <div class="col-xs-8">
+                                        <spf:select path="paymentMethod" class="form-control select-simple" data-container="body">
+                                            <c:forEach var="PaymentMethod" items="${OfferDurationPrice.config.paymentMethods}">
+                                                <div>
+                                                    <span class="input-group-addon">
+                                                        <spf:option value="${PaymentMethod}"><fmt:message key="${PaymentMethod}"/></spf:option>
+                                                        </span>
+                                                    </div>
+                                            </c:forEach>
+                                        </spf:select>
+                                    </div>
+                                </div>
+                            </div>
 
 
                             <div class="row">

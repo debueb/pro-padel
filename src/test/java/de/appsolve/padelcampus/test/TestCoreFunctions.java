@@ -10,6 +10,7 @@ import org.junit.Test;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
 
 /**
@@ -44,6 +45,6 @@ public class TestCoreFunctions extends TestBase {
         mockMvc.perform(get("/bookings/" + nextMonday + "/10:00/offer/"+offer1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bookings/booking"))
-                .andExpect(model().attribute("OfferDurationPrices", not(hasSize(0))));
+                .andExpect(model().attribute("OfferDurationPrice", notNullValue()));
     }
 }

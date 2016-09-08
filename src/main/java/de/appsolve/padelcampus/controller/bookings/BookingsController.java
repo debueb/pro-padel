@@ -16,7 +16,6 @@ import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.data.OfferDurationPrice;
-import de.appsolve.padelcampus.data.TimeSlot;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
@@ -26,14 +25,12 @@ import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.dao.VoucherDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
-import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Facility;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.db.model.Voucher;
-import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import de.appsolve.padelcampus.utils.EventsUtil;
@@ -48,20 +45,11 @@ import de.appsolve.padelcampus.utils.TeamUtil;
 import de.appsolve.padelcampus.utils.VoucherUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.log4j.Logger;
@@ -519,10 +507,10 @@ public class BookingsController extends BaseController {
         }
 
         //create a list of possible booking durations taking into account calendar configurations and confirmed bookings
-        Set<OfferDurationPrice> offerDurationPrices = getOfferDurationPrices(selectedDate, selectedTime, offer);
+        OfferDurationPrice offerDurationPrice = bookingUtil.getOfferDurationPrice(selectedDate, selectedTime, offer);
         
         //notify the user in case there are no durations bookable
-        if (offerDurationPrices.isEmpty()){
+        if (offerDurationPrice == null){
             throw new Exception(msg.get("NoFreeCourtsForSelectedTimeAndDate"));
         }
         
@@ -532,13 +520,10 @@ public class BookingsController extends BaseController {
         
         //set currency and price if offer and duration have been selected
         if (booking.getOffer()!=null && booking.getDuration()!=null){
-            for (OfferDurationPrice offerDurationPrice: offerDurationPrices){
-                if (offerDurationPrice.getOffer().equals(booking.getOffer())){
-                    BigDecimal price = offerDurationPrice.getDurationPriceMap().get(booking.getDuration().intValue());
-                    booking.setAmount(price);
-                    booking.setCurrency(offerDurationPrice.getConfig().getCurrency());
-                    break;
-                }
+            if (offerDurationPrice.getOffer().equals(booking.getOffer())){
+                BigDecimal price = offerDurationPrice.getDurationPriceMap().get(booking.getDuration().intValue());
+                booking.setAmount(price);
+                booking.setCurrency(offerDurationPrice.getConfig().getCurrency());
             }
         }
         
@@ -546,7 +531,7 @@ public class BookingsController extends BaseController {
 
         if (mav!=null){
             mav.addObject("Booking", booking);
-            mav.addObject("OfferDurationPrices", offerDurationPrices);
+            mav.addObject("OfferDurationPrice", offerDurationPrice);
             mav.addObject("SelectedOffer", offer);
         }
     }
@@ -617,127 +602,5 @@ public class BookingsController extends BaseController {
 
     public static ModelAndView getRedirectToSuccessView(Booking booking) {
         return new ModelAndView("redirect:/bookings/booking/" + booking.getUUID() + "/success");
-    }
-
-    private Set<OfferDurationPrice> getOfferDurationPrices(LocalDate selectedDate, LocalTime selectedTime, Offer selectedOffer) throws CalendarConfigException {
-        List<CalendarConfig> configs = calendarConfigDAO.findFor(selectedDate);
-        List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(selectedDate);
-
-        //convert to required data structure
-        Map<Offer, List<CalendarConfig>> offerConfigMap = new HashMap<>();
-        for (CalendarConfig config: configs){
-            for (Offer offer: config.getOffers()){
-                if (offer.equals(selectedOffer)){
-                    List<CalendarConfig> list = offerConfigMap.get(offer);
-                    if (list==null){
-                        list = new ArrayList<>();
-                    }
-                    list.add(config);
-
-                    //sort by start time
-                    Collections.sort(list);
-                    offerConfigMap.put(offer, list);
-                }
-            }
-        }
-        
-        Set<OfferDurationPrice> offerDurationPrices = new TreeSet<>();
-        
-        Iterator<Map.Entry<Offer, List<CalendarConfig>>> iterator = offerConfigMap.entrySet().iterator();
-        //for every offer
-        while (iterator.hasNext()){
-            Map.Entry<Offer, List<CalendarConfig>> entry = iterator.next();
-            Offer offer = entry.getKey();
-            List<CalendarConfig> configsForOffer = entry.getValue();
-            
-            //make sure the first configuration starts before the requested booking time
-            if (selectedTime.compareTo(configsForOffer.get(0).getStartTime()) < 0){
-                continue;
-            }
-            
-            LocalDateTime endTime = null;
-            Integer duration = configsForOffer.get(0).getMinDuration();
-            BigDecimal pricePerMinute;
-            BigDecimal price = null;
-            CalendarConfig previousConfig = null;
-            Map<Integer, BigDecimal> durationPriceMap = new TreeMap<>();
-            Boolean isContiguous = true;
-            for (CalendarConfig config: configsForOffer){
-                
-                //make sure there is no gap between calendar configurations
-                if (endTime == null){
-                    //first run
-                    endTime = bookingUtil.getLocalDateTime(selectedDate, selectedTime).plusMinutes(config.getMinDuration());
-                } else {
-                    //break if there are durations available and calendar configs are not contiguous
-                    if (!durationPriceMap.isEmpty()){
-                        //we substract min interval before the comparison as it has been added during the last iteration
-                        LocalDateTime configStartDateTime = bookingUtil.getLocalDateTime(selectedDate, config.getStartTime());
-                        if (!endTime.minusMinutes(config.getMinInterval()).equals(configStartDateTime)){
-                            break;
-                        }
-                    }
-                }
-                
-                
-                Integer interval = config.getMinInterval();
-            
-                pricePerMinute = bookingUtil.getPricePerMinute(config);
-                
-                //as long as the endTime is before the end time configured in the calendar
-                LocalDateTime configEndDateTime = bookingUtil.getLocalDateTime(selectedDate, config.getEndTime());
-                while (endTime.compareTo(configEndDateTime) <= 0) {
-                    TimeSlot timeSlot = new TimeSlot();
-                    timeSlot.setDate(selectedDate);
-                    timeSlot.setStartTime(selectedTime);
-                    timeSlot.setEndTime(endTime.toLocalTime());
-                    timeSlot.setConfig(config);
-                    Long bookingSlotsLeft = bookingUtil.getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
-
-                    //we only allow contiguous bookings for any given offer
-                    if (bookingSlotsLeft<1){
-                        isContiguous = false;
-                        break;
-                    }
-                    
-                    if (price == null){
-                        //see if previousConfig endTime - minInterval matches the selected time. if so, take half of the previous config price as a basis
-                        if (previousConfig != null && previousConfig.getEndTime().minusMinutes(previousConfig.getMinInterval()).equals(selectedTime)){
-                            BigDecimal previousConfigPricePerMinute = bookingUtil.getPricePerMinute(previousConfig);
-                            price = previousConfigPricePerMinute.multiply(new BigDecimal(previousConfig.getMinInterval()), MathContext.DECIMAL128);
-                            price = price.add(pricePerMinute.multiply(new BigDecimal(duration-previousConfig.getMinInterval()), MathContext.DECIMAL128));
-                        } else {
-                            price = pricePerMinute.multiply(new BigDecimal(duration.toString()), MathContext.DECIMAL128);
-                        }
-                    } else {
-                        //add price for additional interval
-                        price = price.add(pricePerMinute.multiply(new BigDecimal(interval.toString()), MathContext.DECIMAL128));
-                    }
-                    price = price.setScale(2, RoundingMode.HALF_EVEN);
-                    durationPriceMap.put(duration, price);
-
-                    //increase the duration by the configured minimum interval and determine the new end time for the next iteration
-                    duration += interval;
-                    endTime = endTime.plusMinutes(interval);
-                }
-                
-                if (!durationPriceMap.isEmpty()){
-                    OfferDurationPrice odp = new OfferDurationPrice();
-                    odp.setOffer(offer);
-                    odp.setDurationPriceMap(durationPriceMap);
-                    odp.setConfig(config);
-                    offerDurationPrices.add(odp);
-                }
-                
-                if (!isContiguous){
-                    //we only allow coniguous bookings for one offer. process next offer
-//                    previousConfig = null;
-                    break;
-                } 
-                previousConfig = config;
-                
-            }
-        }
-        return offerDurationPrices;
     }
 }
