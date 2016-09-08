@@ -358,23 +358,7 @@ public class BookingsController extends BaseController {
             booking.setConfirmed(true);
             bookingDAO.saveOrUpdate(booking);
             
-            Mail mail = new Mail();
-            mail.setSubject(msg.get("BookingSuccessfulMailSubject"));
-            mail.setBody(msg.get("BookingSuccessfulMailBody", new Object[]{
-                booking.getPlayer().toString(),
-                FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()),
-                FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
-                booking.getDuration() + " " + msg.get("Minutes"),
-                booking.getOffer().toString(),
-                msg.get(booking.getPaymentMethod().toString()),
-                booking.getAmount(),
-                booking.getCurrency(),
-                CANCELLATION_POLICY_DEADLINE,
-                RequestUtil.getBaseURL(request) + "/bookings/booking/" + booking.getUUID() + "/cancel",
-                RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
-                RequestUtil.getBaseURL(request)}));
-            mail.addRecipient(booking.getPlayer());
-            mailUtils.send(mail, request);
+            bookingUtil.sendBookingConfirmation(request, booking);
             booking.setConfirmationMailSent(true);
             bookingDAO.saveOrUpdate(booking);
             

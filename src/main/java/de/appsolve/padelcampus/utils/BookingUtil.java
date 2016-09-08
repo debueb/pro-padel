@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Constants;
+import static de.appsolve.padelcampus.constants.Constants.CANCELLATION_POLICY_DEADLINE;
 import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
 import static de.appsolve.padelcampus.constants.Constants.NO_HOLIDAY_KEY;
 import de.appsolve.padelcampus.data.DatePickerDayConfig;
@@ -375,19 +376,23 @@ public class BookingUtil {
         return config.getBasePrice().divide(new BigDecimal(config.getMinDuration().toString()), MathContext.DECIMAL128);
     }
     
-    public void sendBookingCancellationNotification(HttpServletRequest request, Booking booking) throws MailException, IOException{
-        List<Contact> contactsToNotifyOnBookingCancellation = contactDAO.findAllForBookingCancellations();
-        if (!contactsToNotifyOnBookingCancellation.isEmpty()){
-            Mail mail = new Mail();
-            mail.setSubject(msg.get("BookingCancelledAdminMailSubject", new Object[]{
-                FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
-                FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
-                booking.getPlayer().toString()
-            }));
-            mail.setBody(msg.get("BookingCancelledAdminMailBody", getDetailBody(request, booking)));
-            mail.addRecipient(booking.getPlayer());
-                mailUtils.send(mail, request);
-        }
+    public void sendBookingConfirmation(HttpServletRequest request, Booking booking) throws MailException, IOException {
+        Mail mail = new Mail();
+        mail.setSubject(msg.get("BookingSuccessfulMailSubject"));
+        mail.setBody(msg.get("BookingSuccessfulMailBody", new Object[]{
+            booking.getPlayer().toString(),
+            FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()),
+            FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
+            booking.getOffer().toString(),
+            msg.get(booking.getPaymentMethod().toString()),
+            booking.getAmount(),
+            booking.getCurrency(),
+            CANCELLATION_POLICY_DEADLINE,
+            RequestUtil.getBaseURL(request) + "/bookings/booking/" + booking.getUUID() + "/cancel",
+            RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
+            RequestUtil.getBaseURL(request)}));
+        mail.addRecipient(booking.getPlayer());
+        mailUtils.send(mail, request);
     }
     
     public void sendNewBookingNotification(HttpServletRequest request, Booking booking) throws MailException, IOException{
@@ -404,13 +409,27 @@ public class BookingUtil {
             mailUtils.send(mail, request);
         }
     }
+    
+    public void sendBookingCancellationNotification(HttpServletRequest request, Booking booking) throws MailException, IOException{
+        List<Contact> contactsToNotifyOnBookingCancellation = contactDAO.findAllForBookingCancellations();
+        if (!contactsToNotifyOnBookingCancellation.isEmpty()){
+            Mail mail = new Mail();
+            mail.setSubject(msg.get("BookingCancelledAdminMailSubject", new Object[]{
+                FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
+                FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
+                booking.getPlayer().toString()
+            }));
+            mail.setBody(msg.get("BookingCancelledAdminMailBody", getDetailBody(request, booking)));
+            mail.addRecipient(booking.getPlayer());
+                mailUtils.send(mail, request);
+        }
+    }
 
     private Object[] getDetailBody(HttpServletRequest request, Booking booking) {
         return new Object[]{
             booking.getPlayer().toString(),
             FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
             FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
-            booking.getDuration() + " " + msg.get("Minutes"),
             booking.getOffer().toString(),
             msg.get(booking.getPaymentMethod().toString()),
             booking.getAmount(),
