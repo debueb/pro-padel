@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.data;
 
+import de.appsolve.padelcampus.db.model.Offer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +52,17 @@ public class TimeRange implements Comparable<TimeRange> {
         for (TimeSlot timeSlot: getTimeSlots()){
             if (!timeSlot.getAvailableOffers().isEmpty()){
                 return true;
+            }
+        }
+        return false;
+    }
+    
+    public Boolean getShowInCalendar(){
+        for (TimeSlot timeSlot: getTimeSlots()){
+            for (Offer offer: timeSlot.getAvailableOffers()){
+                if (offer.getShowInCalendar()){
+                    return true;
+                }
             }
         }
         return false;

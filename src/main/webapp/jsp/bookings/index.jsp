@@ -53,8 +53,10 @@
             <div class="booking-gallery">
                 <div class="booking-gallery-time">
                     <c:forEach var="TimeRange" items="${RangeMap}">
-                        <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
-                        <div>${startTime}</div>
+                        <c:if test="${TimeRange.showInCalendar}">
+                            <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
+                            <div>${startTime}</div>
+                        </c:if>
                     </c:forEach>
                 </div>
                 <div class="booking-slick">
@@ -82,6 +84,7 @@
                                 </thead>
                                 <tbody>
                                     <c:forEach var="TimeRange" items="${RangeMap}">
+                                        <c:if test="${TimeRange.showInCalendar}">
                                         <tr>
                                             <c:forEach var="Offer" items="${SelectedOffers}">
                                                 <c:if test="${Offer.showInCalendar}">
@@ -112,6 +115,7 @@
                                                 </c:if>
                                             </c:forEach>
                                         </tr>
+                                        </c:if>
                                     </c:forEach>
                                     <tr>
                                         <c:forEach var="Offer" items="${SelectedOffers}">
