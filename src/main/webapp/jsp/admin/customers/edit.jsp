@@ -29,6 +29,12 @@
                         </div>
                     </div>
                     <div class="relative">
+                        <spf:input path="defaultEmail" type="text" class="form-control form-center-element"/>
+                        <div class="explanation">
+                            <fmt:message key="DefaultEmail"/>
+                        </div>
+                    </div>
+                    <div class="relative">
                         <spf:input path="googleAnalyticsTrackingId" type="text" class="form-control form-center-element"/>
                         <div class="explanation">
                             <fmt:message key="GoogleAnalyticsTrackingId"/>

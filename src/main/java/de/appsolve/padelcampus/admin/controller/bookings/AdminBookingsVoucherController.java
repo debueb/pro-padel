@@ -81,6 +81,9 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
     @Autowired
     GameDAOI gameDAO;
     
+    @Autowired
+    MailUtils mailUtils;
+    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
@@ -196,12 +199,12 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
                     sb.append("\n\n");
                     sb.append(msg.get("NewVoucherListEmailBodyEnd", new Object[]{RequestUtil.getBaseURL(request)}));
 
-                    Mail mail = new Mail(request);
+                    Mail mail = new Mail();
                     mail.addRecipient(player);
                     mail.setSubject(event.getName());
                     mail.setBody(sb.toString());
                     try {
-                        MailUtils.send(mail);
+                        mailUtils.send(mail, request);
                     } catch (MailException | IOException ex) {
                         log.error("Error while sending voucher list to "+player.getEmail(), ex);
                     }

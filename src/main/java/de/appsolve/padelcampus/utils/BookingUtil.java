@@ -88,6 +88,9 @@ public class BookingUtil {
     @Autowired
     ObjectMapper objectMapper;
     
+    @Autowired
+    MailUtils mailUtils;
+    
     public List<TimeSlot> getTimeSlotsForDate(LocalDate selectedDate, List<CalendarConfig> allCalendarConfigs, List<Booking> existingBookings, Boolean onlyFutureTimeSlots, Boolean preventOverlapping) throws CalendarConfigException{
         
         List<CalendarConfig> calendarConfigs = calendarConfigUtil.getCalendarConfigsMatchingDate(allCalendarConfigs, selectedDate);
@@ -375,7 +378,7 @@ public class BookingUtil {
     public void sendBookingCancellationNotification(HttpServletRequest request, Booking booking) throws MailException, IOException{
         List<Contact> contactsToNotifyOnBookingCancellation = contactDAO.findAllForBookingCancellations();
         if (!contactsToNotifyOnBookingCancellation.isEmpty()){
-            Mail mail = new Mail(request);
+            Mail mail = new Mail();
             mail.setSubject(msg.get("BookingCancelledAdminMailSubject", new Object[]{
                 FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
                 FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
@@ -383,14 +386,14 @@ public class BookingUtil {
             }));
             mail.setBody(msg.get("BookingCancelledAdminMailBody", getDetailBody(request, booking)));
             mail.addRecipient(booking.getPlayer());
-                MailUtils.send(mail);
+                mailUtils.send(mail, request);
         }
     }
     
     public void sendNewBookingNotification(HttpServletRequest request, Booking booking) throws MailException, IOException{
         List<Contact> contactsToNotifyOnBooking = contactDAO.findAllForBookings();
         if (!contactsToNotifyOnBooking.isEmpty()){
-            Mail mail = new Mail(request);
+            Mail mail = new Mail();
             mail.setSubject(msg.get("BookingSuccessfulMailSubjectAdmin", new Object[]{
                 FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
                 FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
@@ -398,7 +401,7 @@ public class BookingUtil {
             }));
             mail.setBody(msg.get("BookingSuccessfulMailBodyAdmin", getDetailBody(request, booking)));
             mail.setRecipients(contactsToNotifyOnBooking);
-            MailUtils.send(mail);
+            mailUtils.send(mail, request);
         }
     }
 

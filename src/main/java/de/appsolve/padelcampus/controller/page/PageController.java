@@ -13,6 +13,7 @@ import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.dao.PageEntryDAOI;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.utils.Msg;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,10 +56,10 @@ public class PageController extends BaseController{
     }
     
     @RequestMapping(method=POST)
-    public ModelAndView postIndex(@PathVariable("moduleId") String moduleTitle, @ModelAttribute("Mail") Mail mail, BindingResult bindingResult){
+    public ModelAndView postIndex(HttpServletRequest request, @PathVariable("moduleId") String moduleTitle, @ModelAttribute("Mail") Mail mail, BindingResult bindingResult){
         Module module = getModule(moduleTitle);
         ModelAndView defaultView = getIndexView(module, mail);
-        return sendMail(defaultView, mail, bindingResult);
+        return sendMail(request, defaultView, mail, bindingResult);
     }
 
     private ModelAndView getIndexView(Module module, Mail mail) {

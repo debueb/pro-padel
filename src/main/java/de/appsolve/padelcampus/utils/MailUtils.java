@@ -13,6 +13,7 @@ import com.sparkpost.model.TemplateContentAttributes;
 import com.sparkpost.model.TransmissionWithRecipientArray;
 import com.sparkpost.resources.ResourceTransmissions;
 import com.sparkpost.transport.RestConnection;
+import de.appsolve.padelcampus.data.CustomerI;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.exceptions.MailException;
@@ -20,19 +21,36 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.apache.log4j.Logger;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  *
  * @author dominik
  */
+@Component
 public class MailUtils {
     
-    private static final Logger LOG                 = Logger.getLogger(MailUtils.class);
+    @Autowired
+    SessionUtil sessionUtil;
+    
     private static final String API_KEY             = "3def953e23ed9c354a77cb6465c65cb34b32f2b4";
     private static final String DEFAULT_FROM_EMAIL  = "noreply@pro-padel.de";
         
-    public static void send(Mail mail) throws MailException, IOException {
+    public void send(Mail mail, HttpServletRequest request) throws MailException, IOException {
+        
+        String from = DEFAULT_FROM_EMAIL;
+        if (request != null){
+            CustomerI customer = sessionUtil.getCustomer(request);
+            if (customer != null){
+                if (!StringUtils.isEmpty(customer.getDefaultEmail())){
+                    from = customer.getDefaultEmail();
+                }
+            }
+        }
+        String replyTo = StringUtils.isEmpty(mail.getFrom()) ? from : mail.getFrom();
         
         Client client = new Client(API_KEY);
 
@@ -51,8 +69,8 @@ public class MailUtils {
 
             TemplateContentAttributes contentAttributes = new TemplateContentAttributes();
 
-            contentAttributes.setFrom(new AddressAttributes(DEFAULT_FROM_EMAIL));
-            contentAttributes.setReplyTo(mail.getFrom());
+            contentAttributes.setFrom(new AddressAttributes(from));
+            contentAttributes.setReplyTo(replyTo);
             contentAttributes.setSubject(mail.getSubject());
             contentAttributes.setHtml(getHTML(mail.getBody()));
             contentAttributes.setText(mail.getBody());
@@ -67,12 +85,12 @@ public class MailUtils {
         }
     }
     
-    private static String getHTML(String string) {
+    private String getHTML(String string) {
         string = string.replaceAll("(\r\n|\n)", "<br />");
         return string;
     }
 
-    private static List<String> getRecipients(Mail mail) {
+    private List<String> getRecipients(Mail mail) {
         List<String> recipients = new ArrayList<>();
         for (EmailContact contact: mail.getRecipients()){
             recipients.add(contact.getEmailAddress());

@@ -12,5 +12,6 @@ package de.appsolve.padelcampus.data;
 public interface CustomerI {
 
     String getName();
+    String getDefaultEmail();
     
 }

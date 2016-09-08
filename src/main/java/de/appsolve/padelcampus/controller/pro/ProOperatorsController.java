@@ -77,6 +77,9 @@ public class ProOperatorsController implements ServletContextAware{
     @Autowired
     HtmlResourceUtil htmlResourceUtil;
     
+    @Autowired
+    MailUtils mailUtils;
+    
     private final static Pattern DNS_SUBDOMAIN_PATTERN = Pattern.compile("(?:[A-Za-z0-9][A-Za-z0-9\\-]{0,61}[A-Za-z0-9]|[A-Za-z0-9])");
     
     private final static String OPENSHIFT_URL   = "padelkoeln-appsolve.rhcloud.com";
@@ -172,7 +175,7 @@ public class ProOperatorsController implements ServletContextAware{
         try {
             Contact contact = new Contact();
             contact.setEmailAddress(CONTACT_FORM_RECIPIENT_MAIL);
-            Mail mail = new Mail(request);
+            Mail mail = new Mail();
             mail.addRecipient(contact);
             mail.setReplyTo("noreply@"+CLOUDFLARE_URL);
             mail.setSubject("Customer Registration");
@@ -182,7 +185,7 @@ public class ProOperatorsController implements ServletContextAware{
             body.append("Player email: ").append(customerAccount.getPlayer().getEmailAddress()).append("\n");
             body.append("Message: ").append(message);
             mail.setBody(body.toString());
-            MailUtils.send(mail);
+            mailUtils.send(mail, request);
         } catch (MailException | IOException ex) {
             LOG.error(ex);
         }

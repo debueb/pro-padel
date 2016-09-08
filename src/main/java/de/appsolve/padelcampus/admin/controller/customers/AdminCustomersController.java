@@ -57,7 +57,7 @@ public class AdminCustomersController extends AdminBaseController<Customer> {
         } catch (Exception e){
             result.addError(new ObjectError("*", e.getMessage()));
         }
-        return editView;
+        return redirectToIndex(request);
     }
     
     @Override

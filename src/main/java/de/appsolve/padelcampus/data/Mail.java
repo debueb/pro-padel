@@ -6,10 +6,8 @@
 package de.appsolve.padelcampus.data;
 
 import de.appsolve.padelcampus.annotations.EmailWithTld;
-import static de.appsolve.padelcampus.constants.Constants.MAIL_NOREPLY_SENDER_NAME;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -17,20 +15,6 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author dominik
  */
 public class Mail {
-    
-    /**
-     * default constructor
-     */
-    public Mail(){    
-    }
-    
-    /**
-     * convenience constructor. sender will automatically be set to no-reply@host.tld
-     * @param request
-     */
-    public Mail(HttpServletRequest request){
-        this.from = MAIL_NOREPLY_SENDER_NAME + "@" + request.getServerName();
-    }
     
     @NotEmpty(message = "{NotEmpty.email}")
     @EmailWithTld

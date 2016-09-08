@@ -21,7 +21,6 @@ import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
-import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
@@ -158,7 +157,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
             if (model.getId()==null){
                 List<Player> interestedPlayers = playerDAO.findPlayersInterestedIn(model);
                 if (!interestedPlayers.isEmpty()){
-                    Mail mail = new Mail(request);
+                    Mail mail = new Mail();
                     mail.setSubject(msg.get("NewMatchOfferMailSubject"));
                     mail.setBody(getNewMatchOfferMailBody(request, model));
                     
@@ -168,7 +167,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
                         }
                     }
                     if (!mail.getRecipients().isEmpty()){
-                        MailUtils.send(mail);
+                        mailUtils.send(mail, request);
                     }
                 }
             }
@@ -208,7 +207,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
         existingParticipantsEmail.setFrom(user.getEmail());
         existingParticipantsEmail.setRecipients(new ArrayList<EmailContact>(offer.getPlayers()));
         
-        Mail newParticipantEmail = new Mail(request);
+        Mail newParticipantEmail = new Mail();
         newParticipantEmail.addRecipient(user);
         
         try {
@@ -221,7 +220,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
                 if (offer.getPlayers().size() >= offer.getMaxPlayersCount()){
                     //inform other players about new waiting list entry
                     existingParticipantsEmail.setBody(msg.get("MatchOfferNewWaitingListEntry", new Object[]{user.toString(), offer.toString(), offerURL, baseURL}));
-                    MailUtils.send(existingParticipantsEmail);
+                    mailUtils.send(existingParticipantsEmail, request);
                     
                     //add user to waiting list
                     Set<Player> waitingList = offer.getWaitingList();
@@ -257,8 +256,8 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
                         offer.getWaitingList().remove(user);
                     }
                     
-                    MailUtils.send(existingParticipantsEmail);
-                    MailUtils.send(newParticipantEmail);
+                    mailUtils.send(existingParticipantsEmail, request);
+                    mailUtils.send(newParticipantEmail, request);
                 }
                 
                 //confirm participation to user
@@ -272,7 +271,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
                 Integer remainingRequiredPlayersCount = offer.getMinPlayersCount() - offer.getPlayers().size() + 1;
                 existingParticipantsEmail.setBody(msg.get("MatchOfferParticipantCancelledEmailBody", new Object[]{user.toString(), offer.toString(), remainingRequiredPlayersCount, offerURL, baseURL}));
                 
-                MailUtils.send(existingParticipantsEmail);
+                mailUtils.send(existingParticipantsEmail, request);
                 
                 //remove player from offer
                 offer.getPlayers().remove(user);
@@ -282,11 +281,11 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
                 
                 //inform waiting users
                 for (Player waitingPlayer: offer.getWaitingList()){
-                    Mail waitingPlayerEmail = new Mail(request);
+                    Mail waitingPlayerEmail = new Mail();
                     waitingPlayerEmail.addRecipient(waitingPlayer);
                     waitingPlayerEmail.setSubject(msg.get("MatchOfferWaitingListPlayerCancelledMailSubject"));
                     waitingPlayerEmail.setBody(msg.get("MatchOfferWaitingListPlayerCancelledMailBody", new Object[]{waitingPlayer, offer, offerURL, baseURL}));
-                    MailUtils.send(waitingPlayerEmail);
+                    mailUtils.send(waitingPlayerEmail, request);
                 }
             }
             

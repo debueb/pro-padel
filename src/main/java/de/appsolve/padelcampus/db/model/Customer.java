@@ -7,6 +7,7 @@
 package de.appsolve.padelcampus.db.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.appsolve.padelcampus.annotations.EmailWithTld;
 import de.appsolve.padelcampus.data.CustomerI;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -49,6 +50,9 @@ public class Customer extends BaseEntity implements CustomerI{
     
     @Column(length = 8000)
     private String footerPrefix;
+    
+    @Column
+    private String defaultEmail;
     
     @Override
     public String getName() {
@@ -118,5 +122,13 @@ public class Customer extends BaseEntity implements CustomerI{
 
     public void setFooterPrefix(String footerPrefix) {
         this.footerPrefix = footerPrefix;
+    }
+
+    public String getDefaultEmail() {
+        return defaultEmail;
+    }
+
+    public void setDefaultEmail(String defaultEmail) {
+        this.defaultEmail = defaultEmail;
     }
 }

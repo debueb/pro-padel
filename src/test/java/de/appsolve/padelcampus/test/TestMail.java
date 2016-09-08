@@ -13,6 +13,7 @@ import java.util.Arrays;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
@@ -21,6 +22,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TestMail extends TestBase {
+    
+    @Autowired
+    MailUtils mailUtils;
 
     private static final Logger LOG = Logger.getLogger(TestMail.class);
 
@@ -35,6 +39,6 @@ public class TestMail extends TestBase {
         mail.setRecipients(Arrays.asList(new EmailContact[]{contact}));
         mail.setReplyTo("noreply@appsolve.de");
         mail.setSubject(TestMail.class.getSimpleName());
-        MailUtils.send(mail);
+        mailUtils.send(mail, null);
     }
 }

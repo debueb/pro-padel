@@ -46,6 +46,9 @@ public abstract class BaseController {
     @Autowired
     public Msg msg;
     
+    @Autowired
+    public MailUtils mailUtils;
+    
     @ExceptionHandler(value=Exception.class)
     public ModelAndView handleException(Exception ex){
         log.error(ex.getMessage(), ex);
@@ -63,7 +66,7 @@ public abstract class BaseController {
         return loginRequiredView;
     }
     
-    public ModelAndView sendMail(ModelAndView defaultView, @ModelAttribute("Model") Mail mail, BindingResult bindingResult){
+    public ModelAndView sendMail(HttpServletRequest request, ModelAndView defaultView, @ModelAttribute("Model") Mail mail, BindingResult bindingResult){
         validator.validate(mail, bindingResult);
         if (bindingResult.hasErrors()){
             return defaultView;
@@ -77,7 +80,7 @@ public abstract class BaseController {
                 mail.setRecipients(contacts);
             }
             mail.setSubject("[Feedback] "+mail.getSubject());
-            MailUtils.send(mail);
+            mailUtils.send(mail, request);
             ModelAndView mav = new ModelAndView("contact/success");
             mav.addObject("path", getPath());
             return mav;

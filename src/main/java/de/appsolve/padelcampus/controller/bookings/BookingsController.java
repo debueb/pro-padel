@@ -37,7 +37,6 @@ import de.appsolve.padelcampus.utils.EventsUtil;
 import de.appsolve.padelcampus.utils.FormatUtils;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
 import de.appsolve.padelcampus.utils.GameUtil;
-import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
@@ -359,7 +358,7 @@ public class BookingsController extends BaseController {
             booking.setConfirmed(true);
             bookingDAO.saveOrUpdate(booking);
             
-            Mail mail = new Mail(request);
+            Mail mail = new Mail();
             mail.setSubject(msg.get("BookingSuccessfulMailSubject"));
             mail.setBody(msg.get("BookingSuccessfulMailBody", new Object[]{
                 booking.getPlayer().toString(),
@@ -375,7 +374,7 @@ public class BookingsController extends BaseController {
                 RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
                 RequestUtil.getBaseURL(request)}));
             mail.addRecipient(booking.getPlayer());
-            MailUtils.send(mail);
+            mailUtils.send(mail, request);
             booking.setConfirmationMailSent(true);
             bookingDAO.saveOrUpdate(booking);
             
@@ -453,7 +452,7 @@ public class BookingsController extends BaseController {
                 Voucher voucher = VoucherUtil.createNewVoucher(comment, maxDuration, validUntilDate, validFromTime, validUntilTime, weekDays, offers);
                 voucherDAO.saveOrUpdate(voucher);
 
-                Mail mail = new Mail(request);
+                Mail mail = new Mail();
                 mail.setSubject(msg.get("VoucherMailSubject"));
                 mail.setBody(msg.get("VoucherMailBody", new Object[]{
                     booking.getPlayer().toString(),
@@ -463,7 +462,7 @@ public class BookingsController extends BaseController {
                     voucher.getUUID(),
                     RequestUtil.getBaseURL(request)}));
                 mail.addRecipient(booking.getPlayer());
-                MailUtils.send(mail);
+                mailUtils.send(mail, request);
                 
                 booking.setCancelled(true);
                 booking.setCancelReason("cancellation with replacement voucher");

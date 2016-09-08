@@ -174,7 +174,7 @@ public class LoginController extends BaseController{
         player.setPasswordResetExpiryDate(expiryDate);
         playerDAO.saveOrUpdate(player);
 
-        Mail mail = new Mail(request);
+        Mail mail = new Mail();
         Contact contact = new Contact();
         contact.setEmailAddress(player.getEmail());
         contact.setEmailDisplayName(player.toString());
@@ -182,7 +182,7 @@ public class LoginController extends BaseController{
         mail.setSubject(msg.get("ForgotPasswordMailSubject"));
         mail.setBody(StringEscapeUtils.unescapeJava(msg.get("ForgotPasswordMailBody", new Object[]{player.toString(), resetPasswordURL, RequestUtil.getBaseURL(request)})));
         try {
-            MailUtils.send(mail);
+            mailUtils.send(mail, request);
         } catch (MailException | IOException e) {
             LOG.warn("Error while sending reset password instructions", e);
             bindingResult.addError(new ObjectError("email", e.toString()));
@@ -297,15 +297,15 @@ public class LoginController extends BaseController{
             
             String confirmRegistrationURL = RequestUtil.getBaseURL(request)+"/login/confirm/"+player.getUUID();
             
-            Mail mail = new Mail(request);
+            Mail mail = new Mail();
             Contact contact = new Contact();
             contact.setEmailAddress(player.getEmail());
             contact.setEmailDisplayName(player.toString());
             mail.addRecipient(contact);
             mail.setSubject(msg.get("RegistrationMailSubject"));
             mail.setBody(StringEscapeUtils.unescapeJava(msg.get("RegistrationMailBody", new Object[]{player.toString(), confirmRegistrationURL, RequestUtil.getBaseURL(request)})));
-            try {
-                MailUtils.send(mail);
+            try {                
+                mailUtils.send(mail, request);
             } catch (IOException | MailException e){
                 LOG.error(e.getMessage(), e);
             }
