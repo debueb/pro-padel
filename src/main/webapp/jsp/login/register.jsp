@@ -10,7 +10,7 @@
         <div class="panel panel-info unit">
             <div class="panel-heading"><h4><fmt:message key="Register"/></h4></div>
             <div class="panel-body">
-                <spf:form class="form-signin" modelAttribute="Model" action="/login/register">
+                <spf:form modelAttribute="Model" action="/login/register">
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
                     <spf:input path="id" type="hidden"/>
                     <jsp:include page="/jsp/include/player-input.jsp"><jsp:param name="showPassword" value="true"/></jsp:include>
