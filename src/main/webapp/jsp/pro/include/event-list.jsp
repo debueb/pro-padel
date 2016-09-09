@@ -9,6 +9,7 @@
             <th><fmt:message key="Date"/></th>
             <th><fmt:message key="Category"/></th>
             <th><fmt:message key="Mode"/></th>
+            <th><fmt:message key="Name"/></th>
             <th><fmt:message key="Operator"/></th>
         </thead>
         <tbody>
@@ -19,6 +20,7 @@
                     <td><a href="${url}"><joda:format value="${Event.startDate}" pattern="EEEE, dd. MMMM yyyy"/></a></td>
                     <td><a href="${url}"><fmt:message key="Mode_${Event.gender}"/></a></td>
                     <td><a href="${url}"><fmt:message key="${Event.eventType}"/></a></td>
+                    <td><a href="${url}">${Event.name}</a></td>
                     <td><a href="${url}">${Event.customer}</a></td>
                 </tr>
             </c:forEach>

@@ -38,7 +38,7 @@ public class ProTournamentsController {
         LocalDate today = new LocalDate();
         while (iterator.hasNext()){
             Event event = iterator.next();
-            if (event.getStartDate().isBefore(today)){
+            if (event.getEndDate().isBefore(today)){
                 pastEvents.add(event);
             } else {
                 upcomingEvents.add(event);

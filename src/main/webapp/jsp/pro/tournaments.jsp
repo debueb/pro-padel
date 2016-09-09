@@ -4,7 +4,7 @@
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <div class="panel panel-default unit-2">
             <div class="panel-heading">
-                <h4 class="text-center"><fmt:message key="UpcomingTournaments"/></h4>
+                <h4 class="text-center"><fmt:message key="CurrentTournaments"/></h4>
             </div>
             <div class="panel-body">
                 <div class="table-responsive">
