@@ -127,17 +127,18 @@ public class Module extends SortableEntity{
         if (moduleType == null){
             return null;
         }
-        String moduleName = "/" + moduleType.name().toLowerCase();
         switch (moduleType){
+            case HomePage:
+                return "/home";
             case Link:
                 return url;
-            case Page:
-            case Events:
+            default:
+                String moduleName = "/" + moduleType.name().toLowerCase();
                 moduleName += "/" + getTitle();
-                break;
+                moduleName = moduleName.replace(" ", "-");
+                return moduleName;
         }
-        moduleName = moduleName.replace(" ", "-");
-        return moduleName;
+        
     }
 
     public void setUrl(String url) {
