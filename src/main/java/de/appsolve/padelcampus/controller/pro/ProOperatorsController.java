@@ -96,7 +96,7 @@ public class ProOperatorsController implements ServletContextAware{
     }
     
     @RequestMapping(method=POST, value="newaccount")
-    public ModelAndView postNewAccount(HttpServletRequest request, @ModelAttribute("Model") @Valid CustomerRegistrationModel customerAccount, BindingResult bindingResult){
+    public ModelAndView postNewAccount(HttpServletRequest request, @ModelAttribute("Model") CustomerRegistrationModel customerAccount, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             return new ModelAndView("pro/newaccount", "Model", customerAccount);
         }
