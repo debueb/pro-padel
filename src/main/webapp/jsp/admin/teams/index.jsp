@@ -17,6 +17,7 @@
                     <thead>
                     <th><fmt:message key="TeamName"/></th>
                     <th><fmt:message key="Players"/></th>
+                    <th><fmt:message key="Community"/></th>
                     <th class="text-center"><fmt:message key="SendMail"/></th>
                     <th class="delete"><fmt:message key="Delete"/></th>
                     </thead>
@@ -29,6 +30,7 @@
                                         <a class="ajaxify" href="/admin/players/edit/${Player.id}">${Player}</a>${status.last ? "" : ", "}
                                     </c:forEach>
                                 </td>
+                                <td>${Team.community}</td>
                                 <td><a class="block text-center" href="mailto:${Team.mailTo}"><i class="fa fa-envelope"></i></a></td>
                                 <td class="delete"><a href="/admin/teams/${Team.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
                             </tr>
