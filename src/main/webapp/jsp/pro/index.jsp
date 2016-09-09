@@ -9,7 +9,6 @@
     </div>
 </div>
 <div class="title-container">
-    <div class="container">
         <div class="row">
             <div class="col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 col-xl-6 col-xl-offset-3">
                 <div class="panel panel-default">
@@ -25,9 +24,12 @@
 
         <div class="link-container flex-container">
 
+            
+            
+            
             <div class="panel flex-item panel-default">
                 <div class="panel-heading">
-                    <a href="/pro/tournaments"><h3 class="panel-title"><fmt:message key="Tournaments"/></h3></a>
+                    <a href="/pro/tournaments"><h4><fmt:message key="Tournaments"/></h4></a>
                 </div>
                 <div class="panel-body">
                     <a href="/pro/tournaments"><fmt:message key="TournamentsUserDesc"/></a>
@@ -36,7 +38,7 @@
 
             <div class="panel flex-item panel-default">
                 <div class="panel-heading">
-                    <a href="/pro/ranking"><h3 class="panel-title"><fmt:message key="Ranking"/></h3></a>
+                    <a href="/pro/ranking"><h4><fmt:message key="Ranking"/></h4></a>
                 </div>
                 <div class="panel-body">
                     <a href="/pro/ranking"><fmt:message key="RankingUserDesc"/></a>
@@ -45,13 +47,12 @@
 
             <div class="panel flex-item panel-default">
                 <div class="panel-heading">
-                    <a href="/pro/operators"><h3 class="panel-title"><fmt:message key="ForOperators"/></h3></a>
+                    <a href="/pro/operators"><h4><fmt:message key="ForOperators"/></h4></a>
                 </div>
                 <div class="panel-body">
                     <a href="/pro/operators"><fmt:message key="ForOperatorsDesc"/></a>
                 </div>
             </div>
         </div>
-    </div>
 </div>
 <jsp:include page="/jsp/pro/include/footer.jsp"/>

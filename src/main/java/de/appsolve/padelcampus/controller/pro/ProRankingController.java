@@ -22,7 +22,9 @@ public class ProRankingController extends RankingController {
     @RequestMapping
     @Override
     public ModelAndView getIndex(HttpServletRequest request){
-        return getIndexView(msg.get("Ranking"), msg.get("RankingDesc"));
+        ModelAndView mav = new ModelAndView("pro/ranking/index");
+        mav.addObject("path", getPath());
+        return mav;
     }
     
     @Override

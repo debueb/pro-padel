@@ -45,3 +45,4 @@
         </div>
         <div class="background-fixed">
             <div class="wrapper">
+                <div class="container-fluid">
