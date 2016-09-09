@@ -86,7 +86,9 @@
                 <c:forEach var="Customer" items="${Customers}">
                     <div class="panel flex-item panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title text-center">${Customer}</h3>
+                            <c:forEach var="domainName" items="${Customer.domainNames}" end="0">
+                                <h3 class="panel-title text-center"><a href="https://${domainName}" target="blank">${Customer}</a></h3>
+                            </c:forEach>
                         </div>
                         <div class="panel-body no-padding">
                             <c:forEach var="domainName" items="${Customer.domainNames}" end="0">
