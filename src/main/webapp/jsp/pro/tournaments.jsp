@@ -8,7 +8,7 @@
             </div>
             <div class="panel-body">
                 <div class="table-responsive">
-                    <c:set var="Models" value="${UpcomingEvents}"/>
+                    <c:set var="Models" value="${UpcomingEvents}" scope="request"/>
                     <jsp:include page="/jsp/pro/include/event-list.jsp"/>
                 </div>
             </div>
