@@ -5,7 +5,6 @@
  */
 package de.appsolve.padelcampus.controller.pro;
 
-import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import java.util.ArrayList;
@@ -37,14 +36,10 @@ public class ProTournamentsController {
         LocalDate today = new LocalDate();
         while (iterator.hasNext()){
             Event event = iterator.next();
-            if (event.getEventType().equals(EventType.SingleRoundRobin)){
-                iterator.remove();
+            if (event.getStartDate().isBefore(today)){
+                pastEvents.add(event);
             } else {
-                if (event.getStartDate().isBefore(today)){
-                    pastEvents.add(event);
-                } else {
-                    upcomingEvents.add(event);
-                }
+                upcomingEvents.add(event);
             }
         }
         ModelAndView mav = new ModelAndView("pro/tournaments");

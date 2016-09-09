@@ -10,8 +10,6 @@
             <th><fmt:message key="Category"/></th>
             <th><fmt:message key="Mode"/></th>
             <th><fmt:message key="Operator"/></th>
-            <th><fmt:message key="Location"/></th>
-            <th><fmt:message key="Description"/></th>
         </thead>
         <tbody>
             <c:forEach var="Event" items="${Models}">
@@ -22,8 +20,6 @@
                     <td><a href="${url}"><fmt:message key="Mode_${Event.gender}"/></a></td>
                     <td><a href="${url}"><fmt:message key="${Event.eventType}"/></a></td>
                     <td><a href="${url}">${Event.customer}</a></td>
-                    <td><a href="${url}">${Event.location}</a></td>
-                    <td><a href="${url}">${Event.description}</a></td>
                 </tr>
             </c:forEach>
         </tbody>
