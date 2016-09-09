@@ -6,7 +6,7 @@
             <spf:form method="POST" class="form-horizontal" modelAttribute="Model">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <fmt:message key="Register"/>
+                        <h4><fmt:message key="Register"/></h4>
                     </div>
 
                     <div class="panel-body">
