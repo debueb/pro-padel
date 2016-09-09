@@ -33,7 +33,7 @@
                             </c:when>
                             <c:when test="${Attribute.name eq 'backgroundSize'}">
                                 <div class="text-center unit">
-                                    <input type="checkbox" name="backgroundSizeCover" id="backgroundSizeCover" ${Attribute.cssValue eq 'repeat' ? 'checked' : ''}/>
+                                    <input type="checkbox" name="backgroundSizeCover" id="backgroundSizeCover" ${Attribute.cssValue eq 'cover' ? 'checked' : ''}/>
                                     <label for="backgroundSizeCover"><fmt:message key="BackgroundSizeCover"/></label>
                                 </div>
                             </c:when>
