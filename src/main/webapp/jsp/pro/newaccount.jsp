@@ -17,7 +17,7 @@
                         <fmt:message key="EmailAddress" var="EmailAddress"/>
                         <fmt:message key="PhoneNumber" var="PhoneNumber"/>
                         <fmt:message key="Password" var="Password"/>
-                        <div class="form-group">
+                        <div class="form-group unit-2">
                             <label for="inputEmail3" class="col-sm-2 control-label"><fmt:message key="ProjectName"/></label>
                             <div class="col-sm-10">
                                 <spf:input path="customer.name" type="text" class="form-control"/>
@@ -26,20 +26,20 @@
                         <div class="form-group">
                             <label for="inputEmail3" class="col-sm-2 control-label"><fmt:message key="FirstName"/></label>
                             <div class="col-sm-10">
-                                <spf:input path="player.firstName" type="text" class="form-control form-top-element"/>
+                                <spf:input path="player.firstName" type="text" class="form-control"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputEmail3" class="col-sm-2 control-label"><fmt:message key="LastName"/></label>
                             <div class="col-sm-10">
-                                <spf:input path="player.lastName" type="text" class="form-control form-center-element"/>
+                                <spf:input path="player.lastName" type="text" class="form-control"/>
 
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputEmail3" class="col-sm-2 control-label"><fmt:message key="EmailAddress"/></label>
                             <div class="col-sm-10">
-                                <spf:input path="player.email" type="text" class="form-control form-center-element"/>
+                                <spf:input path="player.email" type="text" class="form-control"/>
 
                             </div>
                         </div>
@@ -47,7 +47,7 @@
                         <div class="form-group">
                             <label for="inputEmail3" class="col-sm-2 control-label"><fmt:message key="PhoneNumber"/></label>
                             <div class="col-sm-10">
-                                <spf:input path="player.phone" type="text" class="form-control form-center-element"/>
+                                <spf:input path="player.phone" type="text" class="form-control"/>
 
                             </div>
                         </div>
@@ -64,12 +64,12 @@
                         <div class="form-group">
                             <label for="inputEmail3" class="col-sm-2 control-label"><fmt:message key="Password"/></label>
                             <div class="col-sm-10">
-                                <spf:input path="player.password" type="password" class="form-control form-center-element"/>
+                                <spf:input path="player.password" type="password" class="form-control"/>
 
                             </div>
                         </div>
                     </div>
-                    <div class="panel-footer"><button class="btn btn-default btn-block btn-form-submit unit" type="submit"><fmt:message key="Register"/></button></div>
+                    <div class="panel-footer"><button class="btn btn-default btn-block btn-form-submit" type="submit"><fmt:message key="Register"/></button></div>
                 </div>
             </spf:form>
         </div>
