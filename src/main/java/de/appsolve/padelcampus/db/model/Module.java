@@ -128,8 +128,18 @@ public class Module extends SortableEntity{
             return null;
         }
         switch (moduleType){
+            case LandingPage:
+                return "/";
             case HomePage:
                 return "/home";
+            case Bookings:
+                return "/bookings";
+            case MatchOffers:
+                return "/matchoffers";
+            case Staff:
+                return "/staff";
+            case Ranking:
+                return "/ranking";
             case Link:
                 return url;
             default:
