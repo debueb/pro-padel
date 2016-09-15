@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -30,6 +31,9 @@ public abstract class Participant extends ComparableEntity implements Participan
     @Column
     private String UUID;
     
+    @Column
+    private Integer initialRanking;
+    
     @Transient
     public String getDiscriminatorValue(){
     DiscriminatorValue val = this.getClass().getAnnotation( DiscriminatorValue.class );
@@ -43,5 +47,17 @@ public abstract class Participant extends ComparableEntity implements Participan
 
     public void setUUID(String UUID) {
         this.UUID = UUID;
+    }
+
+    public void setInitialRanking(Integer initialRanking) {
+        this.initialRanking = initialRanking;
+    }
+    
+    public Integer getInitialRanking(){
+        return initialRanking == null ? 1300 : initialRanking;
+    }
+    
+    public BigDecimal getInitialRankingAsBigDecimal(){
+        return new BigDecimal(getInitialRanking());
     }
 }

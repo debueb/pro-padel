@@ -57,8 +57,6 @@ public class RankingUtil {
 
     private static final BigDecimal ELO_MAGIC_NUMBER = new BigDecimal("400");
 
-    private static final BigDecimal ELO_INITIAL_RATING = new BigDecimal("1300");
-
     private SortedMap<Participant, BigDecimal> rankingMap;
 
     @Autowired
@@ -99,7 +97,7 @@ public class RankingUtil {
                 if (ranking.containsKey(player)) {
                     teamScore = teamScore.add(ranking.get(player));
                 } else {
-                    teamScore = teamScore.add(ELO_INITIAL_RATING);
+                    teamScore = teamScore.add(player.getInitialRankingAsBigDecimal());
                 }
             }
             teamScore = teamScore.divide(new BigDecimal(team.getPlayers().size()));
@@ -120,7 +118,7 @@ public class RankingUtil {
         //add all participants without score
         for (Participant p : participants) {
             if (!ranking.containsKey(p)) {
-                ranking.put(p, ELO_INITIAL_RATING);
+                ranking.put(p, p.getInitialRankingAsBigDecimal());
             }
         }
         return ranking;
@@ -205,7 +203,7 @@ public class RankingUtil {
     private BigDecimal getRanking(Participant participant) {
         BigDecimal rating = rankingMap.get(participant);
         if (rating == null) {
-            rating = ELO_INITIAL_RATING;
+            rating = participant.getInitialRankingAsBigDecimal();
         }
         return rating;
     }

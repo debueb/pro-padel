@@ -67,6 +67,7 @@ public class AdminPlayersController extends AdminBaseController<Player> {
         player.setLastName(model.getLastName());
         player.setPhone(model.getPhone());
         player.setGender(model.getGender());
+        player.setInitialRanking(model.getInitialRanking());
         playerDAO.saveOrUpdate(player);
         return redirectToIndex(request);
     }
