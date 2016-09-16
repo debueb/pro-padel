@@ -111,11 +111,11 @@ public class GameUtil {
         Iterator<Game> eventGameIterator = eventGames.iterator();
         while (eventGameIterator.hasNext()){
             Game game = eventGameIterator.next();
-                //only remove if game participant no longer participates in event
-                if (!newParticipants.containsAll(game.getParticipants())){
-                    eventGameIterator.remove();
-                    gameDAO.deleteById(game.getId());
-                }
+            //only remove if game participant no longer participates in event
+            if (!newParticipants.containsAll(game.getParticipants())){
+                eventGameIterator.remove();
+                gameDAO.deleteById(game.getId());
+            }
         }
     }
     
