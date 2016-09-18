@@ -31,6 +31,6 @@
     <div class="col-xs-9 booking-cell"><joda:format value="${Model.startDate}" pattern="EEEE, dd. MMMM yyyy"/></div>
 </div>                   
 <div class="row">
-    <div class="col-xs-3 booking-cell"><fmt:message key="Time"/></div>
+    <div class="col-xs-3 booking-cell"><fmt:message key="Time"/>:</div>
     <div class="col-xs-9 booking-cell"><joda:format value="${Model.startTime}" pattern="HH:mm"/> - <joda:format value="${Model.endTime}" pattern="HH:mm"/></div>
 </div>

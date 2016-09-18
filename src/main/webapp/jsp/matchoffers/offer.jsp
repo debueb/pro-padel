@@ -14,7 +14,30 @@
                 <div class="alert alert-success">${msg}</div>
 
                 <jsp:include page="/jsp/matchoffers/include/offer-details.jsp"/>
+                <div class="row">
+                    <div class="col-xs-3" style="height: 32px; line-height: 32px;">
+                        <fmt:message key="ShareOffer"/>:
+                    </div>
+                    <div class="col-xs-9">
+                        <c:url var="fullUrl" value="${pageContext.request.scheme}://${pageContext.request.serverName}${pageContext.request.contextPath}${url}"/>
+                        <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+                        <a href="https://www.addtoany.com/share?linkurl=${fullUrl}&amp;linkname="></a>
+                        <a class="a2a_button_whatsapp"></a>
+                        <a class="a2a_button_telegram"></a>
+                        <a class="a2a_button_facebook"></a>
+                        <a class="a2a_button_email"></a>
+                        <a class="a2a_button_google_gmail"></a>
+                        </div>
+                        <script>
+                        var a2a_config = a2a_config || {};
+                        a2a_config.linkurl = "${fullUrl}";
+                        a2a_config.locale = "de";
+                        </script>
+                        <script async src="https://static.addtoany.com/menu/page.js"></script>
+                    </div>
+                </div>
 
+                <div class="unit-2">
                 <c:set var="url" value="/matchoffers/${Model.id}"/>
                 <c:choose>
                     <c:when test="${Model.owner == sessionScope.user}">
@@ -43,11 +66,8 @@
                         </form>
                     </c:otherwise>
                 </c:choose>
-                <c:url var="fullUrl" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}${url}"/>
-                <a class="btn btn-primary btn-block" href="whatsapp://send?text=${fullUrl}"><fmt:message key="ShareOfferViaWhatsApp"/></a>
-                <a class="btn btn-primary btn-block" href="tg://msg?text=${fullUrl}"><fmt:message key="ShareOfferViaTelegram"/></a>
-                <a class="btn btn-primary btn-block" href="mailto:?subject=${NewMatchOfferMailSubject}&body=${NewMatchOfferMailBody}"><fmt:message key="ShareOfferViaMail"/></a>
-                <a class="btn btn-primary btn-block ajaxify" href="/matchoffers"><fmt:message key="OtherMatchOffers"/></a>
+                </div>
+                <a class="btn btn-primary btn-block ajaxify unit" href="/matchoffers"><fmt:message key="OtherMatchOffers"/></a>
             </div>
         </div>
     </div>
