@@ -317,6 +317,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
             mav.addObject("OfferURL", getOfferURL(request, model));
             mav.addObject("NewMatchOfferMailSubject", msg.get("NewMatchOfferMailSubject"));
             mav.addObject("NewMatchOfferMailBody", getNewMatchOfferMailBody(request, model).replace("\n", "%0A"));
+            mav.addObject("PageTitle", String.format("%s %s", FormatUtils.DATE_WITH_DAY.print(model.getStartDate()), FormatUtils.TIME_HUMAN_READABLE.print(model.getStartTime())));
             return mav;
         }
     }

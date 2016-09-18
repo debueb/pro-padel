@@ -14,6 +14,9 @@
         <meta name="google-site-verification" content="zV4l09W2NsrN2uP1MCLQNG5mR8FPsmIPocAQiYGLaHs" />
         
         <c:choose>
+            <c:when test="${not empty PageTitle}">
+                <title>${PageTitle}</title>
+            </c:when>
             <c:when test="${empty Module}">
                 <title>${sessionScope.customer}</title>
             </c:when>
