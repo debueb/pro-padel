@@ -18,6 +18,12 @@
                             <fmt:message key="BookingSuccessMessage"><fmt:param value="${sessionScope.booking.player.email}"/></fmt:message>
                             <c:if test="${sessionScope.booking.paymentMethod == 'Cash'}"><br/><fmt:message key="BookingCashMessage"/></c:if>
                         </div>
+                        <div class="unit-4">
+                            <span style="height: 32px; line-height: 32px; padding-right: 10px; float: left;">
+                                <fmt:message key="ShareVia"/>
+                            </span>
+                            <jsp:include page="/jsp/include/share.jsp"/>
+                        </div>
                     </c:otherwise>
                 </c:choose>
             </div>
