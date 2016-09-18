@@ -8,7 +8,7 @@ package de.appsolve.padelcampus.controller;
 
 import com.drew.imaging.ImageProcessingException;
 import de.appsolve.padelcampus.constants.Constants;
-import de.appsolve.padelcampus.db.dao.ImageDAOI;
+import de.appsolve.padelcampus.db.dao.ImageBaseDAOI;
 import de.appsolve.padelcampus.db.model.Image;
 import de.appsolve.padelcampus.utils.FileUtil;
 import de.appsolve.padelcampus.utils.imaging.ImageUtilI;
@@ -50,11 +50,11 @@ public class ImagesController extends BaseController{
     ImageUtilI imageUtil;
 
     @Autowired
-    ImageDAOI imageDAO;
+    ImageBaseDAOI imageBaseDAO;
     
     @RequestMapping(value="image/{sha256}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> showImage(@PathVariable("sha256") String sha256, HttpServletResponse response) throws IOException{
-        Image image = imageDAO.findBySha256(sha256);
+        Image image = imageBaseDAO.findBySha256(sha256);
         if (image!=null){
             byte[] byteArray = fileUtil.getByteArray(image.getFilePath());
             ResponseEntity.BodyBuilder builder = ResponseEntity
