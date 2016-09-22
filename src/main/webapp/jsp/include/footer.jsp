@@ -20,7 +20,11 @@
                         <c:set var="first" value="false"/>
                     </c:if>
                 </c:forEach>
-                <div>powered by <a href="http://pro-padel.de">pro-padel.de</a></div>
+                <div>
+                    <a href="?lang=en" class="ajaxify"><span class="flag-icon flag-icon-gb"></span></a>
+                    <a href="?lang=de" class="ajaxify"><span class="flag-icon flag-icon-de"></span></a>
+                    powered by <a href="http://pro-padel.de">pro-padel.de</a>
+                </div>
             </div>
         </c:if>
     </div><!-- background -->
