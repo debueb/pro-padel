@@ -89,15 +89,15 @@
         <div class="flex-container">
             <c:set var="req" value="${pageContext.request}" />
             <c:forEach var="Customer" items="${Customers}">
-                <div class="panel flex-item panel-default">
+                <div class="panel flex-item panel-default" style="height: 100%; border-bottom-left-radius: 0; border-bottom-right-radius:0;">
                     <div class="panel-heading">
                         <c:forEach var="domainName" items="${Customer.domainNames}" end="0">
                             <h3 class="panel-title text-center"><a href="https://${domainName}" target="blank">${Customer}</a></h3>
                             </c:forEach>
                     </div>
-                    <div class="panel-body no-padding">
+                    <div class="panel-body no-padding" style="height: 100%;">
                         <c:forEach var="domainName" items="${Customer.domainNames}" end="0">
-                            <iframe src="https://${domainName}" width="100%" height="568px" frameborder="0"></iframe>
+                            <iframe src="https://${domainName}" width="100%" height="568" style="max-height: 568px; display: block;" frameborder="0"></iframe>
                             </c:forEach>
                     </div>
                 </div>
