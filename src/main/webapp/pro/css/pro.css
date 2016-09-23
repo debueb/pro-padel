@@ -21,6 +21,7 @@ a.white:hover{
 .navbar-default .navbar-nav > .active > a{
     color: #fff;
     background-color: transparent;
+    text-transform: uppercase;
 }
 .navbar-default .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus{
     color: #333;
