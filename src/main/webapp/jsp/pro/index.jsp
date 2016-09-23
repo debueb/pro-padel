@@ -1,58 +1,40 @@
 <%@include file="/jsp/include/include.jsp"%>
-<jsp:include page="/jsp/pro/include/head.jsp"/>
-<div class="homepage-hero-module">
-    <div class="video-container">
-        <video autoplay loop class="fillWidth">
-            <source src="/pro/videos/bg.mp4" type="video/mp4" />
-            <source src="/pro/videos/bg.webm" type="video/webm" />
-        </video>
-    </div>
+<jsp:include page="/jsp/pro/include/head-simple.jsp"/>
+
+<div id="overlay">
+    <video class="visible-desktop" id="hero-vid" poster="/pro/images/bg.png" autoplay loop muted>
+        <source type="video/webm" src="/pro/videos/bg.webm"></source>
+        <source type="video/mp4" src="/pro/videos/bg.mp4"></source>
+    </video>
+    <img id="hero-pic" class="hidden-desktop" src="/pro/images/bg.png" alt="">
 </div>
-<div class="title-container">
-        <div class="row">
-            <div class="col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 col-xl-6 col-xl-offset-3">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3><fmt:message key="WelcomeTo"><fmt:param value="${pageContext.request.serverName}"/></fmt:message></h3>
-                    </div>
-                    <div class="panel-body">
-                    <fmt:message key="ProPadelDesc"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="link-container flex-container">
-
-            
-            
-            
-            <div class="panel flex-item panel-default">
-                <div class="panel-heading">
-                    <a href="/pro/tournaments"><h4><fmt:message key="Tournaments"/></h4></a>
-                </div>
-                <div class="panel-body">
-                    <a href="/pro/tournaments"><fmt:message key="TournamentsUserDesc"/></a>
-                </div>
-            </div>
-
-            <div class="panel flex-item panel-default">
-                <div class="panel-heading">
-                    <a href="/pro/ranking"><h4><fmt:message key="Ranking"/></h4></a>
-                </div>
-                <div class="panel-body">
-                    <a href="/pro/ranking"><fmt:message key="RankingUserDesc"/></a>
-                </div>
-            </div>
-
-            <div class="panel flex-item panel-default">
-                <div class="panel-heading">
-                    <a href="/pro/operators"><h4><fmt:message key="ForOperators"/></h4></a>
-                </div>
-                <div class="panel-body">
-                    <a href="/pro/operators"><fmt:message key="ForOperatorsDesc"/></a>
-                </div>
-            </div>
-        </div>
+<div class="content" style="background-color: #263248">
+    <p>
+    <h3 class="text-center"><fmt:message key="WelcomeTo"><fmt:param value="${pageContext.request.serverName}"/></fmt:message></h3>
+        <br><br>
+        <h4 class="text-center"><fmt:message key="ProPadelDesc"/></h4>
+</p>
 </div>
-<jsp:include page="/jsp/pro/include/footer.jsp"/>
+<div class="parallax-window" data-parallax="scroll" data-image-src="/pro/images/3.jpg"></div>
+<div class="content" style="background-color: #FF9800">
+    <p>
+        <a href="/pro/tournaments" class="white"><h3 class="text-center"><fmt:message key="Tournaments"/></h3></a>
+        <br><br>
+        <a href="/pro/tournaments" class="white"><h4 class="text-center"><fmt:message key="TournamentsUserDesc"/></h4></a>
+    </p>
+    <p>
+        <br><br>
+        <a href="/pro/ranking" class="white"><h3 class="text-center"><fmt:message key="Ranking"/></h3></a>
+        <br><br>
+        <a href="/pro/ranking" class="white"><h4 class="text-center"><fmt:message key="RankingUserDesc"/></h4></a>
+    </p>
+</div>
+<div class="parallax-window" data-parallax="scroll" data-image-src="/pro/images/4.jpg"></div>
+<div class="content" style="background-color: #7E8AA2">
+    <p>
+        <a href="/pro/operators" class="white"><h3 class="text-center"><fmt:message key="ForOperators"/></h3></a>
+        <br><br>
+        <a href="/pro/operators" class="white"><h4 class="text-center"><fmt:message key="ForOperatorsDesc"/></h4></a>
+    </p>
+</div>
+<jsp:include page="/jsp/pro/include/footer-simple.jsp"/>

@@ -2,5 +2,4 @@
 </div>
 </div>
 </div>
-</body>
-</html>
+<jsp:include page="/jsp/pro/include/footer-simple.jsp"/>

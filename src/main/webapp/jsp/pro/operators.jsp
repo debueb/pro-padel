@@ -1,14 +1,18 @@
 <%@include file="/jsp/include/include.jsp"%>
-<jsp:include page="/jsp/pro/include/head.jsp"/>
-<div class="row row-margin-bottom" style="background: #D9EDF7; padding-bottom: 10px;">
-    <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 operator-info">
-        <h2 class="text-center"><fmt:message key="ForOperators"/></h2>
-        <div class="text-center"><fmt:message key="ForOperatorsInfo"/></div>
+<jsp:include page="/jsp/pro/include/head-simple.jsp"/>
+<div class="wrapper">
+    <div class="content" style="background-color: #263248">
+        <p>
+        <h3 class="text-center"><fmt:message key="ForOperators"/></h3>
+        <br><br>
+        <h4 class="text-center"><fmt:message key="ForOperatorsInfo"/></h4>
+        </p>
     </div>
-</div>
-<div class="row row-margin-bottom" style="background: #D9EDF7;">
-    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2 operator-info">
-        <h2 class="text-center"><fmt:message key="Features"/></h2>
+    <div class="parallax-window" data-parallax="scroll" data-image-src="/pro/images/8.jpg"></div>
+    <div class="content" style="background-color: #FF9800">
+        <p>
+        <h3 class="text-center"><fmt:message key="Features"/></h3>
+        <br><br>
         <div class="flex-container">
             <div class="panel flex-item panel-default">
                 <div class="panel-heading">
@@ -75,35 +79,37 @@
                 </div>
             </div>
         </div>
+        </p>
     </div>
-</div>
-<div class="row row-margin-bottom" style="background: #D9EDF7;">
-    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2 operator-info">
-        <div class="row">
-            <h2 class="text-center"><fmt:message key="References"/></h2>
-            <div class="flex-container">
-                <c:set var="req" value="${pageContext.request}" />
-                <c:forEach var="Customer" items="${Customers}">
-                    <div class="panel flex-item panel-default">
-                        <div class="panel-heading">
-                            <c:forEach var="domainName" items="${Customer.domainNames}" end="0">
-                                <h3 class="panel-title text-center"><a href="https://${domainName}" target="blank">${Customer}</a></h3>
+    <div class="parallax-window" data-parallax="scroll" data-image-src="/pro/images/4.jpg"></div>
+    <div class="content" style="background-color: #7E8AA2">
+        <p>
+        <h3 class="text-center"><fmt:message key="References"/></h3>
+        <br><br>
+        <div class="flex-container">
+            <c:set var="req" value="${pageContext.request}" />
+            <c:forEach var="Customer" items="${Customers}">
+                <div class="panel flex-item panel-default">
+                    <div class="panel-heading">
+                        <c:forEach var="domainName" items="${Customer.domainNames}" end="0">
+                            <h3 class="panel-title text-center"><a href="https://${domainName}" target="blank">${Customer}</a></h3>
                             </c:forEach>
-                        </div>
-                        <div class="panel-body no-padding">
-                            <c:forEach var="domainName" items="${Customer.domainNames}" end="0">
-                                <iframe src="https://${domainName}" width="100%" height="568px" frameborder="0"></iframe>
-                            </c:forEach>
-                        </div>
                     </div>
-                </c:forEach>
-            </div>
+                    <div class="panel-body no-padding">
+                        <c:forEach var="domainName" items="${Customer.domainNames}" end="0">
+                            <iframe src="https://${domainName}" width="100%" height="568px" frameborder="0"></iframe>
+                            </c:forEach>
+                    </div>
+                </div>
+            </c:forEach>
         </div>
+        </p>
     </div>
-</div>
-<div class="row row-margin-bottom" style="background: #D9EDF7;">
-    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2 operator-info">
-        <h2 class="text-center"><fmt:message key="Pricing"/></h2>
+    <div class="parallax-window" data-parallax="scroll" data-image-src="/pro/images/7.jpg"></div>
+    <div class="content" style="background-color: #FF9800">
+        <p>
+        <h3 class="text-center"><fmt:message key="Pricing"/></h3>
+        <br><br>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title text-center"><fmt:message key="PricingTable"/></h3>
@@ -182,28 +188,22 @@
                             <td class="text-center"><fmt:message key="EURmtl"><fmt:param value="0"/></fmt:message></td>
                             <td class="text-center"><fmt:message key="EURmtl"><fmt:param value="40"/></fmt:message></td>
                             <td class="text-center"><fmt:message key="EURmtl"><fmt:param value="70"/></fmt:message></td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+            </p>
         </div>
-        <hr/>
+
+        <div class="parallax-window" data-parallax="scroll" data-image-src="/pro/images/5.jpg"></div>
+        <div class="content" style="background-color: #7E8AA2">
+            <p>
+                <a href="/pro/operators/newaccount" class="white"><h3 class="text-center"><fmt:message key="Register"/></h3></a>
+            <br><br>
+            <a href="/pro/operators/newaccount" class="white"><h4 class="text-center"><fmt:message key="RegisterAsOperatorDesc"/></h4></a>
+        </p>
     </div>
-</div>
-<div class="row" style="background: #D9EDF7;">
-    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2 operator-info">
-        <h2 class="text-center"><fmt:message key="Register"/></h2>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title text-center"><fmt:message key="RegisterAsOperator"/></h3>
-            </div>
-            <div class="panel-body">
-                <fmt:message key="RegisterAsOperatorDesc"/>
-            </div>
-            <div class="panel-footer">
-                <a class="btn btn-default btn-block" href="/pro/operators/newaccount"><fmt:message key="Register"/></a>
-            </div>
-        </div>
-    </div>
-</div>
-<jsp:include page="/jsp/pro/include/footer.jsp"/>
+
+
+    <jsp:include page="/jsp/pro/include/footer-simple.jsp"/>
