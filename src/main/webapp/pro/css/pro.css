@@ -234,7 +234,132 @@ h1, .h1, h2, .h2, h3, .h3{
     letter-spacing:.02em;
     margin-bottom:1.3em;
 }
-
+.parallax-window {
+    min-height: 700px;
+    background: transparent;
+}
+.teaser {
+    position: relative;
+    left: 0px;
+    height: 600px;
+    width: 950px;
+    display: inline-block;
+    overflow: hidden;
+}
+.mobile {
+    background-image: url(/pro/images/iphone-optimised.png);
+    position: absolute;
+    width: 95px;
+    height: 196px;
+    top: 375px;
+    left: 180px;
+    z-index: 5;
+}
+.tablet {
+    background-image: url(/pro/images/ipad-optimised.png);
+    width: 246px;
+    height: 330px;
+    z-index: 3;
+    position: absolute;
+    left: 0px;
+    top: 230px;
+    background-repeat: no-repeat;
+}
+.laptop {
+    background-image: url(/pro/images/laptop-screen-optimised.png);
+    width: 477px;
+    height: 307px;
+    top: 264px;
+    left: 440px;
+    position: absolute;
+    z-index: 2;
+}
+.desktop {
+    position: absolute;
+    width: 566px;
+    height: 538px;
+    background-image: url(/pro/images/large-screen-optimised.png);
+    top: 0px;
+    left: 100px;
+    z-index: 1;
+}
+.desktop iframe {
+    pointer-events:none;
+    left: 28px;
+    top: 38px;
+    width: 1600px;
+    height: 992px;
+    transform: scale(0.3181);
+    -webkit-transform: scale(0.3181);
+    -o-transform: scale(0.3181);
+    -ms-transform: scale(0.3181);
+    -moz-transform: scale(0.3181);
+    transform-origin: top left;
+    -webkit-transform-origin: top left;
+    -o-transform-origin: top left;
+    -ms-transform-origin: top left;
+    -moz-transform-origin: top left;
+}
+.laptop iframe {
+    pointer-events:none;
+    width: 1280px;
+    height: 802px;
+    top: 26px;
+    left: 60px;
+    transform: scale(0.277);
+    -webkit-transform: scale(0.277);
+    -o-transform: scale(0.277);
+    -ms-transform: scale(0.277);
+    -moz-transform: scale(0.277);
+    transform-origin: top left;
+    -webkit-transform-origin: top left;
+    -o-transform-origin: top left;
+    -ms-transform-origin: top left;
+    -moz-transform-origin: top left;
+}
+.tablet iframe {
+    pointer-events:none;
+    transform: scale(0.219);
+    -webkit-transform: scale(0.219);
+    -o-transform: scale(0.219);
+    -ms-transform: scale(0.219);
+    -moz-transform: scale(0.219);
+    transform-origin: top left;
+    -webkit-transform-origin: top left;
+    -o-transform-origin: top left;
+    -ms-transform-origin: top left;
+    -moz-transform-origin: top left;
+    width: 800px;
+    height: 1100px;
+    top: 35px;
+    left: 41px;
+    overflow-y: hidden;
+}
+.mobile iframe {
+    pointer-events:none;
+    transform: scale(0.219);
+    -webkit-transform: scale(0.219);
+    -o-transform: scale(0.219);
+    -ms-transform: scale(0.219);
+    -moz-transform: scale(0.219);
+    transform-origin: top left;
+    -webkit-transform-origin: top left;
+    -o-transform-origin: top left;
+    -ms-transform-origin: top left;
+    -moz-transform-origin: top left;
+    width: 320px;
+    height: 480px;
+    top: 32px;
+    left: 11px;
+    overflow-y: hidden;
+}
+iframe {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    background-color: #fff;
+    border: 0;
+}
 
 /* Media Queries */
 
@@ -246,17 +371,33 @@ h1, .h1, h2, .h2, h3, .h3{
 /* Visibility Helpers */
 
 @media only screen and (min-width:769px) {
-    .visible-mobile,.visible-tablet,.hidden-desktop { display:none !important; }
+    .visible-mobile,.visible-tablet,.hidden-desktop { 
+        display:none !important; 
+    }
 }
 
 @media only screen and (min-width:480px) and (max-width:768px) {
-    .visible-mobile,.hidden-tablet,.visible-desktop { display:none !important; }
+    .visible-mobile,.hidden-tablet,.visible-desktop { 
+        display:none !important; 
+    }
 }
 
 @media only screen and (max-width:479px) {
-    .hidden-mobile,.visible-tablet,.visible-desktop { display:none !important; }
+    .hidden-mobile,.visible-tablet,.visible-desktop { 
+        display:none !important; 
+    }
 }
-.parallax-window {
-    min-height: 700px;
-    background: transparent;
+.content-teaser{
+        padding: 50px 10px;
+    }
+@media only screen and (max-width:934px) {
+    .teaser{
+        width: 100%;
+        height: 100%;
+    }
+    .mobile, .laptop, .desktop, .tablet{
+        position: static;
+        margin: 0 auto;
+    }
+    
 }

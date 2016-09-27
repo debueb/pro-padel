@@ -30,10 +30,43 @@
     </p>
 </div>
 <div class="parallax-window" data-parallax="scroll" data-image-src="/pro/images/4.jpg"></div>
-<div class="content" style="background-color: #7E8AA2">
+<div class="content content-teaser" style="background-color: #7E8AA2">
     <p>
         <a href="/pro/operators" class="white"><h3 class="text-center"><fmt:message key="ForOperators"/></h3></a>
         <br><br>
+        
+        <a href="/pro/operators">
+            <div style="text-align:center;">
+                <section class="teaser">
+                    <div class="mobile">
+                        <div class="top" style="z-index: 8;">
+                            <iframe id="mobile" src="http://walls.de/home">
+                            </iframe>
+                        </div>
+                    </div>
+
+                    <div class="tablet">
+                        <div class="trim top" style="z-index: 6;">
+                            <iframe id="tablet" src="http://walls.de/home">
+                            </iframe>
+                        </div>
+                    </div>
+                    <div class="laptop">
+                        <div class="trim top" style="z-index: 10;">
+                            <iframe id="laptop" src="http://walls.de/home">
+                            </iframe>
+                        </div>
+                    </div>
+                    <div class="desktop">
+                        <div class="trim">
+                            <iframe id="desktop" src="http://walls.de/home">
+                            </iframe>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </a>
+        
         <a href="/pro/operators" class="white"><h4 class="text-center"><fmt:message key="ForOperatorsDesc"/></h4></a>
     </p>
 </div>
