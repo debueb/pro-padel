@@ -9,7 +9,7 @@
         </p>
     </div>
     <div class="parallax-window" data-parallax="scroll" data-image-src="/pro/images/8.jpg"></div>
-    <div class="content" style="background-color: #FF9800">
+    <div class="content content-teaser" style="background-color: #FF9800">
         <p>
         <h3 class="text-center"><fmt:message key="Features"/></h3>
         <br><br>
@@ -82,7 +82,7 @@
         </p>
     </div>
     <div class="parallax-window" data-parallax="scroll" data-image-src="/pro/images/4.jpg"></div>
-    <div class="content" style="background-color: #7E8AA2">
+    <div class="content content-teaser" style="background-color: #7E8AA2">
         <p>
         <h3 class="text-center"><fmt:message key="References"/></h3>
         <br><br>
