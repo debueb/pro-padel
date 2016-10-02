@@ -45,19 +45,19 @@
                 </div>
 
                 <div class="tablet">
-                    <div class="trim top" style="z-index: 6;">
+                    <div class="top" style="z-index: 6;">
                         <iframe id="tablet" src="https://walls.de/home">
                         </iframe>
                     </div>
                 </div>
                 <div class="laptop">
-                    <div class="trim top" style="z-index: 10;">
+                    <div class="top" style="z-index: 10;">
                         <iframe id="laptop" src="https://walls.de/home">
                         </iframe>
                     </div>
                 </div>
                 <div class="desktop">
-                    <div class="trim">
+                    <div class="top">
                         <iframe id="desktop" src="https://walls.de/home">
                         </iframe>
                     </div>

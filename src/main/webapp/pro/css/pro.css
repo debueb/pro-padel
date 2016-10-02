@@ -283,12 +283,13 @@ h1, .h1, h2, .h2, h3, .h3{
     left: 100px;
     z-index: 1;
 }
-.desktop iframe {
+.desktop .top {
+    position: relative;
     pointer-events:none;
-    left: 28px;
-    top: 38px;
-    width: 1600px;
-    height: 992px;
+    left: 27px;
+    top: 37px;
+    width: 1606px;
+    height: 1000px;
     transform: scale(0.3181);
     -webkit-transform: scale(0.3181);
     -o-transform: scale(0.3181);
@@ -299,13 +300,15 @@ h1, .h1, h2, .h2, h3, .h3{
     -o-transform-origin: top left;
     -ms-transform-origin: top left;
     -moz-transform-origin: top left;
+    overflow-y:hidden;
 }
-.laptop iframe {
+.laptop .top {
+    position: relative;
     pointer-events:none;
-    width: 1280px;
-    height: 802px;
-    top: 26px;
-    left: 60px;
+    width: 1293px;
+    height: 810px;
+    top: 25px;
+    left: 59px;
     transform: scale(0.277);
     -webkit-transform: scale(0.277);
     -o-transform: scale(0.277);
@@ -316,8 +319,10 @@ h1, .h1, h2, .h2, h3, .h3{
     -o-transform-origin: top left;
     -ms-transform-origin: top left;
     -moz-transform-origin: top left;
+    overflow-y:hidden;
 }
-.tablet iframe {
+.tablet .top {
+    position: relative;
     pointer-events:none;
     transform: scale(0.219);
     -webkit-transform: scale(0.219);
@@ -329,13 +334,14 @@ h1, .h1, h2, .h2, h3, .h3{
     -o-transform-origin: top left;
     -ms-transform-origin: top left;
     -moz-transform-origin: top left;
-    width: 800px;
+    width: 808px;
     height: 1100px;
     top: 35px;
-    left: 41px;
+    left: 40px;
     overflow-y: hidden;
 }
-.mobile iframe {
+.mobile .top {
+    position: relative;
     pointer-events:none;
     transform: scale(0.219);
     -webkit-transform: scale(0.219);
@@ -347,10 +353,10 @@ h1, .h1, h2, .h2, h3, .h3{
     -o-transform-origin: top left;
     -ms-transform-origin: top left;
     -moz-transform-origin: top left;
-    width: 320px;
-    height: 480px;
-    top: 32px;
-    left: 11px;
+    width: 331px;
+    height: 492px;
+    top: 31px;
+    left: 10px;
     overflow-y: hidden;
 }
 iframe {
@@ -359,6 +365,8 @@ iframe {
     position: relative;
     background-color: #fff;
     border: 0;
+    width: 100%;
+    height: 100%;
 }
 
 /* Media Queries */
