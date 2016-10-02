@@ -97,7 +97,7 @@
                     </div>
                     <div class="panel-body no-padding" style="height: 100%;">
                         <c:forEach var="domainName" items="${Customer.domainNames}" end="0">
-                            <iframe src="https://${domainName}" width="100%" height="568" style="max-height: 568px; display: block;" frameborder="0"></iframe>
+                            <iframe src="https://${domainName}" width="100%" height="568" style="height: 568px; max-height: 568px; display: block;" frameborder="0"></iframe>
                             </c:forEach>
                     </div>
                 </div>
