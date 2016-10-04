@@ -381,6 +381,9 @@ iframe {
     .visible-mobile,.visible-tablet,.hidden-desktop { 
         display:none !important; 
     }
+    .content-text{
+        padding: 150px 0;
+    }
 }
 
 @media only screen and (min-width:480px) and (max-width:768px) {
