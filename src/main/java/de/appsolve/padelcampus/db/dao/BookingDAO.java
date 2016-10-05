@@ -11,6 +11,7 @@ import java.util.Map;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 /**
@@ -100,8 +101,9 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
     }
     
     @Override
-    public List<Booking> findByComment(String comment) {
+    public List<Booking> findByBlockingTimeAndComment(LocalDateTime blockingTime, String comment) {
         Map<String, Object> attributes = new HashMap<>();
+        attributes.put("blockingTime", blockingTime);
         attributes.put("comment", comment);
         return findByAttributes(attributes);
     }

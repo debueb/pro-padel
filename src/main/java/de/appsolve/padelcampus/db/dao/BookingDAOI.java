@@ -11,6 +11,7 @@ import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Player;
 import java.util.List;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 /**
  *
@@ -28,5 +29,5 @@ public interface BookingDAOI extends BaseEntityDAOI<Booking>{
     public List<Booking> findActiveBookingsBetween(LocalDate startDate, LocalDate endDate);
     public List<Booking> findActiveReservationsBetween(LocalDate startDate, LocalDate endDate);
     public List<Booking> findByPlayer(Player player);
-    public List<Booking> findByComment(String comment);
+    public List<Booking> findByBlockingTimeAndComment(LocalDateTime blockingTime, String comment);
 }

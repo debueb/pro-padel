@@ -54,7 +54,9 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -117,6 +119,20 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         sessionUtil.setBookingListEndDate(request, dateRange.getEndDate());
         return getIndexView(dateRange); 
     }
+    @RequestMapping(method = GET, value="/{bookingId}/deleteall")
+    public ModelAndView getBookingDeleteAll(@PathVariable("bookingId") Long bookingId){
+        Booking booking = bookingDAO.findById(bookingId);
+        List<Booking> commentBookings = bookingDAO.findByBlockingTimeAndComment(booking.getBlockingTime(), booking.getComment());
+        return getBookingDeleteAllView(booking, commentBookings);
+    }
+    
+    @RequestMapping(method = POST, value="/{bookingId}/deleteall")
+    public ModelAndView postBookingDeleteAll(HttpServletRequest request, @PathVariable("bookingId") Long bookingId){
+        Booking booking = bookingDAO.findById(bookingId);
+        List<Booking> commentBookings = bookingDAO.findByBlockingTimeAndComment(booking.getBlockingTime(), booking.getComment());
+        bookingDAO.delete(commentBookings);
+        return redirectToIndex(request);
+    }
     
     @Override
     public ModelAndView showAddView(){
@@ -146,6 +162,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
             
             List<Booking> bookings = new ArrayList<>();
             Map<Booking, String> failedBookings = new TreeMap<>();
+            LocalDateTime blockingTime = new LocalDateTime();
             
             while (date.compareTo(endDate) <= 0){
                 Set<CalendarWeekDay> calendarWeekDays = reservationRequest.getCalendarWeekDays();
@@ -161,7 +178,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
 
                                         Booking booking = new Booking();
                                         booking.setAmount(BigDecimal.ZERO);
-                                        booking.setBlockingTime(new LocalDateTime());
+                                        booking.setBlockingTime(blockingTime);
                                         booking.setBookingDate(date);
                                         booking.setBookingTime(reservationRequest.getStartTime());
                                         booking.setBookingType(BookingType.reservation);
@@ -264,6 +281,13 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     @Override
     public String getModuleName() {
         return "admin/bookings/reservations";
+    }
+    
+    private ModelAndView getBookingDeleteAllView(Booking booking, List<Booking> bookingsToDelete) {
+        ModelAndView mav = new ModelAndView("admin/bookings/reservations/deleteall");
+        mav.addObject("Model", booking);
+        mav.addObject("BookingsToDelete", bookingsToDelete);
+        return mav;
     }
 
     private ModelAndView getIndexView(DateRange dateRange) {

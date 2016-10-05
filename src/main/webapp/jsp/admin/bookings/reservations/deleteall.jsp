@@ -11,11 +11,14 @@
             </div>
             <div class="panel-body">
                 <div class="alert alert-danger">${error}</div>
-
-                <h4><fmt:message key="AreYouSureYouWantToDeleteAllBookingsWithComment"><fmt:param value="${Model.comment}"/></fmt:message></h4>
-
-                    <form method="POST">
-                        <a class="btn btn-primary btn-back unit ajaxify"><fmt:message key="Cancel"/></a>
+                <joda:format value="${Model.bookingDate}" pattern="EE" var="date"/>
+                <joda:format value="${Model.bookingTime}" pattern="HH:mm" var="time"/>
+                <h4><fmt:message key="AreYouSureYouWantToDeleteTheFollowingBookings"/></h4>
+                <c:forEach var="BookingToDelete" items="${BookingsToDelete}">
+                    <div>${BookingToDelete}</div>
+                </c:forEach>
+                <form method="POST">
+                    <a class="btn btn-primary btn-back unit ajaxify"><fmt:message key="Cancel"/></a>
                     <button class="btn btn-danger unit" style="margin-left: 10px;"><fmt:message key="Delete"/></button>
                 </form>
             </div>

@@ -23,6 +23,7 @@
                         <th><fmt:message key="Comment"/></th>
                         <th><fmt:message key="ReservedBy"/></th>
                         <th class="text-center"><fmt:message key="Delete"/></th>
+                        <th class="text-center"><fmt:message key="DeleteAll"/></th>
                         </thead>
                         <tbody>
                             <c:forEach items="${Reservations}" var="Booking">
@@ -35,6 +36,7 @@
                                     <td>${Booking.comment}</td>
                                     <td><a href="${contextPath}/players/player/${Booking.player.UUID}" class="ajaxify">${Booking.player}</a></td>
                                     <td class="text-center"><a class="ajaxify fa fa-minus-circle" href="/admin/bookings/reservations/${Booking.id}/delete"></a></td>
+                                    <td class="text-center"><a class="ajaxify fa fa-minus-circle" href="/admin/bookings/reservations/${Booking.id}/deleteall"></a></td>
                                 </tr>
                             </c:forEach>
                         </tbody>
