@@ -33,9 +33,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
@@ -144,7 +145,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
             LocalDate endDate = reservationRequest.getEndDate();
             
             List<Booking> bookings = new ArrayList<>();
-            Set<Booking> failedBookings = new TreeSet<>();
+            Map<Booking, String> failedBookings = new TreeMap<>();
             
             while (date.compareTo(endDate) <= 0){
                 Set<CalendarWeekDay> calendarWeekDays = reservationRequest.getCalendarWeekDays();
@@ -181,7 +182,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                                         
                                         OfferDurationPrice offerDurationPrice = bookingUtil.getOfferDurationPrice(booking.getBookingDate(), booking.getBookingTime(), offer);
                                         if (offerDurationPrice == null){
-                                            failedBookings.add(booking);
+                                            failedBookings.put(booking, msg.get("NoMatchingCalendarConfigurationFound"));
                                             continue;
                                         } else {
                                             BigDecimal price = offerDurationPrice.getDurationPriceMap().get(booking.getDuration().intValue());
@@ -197,7 +198,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                                         Long bookingSlotsLeft = bookingUtil.getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
 
                                         if (bookingSlotsLeft<1){
-                                            failedBookings.add(booking);
+                                            failedBookings.put(booking, msg.get("BookedOut"));
                                             continue;
                                         }
 
@@ -215,7 +216,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                             failedBooking.setPlayer(player);
                             failedBooking.setBookingDate(date);
                             failedBooking.setBookingTime(reservationRequest.getStartTime());
-                            failedBookings.add(failedBooking);
+                            failedBookings.put(failedBooking, msg.get("NoMatchingCalendarConfigurationFound"));
                         }
                     }
                 }
@@ -224,8 +225,12 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
             
             if (!failedBookings.isEmpty()){
                 StringBuilder sb = new StringBuilder();
-                for (Booking booking: failedBookings){
-                    sb.append(booking);
+                Iterator<Map.Entry<Booking, String>> iterator = failedBookings.entrySet().iterator();
+                while (iterator.hasNext()){
+                    Map.Entry<Booking, String> entry = iterator.next();
+                    sb.append(entry.getKey());
+                    sb.append(": ");
+                    sb.append(entry.getValue());
                     sb.append("<br/>");
                 }
                 throw new Exception(msg.get("UnableToReserveAllDesiredTimes", new Object[]{StringUtils.join(bookings, "<br/>"), sb.toString()}));
