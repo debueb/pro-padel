@@ -13,7 +13,7 @@
                 <jsp:include page="/jsp/admin/include/daterange.jsp"/>
                 
                 <div class="table-responsive unit-2">
-                    <table class="table table-striped table-bordered unit">
+                    <table class="table table-striped table-bordered datatable unit">
                         <thead>
                         <th><fmt:message key="Date"/></th>
                         <th><fmt:message key="Day"/></th>
@@ -49,5 +49,5 @@
         </div>
     </div>
 </div>
-
+<jsp:include page="/jsp/include/datatables.jsp"/>
 <jsp:include page="/jsp/include/footer.jsp"/>
