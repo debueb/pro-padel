@@ -15,7 +15,6 @@ import de.appsolve.padelcampus.db.model.Contact;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.utils.LoginUtil;
-import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.PlayerUtil;
 import de.appsolve.padelcampus.utils.RequestUtil;
