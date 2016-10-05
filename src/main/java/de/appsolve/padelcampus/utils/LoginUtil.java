@@ -5,7 +5,6 @@
  */
 package de.appsolve.padelcampus.utils;
 
-import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.COOKIE_LOGIN_TOKEN;
 import de.appsolve.padelcampus.db.dao.LoginCookieDAOI;
 import de.appsolve.padelcampus.db.model.LoginCookie;
@@ -14,6 +13,7 @@ import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -68,6 +68,10 @@ public class LoginUtil {
                 }
             }
         }
+        deleteCookie(request, response, null);
+        deleteCookie(request, response, "/page");
+        deleteCookie(request, response, "/admin");
+        deleteCookie(request, response, "/login");
         Cookie cookie = new Cookie(COOKIE_LOGIN_TOKEN, null);
         cookie.setDomain(request.getServerName());
         cookie.setMaxAge(0);
@@ -83,5 +87,15 @@ public class LoginUtil {
             return loginCookie;
         }
         return null;
+    }
+
+    private void deleteCookie(HttpServletRequest request, HttpServletResponse response, String path) {
+        Cookie cookie = new Cookie(COOKIE_LOGIN_TOKEN, null);
+        cookie.setDomain(request.getServerName());
+        cookie.setMaxAge(0);
+        if (!StringUtils.isEmpty(path)){
+            cookie.setPath(path);
+        }
+        response.addCookie(cookie);
     }
 }
