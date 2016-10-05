@@ -268,6 +268,7 @@ public class BookingUtil {
         LocalDate firstDay = today.dayOfMonth().withMinimumValue();
         LocalDate lastDay = today.plusDays(Constants.CALENDAR_MAX_DATE).dayOfMonth().withMaximumValue();
         List<CalendarConfig> calendarConfigs = calendarConfigDAO.findBetween(firstDay, lastDay);
+        retainShowInCalendarConfigs(calendarConfigs);
         Collections.sort(calendarConfigs);
         Map<String, DatePickerDayConfig> dayConfigs = getDayConfigMap(firstDay, lastDay, calendarConfigs);
         
@@ -559,5 +560,26 @@ public class BookingUtil {
             }
         }
         return offerDurationPrices;
+    }
+
+    private void retainShowInCalendarConfigs(List<CalendarConfig> calendarConfigs) {
+        Iterator<CalendarConfig> iterator = calendarConfigs.iterator();
+        while (iterator.hasNext()){
+            CalendarConfig config = iterator.next();
+            if (config.getOffers() == null || config.getOffers().isEmpty()){
+                iterator.remove();
+            } else {
+                boolean showInCalendar = false;
+                for (Offer offer: config.getOffers()){
+                    if (offer.getShowInCalendar()){
+                        showInCalendar = true;
+                        break;
+                    }
+                }
+                if (!showInCalendar){
+                    iterator.remove();
+                }
+            }
+        }
     }
 }
