@@ -150,6 +150,20 @@ public class AdminReportsController extends BaseController{
         bookingDAO.deleteById(bookingId);
         return redirectToBookingList();
     }
+    
+    @RequestMapping(method = GET, value="booking/{bookingId}/deleteall")
+    public ModelAndView getBookingDeleteAll(@PathVariable("bookingId") Long bookingId){
+        Booking booking = bookingDAO.findById(bookingId);
+        return getBookingDeleteAllView(booking);
+    }
+    
+    @RequestMapping(method = POST, value="booking/{bookingId}/deleteall")
+    public ModelAndView postBookingDeleteAll(@PathVariable("bookingId") Long bookingId){
+        Booking booking = bookingDAO.findById(bookingId);
+        List<Booking> commentBookings = bookingDAO.findByComment(booking.getComment());
+        bookingDAO.delete(commentBookings);
+        return redirectToBookingList();
+    }
 
     private ModelAndView getBookingListView(DateRange dateRange) {
         List<Booking> bookings = bookingDAO.findActiveBookingsBetween(dateRange.getStartDate(), dateRange.getEndDate());
@@ -173,6 +187,12 @@ public class AdminReportsController extends BaseController{
     
     private ModelAndView getBookingDeleteView(Booking booking) {
         ModelAndView mav = new ModelAndView("include/delete");
+        mav.addObject("Model", booking);
+        return mav;
+    }
+    
+    private ModelAndView getBookingDeleteAllView(Booking booking) {
+        ModelAndView mav = new ModelAndView("admin/reports/deleteall");
         mav.addObject("Model", booking);
         return mav;
     }

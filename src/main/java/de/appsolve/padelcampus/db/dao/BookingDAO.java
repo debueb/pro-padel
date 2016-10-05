@@ -98,4 +98,11 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
         attributes.put("player", player);
         return findByAttributes(attributes);
     }
+    
+    @Override
+    public List<Booking> findByComment(String comment) {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("comment", comment);
+        return findByAttributes(attributes);
+    }
 }

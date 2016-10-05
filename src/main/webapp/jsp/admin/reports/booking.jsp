@@ -50,6 +50,9 @@
                             <div class="col-xs-12 unit-2">
                                 <a href="/admin/reports/booking/${Booking.id}/delete" class="btn btn-danger btn-block"><fmt:message key="Delete"/></a>
                             </div>
+                            <div class="col-xs-12 unit-2">
+                                <a href="/admin/reports/booking/${Booking.id}/deleteall" class="btn btn-danger btn-block"><fmt:message key="DeleteAllWithComment"><fmt:param value="${Booking.comment}"/></fmt:message></a>
+                            </div>
                         </div>
                     </spf:form>
                 </div>
