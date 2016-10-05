@@ -12,7 +12,6 @@ import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
-import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.SortUtil;
 import java.util.HashMap;
 import java.util.List;
