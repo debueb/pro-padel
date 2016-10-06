@@ -108,6 +108,7 @@ public class TestGroupKnockoutTournament extends TestBase {
             .param("startDate", "2016-05-06")
             .param("endDate", "2016-05-06")
             .param("active", "on")
+            .param("maxNumberOfParticipants", "4")
             .param("participants", teamUUIDs.toArray(new String[teamUUIDs.size()])))
             .andExpect(status().is3xxRedirection());
         
