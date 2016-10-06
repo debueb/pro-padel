@@ -31,7 +31,7 @@
                                     <td>${Booking.bookingDate}</td>
                                     <td><joda:format value="${Booking.bookingDate}" pattern="EE"/></td>
                                     <td><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></td>
-                                    <td>${Booking.offer}</td>
+                                    <td>${Booking.name}</td>
                                     <td>${Booking.amount}</td>
                                     <td>${Booking.comment}</td>
                                     <td><a href="${contextPath}/players/player/${Booking.player.UUID}" class="ajaxify">${Booking.player}</a></td>

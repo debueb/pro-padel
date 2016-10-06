@@ -17,8 +17,14 @@
                         <div class="col-xs-4 booking-cell"><fmt:message key="Invoice"/>:</div>
                         <div class="col-xs-8 booking-cell"><a href="/invoices/booking/${Booking.UUID}"><i class="fa fa-file-text"></i></a></div>
                     </div>
-
-                    <a class="btn btn-primary btn-block unit ajaxify" href="/bookings/booking/${Booking.UUID}/cancel"><fmt:message key="CancelBooking2"/></a>
+                        <c:choose>
+                            <c:when test="${empty Booking.offer}">
+                                <div class="alert alert-warning text-center"><fmt:message key="BookingCannotBeCancelled"/></div>
+                            </c:when>
+                            <c:otherwise>
+                                <a class="btn btn-primary btn-block unit ajaxify" href="/bookings/booking/${Booking.UUID}/cancel"><fmt:message key="CancelBooking2"/></a>
+                            </c:otherwise>
+                        </c:choose>
                 </spf:form>
             </div>
         </div>

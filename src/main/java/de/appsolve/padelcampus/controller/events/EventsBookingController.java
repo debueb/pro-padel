@@ -32,6 +32,7 @@ import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import de.appsolve.padelcampus.utils.TeamUtil;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -208,7 +209,11 @@ public class EventsBookingController extends BaseController{
             }
             
             Event event = booking.getEvent();
-            event = eventDAO.findByIdFetchWithParticipants(event.getId());
+            checkPlayerNotParticipating(event, booking.getPlayer());
+            for (Player player: event.getPlayers()){
+                checkPlayerNotParticipating(event, player);
+            }
+            
             if (event.getParticipants().size() >= event.getMaxNumberOfParticipants()){
                 throw new Exception(msg.get("EventBookedOut"));
             }
@@ -293,7 +298,7 @@ public class EventsBookingController extends BaseController{
             booking.setConfirmed(true);
             bookingDAO.saveOrUpdate(booking);
             
-            bookingUtil.sendBookingConfirmation(request, booking);
+            bookingUtil.sendEventBookingConfirmation(request, booking);
             booking.setConfirmationMailSent(true);
             bookingDAO.saveOrUpdate(booking);
             

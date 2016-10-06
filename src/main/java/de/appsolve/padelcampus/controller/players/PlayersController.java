@@ -80,14 +80,7 @@ public class PlayersController extends BaseController {
     @RequestMapping("/event/{id}")
     public ModelAndView getByEvent(@PathVariable("id") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(eventId);
-        Set<ParticipantI> participants = new TreeSet<>();
-        Set<Team> teams = event.getTeams();
-        for (Team team: teams){
-            Set<Player> players = team.getPlayers();
-            participants.addAll(players);
-        }
-        participants.addAll(event.getPlayers());
-        
+        Set<Player> participants = event.getAllPlayers();
         return getPlayersView(event, new ArrayList<>(participants), msg.get("PlayersIn", new Object[]{event.getName()}));
     }
 

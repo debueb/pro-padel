@@ -400,12 +400,29 @@ public class BookingUtil {
             booking.getPlayer().toString(),
             FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()),
             FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
-            booking.getOffer().toString(),
+            booking.getName(),
             msg.get(booking.getPaymentMethod().toString()),
             booking.getAmount(),
             booking.getCurrency(),
             CANCELLATION_POLICY_DEADLINE,
             RequestUtil.getBaseURL(request) + "/bookings/booking/" + booking.getUUID() + "/cancel",
+            RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
+            RequestUtil.getBaseURL(request)}));
+        mail.addRecipient(booking.getPlayer());
+        mailUtils.send(mail, request);
+    }
+    
+    public void sendEventBookingConfirmation(HttpServletRequest request, Booking booking) throws MailException, IOException {
+        Mail mail = new Mail();
+        mail.setSubject(msg.get("BookingSuccessfulMailSubject"));
+        mail.setBody(msg.get("BookingEventSuccessfulMailBody", new Object[]{
+            booking.getPlayer().toString(),
+            FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()),
+            FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
+            booking.getName(),
+            msg.get(booking.getPaymentMethod().toString()),
+            booking.getAmount(),
+            booking.getCurrency(),
             RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
             RequestUtil.getBaseURL(request)}));
         mail.addRecipient(booking.getPlayer());
@@ -447,7 +464,7 @@ public class BookingUtil {
             booking.getPlayer().toString(),
             FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
             FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
-            booking.getOffer().toString(),
+            booking.getName(),
             msg.get(booking.getPaymentMethod().toString()),
             booking.getAmount(),
             booking.getCurrency(),

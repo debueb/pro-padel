@@ -483,6 +483,9 @@ public class BookingsController extends BaseController {
         if (booking.getCancelled()) {
             throw new Exception(msg.get("BookingAlreadyCancelled"));
         }
+        if (booking.getOffer() == null){
+            throw new Exception(msg.get("BookingCannotBeCancelled"));
+        }
         LocalDateTime now = new LocalDateTime(DEFAULT_TIMEZONE);
         LocalDateTime bookingTime = new LocalDateTime()
                 .withDate(booking.getBookingDate().getYear(), booking.getBookingDate().getMonthOfYear(), booking.getBookingDate().getDayOfMonth())

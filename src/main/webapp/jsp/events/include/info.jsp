@@ -45,7 +45,7 @@
                         <fmt:message key="MaxNumberOfParticipants"/>:
                     </div>
                     <div class="col-xs-8">
-                        <fmt:message key="${Model.maxNumberOfParticipants}"/>
+                        ${Model.maxNumberOfParticipants}
                     </div>
                 </c:if>
                 

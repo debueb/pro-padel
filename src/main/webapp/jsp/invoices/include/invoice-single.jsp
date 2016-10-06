@@ -1,5 +1,6 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div class="letter">
     <a href="/"><img class="logo margin-bottom" src="${sessionScope.customer.touchIconPath}" alt="logo"></img></a>
     <div class="clearfix"></div>
@@ -22,19 +23,23 @@
             <th><fmt:message key="Offer"/></th>
             <th><fmt:message key="Date"/></th>
             <th><fmt:message key="Time"/></th>
-            <th><fmt:message key="Duration"/></th>
+            <c:if test="${not empty Booking.duration}">
+                <th><fmt:message key="Duration"/></th>
+            </c:if>
             <th><fmt:message key="PaymentMethod"/></th>
             <th><fmt:message key="Price"/></th>
             </thead>
             <tbody>
                 <tr>
-                    <td>${Booking.offer}</td>
+                    <td>${Booking.name}</td>
                     <td><joda:format value="${Booking.bookingDate}" pattern="EEE, dd. MMM. YYYY"/></td>
-            <td><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/></td>
-            <td>${Booking.duration} <fmt:message key="Minutes"/></td>
-            <td><fmt:message key="${Booking.paymentMethod}"/></td>
-            <td>${Booking.currency} ${Booking.amount}</td>
-            </tr>
+                    <td><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/></td>
+                    <c:if test="${not empty Booking.duration}">
+                        <td>${Booking.duration} <fmt:message key="Minutes"/></td>
+                    </c:if>
+                    <td><fmt:message key="${Booking.paymentMethod}"/></td>
+                    <td>${Booking.currency} ${Booking.amount}</td>
+                </tr>
             </tbody>
         </table>
         <hr/>

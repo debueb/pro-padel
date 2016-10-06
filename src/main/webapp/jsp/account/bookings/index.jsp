@@ -17,7 +17,7 @@
                         <div class="list-group">
                             <c:forEach items="${Bookings}" var="Booking">
                                 <a href="/account/bookings/booking/${Booking.UUID}" class="list-group-item ajaxify">
-                                    <div class="list-item-text"><joda:format value="${Booking.bookingDate}" pattern="EE, dd.MM.YYYY"/> - <joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></div>
+                                    <div class="list-item-text">${Booking.name} - <joda:format value="${Booking.bookingDate}" pattern="EE, dd.MM.YYYY"/> - <joda:format value="${Booking.bookingTime}" pattern="HH:mm"/>-<joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></div>
                                 </a>
                             </c:forEach>
                         </div>

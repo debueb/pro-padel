@@ -333,12 +333,22 @@ public class Event extends ComparableEntity{
         return players;
     }
     
+    public Set<Player> getAllPlayers(){
+        Set<Player> players = new TreeSet<>();
+        for (Participant participant: getParticipants()){
+            if (participant instanceof Player){
+                players.add((Player)participant);
+            } else if (participant instanceof Team){
+                Team team = (Team) participant;
+                players.addAll(team.getPlayers());
+            }
+        }
+        return players;
+    }
+    
     @Transient
     public String getMailTo(){
-        Set<Player> players = new TreeSet<>(getPlayers());
-        for (Team team: getTeams()){
-            players.addAll(team.getPlayers());
-        }
+        Set<Player> players = new TreeSet<>(getAllPlayers());
         return MailUtils.getMailTo(players);
     }
     

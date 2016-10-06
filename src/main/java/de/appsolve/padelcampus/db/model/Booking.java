@@ -120,7 +120,7 @@ public class Booking extends CustomerEntity{
     @ManyToOne
     private Offer offer;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Event event;
     
     @ManyToMany(fetch = FetchType.LAZY)
@@ -315,7 +315,7 @@ public class Booking extends CustomerEntity{
     
     @Override
     public String toString() {
-        return String.format("%s - %s - %s - %s", getPlayer(), getOffer(), getBookingDate() == null ? "no booking date" : getBookingDate().toString(FormatUtils.DATE_WITH_DAY), getBookingTime() == null ? "no booking time" : getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE));
+        return String.format("%s - %s - %s - %s", getPlayer(), getName(), getBookingDate() == null ? "no booking date" : getBookingDate().toString(FormatUtils.DATE_WITH_DAY), getBookingTime() == null ? "no booking time" : getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE));
     }
     
     private StringBuilder getBaseUrl(){
@@ -347,5 +347,16 @@ public class Booking extends CustomerEntity{
         StringBuilder sb = getBaseUrl();
         sb.append("/abort");
         return sb.toString();
+    }
+    
+    @Transient
+    public String getName(){
+        if (getOffer() != null){
+            return getOffer().getName();
+        }
+        if (getEvent() != null){
+            return getEvent().getName();
+        }
+        return null;
     }
 }
