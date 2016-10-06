@@ -10,7 +10,7 @@
             <div class="panel-heading">
                 <h4><fmt:message key="GameSchedule"/> ${Event.name}</h4>
             </div>
-            <spf:form method="POST" role="form" modelAttribute="Model" action="/admin/events/edit/${Event.id}/schedule/pullschedule">
+            <spf:form method="POST" role="form" modelAttribute="Model" action="/admin/events/edit/${Event.id}/schedule/gameschedule">
                 <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
                 <div class="panel-body">
                     <div class="game-schedule">

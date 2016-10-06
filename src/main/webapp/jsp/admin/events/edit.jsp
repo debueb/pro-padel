@@ -169,8 +169,8 @@
                         <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/groupdraws"><fmt:message key="ToGroupDraws"/></a>
                         <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/groupschedule"><fmt:message key="ToGameSchedule"/></a>
                     </c:if>
-                    <c:if test="${not empty Model.id and (Model.eventType eq 'PullRoundRobin')}">
-                        <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/pullschedule"><fmt:message key="ToGameSchedule"/></a>
+                    <c:if test="${not empty Model.id and (Model.eventType eq 'PullRoundRobin' or Model.eventType eq 'SingleRoundRobin')}">
+                        <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/gameschedule"><fmt:message key="ToGameSchedule"/></a>
                     </c:if>
                 </spf:form>
             </div>

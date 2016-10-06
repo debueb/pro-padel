@@ -29,7 +29,7 @@
                                         <a href="/games/game/${Game.id}/edit?redirectUrl=events/event/${Model.id}/pullgames" class="ajaxify"><joda:format value="${Game.startDate}" pattern="dd. MMM" /> <joda:format value="${Game.startTime}" pattern="HH:mm" /> <fmt:message key="oClock"/></a>
                                     </c:when>
                                     <c:otherwise>
-                                        <a href="/admin/events/edit/${Model.id}/pullschedule"><fmt:message key="AddGameDate"/><a/>
+                                        <a href="/admin/events/edit/${Model.id}/gameschedule"><fmt:message key="AddGameDate"/><a/>
                                         | <a href="/games/game/${Game.id}/edit?redirectUrl=events/event/${Model.id}/pullgames" class="ajaxify"><fmt:message key="AddGameResult"/></a>
                                     </c:otherwise>
                                 </c:choose>

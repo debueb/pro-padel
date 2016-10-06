@@ -246,7 +246,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 model = getDAO().saveOrUpdate(model);
                 eventsUtil.createPullGames(model);
                 if (model.getCalendarConfig() == null && !model.getParticipants().isEmpty()){
-                    return redirectToPullSchedule(model);
+                    return redirectToGameSchedule(model);
                 } else {
                     return redirectToIndex(request);
                 }
@@ -393,10 +393,10 @@ public class AdminEventsController extends AdminBaseController<Event>{
         return getGroupScheduleView(event);
     }
     
-    @RequestMapping(value={"edit/{eventId}/pullschedule"}, method=GET)
-    public ModelAndView getPullSchedule(@PathVariable("eventId") Long eventId){
+    @RequestMapping(value={"edit/{eventId}/gameschedule"}, method=GET)
+    public ModelAndView getGameSchedule(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
-        return getPullScheduleView(event);
+        return getGameScheduleView(event);
     }
     
     @RequestMapping(value={"edit/{eventId}/addpullgame"}, method=GET)
@@ -439,9 +439,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
             switch (scheduleName){
                 case "groupschedule":
                     return getGroupScheduleView(event);
-                case "pullschedule":
+                case "gameschedule":
                 default:
-                    return getPullScheduleView(event);
+                    return getGameScheduleView(event);
             }
         }
         for (Game game: gameList.getList()){
@@ -638,8 +638,8 @@ public class AdminEventsController extends AdminBaseController<Event>{
         return mav;
     }
     
-    private ModelAndView getPullScheduleView(Event event) {
-        ModelAndView mav = new ModelAndView("admin/events/pullschedule");
+    private ModelAndView getGameScheduleView(Event event) {
+        ModelAndView mav = new ModelAndView("admin/events/gameschedule");
         mav.addObject("Event", event);
         List<Game> games = new ArrayList<>();
         games.addAll(event.getGames());
@@ -681,8 +681,8 @@ public class AdminEventsController extends AdminBaseController<Event>{
         return eventGroups;
     }
 
-    private ModelAndView redirectToPullSchedule(Event model) {
-        return new ModelAndView("redirect:/admin/events/edit/"+model.getId()+"/pullschedule");
+    private ModelAndView redirectToGameSchedule(Event model) {
+        return new ModelAndView("redirect:/admin/events/edit/"+model.getId()+"/gameschedule");
     }
 
     private Team findOrCreateTeam(Set<Player> players) {
