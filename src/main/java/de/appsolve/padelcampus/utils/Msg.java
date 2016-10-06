@@ -8,6 +8,7 @@ package de.appsolve.padelcampus.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.NoSuchMessageException;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +27,7 @@ public class Msg {
     
     public String get(String code, Object[] args){
         try {
-            return context.getMessage(code, args, null);
+            return context.getMessage(code, args, LocaleContextHolder.getLocale());
         } catch (NoSuchMessageException e){
             return code;
         }
