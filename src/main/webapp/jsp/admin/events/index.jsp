@@ -15,6 +15,7 @@
                     <table class="table table-striped table-bordered datatable">
                         <thead>
                         <th><fmt:message key="Name"/></th>
+                        <th><fmt:message key="StartDate"/></th>
                         <th><fmt:message key="EventType"/></th>
                         <th class="text-center"><fmt:message key="Participants"/></th>
                         <th class="text-center"><fmt:message key="SendMail"/></th>
@@ -26,6 +27,7 @@
                                 <c:set var="url" value="/admin/events/edit/${Event.id}"/>
                                 <tr>
                                     <td><a class="ajaxify" href="${url}">${Event.name}</a></td>
+                                    <td><a class="ajaxify" href="${url}"><joda:format value="${Event.startDate}" pattern="yyyy-MM-dd"/></a></td>
                                     <td><a class="ajaxify" href="${url}"><fmt:message key="${Event.eventType}"/></a></td>
                                     <td class="text-center">
                                         ${fn:length(Event.participants)}
