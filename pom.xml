@@ -440,7 +440,7 @@
                 <OPENSHIFT_MYSQL_DB_USERNAME>padelcampus</OPENSHIFT_MYSQL_DB_USERNAME>
                 <OPENSHIFT_MYSQL_DB_PASSWORD>padelcampus</OPENSHIFT_MYSQL_DB_PASSWORD>
                 <OPENSHIFT_APP_NAME>padelcampus?useSSL=false</OPENSHIFT_APP_NAME>
-                <OPENSHIFT_DATA_DIR>/Users/dominik/Dropbox/Coding/pro-padel/data</OPENSHIFT_DATA_DIR>
+                <OPENSHIFT_DATA_DIR>/var/lib/openshift/54da6eaa4382ec9b55000029/app-root/data</OPENSHIFT_DATA_DIR>
             </properties>
         </profile>
         <profile>
