@@ -10,6 +10,7 @@ import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.utils.CustomerUtil;
 import de.appsolve.padelcampus.utils.GenericsUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -100,6 +101,7 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         if (resultCount == null){
             resultCount = objects.size()+0L;
         }
+        Collections.sort(objects);
         PageImpl<T> page = new PageImpl<>(new ArrayList<>(objects), pageable, resultCount);
         return page;
     }
