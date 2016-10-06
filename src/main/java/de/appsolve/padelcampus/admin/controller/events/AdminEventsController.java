@@ -130,6 +130,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
         binder.registerCustomEditor(Set.class, "participants", participantCollectionEditor);
+        binder.registerCustomEditor(Set.class, "groupParticipants", participantCollectionEditor);
         binder.registerCustomEditor(CalendarConfig.class, calendarConfigPropertyEditor);
         binder.registerCustomEditor(EventGroup.class, eventGroupPropertyEditor);
     }
