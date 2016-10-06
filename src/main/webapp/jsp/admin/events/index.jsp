@@ -11,8 +11,8 @@
             </div>
             <div class="panel-body">
                 <jsp:include page="/jsp/admin/include/search.jsp"/>
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered">
+                <div class="table-responsive unit-2">
+                    <table class="table table-striped table-bordered datatable">
                         <thead>
                         <th><fmt:message key="Name"/></th>
                         <th><fmt:message key="EventType"/></th>
@@ -44,5 +44,5 @@
         </div>
     </div>
 </div>
-
+<jsp:include page="/jsp/include/datatables.jsp"/>
 <jsp:include page="/jsp/include/footer.jsp"/>
