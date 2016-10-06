@@ -317,4 +317,35 @@ public class Booking extends CustomerEntity{
     public String toString() {
         return String.format("%s - %s - %s - %s", getPlayer(), getOffer(), getBookingDate() == null ? "no booking date" : getBookingDate().toString(FormatUtils.DATE_WITH_DAY), getBookingTime() == null ? "no booking time" : getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE));
     }
+    
+    private StringBuilder getBaseUrl(){
+        StringBuilder sb = new StringBuilder();
+        if (offer != null){
+            sb.append("/bookings/booking/");
+        } else if (event != null){
+            sb.append("/events/bookings/");
+        }
+        sb.append(getUUID());
+        return sb;
+    }
+
+    @Transient
+    public String getSuccessUrl() {
+        StringBuilder sb = getBaseUrl();
+        switch (getPaymentMethod()){
+            case PayPal:
+                sb.append("/paypal/return");
+                break;
+            default:
+                sb.append("/success");
+        }
+        return sb.toString();
+    }
+    
+    @Transient
+    public String getAbortUrl() {
+        StringBuilder sb = getBaseUrl();
+        sb.append("/abort");
+        return sb.toString();
+    }
 }

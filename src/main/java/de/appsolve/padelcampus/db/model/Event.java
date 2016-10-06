@@ -6,14 +6,19 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import de.appsolve.padelcampus.constants.Currency;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
+import de.appsolve.padelcampus.constants.PaymentMethod;
+import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import de.appsolve.padelcampus.utils.MailUtils;
+import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -21,12 +26,13 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 /**
  *
@@ -74,6 +80,12 @@ public class Event extends ComparableEntity{
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate startDate;
+    
+    @Column
+    private Integer startTimeHour;
+    
+    @Column
+    private Integer startTimeMinute;
 
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
@@ -89,11 +101,26 @@ public class Event extends ComparableEntity{
     @Column(length=8000)
     private String description;
     
-    @OneToOne(fetch = FetchType.LAZY)
-    private CalendarConfig calendarConfig;
-    
     @ManyToOne(fetch = FetchType.EAGER)
     private EventGroup eventGroup;
+    
+    @Column
+    @NotNull(message = "{NotEmpty.maxNumberOfParticipants}")
+    private Integer maxNumberOfParticipants;
+    
+    @Column
+    private BigDecimal price;
+    
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Currency currency;
+    
+    @ElementCollection(fetch=FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<PaymentMethod> paymentMethods;
+    
+    @Column
+    private Boolean allowSignup;
 
     public String getName() {
         return name;
@@ -179,6 +206,29 @@ public class Event extends ComparableEntity{
         return startDate;
     }
 
+    public Integer getStartTimeHour() {
+        return startTimeHour;
+    }
+
+    public void setStartTimeHour(Integer startTimeHour) {
+        this.startTimeHour = startTimeHour;
+    }
+
+    public Integer getStartTimeMinute() {
+        return startTimeMinute;
+    }
+
+    public void setStartTimeMinute(Integer startTimeMinute) {
+        this.startTimeMinute = startTimeMinute;
+    }
+    
+    public LocalTime getStartTime(){
+        if (getStartTimeHour() == null || getStartTimeMinute() == null){
+            return null;
+        }
+        return TIME_HUMAN_READABLE.parseLocalTime(getStartTimeHour()+":"+getStartTimeMinute());
+    }
+
     public void setStartDate(LocalDate dateTime) {
         this.startDate = dateTime;
     }
@@ -215,20 +265,52 @@ public class Event extends ComparableEntity{
         this.description = description;
     }
 
-    public CalendarConfig getCalendarConfig() {
-        return calendarConfig;
-    }
-
-    public void setCalendarConfig(CalendarConfig calendarConfig) {
-        this.calendarConfig = calendarConfig;
-    }
-
     public EventGroup getEventGroup() {
         return eventGroup;
     }
 
     public void setEventGroup(EventGroup eventGroup) {
         this.eventGroup = eventGroup;
+    }
+
+    public Integer getMaxNumberOfParticipants() {
+        return maxNumberOfParticipants;
+    }
+
+    public void setMaxNumberOfParticipants(Integer maxNumberOfParticipants) {
+        this.maxNumberOfParticipants = maxNumberOfParticipants;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public Set<PaymentMethod> getPaymentMethods() {
+        return paymentMethods;
+    }
+
+    public void setPaymentMethods(Set<PaymentMethod> paymentMethods) {
+        this.paymentMethods = paymentMethods;
+    }
+
+    public Boolean getAllowSignup() {
+        return allowSignup == null ? Boolean.FALSE : allowSignup;
+    }
+
+    public void setAllowSignup(Boolean allowSignup) {
+        this.allowSignup = allowSignup;
     }
     
     public Set<Team> getTeams(){
@@ -251,11 +333,6 @@ public class Event extends ComparableEntity{
         return players;
     }
     
-    @Override
-    public String toString() {
-        return name;
-    }
-    
     @Transient
     public String getMailTo(){
         Set<Player> players = new TreeSet<>(getPlayers());
@@ -263,5 +340,19 @@ public class Event extends ComparableEntity{
             players.addAll(team.getPlayers());
         }
         return MailUtils.getMailTo(players);
+    }
+    
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override
+    public int compareTo(BaseEntityI o) {
+        if (o instanceof Event){
+            Event other = (Event) o;
+            return getName().compareToIgnoreCase(other.getName());
+        }
+        return super.compareTo(o);
     }
 }

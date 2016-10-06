@@ -9,24 +9,17 @@ package de.appsolve.padelcampus.admin.controller.bookings;
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Constants;
-import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
-import de.appsolve.padelcampus.db.dao.PayDirektConfigDAOI;
-import de.appsolve.padelcampus.db.dao.PayMillConfigDAOI;
-import de.appsolve.padelcampus.db.dao.PayPalConfigDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
-import de.appsolve.padelcampus.db.model.PayDirektConfig;
-import de.appsolve.padelcampus.db.model.PayMillConfig;
-import de.appsolve.padelcampus.db.model.PayPalConfig;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
+import de.appsolve.padelcampus.utils.BookingUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.HolidayUtil;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
@@ -63,13 +56,7 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
     OfferDAOI offerDAO;
     
     @Autowired
-    PayPalConfigDAOI payPalConfigDAO;
-
-    @Autowired
-    PayDirektConfigDAOI payDirektConfigDAO;
-    
-    @Autowired
-    PayMillConfigDAOI payMillConfigDAO;
+    BookingUtil bookingUtil;
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -133,37 +120,8 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
     @Override
     protected ModelAndView getEditView(CalendarConfig model){
         ModelAndView editView = new ModelAndView("/"+getModuleName()+"/edit", "Model", model);
-        //determine valid payment methods
-        List<PaymentMethod> paymentMethods = new ArrayList<>();
-        //always support cash and vouchers
-        paymentMethods.add(PaymentMethod.Cash);
-        paymentMethods.add(PaymentMethod.Voucher);
         
-        //check if PayPal config exists and is active
-        PayPalConfig paypalConfig = payPalConfigDAO.findFirst();
-        if (paypalConfig != null && paypalConfig.getActive()) {
-            paymentMethods.add(PaymentMethod.PayPal);
-        }
-        
-        //check if PayDirekt config exists and is active
-        PayDirektConfig payDirektConfig = payDirektConfigDAO.findFirst();
-        if (payDirektConfig != null && payDirektConfig.getActive()) {
-            paymentMethods.add(PaymentMethod.PayDirekt);
-        }
-
-        //check if PayMill config exists
-        PayMillConfig payMillConfig = payMillConfigDAO.findFirst();
-        if (payMillConfig != null) {
-            if (payMillConfig.getEnableDirectDebit()) {
-                paymentMethods.add(PaymentMethod.DirectDebit);
-            }
-            if (payMillConfig.getEnableCreditCard()) {
-                paymentMethods.add(PaymentMethod.CreditCard);
-            }
-        }
-        
-        
-        editView.addObject("PaymentMethods", paymentMethods);
+        editView.addObject("PaymentMethods", bookingUtil.getActivePaymentMethods());
         editView.addObject("WeekDays", CalendarWeekDay.values());
         editView.addObject("HolidayKeys", HolidayUtil.getHolidayKeys());
         editView.addObject("Offers", offerDAO.findAll());

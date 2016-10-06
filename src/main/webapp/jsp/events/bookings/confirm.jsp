@@ -12,7 +12,26 @@
                     <div class="alert alert-danger">${error}</div>
                     <h4><fmt:message key="BookingData"/></h4>
 
-                    <jsp:include page="include/booking-data.jsp"/>
+                    <div class="row">
+                        <div class="col-xs-4 booking-cell"><fmt:message key="Offer"/>:</div>
+                        <div class="col-xs-8 booking-cell">${Booking.event}</div>
+                    </div>                   
+                    <div class="row">
+                        <div class="col-xs-4 booking-cell"><fmt:message key="GameDate"/>:</div>
+                        <div class="col-xs-8 booking-cell"><joda:format value="${Booking.bookingDate}" pattern="EEEE, dd. MMMM yyyy"/></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 booking-cell"><fmt:message key="GameStart"/>:</div>
+                        <div class="col-xs-8 booking-cell"><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 booking-cell"><fmt:message key="Price"/>:</div>
+                        <div class="col-xs-8 booking-cell"><fmt:formatNumber value="${Booking.amount}" minFractionDigits="2" maxFractionDigits="2"/> ${Booking.currency.symbol}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 booking-cell"><fmt:message key="PaymentMethod"/>:</div>
+                        <div class="col-xs-8 booking-cell"><fmt:message key="${Booking.paymentMethod}"/></div>
+                    </div>
 
                     <hr>
 
@@ -38,14 +57,8 @@
                     <input type="checkbox" name="accept-cancellation-policy" id="accept-cancellation-policy"/>
                     <label class="checkbox" for="accept-cancellation-policy"><small><fmt:message key="BookingCancellationPolicy"><fmt:param value="${CancellationPolicyDeadline}"/></fmt:message></small></label>
                     </div>
-                    <c:if test="${Booking.offer.showInCalendar}">
-                        <div>
-                            <input type="checkbox" name="public-booking" id="public-booking" ${Booking.publicBooking ? 'checked' : ''}/>
-                            <label class="checkbox" for="public-booking"><small><fmt:message key="PublicBooking"/></small></label>
-                        </div>
-                    </c:if>
                     <button class="btn btn-primary btn-block unit" type="submit"><fmt:message key="Confirm"/></button>
-                    <a class="btn btn-primary btn-block unit ajaxify" href="/bookings"><fmt:message key="Cancel"/></a>
+                    <a class="btn btn-primary btn-block unit ajaxify" href="/events/event/${Booking.event.id}"><fmt:message key="Cancel"/></a>
                 </spf:form>
             </div>
         </div>

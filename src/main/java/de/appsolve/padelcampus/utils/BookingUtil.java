@@ -12,6 +12,7 @@ import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.CANCELLATION_POLICY_DEADLINE;
 import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
 import static de.appsolve.padelcampus.constants.Constants.NO_HOLIDAY_KEY;
+import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.data.DatePickerDayConfig;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.data.OfferDurationPrice;
@@ -22,11 +23,17 @@ import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
 import de.appsolve.padelcampus.db.dao.ContactDAOI;
 import de.appsolve.padelcampus.db.dao.FacilityDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
+import de.appsolve.padelcampus.db.dao.PayDirektConfigDAOI;
+import de.appsolve.padelcampus.db.dao.PayMillConfigDAOI;
+import de.appsolve.padelcampus.db.dao.PayPalConfigDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Contact;
 import de.appsolve.padelcampus.db.model.Facility;
 import de.appsolve.padelcampus.db.model.Offer;
+import de.appsolve.padelcampus.db.model.PayDirektConfig;
+import de.appsolve.padelcampus.db.model.PayMillConfig;
+import de.appsolve.padelcampus.db.model.PayPalConfig;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.jollyday.HolidayCalendar;
@@ -91,6 +98,15 @@ public class BookingUtil {
     
     @Autowired
     MailUtils mailUtils;
+    
+    @Autowired
+    PayPalConfigDAOI payPalConfigDAO;
+
+    @Autowired
+    PayDirektConfigDAOI payDirektConfigDAO;
+    
+    @Autowired
+    PayMillConfigDAOI payMillConfigDAO;
     
     public List<TimeSlot> getTimeSlotsForDate(LocalDate selectedDate, List<CalendarConfig> allCalendarConfigs, List<Booking> existingBookings, Boolean onlyFutureTimeSlots, Boolean preventOverlapping) throws CalendarConfigException{
         
@@ -581,5 +597,37 @@ public class BookingUtil {
                 }
             }
         }
+    }
+
+    public List<PaymentMethod> getActivePaymentMethods() {
+        //determine valid payment methods
+        List<PaymentMethod> paymentMethods = new ArrayList<>();
+        //always support cash and vouchers
+        paymentMethods.add(PaymentMethod.Cash);
+        paymentMethods.add(PaymentMethod.Voucher);
+        
+        //check if PayPal config exists and is active
+        PayPalConfig paypalConfig = payPalConfigDAO.findFirst();
+        if (paypalConfig != null && paypalConfig.getActive()) {
+            paymentMethods.add(PaymentMethod.PayPal);
+        }
+        
+        //check if PayDirekt config exists and is active
+        PayDirektConfig payDirektConfig = payDirektConfigDAO.findFirst();
+        if (payDirektConfig != null && payDirektConfig.getActive()) {
+            paymentMethods.add(PaymentMethod.PayDirekt);
+        }
+
+        //check if PayMill config exists
+        PayMillConfig payMillConfig = payMillConfigDAO.findFirst();
+        if (payMillConfig != null) {
+            if (payMillConfig.getEnableDirectDebit()) {
+                paymentMethods.add(PaymentMethod.DirectDebit);
+            }
+            if (payMillConfig.getEnableCreditCard()) {
+                paymentMethods.add(PaymentMethod.CreditCard);
+            }
+        }
+        return paymentMethods;
     }
 }

@@ -44,7 +44,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/bookings")
 public class BookingsPayPalController extends BookingsPaymentController{
     
-    private static final Logger log = Logger.getLogger(BookingsPayPalController.class);
+    private static final Logger LOG = Logger.getLogger(BookingsPayPalController.class);
     
     @Autowired
     SessionUtil sessionUtil;
@@ -87,12 +87,12 @@ public class BookingsPayPalController extends BookingsPaymentController{
         payment.setTransactions(transactions);
 
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl(RequestUtil.getBaseURL(request) + "/bookings/booking/"+booking.getUUID()+"/abort");
-        redirectUrls.setReturnUrl(RequestUtil.getBaseURL(request) + "/bookings/booking/"+booking.getUUID()+"/paypal/return");
+        redirectUrls.setCancelUrl(RequestUtil.getBaseURL(request) + booking.getAbortUrl());
+        redirectUrls.setReturnUrl(RequestUtil.getBaseURL(request) + booking.getSuccessUrl());
         payment.setRedirectUrls(redirectUrls);
         
         Payment createdPayment = payment.create(apiContext);
-        log.info("Created PayPal payment with id = "+ createdPayment.getId() + " and status = "+ createdPayment.getState());
+        LOG.info("Created PayPal payment with id = "+ createdPayment.getId() + " and status = "+ createdPayment.getState());
         
         //TODO check payment state
         Iterator<Links> links = createdPayment.getLinks().iterator();
@@ -122,14 +122,14 @@ public class BookingsPayPalController extends BookingsPaymentController{
             if (!state.equals("approved")){
                 throw new Exception("PayPal returned unexpected payment status: "+state);
             }
-            log.info("Approved PayPal payment with id = "+ payment.getId());
+            LOG.info("Approved PayPal payment with id = "+ payment.getId());
             booking.setPaymentConfirmed(true);
             bookingDAO.saveOrUpdate(booking);
-            log.info("Booking payment confirmed: "+booking.getPaymentConfirmed());
-            log.info("Booking payment confirmed: "+bookingDAO.findByUUID(UUID).getPaymentConfirmed());
+            LOG.info("Booking payment confirmed: "+booking.getPaymentConfirmed());
+            LOG.info("Booking payment confirmed: "+bookingDAO.findByUUID(UUID).getPaymentConfirmed());
             return BookingsController.getRedirectToSuccessView(booking);
         } catch (Exception e){
-            log.error("Error while executing paypal payment", e);
+            LOG.error("Error while executing paypal payment", e);
             ModelAndView bookingConfirmView = BookingsController.getBookingConfirmView(booking);
             bookingConfirmView.addObject("error", msg.get("PayPalError", new String[]{e.getMessage()}));
             return bookingConfirmView;

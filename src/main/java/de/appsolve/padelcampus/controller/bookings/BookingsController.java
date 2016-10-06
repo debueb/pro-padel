@@ -10,7 +10,6 @@ import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.CANCELLATION_POLICY_DEADLINE;
 import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
-import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.controller.BaseController;
@@ -25,11 +24,9 @@ import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.dao.VoucherDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
-import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Facility;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.db.model.Voucher;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.utils.BookingUtil;
@@ -40,7 +37,6 @@ import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
-import de.appsolve.padelcampus.utils.TeamUtil;
 import de.appsolve.padelcampus.utils.VoucherUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -319,42 +315,6 @@ public class BookingsController extends BaseController {
                 throw new Exception(msg.get("BookingAlreadyConfirmed"));
             }
             
-            //in case the booking was for an event, add the participants to the event
-            if (booking.getEvent() != null){
-                Event event = eventDAO.findByIdFetchWithParticipantsAndGames(booking.getEvent().getId());
-                
-                switch (event.getEventType()){
-                    case PullRoundRobin:
-                        event.getParticipants().add(booking.getPlayer());
-                        event = eventDAO.saveOrUpdate(event);
-                        
-                        eventsUtil.createPullGames(event);
-                        break;
-                    default:
-                        Set<Player> players = new HashSet<>();
-                        players.add(booking.getPlayer());
-                        players.addAll(booking.getPlayers());
-                        //figure out if team already exists
-                        Team team = teamDAO.findByPlayers(players);
-
-                        //create team if it does not exist
-                        if (team == null){
-                            team = new Team();
-                            team.setPlayers(players);
-                            team.setName(TeamUtil.getTeamName(team));
-                            teamDAO.saveOrUpdate(team);
-                        }
-
-                        //add team to participant list
-                        event.getParticipants().add(team);
-                        event = eventDAO.saveOrUpdate(event);
-
-                        if (event.getEventType().equals(EventType.SingleRoundRobin)){
-                            gameUtil.createMissingGames(event, event.getParticipants());
-                        }  
-                }
-            }
-            
             booking.setConfirmed(true);
             bookingDAO.saveOrUpdate(booking);
             
@@ -391,9 +351,6 @@ public class BookingsController extends BaseController {
         booking.setCancelled(Boolean.TRUE);
         booking.setCancelReason("User cancelled during payment process");
         bookingDAO.saveOrUpdate(booking);
-        if (booking.getEvent() != null){
-            return new ModelAndView("redirect:/events/event/"+booking.getEvent().getId());
-        }
         return new ModelAndView("redirect:/bookings");
     }
 
@@ -584,6 +541,6 @@ public class BookingsController extends BaseController {
     }
 
     public static ModelAndView getRedirectToSuccessView(Booking booking) {
-        return new ModelAndView("redirect:/bookings/booking/" + booking.getUUID() + "/success");
+        return new ModelAndView("redirect:"+booking.getSuccessUrl());
     }
 }

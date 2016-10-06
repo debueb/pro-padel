@@ -25,7 +25,7 @@ public class BookingsPayDirektController extends BookingsPaymentController {
     @Autowired
     PayDirektConfigDAOI payDirektConfigDAO;
 
-    ModelAndView redirectToPayDirekt(Booking booking, HttpServletRequest request) throws Exception {
+    public ModelAndView redirectToPayDirekt(Booking booking, HttpServletRequest request) throws Exception {
         if (booking.getPaymentConfirmed()){
             return BookingsController.getRedirectToSuccessView(booking);
         }

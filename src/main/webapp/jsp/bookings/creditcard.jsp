@@ -44,7 +44,7 @@
                     <input class="card-cvc form-control form-bottom-element" type="tel" maxlength="3" data-valid-chars="[0-9]" placeholder="${placeholder}"/>
 
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Book"/></button>
-                    <a class="btn btn-primary btn-block unit ajaxify" href="/bookings/booking/${Booking.UUID}/abort"><fmt:message key="Cancel"/></a>
+                    <a class="btn btn-primary btn-block unit ajaxify" href="${Booking.abortUrl}"><fmt:message key="Cancel"/></a>
 
                 </form>
             </div>

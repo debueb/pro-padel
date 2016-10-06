@@ -42,7 +42,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/bookings")
 public class BookingsPayMillController extends BookingsPaymentController{
     
-    private static final Logger log = Logger.getLogger(BookingsPayMillController.class);
+    private static final Logger LOG = Logger.getLogger(BookingsPayMillController.class);
     
     @Autowired
     SessionUtil sessionUtil;
@@ -92,7 +92,7 @@ public class BookingsPayMillController extends BookingsPaymentController{
     @ResponseBody
     public String translate(@RequestParam("key") String key, HttpServletResponse response) throws IOException{
         String translation = msg.get(key);
-        log.error("Error while creating PayMill payment: "+translation);
+        LOG.error("Error while creating PayMill payment: "+translation);
         return translation;
     }
 
@@ -117,7 +117,7 @@ public class BookingsPayMillController extends BookingsPaymentController{
             booking.setPaymentConfirmed(true);
             bookingDAO.saveOrUpdate(booking);
         } catch (Exception e){
-            log.error(e.getMessage());
+            LOG.error(e.getMessage());
             mav.addObject("error", e.getMessage());
             return mav;
         }

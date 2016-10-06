@@ -79,6 +79,28 @@
                         <spf:input type="hidden" path="startDate" class="datepicker-input form-control" value="${Model.startDate}" />
                         <div class="datepicker" data-show-on-init="false" data-allow-past="true"></div>
                     </div>
+                        
+                    <%-- Von --%>
+                    <span class="relative input-hour">
+                        <spf:select path="startTimeHour" class="select-simple form-left-element form-center-element" data-container="body">
+                            <c:forEach var="hour" begin="0" end="23">
+                                <fmt:formatNumber value="${hour}" minIntegerDigits="2" var="hour"/>
+                                <spf:option value="${hour}"/>
+                            </c:forEach>
+                        </spf:select>
+                        <span class="explanation-select"><fmt:message key="FromHour"/></span>
+                    </span>
+                    <span class="relative input-hour">
+                        <spf:select path="startTimeMinute" class="select-simple form-right-element form-center-element" data-container="body">
+                            <c:forEach var="minute" begin="0" end="55" step="5">
+                                <fmt:formatNumber value="${minute}" minIntegerDigits="2" var="minute"/>
+                                <spf:option value="${minute}"/>
+                            </c:forEach>
+                        </spf:select>
+                        <span class="explanation-select"><fmt:message key="FromMinute"/></span>
+                    </span>
+                    
+                    <div class="clearfix"></div>
 
                     <div class="datepicker-container">
                         <div class="datepicker-text-container form-center-element">
@@ -111,25 +133,12 @@
                         <spf:input path="numberOfGamesInFinalSet" type="number" class="form-control form-center-element"/>
                         <div class="explanation-select"><fmt:message key="MaxNumberOfGamesInFinalSet"/></div>
                     </div>
-
-                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-Knockout select-toggle-PullRoundRobin relative">
-                        <spf:select path="calendarConfig" class="select-simple form-control" data-style="form-center-element" data-container="body">
-                            <option value=""><fmt:message key="None"/></option>
-                            <spf:options itemValue="id" items="${CalendarConfigs}"/>
-                        </spf:select>
-                        <span class="explanation-select"><fmt:message key="CalendarConfigOffer"/></span>
                     
-                        <div class="alert alert-info" style="border-radius: 0">
-                            <span class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-Knockout">
-                                <fmt:message key="NewEventDesc"/>
-                            </span>
-                            <span class="select-toggle-PullRoundRobin">
-                                <fmt:message key="NewEventDescPlayer"/>
-                            </span>
-                        </div>
+                    <div class="relative">
+                        <spf:input path="maxNumberOfParticipants" type="number" class="form-control form-center-element"/>
+                        <div class="explanation-select"><fmt:message key="MaxNumberOfParticipants"/></div>
                     </div>
-                    
-                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-Knockout select-toggle-CommunityRoundRobin select-toggle-PullRoundRobin relative">
+                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-Knockout select-toggle-CommunityRoundRobin select-toggle-PullRoundRobin relative" data-style="form-center-element">
                         <fmt:message key="CurrentlySelected" var="CurrentlySelected"/>
                         <fmt:message key="PleaseChoose" var="EmptyTitle"/>
                         <fmt:message key="ErrorText" var="ErrorText"/>
@@ -139,7 +148,7 @@
                         <fmt:message key="StatusSearching" var="StatusSearching"/>
                         <spf:select 
                             path="participants" 
-                            class="form-control form-bottom-element select-ajax-search"
+                            class="form-control form-center-element select-ajax-search"
                             multiple="multiple"
                             data-container="body" 
                             data-live-search="true"
@@ -157,9 +166,29 @@
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Participants"/></span>
                     </div>
+                    <%-- Zahlungsmethoden --%>
+                    <div class="relative">
+                        <spf:select path="paymentMethods" class="select-multiple form-control" data-style="form-center-element" data-container="body">
+                            <c:forEach var="PaymentMethod" items="${PaymentMethods}">
+                                <fmt:message key="${PaymentMethod}" var="Label"/>
+                                <spf:option value="${PaymentMethod}" label="${Label}"/>
+                            </c:forEach>
+                        </spf:select>
+                        <span class="explanation-select"><fmt:message key="PaymentMethods"/></span>
+                    </div>
+
+                    <%-- Price --%>
+                    <div class="relative"> 
+                        <spf:input path="price" type="text" class="form-control form-bottom-element text-center" placeholder="20.00" data-valid-chars="[0-9\.]"/>
+                        <span class="explanation"><fmt:message key="PricePerBooking"/></span>
+                    </div>
+                    <spf:input type="hidden" path="currency" value="EUR"/>
                     
                     <div class="unit">
                         <spf:checkbox path="active" id="active"/><label for="active"><fmt:message key="Active"/>&nbsp;(<fmt:message key="PubliclyAvailable"/>)</label>
+                    </div>
+                    <div class="unit">
+                        <spf:checkbox path="allowSignup" id="allowSignup"/><label for="allowSignup"><fmt:message key="AllowEventSignup"/></label>
                     </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
                     <c:if test="${not empty Model.id and (Model.eventType eq 'Knockout')}">

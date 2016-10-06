@@ -16,7 +16,7 @@
 
                     <div class="relative unit-2">
                         <select class="form-control select-simple" name="paymentMethod" data-container="body">
-                        <c:forEach var="PaymentMethod" items="${Model.calendarConfig.paymentMethods}">
+                        <c:forEach var="PaymentMethod" items="${Model.paymentMethods}">
                             <option value="${PaymentMethod}"><fmt:message key="${PaymentMethod}"/></option>
                         </c:forEach>
                         </select>

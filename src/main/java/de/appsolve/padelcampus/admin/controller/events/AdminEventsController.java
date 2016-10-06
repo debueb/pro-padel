@@ -33,6 +33,7 @@ import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.spring.EventGroupPropertyEditor;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.spring.ParticipantCollectionEditor;
+import de.appsolve.padelcampus.utils.BookingUtil;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.GameUtil;
@@ -114,6 +115,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
     SessionUtil sessionUtil;
     
     @Autowired
+    BookingUtil bookingUtil;
+    
+    @Autowired
     ParticipantCollectionEditor participantCollectionEditor;
     
     @Autowired
@@ -125,7 +129,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
-        binder.registerCustomEditor(Set.class, participantCollectionEditor);
+        binder.registerCustomEditor(Set.class, "participants", participantCollectionEditor);
         binder.registerCustomEditor(CalendarConfig.class, calendarConfigPropertyEditor);
         binder.registerCustomEditor(EventGroup.class, eventGroupPropertyEditor);
     }
@@ -158,6 +162,16 @@ public class AdminEventsController extends AdminBaseController<Event>{
             }
         }
         
+        //if participants can sign up online, make sure price and payment methods are set
+        if (model.getAllowSignup()){
+            if (model.getPaymentMethods() == null || model.getPaymentMethods().isEmpty()){
+                result.reject("SelectAPaymentMethod");
+            }
+            if (model.getPrice() == null){
+                result.reject("SetAPrice");
+            }
+        }
+        
         if (result.hasErrors()){
             return editView;
         }
@@ -174,11 +188,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 return redirectToIndex(request);
             
             case CommunityRoundRobin:
-                if (model.getCalendarConfig() != null) {
-                    result.reject("CalendarConfigNotSupportedForCommunityRoundRobin");
-                    return editView;
-                }
-                
                 if (!model.getParticipants().isEmpty()){
                     Map<Community, Set<Team>> communityTeamMap = new HashMap<>();
                     List<Team> teamsWithoutCommunity = new ArrayList<>();
@@ -229,7 +238,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
             
             case GroupKnockout:
                 model = getDAO().saveOrUpdate(model);
-                if (model.getCalendarConfig() == null && !model.getParticipants().isEmpty()){
+                if (!model.getParticipants().isEmpty()){
                     return redirectToGroupDraws(model);
                 } else {
                     return redirectToIndex(request);
@@ -237,7 +246,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
             
             case Knockout:
                 model = getDAO().saveOrUpdate(model);
-                if (model.getCalendarConfig() == null && !model.getParticipants().isEmpty()){
+                if (!model.getParticipants().isEmpty()){
                     return redirectToDraws(model);
                 } else {
                     return redirectToIndex(request);
@@ -245,7 +254,8 @@ public class AdminEventsController extends AdminBaseController<Event>{
             case PullRoundRobin:
                 model = getDAO().saveOrUpdate(model);
                 eventsUtil.createPullGames(model);
-                if (model.getCalendarConfig() == null && !model.getParticipants().isEmpty()){
+
+                if (!model.getParticipants().isEmpty()){
                     return redirectToGameSchedule(model);
                 } else {
                     return redirectToIndex(request);
@@ -563,6 +573,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
         mav.addObject("Genders", Gender.values());
         mav.addObject("CalendarConfigs", calendarConfigDAO.findAll());
         mav.addObject("EventGroups", eventGroupDAO.findAll());
+        mav.addObject("PaymentMethods", bookingUtil.getActivePaymentMethods());
         return mav;
     }
     
@@ -578,7 +589,8 @@ public class AdminEventsController extends AdminBaseController<Event>{
     
     @Override
     public Page<Event> findAll(Pageable pageable){
-        return eventDAO.findAllFetchWithParticipantsAndPlayers(pageable);
+        Page<Event> page = eventDAO.findAllFetchWithParticipantsAndPlayers(pageable);
+        return page;
     }
     
     @Override

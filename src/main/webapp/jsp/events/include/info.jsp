@@ -16,18 +16,39 @@
                         - <joda:format value="${Model.endDate}" pattern="EEE, dd. MMM yyyy"/>
                     </c:if>
                 </div>
+                    
+                <c:if test="${not empty Model.startTime}">
+                    <div class="col-xs-4 text-right">
+                        <fmt:message key="StartTime"/>:
+                    </div>
+                    <div class="col-xs-8">
+                        <joda:format value="${Model.startTime}" pattern="HH:mm"/>
+                    </div>
+                </c:if>
+                    
                 <div class="col-xs-4 text-right">
                     <fmt:message key="Category"/>:
                 </div>
                 <div class="col-xs-8">
                     <fmt:message key="Mode_${Model.gender}"/>
                 </div>
+                
                 <div class="col-xs-4 text-right">
                     <fmt:message key="Mode"/>:
                 </div>
                 <div class="col-xs-8">
                     <fmt:message key="${Model.eventType}"/>
                 </div>
+                
+                <c:if test="${not empty Model.maxNumberOfParticipants}">
+                    <div class="col-xs-4 text-right">
+                        <fmt:message key="MaxNumberOfParticipants"/>:
+                    </div>
+                    <div class="col-xs-8">
+                        <fmt:message key="${Model.maxNumberOfParticipants}"/>
+                    </div>
+                </c:if>
+                
                 <c:if test="${not empty Model.location}">
                     <div class="col-xs-4 text-right">
                         <fmt:message key="Location"/>:
@@ -36,6 +57,7 @@
                         <a href="https://www.google.com/maps/search/${Model.location}" target="blank">${Model.location}</a>
                     </div>
                 </c:if>
+                
                 <c:if test="${not empty Model.description and Model.description ne '<p><br></p>'}">
                     <div class="col-xs-4 text-right">
                         <fmt:message key="Description"/>:
@@ -47,9 +69,9 @@
             </div>
             <div class="unit-2">
                 <div class="list-group">
-                    <c:if test="${Model.calendarConfig ne null}">
+                    <c:if test="${Model.allowSignup}">
                         <jsp:include page="/jsp/include/list-group-item.jsp">
-                            <jsp:param name="href" value="/events/event/${Model.id}/participate"/>
+                            <jsp:param name="href" value="/events/bookings/${Model.id}/participate"/>
                             <jsp:param name="key" value="Participate"/>
                             <jsp:param name="icon" value="user-plus"/>
                         </jsp:include>
