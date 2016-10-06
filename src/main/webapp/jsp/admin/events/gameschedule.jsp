@@ -19,40 +19,47 @@
                         <span class="game-schedule-hour" class="relative"><fmt:message key="Hour"/></span>
                         <span class="game-schedule-minute" class="relative"><fmt:message key="Minute"/></span>
                     </div>
-                    <c:forEach var="Game" items="${Model.list}" varStatus="status">
-                        <div class="game-schedule">
-                            <spf:input type="hidden" path="list[${status.index}].id" value="${Game.id}"/>
-                            <span class="game-schedule-title">${Game}</span>
-                            <span class="game-schedule-date">
-                                <div class="datepicker-container">
-                                    <div class="datepicker-text-container form-control">
-                                        <span class="fa fa-calendar datepicker-icon"></span>
-                                        <div class="datepicker-text"></div>
-                                    </div>
-                                    <spf:input type="hidden" path="list[${status.index}].startDate" class="datepicker-input form-control" value="${Game.startDate eq null ? Event.startDate : Game.startDate}"/>
-                                    <div class="datepicker" data-show-on-init="false" data-allow-past="true"></div>
-                                </div>
-                            </span>
+                    <c:choose>
+                        <c:when test="${empty Model.list}">
+                            <div class="text-center"><fmt:message key="NoGamesYet"/></div>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach var="Game" items="${Model.list}" varStatus="status">
+                                <div class="game-schedule">
+                                    <spf:input type="hidden" path="list[${status.index}].id" value="${Game.id}"/>
+                                    <span class="game-schedule-title">${Game}</span>
+                                    <span class="game-schedule-date">
+                                        <div class="datepicker-container">
+                                            <div class="datepicker-text-container form-control">
+                                                <span class="fa fa-calendar datepicker-icon"></span>
+                                                <div class="datepicker-text"></div>
+                                            </div>
+                                            <spf:input type="hidden" path="list[${status.index}].startDate" class="datepicker-input form-control" value="${Game.startDate eq null ? Event.startDate : Game.startDate}"/>
+                                            <div class="datepicker" data-show-on-init="false" data-allow-past="true"></div>
+                                        </div>
+                                    </span>
 
-                            <span class="game-schedule-hour">
-                                <spf:select path="list[${status.index}].startTimeHour" class="select-simple" data-container="body">
-                                    <c:forEach var="hour" begin="0" end="23">
-                                        <fmt:formatNumber value="${hour}" minIntegerDigits="2" var="hour"/>
-                                        <spf:option value="${hour}"/>
-                                    </c:forEach>
-                                </spf:select>
-                            </span>
-                            <span class="game-schedule-minute">
-                                <spf:select path="list[${status.index}].startTimeMinute" class="select-simple" data-container="body">
-                                    <c:forEach var="minute" begin="0" end="55" step="5">
-                                        <fmt:formatNumber value="${minute}" minIntegerDigits="2" var="minute"/>
-                                        <spf:option value="${minute}"/>
-                                    </c:forEach>
-                                </spf:select>
-                            </span>
-                        </div>
-                    </c:forEach>
-                <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
+                                    <span class="game-schedule-hour">
+                                        <spf:select path="list[${status.index}].startTimeHour" class="select-simple" data-container="body">
+                                            <c:forEach var="hour" begin="0" end="23">
+                                                <fmt:formatNumber value="${hour}" minIntegerDigits="2" var="hour"/>
+                                                <spf:option value="${hour}"/>
+                                            </c:forEach>
+                                        </spf:select>
+                                    </span>
+                                    <span class="game-schedule-minute">
+                                        <spf:select path="list[${status.index}].startTimeMinute" class="select-simple" data-container="body">
+                                            <c:forEach var="minute" begin="0" end="55" step="5">
+                                                <fmt:formatNumber value="${minute}" minIntegerDigits="2" var="minute"/>
+                                                <spf:option value="${minute}"/>
+                                            </c:forEach>
+                                        </spf:select>
+                                    </span>
+                                </div>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
+                    <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
                 </div>
             </spf:form>
         </div>
