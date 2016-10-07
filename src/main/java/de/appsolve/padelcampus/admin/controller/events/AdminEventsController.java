@@ -10,6 +10,7 @@ import de.appsolve.padelcampus.spring.CalendarConfigPropertyEditor;
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
+import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.data.AddPullGame;
 import de.appsolve.padelcampus.data.EventGroups;
 import de.appsolve.padelcampus.data.GameList;
