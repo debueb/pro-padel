@@ -134,6 +134,11 @@ public class AdminEventsController extends AdminBaseController<Event>{
         binder.registerCustomEditor(CalendarConfig.class, calendarConfigPropertyEditor);
         binder.registerCustomEditor(EventGroup.class, eventGroupPropertyEditor);
     }
+
+    @Override
+    protected Event findById(Long modelId) {
+        return getDAO().findByIdFetchWithParticipants(modelId);
+    }
     
     @Override
     @RequestMapping(value={"add", "edit/{modelId}"}, method=POST)
