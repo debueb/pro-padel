@@ -151,6 +151,7 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
             //remove bookings that start after the selected calendar config ends
             if (booking.getBookingTime().compareTo(config.getEndTime()) >= 0){
                 iterator.remove();
+                continue;
             }
             //remove bookings that do not match the offer
             if (booking.getOffer()!=null){
