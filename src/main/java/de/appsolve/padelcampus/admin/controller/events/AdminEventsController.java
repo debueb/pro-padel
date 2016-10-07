@@ -574,7 +574,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
         mav.addObject("Genders", Gender.values());
         mav.addObject("CalendarConfigs", calendarConfigDAO.findAll());
         mav.addObject("EventGroups", eventGroupDAO.findAll());
-        mav.addObject("PaymentMethods", bookingUtil.getActivePaymentMethods());
+        List<PaymentMethod> activePaymentMethods = bookingUtil.getActivePaymentMethods();
+        activePaymentMethods.remove(PaymentMethod.Voucher);
+        mav.addObject("PaymentMethods", activePaymentMethods);
         return mav;
     }
     
