@@ -80,7 +80,7 @@ public class EventsController extends BaseController{
     
     @RequestMapping("event/{eventId}")
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
-        Event event = eventDAO.findByIdFetchWithCalendarConfig(eventId);
+        Event event = eventDAO.findById(eventId);
         ModelAndView mav = new ModelAndView("events/event", "Model", event);
         return mav;
     }

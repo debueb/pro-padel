@@ -599,11 +599,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
         return eventDAO.findAllByFuzzySearch(search, "participants", "participants.players");
     }
     
-    @Override
-    public Event findById(Long id){
-        return eventDAO.findByIdFetchWithParticipantsAndCalendarConfig(id);
-    }
-
     private ModelAndView redirectToDraws(Event model) {
         return new ModelAndView("redirect:/admin/events/edit/"+model.getId()+"/draws");
     }

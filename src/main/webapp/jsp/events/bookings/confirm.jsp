@@ -55,7 +55,7 @@
 
                     <div>
                     <input type="checkbox" name="accept-cancellation-policy" id="accept-cancellation-policy"/>
-                    <label class="checkbox" for="accept-cancellation-policy"><small><fmt:message key="BookingEventCancellationPolicy"><fmt:param value="${CancellationPolicyDeadline}"/></fmt:message></small></label>
+                    <label class="checkbox" for="accept-cancellation-policy"><small><fmt:message key="BookingEventCancellationPolicy"/></small></label>
                     </div>
                     <button class="btn btn-primary btn-block unit" type="submit"><fmt:message key="Confirm"/></button>
                     <a class="btn btn-primary btn-block unit ajaxify" href="/events/event/${Booking.event.id}"><fmt:message key="Cancel"/></a>

@@ -32,7 +32,6 @@ import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import de.appsolve.padelcampus.utils.TeamUtil;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -118,16 +117,14 @@ public class EventsBookingController extends BaseController{
                 return getLoginRequiredView(request, msg.get("Participate"));
             }
             
-            Event event = eventDAO.findByIdFetchWithParticipantsAndCalendarConfig(eventId);
+            Event event = eventDAO.findByIdFetchWithParticipants(eventId);
             
             Booking booking = new Booking();
             booking.setPlayer(user);
-            //booking.setOffer(offer);
             booking.setBookingDate(event.getStartDate());
             booking.setBookingTime(event.getStartTime());
             booking.setAmount(event.getPrice());
             booking.setCurrency(event.getCurrency());
-            //booking.setDuration(0L+Minutes.minutesBetween(calendarConfig.getStartTime(), calendarConfig.getEndTime()).getMinutes());
             booking.setPaymentMethod(PaymentMethod.valueOf(request.getParameter("paymentMethod")));
             booking.setBookingType(BookingType.loggedIn);
             booking.setEvent(event);
@@ -159,10 +156,8 @@ public class EventsBookingController extends BaseController{
                     
                     //extra fields
                     booking.setPlayers(participants);
-                    
-                    checkPlayerNotParticipating(event, partner);
             }
-            checkPlayerNotParticipating(event, user);
+            checkPlayersNotParticipating(booking);
             
             sessionUtil.setBooking(request, booking);
             return new ModelAndView("redirect:/events/bookings/"+event.getId()+"/confirm");
@@ -177,12 +172,16 @@ public class EventsBookingController extends BaseController{
     public ModelAndView showConfirmView(HttpServletRequest request) {
         Booking booking = sessionUtil.getBooking(request);
         ModelAndView confirmView = getBookingConfirmView(booking);
-        if (booking == null || booking.getPlayer() == null) {
-            confirmView.addObject("error", msg.get("SessionTimeout"));
+        try {
+            if (booking == null || booking.getPlayer() == null) {
+                throw new Exception(msg.get("SessionTimeout"));
+            }
+            checkPlayersNotParticipating(booking);
+        } catch (Exception e) {
+            LOG.error("Error while processing booking request: "+e.getMessage(), e);
+            confirmView.addObject("error", e.getMessage());
             return confirmView;
         }
-
-        //TODO: make sure all required info is available
         return confirmView;
     }
 
@@ -208,12 +207,9 @@ public class EventsBookingController extends BaseController{
                 throw new Exception(msg.get("BookingAlreadyConfirmed"));
             }
             
-            Event event = booking.getEvent();
-            checkPlayerNotParticipating(event, booking.getPlayer());
-            for (Player player: event.getPlayers()){
-                checkPlayerNotParticipating(event, player);
-            }
+            checkPlayersNotParticipating(booking);
             
+            Event event = booking.getEvent();
             if (event.getParticipants().size() >= event.getMaxNumberOfParticipants()){
                 throw new Exception(msg.get("EventBookedOut"));
             }
@@ -323,7 +319,7 @@ public class EventsBookingController extends BaseController{
     }
     
     private ModelAndView participateView(Long eventId, Player player) {
-        Event event = eventDAO.findByIdFetchWithCalendarConfig(eventId);
+        Event event = eventDAO.findById(eventId);
         ModelAndView mav;
         switch (event.getEventType()){
             case PullRoundRobin:
@@ -337,6 +333,24 @@ public class EventsBookingController extends BaseController{
         return mav;
     }
 
+    private ModelAndView getBookingConfirmView(Booking booking) {
+        ModelAndView mav = new ModelAndView("events/bookings/confirm");
+        mav.addObject("Booking", booking);
+        return mav;
+    }
+    
+     private ModelAndView getBookingSuccessView() {
+        return new ModelAndView("events/bookings/success");
+    }
+
+    private void checkPlayersNotParticipating(Booking booking) throws Exception {
+        Event event = booking.getEvent();
+        checkPlayerNotParticipating(event, booking.getPlayer());
+        for (Player player: booking.getPlayers()){
+            checkPlayerNotParticipating(event, player);
+        }
+    }
+    
     private void checkPlayerNotParticipating(Event event, Player user) throws Exception {
         for (Participant p: event.getParticipants()){
             if (p instanceof Team){
@@ -351,16 +365,4 @@ public class EventsBookingController extends BaseController{
             }
         }
     }
-
-    private ModelAndView getBookingConfirmView(Booking booking) {
-        ModelAndView mav = new ModelAndView("events/bookings/confirm");
-        mav.addObject("Booking", booking);
-        mav.addObject("CancellationPolicyDeadline", CANCELLATION_POLICY_DEADLINE);
-        return mav;
-    }
-    
-     private ModelAndView getBookingSuccessView() {
-        return new ModelAndView("events/bookings/success");
-    }
-
 }
