@@ -7,7 +7,6 @@
 package de.appsolve.padelcampus.controller.events;
 
 import de.appsolve.padelcampus.constants.BookingType;
-import static de.appsolve.padelcampus.constants.Constants.CANCELLATION_POLICY_DEADLINE;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.controller.BaseController;
@@ -157,7 +156,7 @@ public class EventsBookingController extends BaseController{
                     //extra fields
                     booking.setPlayers(participants);
             }
-            checkPlayersNotParticipating(booking);
+            isEventBookingPossible(booking);
             
             sessionUtil.setBooking(request, booking);
             return new ModelAndView("redirect:/events/bookings/"+event.getId()+"/confirm");
@@ -176,9 +175,9 @@ public class EventsBookingController extends BaseController{
             if (booking == null || booking.getPlayer() == null) {
                 throw new Exception(msg.get("SessionTimeout"));
             }
-            checkPlayersNotParticipating(booking);
+            isEventBookingPossible(booking);
         } catch (Exception e) {
-            LOG.error("Error while processing booking request: "+e.getMessage(), e);
+            LOG.warn("Error while processing booking request: "+e.getMessage(), e);
             confirmView.addObject("error", e.getMessage());
             return confirmView;
         }
@@ -207,12 +206,7 @@ public class EventsBookingController extends BaseController{
                 throw new Exception(msg.get("BookingAlreadyConfirmed"));
             }
             
-            checkPlayersNotParticipating(booking);
-            
-            Event event = booking.getEvent();
-            if (event.getParticipants().size() >= event.getMaxNumberOfParticipants()){
-                throw new Exception(msg.get("EventBookedOut"));
-            }
+            isEventBookingPossible(booking);
             
             booking.setBlockingTime(new LocalDateTime());
             booking.setUUID(BookingUtil.generateUUID());
@@ -239,7 +233,7 @@ public class EventsBookingController extends BaseController{
                     return confirmView;
             }
         } catch (Exception e) {
-            LOG.error("Error while processing booking request: "+e.getMessage(), e);
+            LOG.warn("Error while processing booking request: "+e.getMessage(), e);
             confirmView.addObject("error", e.getMessage());
             return confirmView;
         }
@@ -343,11 +337,17 @@ public class EventsBookingController extends BaseController{
         return new ModelAndView("events/bookings/success");
     }
 
-    private void checkPlayersNotParticipating(Booking booking) throws Exception {
+    private void isEventBookingPossible(Booking booking) throws Exception {
         Event event = booking.getEvent();
-        checkPlayerNotParticipating(event, booking.getPlayer());
-        for (Player player: booking.getPlayers()){
-            checkPlayerNotParticipating(event, player);
+        Event eventWithPlayers = eventDAO.findByIdFetchWithParticipantsAndPlayers(event.getId());
+        checkPlayerNotParticipating(eventWithPlayers, booking.getPlayer());
+        if (booking.getPlayers()!=null){
+            for (Player player: booking.getPlayers()){
+                checkPlayerNotParticipating(eventWithPlayers, player);
+            }
+        }
+        if (event.getParticipants().size() >= event.getMaxNumberOfParticipants()){
+            throw new Exception(msg.get("EventBookedOut"));
         }
     }
     
