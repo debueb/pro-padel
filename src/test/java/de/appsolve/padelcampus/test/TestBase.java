@@ -20,12 +20,14 @@ import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.dao.VoucherDAOI;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Customer;
+import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Voucher;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import org.apache.log4j.Logger;
@@ -105,11 +107,16 @@ public abstract class TestBase  {
     @Before
     public void setUp() {
         if (mockMvc == null){
-            eventDAO.delete(eventDAO.findAll());
+            bookingDAO.delete(bookingDAO.findAll());
+
+            List<Event> events = eventDAO.findAllFetchWithParticipants();
+            for (Event event: events){
+                event.getParticipants().clear();
+                event = eventDAO.saveOrUpdate(event);
+            }
+            eventDAO.delete(events);
             
             adminGroupDAO.delete(adminGroupDAO.findAll());
-
-            bookingDAO.delete(bookingDAO.findAll());
 
             teamDAO.delete(teamDAO.findAll());
 

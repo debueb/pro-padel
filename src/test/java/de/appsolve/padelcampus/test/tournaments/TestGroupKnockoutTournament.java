@@ -9,6 +9,7 @@ import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.Privilege;
 import de.appsolve.padelcampus.db.model.AdminGroup;
+import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.test.*;
@@ -112,10 +113,12 @@ public class TestGroupKnockoutTournament extends TestBase {
             .param("participants", teamUUIDs.toArray(new String[teamUUIDs.size()])))
             .andExpect(status().is3xxRedirection());
         
+        Event event = eventDAO.findByAttribute("name", "Knockout Tournament");
+        
         LOG.info("attempt to modify tournament should fail");
-        mockMvc.perform(post("/admin/events/edit/1")
+        mockMvc.perform(post("/admin/events/edit/"+event.getId())
             .session(session)
-            .param("id", "1")
+            .param("id", event.getId().toString())
             .param("name", "GroupKnockout Tournament")
             .param("gender", Gender.male.name())
             .param("eventType", EventType.GroupKnockout.name())
@@ -127,7 +130,7 @@ public class TestGroupKnockoutTournament extends TestBase {
 
         
         LOG.info("update group draws");
-        mockMvc.perform(post("/admin/events/edit/1/groupdraws")
+        mockMvc.perform(post("/admin/events/edit/"+event.getId()+"/groupdraws")
             .session(session)
             .param("_groupParticipants[0]", "1")
             .param("groupParticipants[0]", teamUUIDs.get(0))
@@ -140,20 +143,20 @@ public class TestGroupKnockoutTournament extends TestBase {
         
         LOG.info("check tournament view");
         
-        mockMvc.perform(get("/events/event/1")
+        mockMvc.perform(get("/events/event/"+event.getId())
             .session(session))
             .andExpect(status().isOk())
             .andExpect(model().hasNoErrors())
             .andExpect(model().attributeExists("Model"));
         
-        mockMvc.perform(get("/events/event/1/groupgames")
+        mockMvc.perform(get("/events/event/"+event.getId()+"/groupgames")
             .session(session))
             .andExpect(status().isOk())
             .andExpect(model().hasNoErrors())
             .andExpect(view().name("events/groupknockout/groupgames"))
             .andExpect(model().attributeExists("GroupParticipantGameResultMap"));
                 
-        mockMvc.perform(get("/events/event/1/knockoutgames")
+        mockMvc.perform(get("/events/event/"+event.getId()+"/knockoutgames")
             .session(session))
             .andExpect(status().isOk())
             .andExpect(model().hasNoErrors())
