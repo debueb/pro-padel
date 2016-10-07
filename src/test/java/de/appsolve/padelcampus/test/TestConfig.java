@@ -51,7 +51,7 @@ public class TestConfig {
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/padelcampustest");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/padelcampustest?useSSL=false");
         dataSource.setUsername("padelcampustest");
         dataSource.setPassword("padelcampustest");
         return dataSource;
