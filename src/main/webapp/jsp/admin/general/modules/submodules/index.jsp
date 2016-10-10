@@ -44,5 +44,5 @@
         </div>
     </div>
 </div>
-
+<jsp:include page="/jsp/include/sortable.jsp"/>
 <jsp:include page="/jsp/include/footer.jsp"/>
