@@ -18,11 +18,11 @@
 .flag-icon.flag-icon-squared {
   width: 1em;
 }
-.flag-icon-us {
-  background-image: url(/flags/4x3/us.svg);
+.flag-icon-gb {
+  background-image: url(/flags/4x3/gb.svg);
 }
-.flag-icon-us.flag-icon-squared {
-  background-image: url(/flags/1x1/us.svg);
+.flag-icon-gb.flag-icon-squared {
+  background-image: url(/flags/1x1/gb.svg);
 }
 .flag-icon-de {
   background-image: url(/flags/4x3/de.svg);
@@ -1468,7 +1468,7 @@ th.normal {
   background-position: 0 0;
 }
 .customerLogo:hover {
-  background-position: 0 44px;
+  background-position: 0 -44px;
 }
 .bootstrap-select.form-center-element .btn {
   border-radius: 0;
