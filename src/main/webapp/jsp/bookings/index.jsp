@@ -102,12 +102,14 @@
                                                                         </a>
                                                                     </c:when>
                                                                     <c:when test="${not empty TimeSlot.bookings}">
+                                                                        <c:set var="timeSlotFilled" value="false"/>
                                                                         <c:forEach var="Booking" items="${TimeSlot.bookings}">
                                                                             <c:choose>
                                                                                 <c:when test="${Booking.publicBooking and Booking.offer eq Offer and TimeSlot.startTime ge Booking.bookingTime}">
                                                                                     <i class="fa fa-info-circle text-center" data-toggle="tooltip" data-placement="top" data-container="body" data-content="${not empty Booking.comment ? Booking.comment : Booking.player}<br /> <joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/>${Booking.confirmed ? '' : BookingPendingMsg}"></i>
+                                                                                    <c:set var="timeSlotFilled" value="true"/>
                                                                                 </c:when>
-                                                                                <c:when test="${Booking.publicBooking and Booking.offer eq Offer and TimeSlot.startTime lt Booking.bookingTime}">
+                                                                                <c:when test="${Booking.publicBooking and Booking.offer eq Offer and not timeSlotFilled}">
                                                                                     <div class="booking-gallery-offer" style="background-color: ${Offer.hexColor};"></div>
                                                                                 </c:when>
                                                                             </c:choose>
