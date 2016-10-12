@@ -95,7 +95,8 @@ body {
   background-color: #94cfea;
   font-family: 'Helvetica', 'Verdana', 'Arial';
 }
-.background {
+.background,
+body.mce-content-body {
   background: url('/images/bg.jpg');
   background-repeat: no-repeat;
   background-position: center center;
@@ -104,6 +105,8 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+}
+.background {
   display: table;
   table-layout: fixed;
   height: 100%;
