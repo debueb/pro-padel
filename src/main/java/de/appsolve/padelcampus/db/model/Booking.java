@@ -359,4 +359,23 @@ public class Booking extends CustomerEntity{
         }
         return null;
     }
+
+    @Override
+    public int compareTo(BaseEntityI o) {
+        if (o instanceof Booking){
+            Booking other = (Booking )o;
+            if (getBookingDate()!=null && other.getBookingDate()!=null){
+                int result = getBookingDate().compareTo(other.getBookingDate());
+                if (result != 0){
+                    return result;
+                }
+                if (getBookingTime()!=null && other.getBookingTime()!=null){
+                    return getBookingTime().compareTo(other.getBookingTime());
+                }
+            }
+        }
+        return super.compareTo(o);
+    }
+    
+    
 }
