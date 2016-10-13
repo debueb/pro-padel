@@ -76,16 +76,16 @@ public class TimeSlot implements Comparable<TimeSlot> {
     }
 
     public void addBooking(Booking booking) {
-        List<Booking> _bookings = getBookings();
-        _bookings.add(booking);
+        List<Booking> localBookings = getBookings();
+        localBookings.add(booking);
         //sort bookings by booking time (needed by UI)
-        _bookings.sort(new Comparator<Booking>() {
+        localBookings.sort(new Comparator<Booking>() {
             @Override
             public int compare(Booking o1, Booking o2) {
                 return o1.getBookingTime().compareTo(o2.getBookingTime());
             }
         });
-        setBookings(_bookings);
+        setBookings(localBookings);
     }
 
     public BigDecimal getPricePerMinDuration() {
