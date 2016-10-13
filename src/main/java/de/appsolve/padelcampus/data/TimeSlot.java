@@ -11,6 +11,7 @@ import de.appsolve.padelcampus.db.model.Offer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import org.joda.time.LocalDate;
@@ -77,6 +78,13 @@ public class TimeSlot implements Comparable<TimeSlot> {
     public void addBooking(Booking booking) {
         List<Booking> _bookings = getBookings();
         _bookings.add(booking);
+        //sort bookings by booking time (needed by UI)
+        _bookings.sort(new Comparator<Booking>() {
+            @Override
+            public int compare(Booking o1, Booking o2) {
+                return o1.getBookingTime().compareTo(o2.getBookingTime());
+            }
+        });
         setBookings(_bookings);
     }
 
