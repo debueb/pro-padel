@@ -79,7 +79,7 @@ public class TimeSlot implements Comparable<TimeSlot> {
         List<Booking> localBookings = getBookings();
         localBookings.add(booking);
         //sort bookings by booking time (needed by UI)
-        Collections.sort(bookings);
+        Collections.sort(localBookings);
         setBookings(localBookings);
     }
 
