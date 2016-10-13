@@ -1,4 +1,4 @@
 $(document).ready(function () {
 
-    $('.color-picker').colorpicker();
+    $('.color-picker').colorpicker({'format': 'rgba'});
 });
