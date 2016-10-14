@@ -64,10 +64,6 @@
                         </span>
                     </div>
 
-                    <div class="unit">
-                        <spf:checkbox path="showInCalendar" id="showInCalendar"/><label for="showInCalendar"><fmt:message key="ShowInBookingsCalendar"/></label>
-                    </div>
-                        
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
                 </spf:form>
             </div>

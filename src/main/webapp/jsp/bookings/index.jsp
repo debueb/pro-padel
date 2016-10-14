@@ -1,5 +1,6 @@
 <%@include file="/jsp/include/include.jsp"%>
 <jsp:include page="/jsp/include/head.jsp"/>
+<fmt:message key="Booking" var="BookingMsg"/>
 <div class="row">
     <div class="col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
         <div class="page-header"></div>
@@ -53,10 +54,8 @@
             <div class="booking-gallery">
                 <div class="booking-gallery-time">
                     <c:forEach var="TimeRange" items="${RangeMap}">
-                        <c:if test="${TimeRange.showInCalendar}">
-                            <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
-                            <div>${startTime}</div>
-                        </c:if>
+                        <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
+                        <div>${status.index} ${startTime}</div>
                     </c:forEach>
                 </div>
                 <div class="booking-slick">
@@ -70,71 +69,65 @@
                                 <thead>
                                     <tr>
                                         <c:forEach var="Offer" items="${SelectedOffers}">
-                                            <c:if test="${Offer.showInCalendar}">
-                                                <th style="background-color: ${Offer.hexColor};">
-                                                    <div    data-toggle="tooltip" 
-                                                            data-placement="top"
-                                                            data-content="${Offer}">
-                                                        ${Offer.shortName}
-                                                    </div>
-                                                </th>
-                                            </c:if>
+                                            <th style="background-color: ${Offer.hexColor};">
+                                                <div    data-toggle="tooltip" 
+                                                        data-placement="top"
+                                                        data-content="${Offer}">
+                                                    ${Offer.shortName}
+                                                </div>
+                                            </th>
                                         </c:forEach>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <c:forEach var="TimeRange" items="${RangeMap}">
-                                        <c:if test="${TimeRange.showInCalendar}">
                                         <tr>
                                             <c:forEach var="Offer" items="${SelectedOffers}">
-                                                <c:if test="${Offer.showInCalendar}">
-                                                    <td>
-                                                        <c:set var="containsTimeSlot" value="false"/>
-                                                        <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
-                                                            <c:if test="${TimeSlot.date.dayOfWeek eq WeekDay.dayOfWeek}">
-                                                                <c:set var="containsTimeSlot" value="true"/>
-                                                                <c:choose>
-                                                                    <c:when test="${fn:contains(TimeSlot.availableOffers, Offer)}">
-                                                                        <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
-                                                                        <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
-                                                                        <a class="ajaxify booking-gallery-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${Offer.hexColor};">
-                                                                            ${TimeSlot.pricePerMinDuration}
-                                                                        </a>
-                                                                    </c:when>
-                                                                    <c:when test="${not empty TimeSlot.bookings}">
-                                                                        <c:set var="timeSlotFilled" value="false"/>
-                                                                        <c:forEach var="Booking" items="${TimeSlot.bookings}">
+                                                <td>
+                                                    <c:set var="containsTimeSlot" value="false"/>
+                                                    <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
+                                                        <c:if test="${TimeSlot.date.dayOfWeek eq WeekDay.dayOfWeek}">
+                                                            <c:set var="containsTimeSlot" value="true"/>
+                                                            <c:choose>
+                                                                <c:when test="${fn:contains(TimeSlot.availableOffers, Offer)}">
+                                                                    <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
+                                                                    <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
+                                                                    <a class="ajaxify booking-gallery-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${Offer.hexColor};">
+                                                                        ${TimeSlot.pricePerMinDuration}
+                                                                    </a>
+                                                                </c:when>
+                                                                <c:when test="${not empty TimeSlot.bookings}">
+                                                                    <c:set var="timeSlotFilled" value="false"/>
+                                                                    <c:forEach var="Booking" items="${TimeSlot.bookings}">
+                                                                        <c:if test="${Booking.offer eq Offer}">
                                                                             <c:choose>
-                                                                                <c:when test="${Booking.publicBooking and Booking.offer eq Offer and TimeSlot.startTime ge Booking.bookingTime}">
-                                                                                    <i class="fa fa-info-circle text-center" data-toggle="tooltip" data-placement="top" data-container="body" data-content="${not empty Booking.comment ? Booking.comment : Booking.player}<br /> <joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/>${Booking.confirmed ? '' : BookingPendingMsg}"></i>
+                                                                                <c:when test="${TimeSlot.startTime ge Booking.bookingTime}">
+                                                                                    <i class="fa fa-info-circle text-center" data-toggle="tooltip" data-placement="top" data-container="body" data-content="${Booking.publicBooking ? empty Booking.comment ? Booking.player : Booking.comment : BookingMsg}<br /> <joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/>${Booking.confirmed ? '' : BookingPendingMsg}"></i>
                                                                                     <c:set var="timeSlotFilled" value="true"/>
                                                                                 </c:when>
-                                                                                <c:when test="${Booking.publicBooking and Booking.offer eq Offer and not timeSlotFilled}">
+                                                                                <c:when test="${not timeSlotFilled}">
                                                                                     <div class="booking-gallery-offer" style="background-color: ${Offer.hexColor};"></div>
                                                                                 </c:when>
                                                                             </c:choose>
-                                                                        </c:forEach>
-                                                                    </c:when>
-                                                                </c:choose>
-                                                            </c:if>
-                                                        </c:forEach>
-                                                    </td>
-                                                </c:if>
+                                                                        </c:if>
+                                                                    </c:forEach>
+                                                                </c:when>
+                                                            </c:choose>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </td>
                                             </c:forEach>
                                         </tr>
-                                        </c:if>
                                     </c:forEach>
                                     <tr>
                                         <c:forEach var="Offer" items="${SelectedOffers}">
-                                            <c:if test="${Offer.showInCalendar}">
-                                                <td style="background-color: ${Offer.hexColor};">
-                                                    <div    data-toggle="tooltip" 
-                                                            data-placement="bottom"
-                                                            data-content="${Offer}">
-                                                        ${Offer.shortName}
-                                                    </div>
-                                                </td>
-                                            </c:if>
+                                            <td style="background-color: ${Offer.hexColor};">
+                                                <div    data-toggle="tooltip" 
+                                                        data-placement="bottom"
+                                                        data-content="${Offer}">
+                                                    ${Offer.shortName}
+                                                </div>
+                                            </td>
                                         </c:forEach>
                                     </tr>
                                 </tbody>

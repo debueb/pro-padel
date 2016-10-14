@@ -38,12 +38,10 @@
                     <input type="checkbox" name="accept-cancellation-policy" id="accept-cancellation-policy"/>
                     <label class="checkbox" for="accept-cancellation-policy"><small><fmt:message key="BookingCancellationPolicy"><fmt:param value="${CancellationPolicyDeadline}"/></fmt:message></small></label>
                     </div>
-                    <c:if test="${Booking.offer.showInCalendar}">
-                        <div>
-                            <input type="checkbox" name="public-booking" id="public-booking" ${Booking.publicBooking ? 'checked' : ''}/>
-                            <label class="checkbox" for="public-booking"><small><fmt:message key="PublicBooking"/></small></label>
-                        </div>
-                    </c:if>
+                    <div>
+                        <input type="checkbox" name="public-booking" id="public-booking" ${Booking.publicBooking ? 'checked' : ''}/>
+                        <label class="checkbox" for="public-booking"><small><fmt:message key="PublicBooking"/></small></label>
+                    </div>
                     <button class="btn btn-primary btn-block unit" type="submit"><fmt:message key="Confirm"/></button>
                     <a class="btn btn-primary btn-block unit ajaxify" href="/bookings"><fmt:message key="Cancel"/></a>
                 </spf:form>

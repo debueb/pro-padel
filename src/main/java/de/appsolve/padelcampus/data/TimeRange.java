@@ -56,17 +56,6 @@ public class TimeRange implements Comparable<TimeRange> {
         }
         return false;
     }
-    
-    public Boolean getShowInCalendar(){
-        for (TimeSlot timeSlot: getTimeSlots()){
-            for (Offer offer: timeSlot.getAvailableOffers()){
-                if (offer.getShowInCalendar()){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     @Override
     public int hashCode() {
