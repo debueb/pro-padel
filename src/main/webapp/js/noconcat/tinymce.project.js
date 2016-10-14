@@ -3,10 +3,18 @@ var initTinyMce = function () {
     window.app = app || {};
     app.imageHandler = {};
     
-    app.imageHandler.uploadImage = function(event, callback){
+    app.imageHandler.uploadImage = function(files, callback){
         app.main.showSpinner();
-        var data = new FormData();
-        data.append("file", event.target.files[0]);
+        var data = new FormData(),
+            file = files[0];
+        
+        if (!(/^image\//.test(file.type))){
+            app.main.hideSpinner();
+            alert('Currently only image uploads are supported.');
+            return;
+        }
+        
+        data.append("file", file);
         $.ajax({
             accepts: "text/plain",
             dataType: "text",
@@ -73,12 +81,14 @@ var initTinyMce = function () {
         file_picker_callback: function(callback, value, meta) {
             
             if (meta.filetype === 'file' || meta.filetype === 'media') {
-                alert('Zur Zeit werden nur Bilder Uploads unterstützt.');
+                alert('Currently only image uploads are supported.');
             }
 
             if (meta.filetype === 'image') {
                 $('body').append($('<input id="file-input" name="image" type="file">'));
-                $('#file-input').on('change', function(){app.imageHandler.uploadImage(event, callback);});
+                $('#file-input').off('change').on('change', function(){
+                    app.imageHandler.uploadImage(this.files, callback);
+                });
                 $('#file-input').click();
             }
         },
