@@ -88,11 +88,11 @@ var initTinyMce = function () {
         remove_script_host: true,
         document_base_url: location.hostname,
         //allow custom html elements
-        custom_elements: 'svg,clippath,polygon',
+        custom_elements: 'svg,clippath,polygon,link,script',
         //allow script and style tag attributes and svg attributes
-        extended_valid_elements: 'script[src|async|defer|type],style,svg[width|height],clippath[id],polygon[points]',
+        extended_valid_elements: 'script[src|async|defer|type],style,link[rel|type|href],svg[width|height],clippath[id],polygon[points]',
         //allow style and script elements as body children
-        valid_children : '+body[style],+body[script]',
+        valid_children : '+body[style],+body[script],+body[link]',
         //void removal of empty elements
         verify_html: false,
         //avoid CDATA comments, as Whitespacefilter will remove all line breaks, causing everything after the opening CDATA tag to be a comment
