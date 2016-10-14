@@ -55,11 +55,20 @@ ${Attribute.cssValue}</textarea>
                             </c:when>
                             <c:otherwise>
                                 <hr/>
-                                <figure class="picture unit">
+                                <figure class="picture unit" style="overflow: hidden;">
                                     <div class="text-center"><fmt:message key="BackgroundImage"/>
                                     <div class="text-center"><fmt:message key="BackgroundImageDesc"/>
                                     <div class="picture-subtext text-center"><fmt:message key="ClickImageToChange"/></div>
-                                    <div class="unit" style="width: 100%; height: 100%; background-size: 100% 100%; content: ${empty Attribute.cssValue ? 'url(\'/images/bg.jpg\')' : Attribute.cssValue}"></div>
+                                    <div class="background-picture unit"></div>
+                                    <style type="text/css">
+                                        /* :after is required for FF */
+                                        .background-picture, .background-picture:after{
+                                            width: 100%;
+                                            height: 100%;
+                                            background-size: 100% 100%;
+                                            content: ${empty Attribute.cssValue ? 'url(\'/images/bg.jpg\')' : Attribute.cssValue};
+                                        }
+                                    </style>
                                 </figure>
                                 <input type="file" capture="camera" accept="image/*" name="backgroundImage" class="picture-input hidden"/>
                             </c:otherwise>
