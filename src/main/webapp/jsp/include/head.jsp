@@ -21,12 +21,14 @@
                 <title>${sessionScope.customer}</title>
             </c:when>
             <c:otherwise>
-                <title>${sessionScope.customer} - ${Module.title}</title>
+                <title>${Module.seoTitle}</title>
                 <c:if test="${not empty Module.shortDescription}">
                     <meta name="description" content="${Module.shortDescription}">
                 </c:if>
             </c:otherwise>
         </c:choose>
+                    
+        <meta name="robots" content="${Module.seoRobots}">
 
         <%-- https://mathiasbynens.be/notes/touch-icons --%>
         <%-- we only use one touch-icon as it will be downscaled if necessary and the touch-icon has the same ratio on all devices --%>

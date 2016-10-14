@@ -39,13 +39,28 @@
                     
                     <div class="relative">
                         <fmt:message var="Title" key="Title"/>
-                    <spf:input path="title" type="text" class="form-control form-center-element" placeholder="${Title}"/>
+                        <spf:input path="title" type="text" class="form-control form-center-element" placeholder="${Title}"/>
                         <div class="explanation"><fmt:message key="Title"/></div>
+                    </div>
+                    
+                    <div class="relative">
+                        <spf:input path="seoTitle" type="text" class="form-control form-center-element" placeholder="${Title}"/>
+                        <div class="explanation"><fmt:message key="SEOTitle"/></div>
                     </div>
                     
                     <div class="relative">
                         <spf:input type="text" path="shortDescription" class="form-control form-center-element"/>
                         <div class="explanation"><fmt:message key="ShortDescription"/></div>
+                    </div>
+                    
+                    <div class="relative">
+                        <spf:select path="seoRobots" type="text" class="form-control form-center-element select-simple" data-container="body">
+                            <spf:option value="index, follow">index, follow</spf:option>
+                            <spf:option value="index, nofollow">index, nofollow</spf:option>
+                            <spf:option value="noindex, follow">noindex, follow</spf:option>
+                            <spf:option value="noindex, nofollow">noindex, nofollow</spf:option>
+                        </spf:select>
+                        <div class="explanation-select"><fmt:message key="SEORobots"/></div>
                     </div>
                         
                     <div class="select-toggle-Events select-toggle-Bookings select-toggle-Ranking select-toggle-MatchOffers select-toggle-Staff relative">

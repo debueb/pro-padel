@@ -160,12 +160,13 @@
                     $content.stop(true, true);
                     $content.html(contentHtml).ajaxify().show();
 
-                    // Update the title
+                    // Update the title and meta tags
                     document.title = $data.find('.document-title:first').text();
                     try {
-                        document.getElementsByTagName('title')[0].innerHTML = document.title.replace('<', '&lt;').replace('>', '&gt;').replace(' & ', ' &amp; ');
-                    }
-                    catch (Exception) {
+                        $('title').html(document.title.replace('<', '&lt;').replace('>', '&gt;').replace(' & ', ' &amp; '));
+                        $('meta[name="robots"]').attr('content', $data.find('.document-meta[name="robots"]:first').attr('content'));
+                        $('meta[name="description"]').attr('content', $data.find('.document-meta[name="description"]:first').attr('content'));
+                    } catch (Exception) {
                         //empty
                     }
 

@@ -17,6 +17,7 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.SortNatural;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -41,6 +42,13 @@ public class Module extends SortableEntity{
     @NotEmpty(message = "{NotEmpty.title}")
     @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}") 
     private String title;
+    
+    @Column
+    @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}") 
+    private String seoTitle;
+    
+    @Column
+    private String seoRobots;
     
     @Column
     private Boolean showInMenu;
@@ -89,6 +97,22 @@ public class Module extends SortableEntity{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getSeoTitle() {
+        return seoTitle == null ? title : seoTitle;
+    }
+
+    public void setSeoTitle(String seoTitle) {
+        this.seoTitle = seoTitle;
+    }
+
+    public String getSeoRobots() {
+        return StringUtils.isEmpty(seoRobots) ? "index, follow" : seoRobots;
+    }
+
+    public void setSeoRobots(String seoRobots) {
+        this.seoRobots = seoRobots;
     }
 
     public Boolean getShowOnHomepage() {
