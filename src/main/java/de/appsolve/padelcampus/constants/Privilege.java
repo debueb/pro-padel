@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  */
 public enum Privilege {
     
-    AccessAdminInterface("/admin"),
+    AccessAdminInterface("/admin[\\/]?"),
     ManageCustomers("/admin/customers.*"),
     ManageGeneral("/admin/general.*"),
     ManageEvents("/admin/event.*"),
