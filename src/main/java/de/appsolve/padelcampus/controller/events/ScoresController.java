@@ -85,6 +85,7 @@ public class ScoresController extends BaseController{
                         playerScore.setMatchesWon(playerScore.getMatchesWon()+teamScore.getMatchesWon());
                         playerScore.setSetsPlayed(playerScore.getSetsPlayed()+teamScore.getSetsPlayed());
                         playerScore.setSetsWon(playerScore.getSetsWon()+teamScore.getSetsWon());
+                        playerScore.setTotalPoints(playerScore.getTotalPoints()+teamScore.getTotalPoints());
                         playerScores.put(player, playerScore);
                     }
                 }
