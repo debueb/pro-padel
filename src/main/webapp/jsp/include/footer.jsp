@@ -22,6 +22,7 @@
                 </c:forEach>
                 <div>
                     <a href="?lang=en" class="ajaxify"><span class="flag-icon flag-icon-gb"></span></a>
+                    <a href="?lang=es" class="ajaxify"><span class="flag-icon flag-icon-es"></span></a>
                     <a href="?lang=de" class="ajaxify"><span class="flag-icon flag-icon-de"></span></a>
                     powered by <a href="http://pro-padel.de">pro-padel.de</a>
                 </div>
