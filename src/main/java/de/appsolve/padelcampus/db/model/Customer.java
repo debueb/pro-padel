@@ -40,6 +40,9 @@ public class Customer extends BaseEntity implements CustomerI{
     @Column
     private String googleAnalyticsTrackingId;
     
+    @Column
+    private String googleTagManagerId;
+    
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Image companyLogo;
@@ -92,6 +95,14 @@ public class Customer extends BaseEntity implements CustomerI{
         this.googleAnalyticsTrackingId = googleAnalyticsTrackingId;
     }
 
+    public String getGoogleTagManagerId() {
+        return googleTagManagerId;
+    }
+
+    public void setGoogleTagManagerId(String googleTagManagerId) {
+        this.googleTagManagerId = googleTagManagerId;
+    }
+
     public Image getCompanyLogo() {
         return companyLogo;
     }
@@ -124,6 +135,7 @@ public class Customer extends BaseEntity implements CustomerI{
         this.footerPrefix = footerPrefix;
     }
 
+    @Override
     public String getDefaultEmail() {
         return defaultEmail;
     }

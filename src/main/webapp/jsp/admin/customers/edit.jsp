@@ -35,9 +35,15 @@
                         </div>
                     </div>
                     <div class="relative">
-                        <spf:input path="googleAnalyticsTrackingId" type="text" class="form-control form-center-element"/>
+                        <spf:input path="googleAnalyticsTrackingId" type="text" class="form-control form-center-element" placeholder="GA-H8J7HH9"/>
                         <div class="explanation">
                             <fmt:message key="GoogleAnalyticsTrackingId"/>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <spf:input path="googleTagManagerId" type="text" class="form-control form-center-element" placeholder="GTM-M3Q4N2"/>
+                        <div class="explanation">
+                            <fmt:message key="GoogleTagManagerId"/>
                         </div>
                     </div>
                     <div class="relative">

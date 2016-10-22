@@ -62,9 +62,21 @@
                 <script src="/js/98_ie10-viewport-bug-workaround.js"></script>
             </c:otherwise>
         </c:choose>
+                
+        <c:if test="${not empty sessionScope.customer and not empty sessionScope.customer.googleTagManagerId}">
+            <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','${sessionScope.customer.googleTagManagerId}');
+            </script>
+        </c:if>
     </head>
     <%--</c:if>--%>
     <body ontouchstart="">
+        <c:if test="${not empty sessionScope.customer and not empty sessionScope.customer.googleTagManagerId}">
+            <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${sessionScope.customer.googleTagManagerId}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        </c:if>
         <div class="background">
             <div class="wrapper">
                 <c:if test="${empty skipNavbar}">
