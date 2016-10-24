@@ -318,7 +318,7 @@ public class Booking extends CustomerEntity{
         return String.format("%s - %s - %s - %s", getPlayer(), getName(), getBookingDate() == null ? "no booking date" : getBookingDate().toString(FormatUtils.DATE_WITH_DAY), getBookingTime() == null ? "no booking time" : getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE));
     }
     
-    private StringBuilder getBaseUrl(){
+    public StringBuilder getBaseUrl(){
         StringBuilder sb = new StringBuilder();
         if (offer != null){
             sb.append("/bookings/booking/");
@@ -332,13 +332,7 @@ public class Booking extends CustomerEntity{
     @Transient
     public String getSuccessUrl() {
         StringBuilder sb = getBaseUrl();
-        switch (getPaymentMethod()){
-            case PayPal:
-                sb.append("/paypal/return");
-                break;
-            default:
-                sb.append("/success");
-        }
+        sb.append("/success");
         return sb.toString();
     }
     

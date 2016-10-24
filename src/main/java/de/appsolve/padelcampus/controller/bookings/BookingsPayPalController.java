@@ -88,7 +88,7 @@ public class BookingsPayPalController extends BookingsPaymentController{
 
         RedirectUrls redirectUrls = new RedirectUrls();
         redirectUrls.setCancelUrl(RequestUtil.getBaseURL(request) + booking.getAbortUrl());
-        redirectUrls.setReturnUrl(RequestUtil.getBaseURL(request) + booking.getSuccessUrl());
+        redirectUrls.setReturnUrl(RequestUtil.getBaseURL(request) + booking.getBaseUrl().append("/paypal/return").toString());
         payment.setRedirectUrls(redirectUrls);
         
         Payment createdPayment = payment.create(apiContext);
