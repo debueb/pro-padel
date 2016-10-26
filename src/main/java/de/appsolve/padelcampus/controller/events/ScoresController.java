@@ -92,6 +92,14 @@ public class ScoresController extends BaseController{
                 scoreEntries = new ArrayList<>(playerScores.values());
                 Collections.sort(scoreEntries);
                 break;
+            case FriendlyGames:
+                //friendly games do not have participants. get them from all games
+                Set<Participant> participants = new HashSet<>();
+                for (Game game: eventGames){
+                    participants.addAll(game.getParticipants());
+                }
+                scoreEntries = rankingUtil.getScores(participants, eventGames);
+                break;
             default:
                 scoreEntries = rankingUtil.getScores(event.getParticipants(), eventGames);
         }

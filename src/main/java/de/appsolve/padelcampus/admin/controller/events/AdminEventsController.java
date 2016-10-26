@@ -273,6 +273,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 } else {
                     return redirectToIndex(request);
                 }
+            case FriendlyGames:
+                getDAO().saveOrUpdate(model);
+                return redirectToIndex(request);
             default:
                 result.addError(new ObjectError("id", "Unsupported event type "+model.getEventType()));
                 return editView;
@@ -448,6 +451,33 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 return getAddPullGameView(event, addPullGame);
             }
         }
+        Game game = new Game();
+        game.setEvent(event);
+        game.setParticipants(teams);
+        gameDAO.saveOrUpdate(game);
+        return new ModelAndView("redirect:/events/event/"+event.getId()+"/pullgames");
+    }
+    
+    @RequestMapping(value={"edit/{eventId}/addfriendlygame"}, method=GET)
+    public ModelAndView getAddFriendlyGame(@PathVariable("eventId") Long eventId){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        return getAddFriendlyGameView(event, new AddPullGame());
+    }
+    
+    @RequestMapping(value={"edit/{eventId}/addfriendlygame"}, method=POST)
+    public ModelAndView postAddFriendlyGame(@PathVariable("eventId") Long eventId, @ModelAttribute("Model") AddPullGame addPullGame, BindingResult bindingResult){
+        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
+        validator.validate(addPullGame, bindingResult);
+        if (bindingResult.hasErrors()){
+            return getAddFriendlyGameView(event, addPullGame);
+        }
+        if (!Collections.disjoint(addPullGame.getTeam1(), addPullGame.getTeam2())){
+            bindingResult.addError(new ObjectError("id", msg.get("ChooseDistinctPlayers")));
+            return getAddFriendlyGameView(event, addPullGame);
+        }
+        Set<Participant> teams = new HashSet<>();
+        teams.add(findOrCreateTeam(addPullGame.getTeam1()));
+        teams.add(findOrCreateTeam(addPullGame.getTeam2()));
         Game game = new Game();
         game.setEvent(event);
         game.setParticipants(teams);
@@ -673,6 +703,13 @@ public class AdminEventsController extends AdminBaseController<Event>{
 
     private ModelAndView getAddPullGameView(Event event, AddPullGame game) {
         ModelAndView mav = new ModelAndView("admin/events/addpullgame");
+        mav.addObject("Event", event);
+        mav.addObject("Model", game);
+        return mav;
+    }
+    
+    private ModelAndView getAddFriendlyGameView(Event event, AddPullGame game) {
+        ModelAndView mav = new ModelAndView("admin/events/addfriendlygame");
         mav.addObject("Event", event);
         mav.addObject("Model", game);
         return mav;

@@ -15,5 +15,6 @@ public enum EventType {
     CommunityRoundRobin,
     PullRoundRobin,
     Knockout,
-    GroupKnockout
+    GroupKnockout,
+    FriendlyGames
 }

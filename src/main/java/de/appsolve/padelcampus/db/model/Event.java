@@ -274,7 +274,7 @@ public class Event extends ComparableEntity{
     }
 
     public Integer getMaxNumberOfParticipants() {
-        return maxNumberOfParticipants;
+        return maxNumberOfParticipants == null ?  0 : maxNumberOfParticipants;
     }
 
     public void setMaxNumberOfParticipants(Integer maxNumberOfParticipants) {

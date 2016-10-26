@@ -18,12 +18,15 @@
                 </div>
                     
                 <c:if test="${not empty Model.startTime}">
-                    <div class="col-xs-4 text-right">
-                        <fmt:message key="StartTime"/>:
-                    </div>
-                    <div class="col-xs-8">
-                        <joda:format value="${Model.startTime}" pattern="HH:mm"/>
-                    </div>
+                    <joda:format value="${Model.startTime}" pattern="HH:mm" var="startTimeFormatted"/>
+                    <c:if test="${not startTimeFormatted eq '00:00'}">
+                        <div class="col-xs-4 text-right">
+                            <fmt:message key="StartTime"/>:
+                        </div>
+                        <div class="col-xs-8">
+                            ${startTimeFormatted}
+                        </div>
+                    </c:if>
                 </c:if>
                     
                 <div class="col-xs-4 text-right">
@@ -40,7 +43,7 @@
                     <fmt:message key="${Model.eventType}"/>
                 </div>
                 
-                <c:if test="${not empty Model.maxNumberOfParticipants}">
+                <c:if test="${not empty Model.maxNumberOfParticipants and Model.maxNumberOfParticipants ne 0}">
                     <div class="col-xs-4 text-right">
                         <fmt:message key="MaxNumberOfParticipants"/>:
                     </div>
@@ -165,6 +168,24 @@
                                 <jsp:param name="href" value="/events/event/${Model.id}/knockoutgames"/>
                                 <jsp:param name="key" value="KnockoutGames"/>
                                 <jsp:param name="icon" value="trophy"/>
+                            </jsp:include>
+                        </c:when>
+                        
+                         <c:when test="${Model.eventType eq 'FriendlyGames'}">
+                            <jsp:include page="/jsp/include/list-group-item.jsp">
+                                <jsp:param name="href" value="/events/event/${Model.id}/pullgames"/>
+                                <jsp:param name="key" value="Games"/>
+                                <jsp:param name="icon" value="dot-circle-o"/>
+                            </jsp:include>
+                            <jsp:include page="/jsp/include/list-group-item.jsp">
+                                <jsp:param name="href" value="/scores/event/${Model.id}"/>
+                                <jsp:param name="key" value="Score"/>
+                                <jsp:param name="icon" value="list-ol"/>
+                            </jsp:include>
+                            <jsp:include page="/jsp/include/list-group-item.jsp">
+                                <jsp:param name="href" value="/ranking"/>
+                                <jsp:param name="key" value="Ranking"/>
+                                <jsp:param name="icon" value="sort-numeric-asc"/>
                             </jsp:include>
                         </c:when>
                     </c:choose>

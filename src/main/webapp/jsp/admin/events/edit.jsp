@@ -112,29 +112,7 @@
                         <div class="datepicker" data-show-on-init="false" data-allow-past="true"></div>
                     </div>
                         
-                    <div class="relative">
-                        <fmt:message key="LocationDesc" var="LocationDesc"/>
-                        <spf:input path="location" type="text" class="form-control form-center-element" placeholder="${LocationDesc}"/>
-                        <div class="explanation"><fmt:message key="Location"/></div>
-                    </div>
-                    
-                    <div class="relative">
-                        <spf:input path="numberOfSets" type="number" class="form-control form-center-element"/>
-                        <div class="explanation-select"><fmt:message key="MaxNumberOfSets"/></div>
-                    </div>
-                    
-                    <div class="relative">
-                        
-                        <spf:input path="numberOfGamesPerSet" type="number" class="form-control form-center-element"/>
-                        <div class="explanation-select"><fmt:message key="MaxNumberOfGamesPerSet"/></div>
-                    </div>
-                    
-                    <div class="relative">
-                        <spf:input path="numberOfGamesInFinalSet" type="number" class="form-control form-center-element"/>
-                        <div class="explanation-select"><fmt:message key="MaxNumberOfGamesInFinalSet"/></div>
-                    </div>
-                    
-                    <div class="relative">
+                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-Knockout select-toggle-CommunityRoundRobin select-toggle-PullRoundRobin relative">
                         <spf:input path="maxNumberOfParticipants" type="number" class="form-control form-center-element"/>
                         <div class="explanation-select"><fmt:message key="MaxNumberOfParticipants"/></div>
                     </div>
@@ -166,23 +144,48 @@
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Participants"/></span>
                     </div>
-                    <%-- Zahlungsmethoden --%>
-                    <div class="relative">
-                        <spf:select path="paymentMethods" class="select-multiple form-control" data-style="form-center-element" data-container="body">
-                            <c:forEach var="PaymentMethod" items="${PaymentMethods}">
-                                <fmt:message key="${PaymentMethod}" var="Label"/>
-                                <spf:option value="${PaymentMethod}" label="${Label}"/>
-                            </c:forEach>
-                        </spf:select>
-                        <span class="explanation-select"><fmt:message key="PaymentMethods"/></span>
-                    </div>
+                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-Knockout select-toggle-PullRoundRobin">
+                        <%-- Zahlungsmethoden --%>
+                        <div class="relative">
+                            <spf:select path="paymentMethods" class="select-multiple form-control" data-style="form-center-element" data-container="body">
+                                <c:forEach var="PaymentMethod" items="${PaymentMethods}">
+                                    <fmt:message key="${PaymentMethod}" var="Label"/>
+                                    <spf:option value="${PaymentMethod}" label="${Label}"/>
+                                </c:forEach>
+                            </spf:select>
+                            <span class="explanation-select"><fmt:message key="PaymentMethods"/></span>
+                        </div>
 
-                    <%-- Price --%>
-                    <div class="relative"> 
-                        <spf:input path="price" type="text" class="form-control form-bottom-element text-center" placeholder="20.00" data-valid-chars="[0-9\.]"/>
-                        <span class="explanation"><fmt:message key="PricePerBooking"/></span>
+                        <%-- Price --%>
+                        <div class="relative"> 
+                            <spf:input path="price" type="text" class="form-control form-center-element text-center" placeholder="20.00" data-valid-chars="[0-9\.]"/>
+                            <span class="explanation"><fmt:message key="PricePerBooking"/></span>
+                        </div>
                     </div>
                     <spf:input type="hidden" path="currency" value="EUR"/>
+                    
+                    <div class="relative">
+                        <fmt:message key="LocationDesc" var="LocationDesc"/>
+                        <spf:input path="location" type="text" class="form-control form-center-element" placeholder="${LocationDesc}"/>
+                        <div class="explanation"><fmt:message key="Location"/></div>
+                    </div>
+                    
+                    <div class="relative">
+                        <spf:input path="numberOfSets" type="number" class="form-control form-center-element"/>
+                        <div class="explanation-select"><fmt:message key="MaxNumberOfSets"/></div>
+                    </div>
+                    
+                    <div class="relative">
+                        
+                        <spf:input path="numberOfGamesPerSet" type="number" class="form-control form-center-element"/>
+                        <div class="explanation-select"><fmt:message key="MaxNumberOfGamesPerSet"/></div>
+                    </div>
+                    
+                    <div class="relative">
+                        <spf:input path="numberOfGamesInFinalSet" type="number" class="form-control form-bottom-element"/>
+                        <div class="explanation-select"><fmt:message key="MaxNumberOfGamesInFinalSet"/></div>
+                    </div>
+                    
                     
                     <div class="unit">
                         <spf:checkbox path="active" id="active"/><label for="active"><fmt:message key="Active"/>&nbsp;(<fmt:message key="PubliclyAvailable"/>)</label>
