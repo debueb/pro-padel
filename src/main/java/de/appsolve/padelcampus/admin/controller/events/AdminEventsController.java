@@ -34,6 +34,7 @@ import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.spring.EventGroupPropertyEditor;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.spring.ParticipantCollectionEditor;
+import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
@@ -127,11 +128,16 @@ public class AdminEventsController extends AdminBaseController<Event>{
     @Autowired
     EventGroupPropertyEditor eventGroupPropertyEditor;
     
+    @Autowired
+    PlayerCollectionEditor playerCollectionEditor;
+    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
         binder.registerCustomEditor(Set.class, "participants", participantCollectionEditor);
         binder.registerCustomEditor(Set.class, "groupParticipants", participantCollectionEditor);
+        binder.registerCustomEditor(Set.class, "team1", playerCollectionEditor);
+        binder.registerCustomEditor(Set.class, "team2", playerCollectionEditor);
         binder.registerCustomEditor(CalendarConfig.class, calendarConfigPropertyEditor);
         binder.registerCustomEditor(EventGroup.class, eventGroupPropertyEditor);
     }
