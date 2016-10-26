@@ -540,6 +540,13 @@ app.main = {};
             var timeout;
             
             var $form = $(this);
+            
+            $form.on('submit', function(){
+               if (!!timeout){
+                    clearTimeout(timeout);
+                } 
+            });
+            
             $form.find('input[name="search"]').on('keyup', function(){
                 if (!!timeout){
                     clearTimeout(timeout);
