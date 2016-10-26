@@ -25,6 +25,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+import javax.validation.constraints.Pattern;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -43,15 +44,17 @@ public class Player extends Participant implements EmailContact{
     private static final long serialVersionUID = 1L;
     
     @Column
+    @JsonIgnore
     @NotEmpty(message = "{NotEmpty.firstName}")
     @Length(min = 2, max = 255, message = "${Length.firstName}")
-    @JsonIgnore
+    @Pattern(regexp = "^[^\\s][À-ÿA-z\\-\\s]*[^\\s]$", message = "{RegExp.AlphaNum}")
     private String firstName;
     
     @Column
-    @NotEmpty(message = "{NotEmpty.lastName}")
     @JsonIgnore
+    @NotEmpty(message = "{NotEmpty.lastName}")
     @Length(min = 2, max = 255, message = "${Length.lastName}")
+    @Pattern(regexp = "^[^\\s][À-ÿA-z\\-\\s]*[^\\s]$", message = "{RegExp.AlphaNum}")
     private String lastName;
     
     @Column
