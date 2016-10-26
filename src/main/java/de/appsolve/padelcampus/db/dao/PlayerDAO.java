@@ -10,10 +10,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
-import org.jadira.usertype.spi.utils.lang.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +48,12 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
         if (!StringUtils.isEmpty(player.getPassword())){
             player.setPasswordHash(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt()));
             player.setSalted(true);
+        }
+        if (!StringUtils.isEmpty(player.getFirstName())){
+            player.setFirstName(StringUtils.capitalize(player.getFirstName()));
+        }
+        if (!StringUtils.isEmpty(player.getLastName())){
+            player.setLastName(StringUtils.capitalize(player.getLastName()));
         }
         player.setCustomer(getCustomer());
         return super.saveOrUpdate(player);
