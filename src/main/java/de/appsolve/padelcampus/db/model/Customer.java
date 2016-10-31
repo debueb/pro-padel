@@ -54,6 +54,9 @@ public class Customer extends BaseEntity implements CustomerI{
     @Column(length = 8000)
     private String footerPrefix;
     
+    @Column(length = 8000)
+    private String footerSuffix;
+    
     @Column
     private String defaultEmail;
     
@@ -133,6 +136,14 @@ public class Customer extends BaseEntity implements CustomerI{
 
     public void setFooterPrefix(String footerPrefix) {
         this.footerPrefix = footerPrefix;
+    }
+
+    public String getFooterSuffix() {
+        return footerSuffix;
+    }
+
+    public void setFooterSuffix(String footerSuffix) {
+        this.footerSuffix = footerSuffix;
     }
 
     @Override

@@ -20,6 +20,9 @@
                         <c:set var="first" value="false"/>
                     </c:if>
                 </c:forEach>
+                <c:if test="${not empty sessionScope.customer.footerSuffix}">
+                    ${sessionScope.customer.footerSuffix}&nbsp;
+                </c:if>
                 <div>
                     <a href="?lang=en" class="ajaxify"><span class="flag-icon flag-icon-gb"></span></a>
                     <a href="?lang=es" class="ajaxify"><span class="flag-icon flag-icon-es"></span></a>
