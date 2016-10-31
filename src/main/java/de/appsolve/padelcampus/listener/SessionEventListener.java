@@ -34,7 +34,7 @@ public class SessionEventListener implements HttpSessionListener{
     @Autowired
     SessionUtil sessionUtil;
     
-    private static final Set<PaymentMethod> PAYMENT_METHODS_THAT_DO_NOT_REQUIRE_PAYMENT = EnumSet.of(PaymentMethod.Cash, PaymentMethod.Reservation, PaymentMethod.Voucher);
+    private static final Set<PaymentMethod> PAYMENT_METHODS_THAT_DO_NOT_REQUIRE_PAYMENT = EnumSet.of(PaymentMethod.Cash, PaymentMethod.Reservation);
         
  
     @Override
@@ -62,7 +62,7 @@ public class SessionEventListener implements HttpSessionListener{
     }
 
     private void cancelBooking(Booking booking, LocalDateTime maxAge) {
-        //cancel if the payment method is not cash/reservation/voucher and the payment has not been done
+        //cancel if the payment method is not cash/reservation and the payment has not been done
         if (booking.getPaymentMethod() == null || (!PAYMENT_METHODS_THAT_DO_NOT_REQUIRE_PAYMENT.contains(booking.getPaymentMethod()) && !booking.getPaymentConfirmed())){
             LocalDateTime blockingTime = booking.getBlockingTime();
             if (blockingTime!=null && blockingTime.isBefore(maxAge)){
