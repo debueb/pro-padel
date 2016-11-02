@@ -299,6 +299,12 @@
             <version>7.7.0</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-ssh</artifactId>
+            <version>1.5</version>
+            <classifier>jar-with-dependencies</classifier>
+        </dependency>
     </dependencies>
 
     <build>

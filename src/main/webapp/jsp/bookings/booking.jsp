@@ -55,6 +55,22 @@
                                         </spf:select>
                                     </div>
                                 </div>
+                                    
+                                <c:if test="${not empty SelectedOffer.offerOptions}">   
+                                    <div class="row unit">
+                                        <div class="col-xs-4 booking-cell"><fmt:message key="OfferOptions"/>:</div>
+                                        <div class="col-xs-8">
+                                            <fmt:message key="None" var="None"/>
+                                            <spf:select 
+                                                path="offerOptions" 
+                                                class="form-control select-simple booking-duration" 
+                                                data-container="body"
+                                                data-none-selected-text="${None}">
+                                                <spf:options items="${SelectedOffer.offerOptions}" itemLabel="description" itemValue="id"/>
+                                            </spf:select>
+                                        </div>
+                                    </div>
+                                </c:if>
 
                                 <div class="row unit">
                                     <div class="col-xs-4 booking-cell"><fmt:message key="PaymentMethod"/>:</div>

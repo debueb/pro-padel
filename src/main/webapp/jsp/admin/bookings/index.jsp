@@ -23,6 +23,11 @@
                         <jsp:param name="icon" value="building"/>
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/bookings/offeroptions"/>
+                        <jsp:param name="key" value="OfferOptions"/>
+                        <jsp:param name="icon" value="video-camera"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/bookings/paypal"/>
                         <jsp:param name="key" value="PayPal"/>
                         <jsp:param name="icon" value="paypal"/>

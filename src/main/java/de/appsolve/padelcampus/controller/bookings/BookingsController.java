@@ -29,6 +29,7 @@ import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Voucher;
 import de.appsolve.padelcampus.exceptions.MailException;
+import de.appsolve.padelcampus.spring.OfferOptionCollectionEditor;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import de.appsolve.padelcampus.utils.FormatUtils;
@@ -59,6 +60,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,10 +69,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-/**
- *
- * @author dominik
- */
+
+
 @Controller()
 @RequestMapping("/bookings")
 public class BookingsController extends BaseController {
@@ -127,6 +128,14 @@ public class BookingsController extends BaseController {
     @Autowired
     ModuleUtil moduleUtil;
     
+    @Autowired
+    OfferOptionCollectionEditor offerOptionCollectionEditor;
+    
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Set.class, "offerOptions", offerOptionCollectionEditor);
+    }
+    
     @RequestMapping()
     public ModelAndView getToday(
             HttpServletRequest request,
@@ -149,7 +158,7 @@ public class BookingsController extends BaseController {
     public ModelAndView showBookingView(@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("offerId") Long offerId, HttpServletRequest request) throws ParseException, Exception {
         ModelAndView bookingView = getBookingView();
         try {
-            Offer offer = offerDAO.findById(offerId);
+            Offer offer = offerDAO.findByIdFetchWithOfferOptions(offerId);
             validateAndAddObjectsToView(bookingView, request, new Booking(), day, time, offer);
         } catch (Exception e){
             bookingView.addObject("error", e.getMessage());
@@ -160,7 +169,7 @@ public class BookingsController extends BaseController {
     @RequestMapping(value = "{day}/{time}/offer/{offerId}", method = POST)
     public ModelAndView selectBooking(@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("offerId") Long offerId, @ModelAttribute("Booking") Booking booking, BindingResult bindingResult, HttpServletRequest request) throws Exception {
         ModelAndView bookingView = getBookingView();
-        Offer offer = offerDAO.findById(offerId);
+        Offer offer = offerDAO.findByIdFetchWithOfferOptions(offerId);
         booking.setOffer(offer);
         try {
             validateAndAddObjectsToView(bookingView, request, booking, day, time, offer);
@@ -327,6 +336,7 @@ public class BookingsController extends BaseController {
             LOG.error("Error while sending booking confirmation email", ex);
             mav.addObject("error", msg.get("FailedToSendBookingConfirmationEmail", new Object[]{FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()), FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime())}));
         } catch (Exception e){
+            LOG.error(e);
             mav.addObject("error", e.getMessage());
         }
         return mav;

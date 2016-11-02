@@ -14,6 +14,7 @@
             <div class="panel-body">
                 <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>
+                    <spf:input type="hidden" path="position"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
 
                     <fmt:message var="Name" key="Name"/>
@@ -47,21 +48,11 @@
                         </span>
                     </div>
 
-                    <div class="input-group">
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-plus-minus form-bottom-element form-control form-bottom-left-element" data-type="minus" data-field="position">
-                                <span class="fa fa-minus"></span>
-                            </button>
-                        </span>
-                        <span class="relative">
-                            <spf:input type="number" path="position" class="form-control text-center input-plus-minus form-bottom-element" min="1" max="100"/>
-                            <span class="explanation"><fmt:message key="Position"/></span>
-                        </span>
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-plus-minus form-bottom-element form-control form-bottom-right-element" data-type="plus" data-field="position">
-                                <span class="fa fa-plus"></span>
-                            </button>
-                        </span>
+                    <div class="relative">
+                        <spf:select path="offerOptions" class="select-simple form-control" data-style="form-bottom-element" data-container="body">
+                            <spf:options items="${OfferOptions}" itemLabel="name" itemValue="id"/>
+                        </spf:select>
+                        <span class="explanation-select"><fmt:message key="OfferOptions"/></span>
                     </div>
 
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>

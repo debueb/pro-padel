@@ -6,8 +6,11 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -37,6 +40,9 @@ public class Offer extends SortableEntity{
     
     @Column
     private String hexColor;
+    
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<OfferOption> offerOptions;
     
     public String getName() {
         return name;
@@ -68,6 +74,14 @@ public class Offer extends SortableEntity{
 
     public void setHexColor(String hexColor) {
         this.hexColor = hexColor;
+    }
+
+    public Set<OfferOption> getOfferOptions() {
+        return offerOptions;
+    }
+
+    public void setOfferOptions(Set<OfferOption> offerOptions) {
+        this.offerOptions = offerOptions;
     }
     
     @Override

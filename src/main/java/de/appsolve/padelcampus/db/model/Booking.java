@@ -75,6 +75,9 @@ public class Booking extends CustomerEntity{
     @Length(max = 8000, message = "{Length.Booking.comment}")
     private String comment;
     
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<OfferOption> offerOptions;
+    
     /**
      * indicates the time that the user has entered the checkout (payment) phase
      * to indicate that the court should be blocked to avoid duplicate bookings
@@ -128,6 +131,9 @@ public class Booking extends CustomerEntity{
     
     @Column
     private Boolean publicBooking;
+    
+    @Column
+    private String hostUrl;
     
     public Player getPlayer() {
         return player;
@@ -311,6 +317,22 @@ public class Booking extends CustomerEntity{
 
     public void setPublicBooking(Boolean publicBooking) {
         this.publicBooking = publicBooking;
+    }
+
+    public Set<OfferOption> getOfferOptions() {
+        return offerOptions;
+    }
+
+    public void setOfferOptions(Set<OfferOption> offerOptions) {
+        this.offerOptions = offerOptions;
+    }
+
+    public String getHostUrl() {
+        return hostUrl;
+    }
+
+    public void setHostUrl(String hostUrl) {
+        this.hostUrl = hostUrl;
     }
     
     @Override

@@ -9,6 +9,8 @@ package de.appsolve.padelcampus.db.dao;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import java.util.List;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 /**
  *
@@ -16,6 +18,7 @@ import java.util.List;
  */
 public interface BookingBaseDAOI extends BaseEntityDAOI<Booking>{
     
+    public List<Booking> findCurrentBookingsWithOfferOptions(LocalDate date, LocalTime time);
     public List<Booking> findUnpaidBlockingBookings();
     public void cancelBooking(Booking booking);
 }

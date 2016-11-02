@@ -7,13 +7,12 @@
 package de.appsolve.padelcampus.db.dao;
 
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
-import de.appsolve.padelcampus.db.model.Offer;
+import de.appsolve.padelcampus.db.model.OfferOption;
 
 /**
  *
  * @author dominik
  */
-public interface OfferDAOI extends BaseEntityDAOI<Offer>{
- 
-    public Offer findByIdFetchWithOfferOptions(Long id);
+public interface OfferOptionDAOI extends BaseEntityDAOI<OfferOption>{
+    
 }
