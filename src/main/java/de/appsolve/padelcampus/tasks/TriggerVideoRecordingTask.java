@@ -61,7 +61,7 @@ public class TriggerVideoRecordingTask {
                             ByteArrayOutputStream stdOutStream = new ByteArrayOutputStream();
                             ByteArrayOutputStream stdErrStream = new ByteArrayOutputStream();
                             String callbackURL = String.format("%s/bookings/recording/%s", booking.getHostUrl(), booking.getUUID());
-                            int code = ssh.exec(String.format("nohup ~/record.sh -d %s -c %s > /dev/null 2>&1 &", booking.getDuration()*60, callbackURL), null, stdOutStream, stdErrStream);
+                            int code = ssh.exec(String.format("nohup ~/record.sh -d %s -c %s > /tmp/record.log 2>&1 &", booking.getDuration()*60, callbackURL), null, stdOutStream, stdErrStream);
                             LOG.info(String.format("Remote host returned [code: %s, stdout: %s, stderr: %s]", code, stdOutStream.toString("UTF-8"), stdErrStream.toString("UTF-8")));
                         } catch (UnknownHostException ex) {
                             LOG.info(ex);
