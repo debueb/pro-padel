@@ -17,6 +17,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -75,6 +76,15 @@ public class Customer extends BaseEntity implements CustomerI{
             return domainNames.iterator().next();
         }
         return null;
+    }
+    
+    @Transient
+    public String getHostUrl(){
+        String domainName = getDomainName();
+        if (StringUtils.isEmpty(domainName)){
+            return null;
+        }
+        return String.format("http://%s", domainName);
     }
 
     public Set<String> getDomainNames() {

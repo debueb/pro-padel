@@ -132,9 +132,6 @@ public class Booking extends CustomerEntity{
     @Column
     private Boolean publicBooking;
     
-    @Column
-    private String hostUrl;
-    
     public Player getPlayer() {
         return player;
     }
@@ -327,14 +324,6 @@ public class Booking extends CustomerEntity{
         this.offerOptions = offerOptions;
     }
 
-    public String getHostUrl() {
-        return hostUrl;
-    }
-
-    public void setHostUrl(String hostUrl) {
-        this.hostUrl = hostUrl;
-    }
-    
     @Override
     public String toString() {
         return String.format("%s - %s - %s - %s", getPlayer(), getName(), getBookingDate() == null ? "no booking date" : getBookingDate().toString(FormatUtils.DATE_WITH_DAY), getBookingTime() == null ? "no booking time" : getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE));

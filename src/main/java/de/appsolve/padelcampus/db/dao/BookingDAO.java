@@ -6,18 +6,13 @@ import de.appsolve.padelcampus.constants.PaymentMethod;
 import java.util.List;
 import org.joda.time.LocalDate;
 import de.appsolve.padelcampus.db.model.Booking;
-import de.appsolve.padelcampus.utils.RequestUtil;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDateTime;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  *
@@ -111,16 +106,5 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
         attributes.put("blockingTime", blockingTime);
         attributes.put("comment", comment);
         return findByAttributes(attributes);
-    }
-    
-    @Override
-    public Booking saveOrUpdate(Booking entity) {
-        setCustomer(entity);
-        Session session = entityManager.unwrap(Session.class);
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpServletRequest request = attr.getRequest();
-        entity.setHostUrl(RequestUtil.getBaseURL(request));
-        session.saveOrUpdate(entity);
-        return entity;
     }
 }

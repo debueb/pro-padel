@@ -53,7 +53,7 @@ public class BookingsRecordingController {
         Mail mail = new Mail();
         mail.addRecipient(booking.getPlayer());
         mail.setSubject(msg.get("YoutubeVideoReadySubject"));
-        mail.setBody(msg.get("YoutubeVideoReadyBody", new Object[]{booking.getPlayer(), youtubeUrl, booking.getHostUrl()}));
+        mail.setBody(msg.get("YoutubeVideoReadyBody", new Object[]{booking.getPlayer(), youtubeUrl, booking.getCustomer().getHostUrl()}));
         mailUtils.send(mail, request);
         
         return new ResponseEntity<>("OK", HttpStatus.CREATED);
