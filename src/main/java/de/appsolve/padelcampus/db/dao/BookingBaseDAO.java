@@ -43,7 +43,6 @@ public class BookingBaseDAO extends BaseEntityDAO<Booking> implements BookingBas
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.eq("bookingDate", date));
         criteria.add(Restrictions.eq("bookingTime", time));
-        criteria.add(Restrictions.isNotNull("hostUrl"));
         criteria.setFetchMode("offerOptions", FetchMode.JOIN);
         criteria.add(Restrictions.isNotNull("offerOptions"));
         criteria.add(Restrictions.or(Restrictions.isNull("cancelled"), Restrictions.eq("cancelled", false)));
