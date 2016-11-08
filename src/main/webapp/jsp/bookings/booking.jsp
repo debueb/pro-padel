@@ -58,14 +58,15 @@
                                     
                                 <c:if test="${not empty SelectedOffer.offerOptions}">   
                                     <div class="row unit">
-                                        <div class="col-xs-4 booking-cell"><fmt:message key="OfferOptions"/>:</div>
+                                        <div class="col-xs-4 booking-cell"><fmt:message key="Options"/>:</div>
                                         <div class="col-xs-8">
                                             <fmt:message key="None" var="None"/>
                                             <spf:select 
                                                 path="offerOptions" 
-                                                class="form-control select-simple booking-duration" 
+                                                class="form-control select-simple" 
                                                 data-container="body"
-                                                data-none-selected-text="${None}">
+                                                multiple="${fn:length(SelectedOffer.offerOptions)>1 ? 'multiple' : 'false'}">
+                                                <spf:option value="" label="${None}"/>
                                                 <spf:options items="${SelectedOffer.offerOptions}" itemLabel="description" itemValue="id"/>
                                             </spf:select>
                                         </div>
@@ -77,11 +78,7 @@
                                     <div class="col-xs-8">
                                         <spf:select path="paymentMethod" class="form-control select-simple" data-container="body">
                                             <c:forEach var="PaymentMethod" items="${OfferDurationPrice.config.paymentMethods}">
-                                                <div>
-                                                    <span class="input-group-addon">
-                                                        <spf:option value="${PaymentMethod}"><fmt:message key="${PaymentMethod}"/></spf:option>
-                                                        </span>
-                                                    </div>
+                                                <spf:option value="${PaymentMethod}"><fmt:message key="${PaymentMethod}"/></spf:option>
                                             </c:forEach>
                                         </spf:select>
                                     </div>
