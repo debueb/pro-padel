@@ -97,7 +97,7 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
     public ModelAndView postEditView(@ModelAttribute("Model") Module model, HttpServletRequest request, BindingResult result){
         checkTitleRequirements(model, result);
         if (result.hasErrors()){
-            return super.getEditView(model);
+            return getEditView(model);
         }
         keepSubModules(model);
         checkPosition(model);
