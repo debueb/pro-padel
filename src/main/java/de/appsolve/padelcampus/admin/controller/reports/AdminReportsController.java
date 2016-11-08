@@ -93,6 +93,9 @@ public class AdminReportsController extends BaseController{
     @RequestMapping(value={"bookinglist", "bookinglist/{date}"}, method=POST)
     public ModelAndView getBookingListForDateRange(HttpServletRequest request, @Valid @ModelAttribute("DateRange") DateRange dateRange){
         sessionUtil.setBookingListStartDate(request, dateRange.getStartDate());
+        if (dateRange.getEndDate().isBefore(dateRange.getStartDate())){
+            dateRange.setEndDate(dateRange.getStartDate());
+        }
         sessionUtil.setBookingListEndDate(request, dateRange.getEndDate());
         return getBookingListView(dateRange); 
     }
