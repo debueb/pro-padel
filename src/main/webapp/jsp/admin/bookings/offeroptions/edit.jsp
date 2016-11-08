@@ -14,6 +14,7 @@
             <div class="panel-body">
                 <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>
+                    <spf:input type="hidden" path="position"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
 
                     <div class="relative">
