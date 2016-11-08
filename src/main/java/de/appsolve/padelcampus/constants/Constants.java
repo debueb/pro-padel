@@ -44,6 +44,7 @@ public class Constants {
     public static final String SESSION_BOOKING_LIST_END_DATE    = "bookingListEndDate";
     public static final String SESSION_RESERVATION_LIST_START_DATE  = "reservationListStartDate";
     public static final String SESSION_RESERVATION_LIST_END_DATE    = "reservationListEndDate";
+    public static final String SESSION_DEFAULT_LOCALE       = "sessionLocale";
     
     public static final String APPLICATION_CUSTOMER_MODULES = "customerModules";
     
@@ -55,8 +56,8 @@ public class Constants {
     public static final Integer CANCELLATION_POLICY_DEADLINE= 24;
     
     
-    public static final String DEFAULT_LOCALE_STRING        = "de_DE";
-    public static final Locale DEFAULT_LOCALE               = new Locale("de", "DE");
+    public static final String DEFAULT_LANGUAGE             = "de";
+    public static final Locale DEFAULT_LOCALE               = new Locale(DEFAULT_LANGUAGE, "DE");
     public static final String DEFAULT_TIMEZONE_STRING      = "Europe/Berlin";
     public static final DateTimeZone DEFAULT_TIMEZONE       = DateTimeZone.forID(DEFAULT_TIMEZONE_STRING);
     public static final String DEFAULT_HOLIDAY_KEY          = "GERMANY-nw";

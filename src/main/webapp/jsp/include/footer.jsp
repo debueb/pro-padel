@@ -24,10 +24,14 @@
                     ${sessionScope.customer.footerSuffix}&nbsp;
                 </c:if>
                 <div>
-                    <a href="?lang=en" class="ajaxify"><span class="flag-icon flag-icon-gb"></span></a>
-                    <a href="?lang=es" class="ajaxify"><span class="flag-icon flag-icon-es"></span></a>
-                    <a href="?lang=de" class="ajaxify"><span class="flag-icon flag-icon-de"></span></a>
-                    powered by <a href="http://pro-padel.de">pro-padel.de</a>
+                    <c:forTokens items="de,en,es" delims="," var="lang">
+                        <c:if test="${lang ne sessionLang}">
+                            <c:set var="subdomain" value="${sessionScope.customer.defaultLanguage eq lang ? '' : lang}"/>
+                            <c:set var="r" value="${pageContext.request}"/>
+                            <a href="${r.scheme}://${subdomain}${empty subdomain ? '' : '.'}${sessionScope.customer.domainName}${r.serverPort == '8080' ? ':8080' : ''}${r.contextPath}/home" class="ajaxify"><span class="flag-icon flag-icon-${lang}"></span></a>
+                        </c:if>
+                    </c:forTokens>
+                    powered by <a href="https://pro-padel.de">pro-padel.de</a>
                 </div>
             </div>
         </c:if>

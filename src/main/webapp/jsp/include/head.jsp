@@ -13,6 +13,20 @@
         
         <meta name="google-site-verification" content="zV4l09W2NsrN2uP1MCLQNG5mR8FPsmIPocAQiYGLaHs" />
         
+        <%-- also used in footer --%>
+        <c:set var="indexOfUnderscore" value='${fn:indexOf(sessionScope.sessionLocale, "_")}'/>
+        <c:set var="sessionLang" value="${indexOfUnderscore > 0 ? fn:substring(sessionScope.sessionLocale, 0, indexOfUnderscore) : sessionScope.sessionLocale}" scope="request"/>
+        
+        <c:if test="${pageContext.request.requestURI == '/jsp/index.jsp'}">
+            <c:forTokens items="de,en,es" delims="," var="lang">
+                <c:if test="${lang ne sessionLang}">
+                    <c:set var="subdomain" value="${sessionScope.customer.defaultLanguage eq lang ? '' : lang}"/>
+                    <c:set var="r" value="${pageContext.request}"/>
+                    <link rel="alternate" href="${r.scheme}://${subdomain}${empty subdomain ? '' : '.'}${sessionScope.customer.domainName}${r.serverPort == '8080' ? ':8080' : ''}${r.contextPath}/home" hreflang="${lang}"/>
+                </c:if>
+            </c:forTokens>
+        </c:if>
+        
         <c:choose>
             <c:when test="${not empty PageTitle}">
                 <title>${PageTitle}</title>

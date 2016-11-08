@@ -8,6 +8,7 @@ package de.appsolve.padelcampus.db.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.appsolve.padelcampus.annotations.EmailWithTld;
+import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.data.CustomerI;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -60,6 +61,9 @@ public class Customer extends BaseEntity implements CustomerI{
     
     @Column
     private String defaultEmail;
+    
+    @Column
+    private String defaultLanguage;
     
     @Override
     public String getName() {
@@ -163,5 +167,13 @@ public class Customer extends BaseEntity implements CustomerI{
 
     public void setDefaultEmail(String defaultEmail) {
         this.defaultEmail = defaultEmail;
+    }
+
+    public String getDefaultLanguage() {
+        return defaultLanguage == null ? Constants.DEFAULT_LANGUAGE : defaultLanguage;
+    }
+
+    public void setDefaultLanguage(String defaultLanguage) {
+        this.defaultLanguage = defaultLanguage;
     }
 }
