@@ -24,13 +24,13 @@
                     ${sessionScope.customer.footerSuffix}&nbsp;
                 </c:if>
                 <div>
-                    <c:forTokens items="de,en,es" delims="," var="lang">
+                    <c:forEach items="${Constants.VALID_LANGUAGES}" var="lang">
                         <c:if test="${lang ne sessionLang}">
                             <c:set var="subdomain" value="${sessionScope.customer.defaultLanguage eq lang ? '' : lang}"/>
                             <c:set var="r" value="${pageContext.request}"/>
                             <a href="${r.scheme}://${subdomain}${empty subdomain ? '' : '.'}${sessionScope.customer.domainName}${r.serverPort == '8080' ? ':8080' : ''}${r.contextPath}/home" class="ajaxify"><span class="flag-icon flag-icon-${lang}"></span></a>
                         </c:if>
-                    </c:forTokens>
+                    </c:forEach>
                     powered by <a href="https://pro-padel.de">pro-padel.de</a>
                 </div>
             </div>

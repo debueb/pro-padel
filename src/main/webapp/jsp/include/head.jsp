@@ -18,13 +18,13 @@
         <c:set var="sessionLang" value="${indexOfUnderscore > 0 ? fn:substring(sessionScope.sessionLocale, 0, indexOfUnderscore) : sessionScope.sessionLocale}" scope="request"/>
         
         <c:if test="${pageContext.request.requestURI == '/jsp/index.jsp'}">
-            <c:forTokens items="de,en,es" delims="," var="lang">
+            <c:forEach items="${Constants.VALID_LANGUAGES}" var="lang">
                 <c:if test="${lang ne sessionLang}">
                     <c:set var="subdomain" value="${sessionScope.customer.defaultLanguage eq lang ? '' : lang}"/>
                     <c:set var="r" value="${pageContext.request}"/>
                     <link rel="alternate" href="${r.scheme}://${subdomain}${empty subdomain ? '' : '.'}${sessionScope.customer.domainName}${r.serverPort == '8080' ? ':8080' : ''}${r.contextPath}/home" hreflang="${lang}"/>
                 </c:if>
-            </c:forTokens>
+            </c:forEach>
         </c:if>
         
         <c:choose>

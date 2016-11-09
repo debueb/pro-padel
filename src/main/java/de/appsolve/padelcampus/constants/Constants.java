@@ -5,6 +5,8 @@
  */
 package de.appsolve.padelcampus.constants;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import org.joda.time.DateTimeZone;
 
@@ -56,6 +58,8 @@ public class Constants {
     public static final Integer CANCELLATION_POLICY_DEADLINE= 24;
     
     
+    public static final List<String> VALID_LANGUAGES = Arrays.asList(new String[]{"de", "en", "es"});
+
     public static final String DEFAULT_LANGUAGE             = "de";
     public static final Locale DEFAULT_LOCALE               = new Locale(DEFAULT_LANGUAGE, "DE");
     public static final String DEFAULT_TIMEZONE_STRING      = "Europe/Berlin";

@@ -5,9 +5,8 @@
  */
 package de.appsolve.padelcampus.spring;
 
+import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_DEFAULT_LOCALE;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,8 +19,6 @@ import org.springframework.web.servlet.i18n.AbstractLocaleResolver;
  */
 public class SubDomainLocaleResolver extends AbstractLocaleResolver {
     
-    private static final List<String> VALID_LANGUAGES = Arrays.asList(new String[]{"de", "en", "es"});
-
     @Override
     public Locale resolveLocale(HttpServletRequest request) {
         setLocaleIfNecessary(request);
@@ -40,7 +37,7 @@ public class SubDomainLocaleResolver extends AbstractLocaleResolver {
             int indexOfDot = serverName.indexOf('.');
             if (indexOfDot > 0){
                 String leftMostSubdomain = serverName.substring(0, indexOfDot);
-                if (VALID_LANGUAGES.contains(leftMostSubdomain)){
+                if (Constants.VALID_LANGUAGES.contains(leftMostSubdomain)){
                     locale = StringUtils.parseLocaleString(leftMostSubdomain);
                 }
             }
