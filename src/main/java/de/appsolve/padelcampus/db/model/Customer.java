@@ -7,9 +7,10 @@
 package de.appsolve.padelcampus.db.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.appsolve.padelcampus.annotations.EmailWithTld;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.data.CustomerI;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -64,6 +65,9 @@ public class Customer extends BaseEntity implements CustomerI{
     
     @Column
     private String defaultLanguage;
+    
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> supportedLanguages;
     
     @Override
     public String getName() {
@@ -175,5 +179,19 @@ public class Customer extends BaseEntity implements CustomerI{
 
     public void setDefaultLanguage(String defaultLanguage) {
         this.defaultLanguage = defaultLanguage;
+    }
+
+    public Set<String> getSupportedLanguages() {
+        if (supportedLanguages == null){
+            return new HashSet<>(Arrays.asList(Constants.DEFAULT_LANGUAGE));
+        }
+        if (supportedLanguages.isEmpty()){
+            supportedLanguages.add(Constants.DEFAULT_LANGUAGE);
+        }
+        return supportedLanguages;
+    }
+
+    public void setSupportedLanguages(Set<String> supportedLanguages) {
+        this.supportedLanguages = supportedLanguages;
     }
 }

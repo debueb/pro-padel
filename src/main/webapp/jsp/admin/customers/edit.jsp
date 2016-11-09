@@ -28,6 +28,23 @@
                             <fmt:message key="DomainNames"/>
                         </div>
                     </div>
+                    <spring:eval var="VALID_LANGUAGES" expression="T(de.appsolve.padelcampus.constants.Constants).VALID_LANGUAGES"/>
+                    <div class="relative">
+                        <div class="relative">
+                            <spf:select path="defaultLanguage" class="select-simple form-control" data-style="form-center-element" data-container="body">
+                                <spf:options items="${VALID_LANGUAGES}"/>
+                            </spf:select>
+                            <span class="explanation-select"><fmt:message key="DefaultLanguage"/></span>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="relative">
+                            <spf:select path="supportedLanguages" class="select-multiple form-control" data-style="form-center-element" data-container="body">
+                                <spf:options items="${VALID_LANGUAGES}"/>
+                            </spf:select>
+                            <span class="explanation-select"><fmt:message key="SupportedLanguages"/></span>
+                        </div>
+                    </div>
                     <div class="relative">
                         <spf:input path="defaultEmail" type="text" class="form-control form-center-element"/>
                         <div class="explanation">
