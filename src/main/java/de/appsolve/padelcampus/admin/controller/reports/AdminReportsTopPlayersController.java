@@ -14,6 +14,7 @@ import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.SortUtil;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,18 @@ public class AdminReportsTopPlayersController extends BaseController{
         }
         
         Map<Player, Integer> sortedMap = SortUtil.sortMap(map);
+        
+        //keep only top 20
+        Iterator<Map.Entry<Player, Integer>> iterator = sortedMap.entrySet().iterator();
+        int i=0;
+        while (iterator.hasNext()){
+            iterator.next();
+            if (i>20){
+                iterator.remove();
+            }
+            i++;
+        }
+        
         mav.addObject("chartData", objectMapper.writeValueAsString(sortedMap));
         
         return mav;
