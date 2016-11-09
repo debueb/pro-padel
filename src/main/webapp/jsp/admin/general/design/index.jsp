@@ -100,3 +100,4 @@ ${Attribute.cssValue}</textarea>
     </div>
 </div>
 <jsp:include page="/jsp/admin/include/colorpicker.jsp"/>
+<jsp:include page="/jsp/include/footer.jsp"/>

@@ -1,8 +1,4 @@
-<%-- include js and css in body when requested via ajax, otherwise after footer (where jquery is added) --%>
-<c:if test="${not empty header['x-requested-with']}">
-    <jsp:include page="/jsp/admin/general/include/colorpicker.jsp"/>
-</c:if>
-<jsp:include page="/jsp/include/footer.jsp"/>
-<c:if test="${empty header['x-requested-with']}">
-    <jsp:include page="/jsp/admin/general/include/colorpicker.jsp"/>
-</c:if>
+<%@include file="/jsp/include/include.jsp"%>
+<link href="/css/noconcat/bootstrap-colorpicker.min.css" rel="stylesheet">
+<script src="/js/noconcat/bootstrap-colorpicker.min.js"></script>
+<script src="/js/noconcat/bootstrap-colorpicker.project.js"></script>
