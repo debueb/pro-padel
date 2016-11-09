@@ -55,7 +55,7 @@
                     <div class="relative">
                         <spf:input path="footerSuffix" type="text" class="form-control form-bottom-element"/>
                         <div class="explanation">
-                            <fmt:message key="FooterPrefix"/>
+                            <fmt:message key="FooterSuffix"/>
                         </div>
                     </div>
 
