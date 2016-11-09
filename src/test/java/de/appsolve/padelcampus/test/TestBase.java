@@ -38,6 +38,7 @@ import org.junit.FixMethodOrder;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -107,6 +108,8 @@ public abstract class TestBase  {
     @Before
     public void setUp() {
         if (mockMvc == null){
+            LocaleContextHolder.setLocale(Constants.DEFAULT_LOCALE);
+        
             bookingDAO.delete(bookingDAO.findAll());
 
             List<Event> events = eventDAO.findAllFetchWithParticipants();

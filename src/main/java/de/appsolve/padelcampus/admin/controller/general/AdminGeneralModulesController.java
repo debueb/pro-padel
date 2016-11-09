@@ -6,7 +6,6 @@
 
 package de.appsolve.padelcampus.admin.controller.general;
 
-import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.db.dao.EventGroupDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
@@ -21,6 +20,7 @@ import de.appsolve.padelcampus.utils.ModuleUtil;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +42,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
  *
@@ -52,6 +55,13 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/admin/general/modules")
 public class AdminGeneralModulesController extends AdminSortableController<Module> {
     
+    private final RequestMappingHandlerMapping handlerMapping;
+    
+    @Autowired
+    public AdminGeneralModulesController(RequestMappingHandlerMapping handlerMapping) {
+        this.handlerMapping = handlerMapping;
+    }
+
     @Autowired
     ModuleDAOI moduleDAO;
     
@@ -228,9 +238,22 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         if (result.hasErrors()){
             return;
         }
-        Module existingModule = moduleDAO.findByTitle(module.getTitle());
+        
+        //make sure title does not conflict with existing request mappings
+        for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMapping.getHandlerMethods().entrySet()) {
+            RequestMappingInfo requestMappingInfo = entry.getKey();
+            List<String> matchingPatterns = requestMappingInfo.getPatternsCondition().getMatchingPatterns("/"+module.getUrlTitle());
+            for (String pattern: matchingPatterns){
+                if (!pattern.equals("/{moduleId}")){
+                    result.rejectValue("title", "ModuleWithUrlTitleAlreadyExists", new Object[]{module.getUrlTitle()}, "ModuleWithUrlTitleAlreadyExists");
+                    return;
+                }
+            }
+        }
+        
+        Module existingModule = moduleDAO.findByUrlTitle(module.getUrlTitle());
         if (existingModule != null && !existingModule.equals(module)){
-            result.rejectValue("title", "ModuleWithTitleAlreadyExists", new Object[]{module.getTitle()}, "ModuleWithTitleAlreadyExists");
+            result.rejectValue("title", "ModuleWithUrlTitleAlreadyExists", new Object[]{module.getUrlTitle()}, "ModuleWithUrlTitleAlreadyExists");
         }
     }
 

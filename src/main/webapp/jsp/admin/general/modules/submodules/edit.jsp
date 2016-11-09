@@ -41,12 +41,17 @@
                     
                     <div class="relative">
                         <fmt:message var="Title" key="Title"/>
-                        <spf:input path="title" type="text" class="form-control form-center-element" placeholder="${Title}"/>
+                        <spf:input path="title" type="text" class="form-control form-center-element"/>
                         <div class="explanation"><fmt:message key="Title"/></div>
                     </div>
                     
+                    <div class="select-toggle-Page select-toggle-Events relative">
+                        <spf:input path="urlTitle" type="text" class="form-control form-center-element"/>
+                        <div class="explanation"><fmt:message key="URLTitle"/></div>
+                    </div>
+                    
                     <div class="relative">
-                        <spf:input path="seoTitle" type="text" class="form-control form-center-element" placeholder="${Title}"/>
+                        <spf:input path="seoTitle" type="text" class="form-control form-center-element"/>
                         <div class="explanation"><fmt:message key="SEOTitle"/></div>
                     </div>
                     

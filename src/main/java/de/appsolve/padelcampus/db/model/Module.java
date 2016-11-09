@@ -48,6 +48,11 @@ public class Module extends SortableEntity{
     private String seoTitle;
     
     @Column
+    @NotEmpty(message = "{NotEmpty.urlTitle}")
+    @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}") 
+    private String urlTitle;
+    
+    @Column
     private String seoRobots;
     
     @Column
@@ -105,6 +110,14 @@ public class Module extends SortableEntity{
 
     public void setSeoTitle(String seoTitle) {
         this.seoTitle = seoTitle;
+    }
+
+    public String getUrlTitle() {
+        return urlTitle;
+    }
+
+    public void setUrlTitle(String urlTitle) {
+        this.urlTitle = urlTitle;
     }
 
     public String getSeoRobots() {
@@ -166,11 +179,16 @@ public class Module extends SortableEntity{
                 return "/ranking";
             case Link:
                 return url;
-            default:
-                String moduleName = "/" + moduleType.name().toLowerCase();
-                moduleName += "/" + getTitle();
+            case Events:
+                String eventsName = "/events/" + getUrlTitle();
+                eventsName = eventsName.replace(" ", "-");
+                return eventsName;
+            case Page:
+                String moduleName = "/" + getUrlTitle();
                 moduleName = moduleName.replace(" ", "-");
                 return moduleName;
+            default:
+                return "/";
         }
         
     }

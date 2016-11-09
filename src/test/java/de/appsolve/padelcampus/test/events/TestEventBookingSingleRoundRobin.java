@@ -13,11 +13,13 @@ import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Player;
 import static de.appsolve.padelcampus.test.matchers.GlobalErrorsMatcher.globalErrors;
+import de.appsolve.padelcampus.utils.Msg;
 import org.joda.time.LocalDate;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -30,6 +32,9 @@ import org.springframework.util.Assert;
 @RunWith(SpringJUnit4ClassRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestEventBookingSingleRoundRobin extends TestEventBookingBase {
+    
+    @Autowired
+    Msg msg;
     
     @Test
     public void test01AddPullEvent() throws Exception {
@@ -94,7 +99,7 @@ public class TestEventBookingSingleRoundRobin extends TestEventBookingBase {
                 .param("allowEmailContact", "on"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors())
-                .andExpect(globalErrors().hasGlobalError("Player", "*", "The event is booked out"));
+                .andExpect(globalErrors().hasGlobalError("Player", "*", msg.get("EventBookedOut")));
     }
 
     private void participate(Player partner, Event event) throws Exception {

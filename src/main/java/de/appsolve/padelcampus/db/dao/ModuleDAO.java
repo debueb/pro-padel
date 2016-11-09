@@ -34,9 +34,9 @@ public class ModuleDAO extends SortedGenericDAO<Module> implements ModuleDAOI{
     }
     
     @Override
-    public Module findByTitle(String title) {
+    public Module findByUrlTitle(String title) {
         title = title.replace("-", " ");
-        return findByAttribute("title", title);
+        return findByAttribute("urlTitle", title);
     }
 
     @Override

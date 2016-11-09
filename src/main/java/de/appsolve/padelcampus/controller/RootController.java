@@ -19,7 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -62,11 +66,35 @@ public class RootController extends BaseController{
         return getHomePage();
     }
     
-    @RequestMapping(value={"/home", "index", "index.html"})
-    public ModelAndView getHome(HttpServletRequest request){
-        HttpSession session = request.getSession(true);
-        session.setAttribute("LANDINGPAGE_PAGE_CHECKED", true);
-        return getHomePage();       
+    @RequestMapping("/{moduleId}")
+    public ModelAndView getIndex(HttpServletRequest request, @PathVariable("moduleId") String moduleTitle){
+        switch (moduleTitle){
+            case "home":
+                HttpSession session = request.getSession(true);
+                session.setAttribute("LANDINGPAGE_PAGE_CHECKED", true);
+                return getHomePage(); 
+            default:
+                return getIndexView(getModule(moduleTitle), new Mail());
+        }
+    }
+    
+    @RequestMapping(method=POST)
+    public ModelAndView postIndex(HttpServletRequest request, @PathVariable("moduleId") String moduleTitle, @ModelAttribute("Mail") Mail mail, BindingResult bindingResult){
+        Module module = getModule(moduleTitle);
+        ModelAndView defaultView = getIndexView(module, mail);
+        return sendMail(request, defaultView, mail, bindingResult);
+    }
+
+    private ModelAndView getIndexView(Module module, Mail mail) {
+        ModelAndView mav = new ModelAndView("page/index");
+        mav.addObject("PageEntries", pageEntryDAO.findByModule(module));
+        mav.addObject("Module", module);
+        mav.addObject("Mail", mail);
+        return mav;
+    }
+
+    private Module getModule(String moduleTitle) {
+        return moduleDAO.findByUrlTitle(moduleTitle);
     }
 
     private ModelAndView getHomePage() {
