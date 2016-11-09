@@ -38,8 +38,8 @@
             // Prepare
             var result = String(html)
                     .replace(/<\!DOCTYPE[^>]*>/i, '')
-                    .replace(/<(html|head|body|title|meta|script|link)([\s\>])/gi,'<div class="document-$1"$2')
-                    .replace(/<\/(html|head|body|title|meta|script|link)\>/gi,'</div>');
+                    .replace(/<(html|head|body|title|meta|script)([\s\>])/gi,'<div class="document-$1"$2')
+                    .replace(/<\/(html|head|body|title|meta|script)\>/gi,'</div>');
             
             return $.trim(result);
         };
@@ -165,17 +165,7 @@
                     try {
                         $('title').html(document.title.replace('<', '&lt;').replace('>', '&gt;').replace(' & ', ' &amp; '));
                         $('meta[name="robots"]').attr('content', $data.find('.document-meta[name="robots"]:first').attr('content'));
-                        $('meta[name="description"]').attr('content', $data.find('.document-meta[name="description"]:first').attr('content'));
-                        
-                        $('link[hreflang]').remove();
-                        $data.find('.document-link[hreflang]').each(function(index, elem){
-                            $link = $("<link/>");
-                            $link.attr("rel", "alternate");
-                            $link.attr("href", $(elem).attr('href'));
-                            $link.attr("hreflang", $(elem).attr('hreflang'));
-                            $('head').append($link);
-                        });
-                        
+                        $('meta[name="description"]').attr('content', $data.find('.document-meta[name="description"]:first').attr('content'));                        
                     } catch (Exception) {
                         //empty
                     }
