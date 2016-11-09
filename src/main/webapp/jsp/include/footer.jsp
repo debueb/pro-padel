@@ -24,7 +24,8 @@
                     ${sessionScope.customer.footerSuffix}&nbsp;
                 </c:if>
                 <div>
-                    <c:forEach items="${Constants.VALID_LANGUAGES}" var="lang">
+                    <spring:eval var="VALID_LANGUAGES" expression="T(de.appsolve.padelcampus.constants.Constants).VALID_LANGUAGES"/>
+                    <c:forEach items="${VALID_LANGUAGES}" var="lang">
                         <c:if test="${lang ne sessionLang}">
                             <c:set var="subdomain" value="${sessionScope.customer.defaultLanguage eq lang ? '' : lang}"/>
                             <c:set var="r" value="${pageContext.request}"/>

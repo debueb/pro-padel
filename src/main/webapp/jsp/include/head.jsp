@@ -18,7 +18,8 @@
         <c:set var="sessionLang" value="${indexOfUnderscore > 0 ? fn:substring(sessionScope.sessionLocale, 0, indexOfUnderscore) : sessionScope.sessionLocale}" scope="request"/>
         
         <c:if test="${pageContext.request.requestURI == '/jsp/index.jsp'}">
-            <c:forEach items="${Constants.VALID_LANGUAGES}" var="lang">
+            <spring:eval var="VALID_LANGUAGES" expression="T(de.appsolve.padelcampus.constants.Constants).VALID_LANGUAGES"/>
+            <c:forEach items="${VALID_LANGUAGES}" var="lang">
                 <c:if test="${lang ne sessionLang}">
                     <c:set var="subdomain" value="${sessionScope.customer.defaultLanguage eq lang ? '' : lang}"/>
                     <c:set var="r" value="${pageContext.request}"/>
