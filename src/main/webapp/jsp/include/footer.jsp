@@ -24,6 +24,7 @@
                     ${sessionScope.customer.footerSuffix}&nbsp;
                 </c:if>
                 <div>
+                    ${sessionLang}
                     <c:forTokens items="de,en,es" delims="," var="lang">
                         <c:if test="${lang ne sessionLang}">
                             <c:set var="subdomain" value="${sessionScope.customer.defaultLanguage eq lang ? '' : lang}"/>
