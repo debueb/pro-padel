@@ -10,8 +10,10 @@ import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.db.dao.EventGroupDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
+import de.appsolve.padelcampus.db.dao.PageEntryDAOI;
 import de.appsolve.padelcampus.db.model.EventGroup;
 import de.appsolve.padelcampus.db.model.Module;
+import de.appsolve.padelcampus.db.model.PageEntry;
 import de.appsolve.padelcampus.spring.EventGroupPropertyEditor;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.utils.FileUtil;
@@ -23,7 +25,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,6 +61,8 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @RequestMapping("/admin/general/modules")
 public class AdminGeneralModulesController extends AdminSortableController<Module> {
     
+    private final static Logger LOG = Logger.getLogger(AdminGeneralModulesController.class);
+    
     private final RequestMappingHandlerMapping handlerMapping;
     
     @Autowired
@@ -64,6 +72,9 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
 
     @Autowired
     ModuleDAOI moduleDAO;
+    
+    @Autowired
+    PageEntryDAOI pageEntryDAO;
     
     @Autowired
     ModuleUtil moduleUtil;
@@ -111,6 +122,7 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         }
         keepSubModules(model);
         checkPosition(model);
+        rewriteLinks(model);
         
         ModelAndView mav = super.postEditView(model, request, result);
         reloadModules(request);
@@ -166,6 +178,7 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         model.setShowOnHomepage(Boolean.FALSE);
         keepSubModules(model);
         checkPosition(model);
+        rewriteLinks(model);
         model = moduleDAO.saveOrUpdate(model);
         Module parent = moduleDAO.findById(parentModuleId);
         Set<Module> subModules = parent.getSubModules();
@@ -288,6 +301,29 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
             }
             position++;
             module.setPosition(position);
+        }
+    }
+
+    private void rewriteLinks(Module model) {
+        if (model.getId()!=null){
+            Module existingModule = moduleDAO.findById(model.getId());
+            if (!model.getUrlTitle().equals(existingModule.getUrlTitle())){
+                String oldHref = String.format("href=\"(%s|/page%s)\"", existingModule.getUrl(), existingModule.getUrl());
+                String newHref = String.format("href=\"%s\"", model.getUrl());
+                Pattern p = Pattern.compile(oldHref, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+                for (PageEntry pageEntry: pageEntryDAO.findAll()){
+                    String message = pageEntry.getMessage();
+                    if (!StringUtils.isEmpty(message)){
+                        Matcher m = p.matcher(message);
+                        if (m.find()){
+                            LOG.info(String.format("replacing links %s by %s in page entry %s", oldHref, newHref, pageEntry.getId()));
+                            pageEntry.setMessage(m.replaceAll(newHref));
+                            pageEntryDAO.saveOrUpdate(pageEntry);
+                        }
+                    }
+                    
+                }
+            }
         }
     }
 }
