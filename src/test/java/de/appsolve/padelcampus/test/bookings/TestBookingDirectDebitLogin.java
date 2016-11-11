@@ -31,7 +31,7 @@ public class TestBookingDirectDebitLogin extends TestBase {
         Player player = new Player();
         player.setEmail("padelcampus-unittest-2@appsolve.de");
         player.setFirstName("dummy");
-        player.setLastName("dummy");
+        player.setLastName("dummy lastname");
         player.setPassword("test");
         player.setPhone("004917497568349");
         playerDAO.saveOrUpdate(player);

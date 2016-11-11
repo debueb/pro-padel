@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -67,7 +68,7 @@ public class AccountProfileController extends BaseController {
     }
 
     @RequestMapping(method = POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ModelAndView postIndex(@ModelAttribute("Model") Player player, BindingResult bindingResult, HttpServletRequest request) {
+    public ModelAndView postIndex(@ModelAttribute("Model") @Valid Player player, BindingResult bindingResult, HttpServletRequest request) {
         ModelAndView profileView = getIndexView(player);
         if (bindingResult.hasErrors()) {
             return profileView;

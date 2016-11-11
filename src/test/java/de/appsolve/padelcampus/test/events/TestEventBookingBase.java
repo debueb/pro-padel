@@ -5,11 +5,10 @@
  */
 package de.appsolve.padelcampus.test.events;
 
-import de.appsolve.padelcampus.constants.Constants;
-import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.test.TestBase;
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.FixMethodOrder;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -49,8 +48,8 @@ public abstract class TestEventBookingBase extends TestBase {
     protected Player createPlayer(int i) {
         Player player = new Player();
         player.setEmail("padelcampus-unittest-eventbooking"+i+"@appsolve.de");
-        player.setFirstName("dummy"+i);
-        player.setLastName("dummy"+i);
+        player.setFirstName("dummy "+RandomStringUtils.random(3, "abcdefghijklmnopqrstuvwxyz".toCharArray()));
+        player.setLastName("dummy lastname");
         player.setPassword("test");
         player.setPhone("004917497568349");
         return playerDAO.saveOrUpdate(player);

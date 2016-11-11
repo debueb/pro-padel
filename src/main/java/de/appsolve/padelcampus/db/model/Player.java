@@ -13,6 +13,8 @@ import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.utils.CryptUtil;
 import de.appsolve.padelcampus.validation.constraints.Phone;
+import de.appsolve.padelcampus.validation.constraints.SelfValidating;
+import de.appsolve.padelcampus.validation.constraints.Validatable;
 import java.util.Collections;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -26,6 +28,7 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -38,7 +41,8 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Entity
 @DiscriminatorValue("Player")
-public class Player extends Participant implements EmailContact{
+@SelfValidating(message = "{FirstNameAndLastNameMustBeDifferent}")
+public class Player extends Participant implements EmailContact, Validatable{
     
     @Transient
     private static final long serialVersionUID = 1L;
@@ -276,5 +280,13 @@ public class Player extends Participant implements EmailContact{
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    @Override
+    public boolean isValid() {
+        if (!StringUtils.isEmpty(getFirstName()) && !StringUtils.isEmpty(getLastName()) && getFirstName().toLowerCase().equals(getLastName().toLowerCase())){
+            return false;
+        }
+        return true;
     }
 }
