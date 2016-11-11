@@ -39,6 +39,11 @@
                         <jsp:param name="key" value="TopPaymentMethod"/>
                         <jsp:param name="icon" value="credit-card"/>
                     </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/reports/utilization"/>
+                        <jsp:param name="key" value="Utilization"/>
+                        <jsp:param name="icon" value="line-chart"/>
+                    </jsp:include>
                 </div>
             </div>
         </div>
