@@ -12,7 +12,7 @@ import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
-import javax.persistence.Entity;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -21,7 +21,6 @@ import org.joda.time.LocalTime;
  *
  * @author dominik
  */
-@Entity
 public class ReservationRequest extends CustomerEntity{
     
     private static final long serialVersionUID = 1L;
@@ -51,6 +50,7 @@ public class ReservationRequest extends CustomerEntity{
     private Set<Offer> offers;
     
     @NotEmpty(message = "{NotEmpty.comment}")
+    @Length(min = 3, max = 255, message = "{ReservationRequest.comment}")
     private String comment;
 
     public Set<CalendarWeekDay> getCalendarWeekDays() {
