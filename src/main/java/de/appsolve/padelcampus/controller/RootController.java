@@ -12,6 +12,7 @@ import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.dao.PageEntryDAOI;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.PageEntry;
+import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -74,7 +75,11 @@ public class RootController extends BaseController{
                 session.setAttribute("LANDINGPAGE_PAGE_CHECKED", true);
                 return getHomePage(); 
             default:
-                return getIndexView(getModule(moduleTitle), new Mail());
+                Module module = getModule(moduleTitle);
+                if (module != null){
+                    return getIndexView(module, new Mail());
+                }
+                throw new ResourceNotFoundException();
         }
     }
     

@@ -11,6 +11,7 @@ import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.ContactDAOI;
 import de.appsolve.padelcampus.db.model.Contact;
 import de.appsolve.padelcampus.exceptions.MailException;
+import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import java.io.IOException;
@@ -18,12 +19,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -48,9 +51,17 @@ public abstract class BaseController {
     public MailUtils mailUtils;
     
     @ExceptionHandler(value=Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView handleException(Exception ex){
         log.error(ex.getMessage(), ex);
         return new ModelAndView("error/500", "Exception", ex);
+    }
+    
+    @ExceptionHandler(value=ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ModelAndView handleResourceNotFoundException(Exception ex){
+        log.error(ex.getMessage(), ex);
+        return new ModelAndView("error/404", "Exception", ex);
     }
     
     protected ModelAndView getLoginRequiredView(HttpServletRequest request, String title) {
