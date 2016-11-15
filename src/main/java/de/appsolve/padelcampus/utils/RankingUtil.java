@@ -129,6 +129,9 @@ public class RankingUtil {
         SortedSet<Game> sortedGames = new TreeSet<>(new Comparator<Game>() {
             @Override
             public int compare(Game o1, Game o2) {
+                if (o1.getStartDate()!=null && o2.getStartDate()!=null){
+                    return o1.getStartDate().compareTo(o2.getStartDate());
+                }
                 return o1.getId().compareTo(o2.getId());
             }
         });
@@ -148,7 +151,11 @@ public class RankingUtil {
             Participant p1 = iterator.next();
             Participant p2 = iterator.next();
 
-            updateRanking(game, p1, p2);
+            if (p1 instanceof Team && p2 instanceof Team){
+                updateRanking(game, (Team) p1, (Team) p2);
+            } else {
+                updateRanking(game, p1, p2);
+            }
         }
         Iterator<Map.Entry<Participant, BigDecimal>> iterator = rankingMap.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -162,17 +169,37 @@ public class RankingUtil {
         return sortedMap;
     }
 
-    private void updateRanking(Game game, Participant p1, Participant p2) {
-        BigDecimal r1;
-        BigDecimal r2;
-        if (p1 instanceof Team && p2 instanceof Team){
-            r1 = getTeamRanking((Team)p1);
-            r2 = getTeamRanking((Team)p2);
-        } else {
-            r1 = getRanking(p1);
-            r2 = getRanking(p2);
+    private void updateRanking(Game game, Team team1, Team team2) {
+        BigDecimal r2 = getTeamRanking((Team)team2);
+        BigDecimal r1 = getTeamRanking((Team)team1);
+        
+        for (Player player: team1.getPlayers()){
+            BigDecimal r1p1 = getRanking(player);
+            BigDecimal tr1 = getTransformedRating(r1);
+            BigDecimal tr2 = getTransformedRating(r2);
+            
+            BigDecimal e1 = getExpectedScore(tr1, tr2);
+            BigDecimal s1 = getScore(game, team1);
+            BigDecimal newR1 = ELO_K_FACTOR.multiply((s1.subtract(e1))).add(r1p1);
+            rankingMap.put(player, newR1);
         }
-
+        
+        for (Player player: team2.getPlayers()){
+            BigDecimal r2p1 = getRanking(player);
+            BigDecimal tr1 = getTransformedRating(r2);
+            BigDecimal tr2 = getTransformedRating(r1);
+            
+            BigDecimal e1 = getExpectedScore(tr1, tr2);
+            BigDecimal s1 = getScore(game, team2);
+            BigDecimal newR1 = ELO_K_FACTOR.multiply((s1.subtract(e1))).add(r2p1);
+            rankingMap.put(player, newR1);
+        }
+    }
+    
+    private void updateRanking(Game game, Participant p1, Participant p2) {
+        BigDecimal r1 = getRanking(p1);
+        BigDecimal r2 = getRanking(p2);
+        
         BigDecimal tr1 = getTransformedRating(r1);
         BigDecimal tr2 = getTransformedRating(r2);
 
@@ -185,19 +212,8 @@ public class RankingUtil {
         BigDecimal newR1 = ELO_K_FACTOR.multiply((s1.subtract(e1))).add(r1);
         BigDecimal newR2 = ELO_K_FACTOR.multiply((s2.subtract(e2))).add(r2);
 
-        if (p1 instanceof Team && p2 instanceof Team){
-            updateTeamRanking((Team)p1, newR1);
-            updateTeamRanking((Team)p2, newR2);
-        } else {
-            rankingMap.put(p1, newR1);
-            rankingMap.put(p2, newR2);
-        }
-    }
-    
-    private void updateTeamRanking(Team team, BigDecimal newR1) {
-        for (Player player : team.getPlayers()) {
-            rankingMap.put(player, newR1);
-        }
+        rankingMap.put(p1, newR1);
+        rankingMap.put(p2, newR2);
     }
     
     private BigDecimal getRanking(Participant participant) {
