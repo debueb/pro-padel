@@ -26,7 +26,7 @@ app.charts = {};
                     renderTo: 'players',
                     type: 'bar',
                     marginTop: 20,
-                    marginBottom: 80
+                    marginBottom: 70
                 },
                 title: {
                     text: null
@@ -107,7 +107,8 @@ app.charts = {};
                     renderTo: 'times',
                     type: 'heatmap',
                     marginTop: 20,
-                    marginBottom: 80
+                    marginBottom: 80,
+                    height: 600
                 },
 
                 title: {
@@ -180,7 +181,8 @@ app.charts = {};
                         renderTo: 'utilization',
                         type: 'heatmap',
                         marginTop: 20,
-                        marginBottom: 80
+                        marginBottom: 40,
+                        height: 500
                     },
                 title: {
                     text: null
@@ -189,6 +191,7 @@ app.charts = {};
                     type: 'datetime'
                 },
                 yAxis: {
+                    min: 0,
                     title: {
                         text: null
                     }
