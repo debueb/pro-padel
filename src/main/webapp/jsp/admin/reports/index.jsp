@@ -19,12 +19,6 @@
                         <jsp:param name="icon" value="cubes"/>
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
-                        <jsp:param name="href" value="/admin/reports/bookinglist"/>
-                        <jsp:param name="key" value="BookingList"/>
-                        <jsp:param name="icon" value="bars"/>
-                    </jsp:include>
-
-                    <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/reports/players"/>
                         <jsp:param name="key" value="TopPlayers"/>
                         <jsp:param name="icon" value="user"/>

@@ -7,7 +7,7 @@
 
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4><fmt:message key="CourtReservations"/></h4>
+                <h4><fmt:message key="AddReservation"/></h4>
             </div>
             <div class="panel-body">
 

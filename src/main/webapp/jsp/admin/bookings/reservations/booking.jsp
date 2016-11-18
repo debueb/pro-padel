@@ -47,8 +47,14 @@
                             <div class="col-xs-12">
                                 <button type="submit" class="btn btn-primary btn-block"><fmt:message key="Save"/></button>
                             </div>
-                            <div class="col-xs-12 unit-2">
-                                <a href="/admin/reports/booking/${Booking.id}/delete" class="btn btn-danger btn-block"><fmt:message key="Delete"/></a>
+                             <div class="col-xs-12 unit">
+                                <a href="/admin/bookings/reservations" class="btn btn-primary btn-block"><fmt:message key="Cancel"/></a>
+                            </div>
+                            <div class="col-xs-12 unit">
+                                <a href="/admin/bookings/reservations/${Booking.id}/delete" class="btn btn-danger btn-block"><fmt:message key="Delete"/></a>
+                            </div>
+                            <div class="col-xs-12 unit">
+                                <c:if test="${Booking.paymentMethod == 'Reservation'}"><a class="btn btn-danger btn-block" href="/admin/bookings/reservations/${Booking.id}/deleteall"><fmt:message key="DeleteAll"/></a></c:if>
                             </div>
                         </div>
                     </spf:form>

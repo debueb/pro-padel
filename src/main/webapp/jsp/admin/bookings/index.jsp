@@ -54,7 +54,7 @@
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/bookings/reservations"/>
-                        <jsp:param name="key" value="CourtReservations"/>
+                        <jsp:param name="key" value="BookingsAndReservations"/>
                         <jsp:param name="icon" value="cube"/>
                     </jsp:include>
                 </div>

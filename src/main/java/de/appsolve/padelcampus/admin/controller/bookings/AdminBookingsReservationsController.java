@@ -18,10 +18,12 @@ import de.appsolve.padelcampus.data.ReservationRequest;
 import de.appsolve.padelcampus.data.TimeSlot;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
+import de.appsolve.padelcampus.db.dao.MasterDataDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
+import de.appsolve.padelcampus.db.model.MasterData;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
@@ -85,6 +87,9 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     @Autowired
     SessionUtil sessionUtil;
     
+    @Autowired
+    MasterDataDAOI masterDataDAO;
+    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
@@ -116,9 +121,67 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     @RequestMapping(method=POST)
     public ModelAndView postIndex(HttpServletRequest request, @Valid @ModelAttribute("DateRange") DateRange dateRange){
         sessionUtil.setBookingListStartDate(request, dateRange.getStartDate());
+        if (dateRange.getEndDate().isBefore(dateRange.getStartDate())){
+            dateRange.setEndDate(dateRange.getStartDate());
+        }
         sessionUtil.setBookingListEndDate(request, dateRange.getEndDate());
         return getIndexView(dateRange); 
     }
+    
+    @RequestMapping("print/{start}/{end}")
+    public ModelAndView getPrintInvoices(@PathVariable("start") String start, @PathVariable("end") String end){
+        MasterData masterData = masterDataDAO.findFirst();
+        if (masterData == null){
+            return new ModelAndView("invoices/masterdata_missing");
+        }
+        LocalDate startDate = new LocalDate(start);
+        LocalDate endDate = new LocalDate(end);
+        DateRange dateRange = new DateRange();
+        dateRange.setStartDate(startDate);
+        dateRange.setEndDate(endDate);
+        List<Booking> bookings = bookingDAO.findActiveBookingsBetween(dateRange.getStartDate(), dateRange.getEndDate());
+        ModelAndView mav = new ModelAndView("admin/bookings/reservations/printinvoices");
+        mav.addObject("MasterData", masterData);
+        mav.addObject("Bookings", bookings);
+        return mav;
+    }
+    
+    @RequestMapping(method = GET, value="booking/{bookingId}")
+    public ModelAndView getBooking(@PathVariable("bookingId") Long bookingId){
+        Booking booking = bookingDAO.findById(bookingId);
+        return getBookingEditView(booking);
+    }
+    
+    @RequestMapping(method = POST, value="booking/{bookingId}")
+    public ModelAndView postBooking(@PathVariable("bookingId") Long bookingId, @Valid @ModelAttribute("Model") Booking model, BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            return getBookingEditView(model);
+        }
+        Booking booking = bookingDAO.findById(bookingId);
+        try {
+            booking.setComment(model.getComment());
+            booking.setPaymentConfirmed(model.getPaymentConfirmed());
+            bookingDAO.saveOrUpdate(booking);
+            return redirectToIndex();
+        }catch (Exception e){
+            LOG.error(e);
+            bindingResult.addError(new ObjectError("id", e.getMessage()));
+            return getBookingEditView(booking);
+        }
+    }
+    
+    @RequestMapping(method = GET, value="booking/{bookingId}/delete")
+    public ModelAndView getBookingDelete(@PathVariable("bookingId") Long bookingId){
+        Booking booking = bookingDAO.findById(bookingId);
+        return getBookingDeleteView(booking);
+    }
+    
+    @RequestMapping(method = POST, value="booking/{bookingId}/delete")
+    public ModelAndView postBookingDelete(@PathVariable("bookingId") Long bookingId){
+        bookingDAO.deleteById(bookingId);
+        return redirectToIndex();
+    }
+    
     @RequestMapping(method = GET, value="/{bookingId}/deleteall")
     public ModelAndView getBookingDeleteAll(@PathVariable("bookingId") Long bookingId){
         Booking booking = bookingDAO.findById(bookingId);
@@ -132,6 +195,36 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         List<Booking> commentBookings = bookingDAO.findByBlockingTimeAndComment(booking.getBlockingTime(), booking.getComment());
         bookingDAO.delete(commentBookings);
         return redirectToIndex(request);
+    }
+    
+    private ModelAndView getIndexView(DateRange dateRange) {
+        List<Booking> bookings = bookingDAO.findActiveBookingsBetween(dateRange.getStartDate(), dateRange.getEndDate());
+        
+        BigDecimal total = new BigDecimal(0);
+        for (Booking booking: bookings){
+            total = total.add(booking.getAmount());
+        }
+        ModelAndView listView = new ModelAndView("admin/bookings/reservations/index");
+        listView.addObject("Total", total);
+        listView.addObject("Bookings", bookings);
+        listView.addObject("DateRange", dateRange);
+        return listView;
+    }
+    
+    private ModelAndView getBookingEditView(Booking booking) {
+        ModelAndView mav = new ModelAndView("admin/bookings/reservations/booking");
+        mav.addObject("Booking", booking);
+        return mav;
+    }
+    
+    private ModelAndView getBookingDeleteView(Booking booking) {
+        ModelAndView mav = new ModelAndView("include/delete");
+        mav.addObject("Model", booking);
+        return mav;
+    }
+
+    private ModelAndView redirectToIndex() {
+        return new ModelAndView("redirect:/admin/bookings/reservations");
     }
     
     @Override
@@ -287,14 +380,6 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         ModelAndView mav = new ModelAndView("admin/bookings/reservations/deleteall");
         mav.addObject("Model", booking);
         mav.addObject("BookingsToDelete", bookingsToDelete);
-        return mav;
-    }
-
-    private ModelAndView getIndexView(DateRange dateRange) {
-        ModelAndView mav = new ModelAndView("admin/bookings/reservations/index");
-        List<Booking> reservations = bookingDAO.findActiveReservationsBetween(dateRange.getStartDate(), dateRange.getEndDate());
-        mav.addObject("Reservations", reservations);
-        mav.addObject("DateRange", dateRange);
         return mav;
     }
 }
