@@ -18,11 +18,11 @@
 .flag-icon.flag-icon-squared {
   width: 1em;
 }
-.flag-icon-gb {
-  background-image: url(/flags/4x3/gb.svg);
+.flag-icon-en {
+  background-image: url(/flags/4x3/en.svg);
 }
-.flag-icon-gb.flag-icon-squared {
-  background-image: url(/flags/1x1/gb.svg);
+.flag-icon-en.flag-icon-squared {
+  background-image: url(/flags/1x1/en.svg);
 }
 .flag-icon-de {
   background-image: url(/flags/4x3/de.svg);
@@ -1379,7 +1379,8 @@ th.normal {
   border-top: 1px solid #ccc;
 }
 .booking-gallery-offer,
-.booking-gallery-header {
+.booking-gallery-header,
+.booking-gallery-allocation {
   display: block;
   text-align: center;
   white-space: nowrap;
@@ -1390,6 +1391,9 @@ th.normal {
 }
 .booking-gallery-header {
   font-weight: bold;
+}
+.booking-gallery-allocation {
+  font-size: 11px;
 }
 .booking-disabled {
   background: #e7e7e7;
