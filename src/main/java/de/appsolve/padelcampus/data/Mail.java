@@ -68,8 +68,7 @@ public class Mail {
     }
 
     public void setRecipients(List<? extends EmailContact> contacts) {
-        List<EmailContact> list = new ArrayList<>(contacts);
-        this.recipients = list;
+        this.recipients = (List<EmailContact>) contacts;
     }
     
     public <T extends EmailContact> void addRecipient(T contact) {
