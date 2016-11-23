@@ -164,8 +164,19 @@
                     document.title = $data.find('.document-title:first').text();
                     try {
                         $('title').html(document.title.replace('<', '&lt;').replace('>', '&gt;').replace(' & ', ' &amp; '));
-                        $('meta[name="robots"]').attr('content', $data.find('.document-meta[name="robots"]:first').attr('content'));
-                        $('meta[name="description"]').attr('content', $data.find('.document-meta[name="description"]:first').attr('content'));                        
+                        
+                        $data.find('.document-meta').each(function(){
+                            var name    = $(this).attr('name'),
+                                content = $(this).attr('content');
+                            if (name && content){
+                                var $metaTag = $('head').find('meta[name="'+name+'"]');
+                                if (!$metaTag.length){
+                                    $metaTag = $('<meta name="'+name+'">');
+                                    $('head').append($metaTag);
+                                }
+                                $metaTag.attr('content', content);
+                            }
+                        });                  
                     } catch (Exception) {
                         //empty
                     }
