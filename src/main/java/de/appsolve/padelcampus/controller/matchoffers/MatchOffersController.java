@@ -10,7 +10,6 @@ import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_
 import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.controller.BaseEntityController;
-import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.MatchOfferDAOI;
@@ -151,24 +150,19 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
         
         try {
             model.setOwner(user);
+            boolean isNewMatchOffer = model.getId() == null;
             matchOfferDAO.saveOrUpdate(model);
         
             //inform other users about new offers
-            if (model.getId()==null){
+            if (isNewMatchOffer){
                 List<Player> interestedPlayers = playerDAO.findPlayersInterestedIn(model);
+                interestedPlayers.remove(user);
                 if (!interestedPlayers.isEmpty()){
                     Mail mail = new Mail();
                     mail.setSubject(msg.get("NewMatchOfferMailSubject"));
                     mail.setBody(getNewMatchOfferMailBody(request, model));
-                    
-                    for (Player player: interestedPlayers){
-                        if (!player.equals(user)){
-                            mail.addRecipient(player);
-                        }
-                    }
-                    if (!mail.getRecipients().isEmpty()){
-                        mailUtils.send(mail, request);
-                    }
+                    mail.setRecipients(interestedPlayers);
+                    mailUtils.send(mail, request);
                 }
             }
         } catch (MailException | IOException e){
@@ -205,7 +199,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
 
         Mail existingParticipantsEmail = new Mail();
         existingParticipantsEmail.setFrom(user.getEmail());
-        existingParticipantsEmail.setRecipients(new ArrayList<EmailContact>(offer.getPlayers()));
+        existingParticipantsEmail.setRecipients(new ArrayList<>(offer.getPlayers()));
         
         Mail newParticipantEmail = new Mail();
         newParticipantEmail.addRecipient(user);
