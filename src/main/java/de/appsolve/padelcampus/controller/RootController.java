@@ -16,6 +16,7 @@ import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller()
 @RequestMapping()
 public class RootController extends BaseController{
+    
+    private static final Logger LOG = Logger.getLogger(RootController.class);
     
     @Autowired
     ModuleDAOI moduleDAO;
@@ -80,6 +83,7 @@ public class RootController extends BaseController{
                 if (module != null){
                     return getIndexView(module, new Mail());
                 }
+                LOG.error("Module does not exist: "+moduleTitle);
                 throw new ResourceNotFoundException();
         }
     }
