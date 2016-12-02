@@ -55,10 +55,10 @@ var initTinyMce = function () {
                     }
                 });
                 
-                $('head').append('<script src="/file-manager/dist/assets/vendor.js"></script>');
-                $('head').append('<script src="/file-manager/dist/assets/file-manager.js"></script>');
-                $('head').append('<link href="/file-manager/dist/assets/vendor.css" rel="stylesheet"/>');
-                $('head').append('<link href="/file-manager/dist/assets/file-manager.css" rel="stylesheet"/>');
+                $('head').append('<script src="/filemanager/vendor.js"></script>');
+                $('head').append('<script src="/filemanager/file-manager.js"></script>');
+                $('head').append('<link href="/filemanager/vendor.css" rel="stylesheet"/>');
+                $('head').append('<link href="/filemanager/file-manager.css" rel="stylesheet"/>');
             }
         },
         file_picker_types: 'image',
