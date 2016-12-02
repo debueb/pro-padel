@@ -7,13 +7,15 @@
 package de.appsolve.padelcampus.controller.players;
 
 import de.appsolve.padelcampus.controller.BaseController;
+import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.ParticipantI;
 import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.exceptions.MailException;
+import de.appsolve.padelcampus.utils.PlayerUtil;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
@@ -21,13 +23,16 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -37,6 +42,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller()
 @RequestMapping("/players")
 public class PlayersController extends BaseController {
+    
+    private static final Logger LOG = Logger.getLogger(PlayersController.class);
     
     @Autowired
     PlayerDAOI playerDAO;
@@ -50,9 +57,23 @@ public class PlayersController extends BaseController {
     @Autowired
     SessionUtil sessionUtil;
     
-    @RequestMapping("/player/{UUID}")
+    @RequestMapping(method=GET, value="/player/{UUID}")
     public ModelAndView getPlayer(@PathVariable("UUID") String UUID, HttpServletRequest request){
         return getPlayerView(playerDAO.findByUUID(UUID));
+    }
+    
+    @RequestMapping(method=POST, value="/player/{UUID}")
+    public ModelAndView resendAccountVerificationEmail(@PathVariable("UUID") String UUID, HttpServletRequest request) throws MailException, IOException{
+        Player player = sessionUtil.getUser(request);
+        String accountVerificationLink = PlayerUtil.getAccountVerificationLink(request, player);
+        Mail mail = new Mail();
+        mail.addRecipient(player);
+        mail.setSubject(msg.get("AccountVerificationEmailSubject"));
+        mail.setBody(StringEscapeUtils.unescapeJava(msg.get("AccountVerificationEmailBody", new Object[]{player.toString(), accountVerificationLink, RequestUtil.getBaseURL(request)})));
+        mailUtils.send(mail, request);
+        ModelAndView mav = getPlayerView(playerDAO.findByUUID(UUID));
+        mav.addObject("AccountVerificationLinkSent", true);
+        return mav;
     }
     
     @RequestMapping(value = "/player/{UUID}/vcard.vcf")

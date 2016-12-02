@@ -11,10 +11,13 @@
             <div class="panel-heading">
                 <h4><fmt:message key="RegistrationEmailVerified"/></h4>
             </div>
+            <div class="panel-body">
+                <div class="alert alert-success"><fmt:message key="EmailSuccessfullyVerified"/></div>
+            </div>
         </div>
 
 
-        <div class="alert alert-success"><fmt:message key="EmailSuccessfullyVerified"/></div>
+        
     </div>
 </div>
 

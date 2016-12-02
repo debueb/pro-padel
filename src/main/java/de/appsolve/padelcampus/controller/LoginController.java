@@ -15,7 +15,6 @@ import de.appsolve.padelcampus.db.model.Contact;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.utils.LoginUtil;
-import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.PlayerUtil;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
@@ -54,9 +53,6 @@ public class LoginController extends BaseController{
     
     @Autowired
     EventDAOI eventDAO;
-    
-    @Autowired
-    Msg msg;
     
     @Autowired
     SessionUtil sessionUtil;
@@ -135,10 +131,11 @@ public class LoginController extends BaseController{
     }
     
     @RequestMapping(value="confirm/{UUID}")
-    public ModelAndView confirmEmail(@PathVariable("UUID") String UUID){
+    public ModelAndView confirmEmail(HttpServletRequest request, @PathVariable("UUID") String UUID){
         Player player = playerDAO.findByUUID(UUID);
         player.setVerified(true);
         playerDAO.saveOrUpdate(player);
+        sessionUtil.setUser(request, player);
         ModelAndView mav = new ModelAndView("login/confirm-email");
         return mav;
     }
@@ -294,15 +291,12 @@ public class LoginController extends BaseController{
             //create player object which also generates a UUID
             player = playerDAO.saveOrUpdate(player);
             
-            String confirmRegistrationURL = RequestUtil.getBaseURL(request)+"/login/confirm/"+player.getUUID();
+            String accountVerificationLink = PlayerUtil.getAccountVerificationLink(request, player);
             
             Mail mail = new Mail();
-            Contact contact = new Contact();
-            contact.setEmailAddress(player.getEmail());
-            contact.setEmailDisplayName(player.toString());
-            mail.addRecipient(contact);
+            mail.addRecipient(player);
             mail.setSubject(msg.get("RegistrationMailSubject"));
-            mail.setBody(StringEscapeUtils.unescapeJava(msg.get("RegistrationMailBody", new Object[]{player.toString(), confirmRegistrationURL, RequestUtil.getBaseURL(request)})));
+            mail.setBody(StringEscapeUtils.unescapeJava(msg.get("RegistrationMailBody", new Object[]{player.toString(), accountVerificationLink, RequestUtil.getBaseURL(request)})));
             try {                
                 mailUtils.send(mail, request);
             } catch (IOException | MailException e){

@@ -6,11 +6,7 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import static de.appsolve.padelcampus.constants.Constants.UTF8;
-import de.appsolve.padelcampus.utils.CryptUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -166,36 +162,6 @@ public class Game extends CustomerEntity{
 
     public void setNextGame(Game nextGame) {
         this.nextGame = nextGame;
-    }
-    
-    public String getObfuscatedMailTo() throws UnsupportedEncodingException{
-        StringBuilder builder = new StringBuilder(CryptUtil.rot47("?cc="));
-        for (Participant participant: getParticipants()){
-            if (participant instanceof Team){
-                Team team = (Team) participant;
-                for (Player player: team.getPlayers()){
-                    builder.append(player.getObfuscatedEmail());
-                    builder.append(CryptUtil.rot47(","));
-                }
-            } else if (participant instanceof Player){
-                Player player = (Player) participant;
-                builder.append(player.getObfuscatedEmail());
-                builder.append(CryptUtil.rot47(","));
-            }
-        }
-        if (builder.length()>4){
-            int i = 0;
-                builder.append(CryptUtil.rot47("&subject="));
-            for (Participant participant: getParticipants()){
-                builder.append(CryptUtil.rot47(URLEncoder.encode(participant.toString(), UTF8)));
-                if (i<getParticipants().size()-1){
-                    builder.append(CryptUtil.rot47(" vs. "));
-                }
-                i++;
-            }
-            return builder.toString();
-        }
-        return "";
     }
     
     public Set<Player> getPlayers(){

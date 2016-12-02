@@ -12,56 +12,62 @@
                 <h4>${Player}</h4>
             </div>
             <div class="panel-body">
-
-
                 <div class="text-center">
                     <jsp:include page="/jsp/players/include/profile-image.jsp"/>
                 </div>
 
-                <div class="list-group unit">
-                    <a href="/teams/player/${Player.UUID}" class="list-group-item ajaxify">
-                        <div class="list-item-text"><fmt:message key="TeamsWith"><fmt:param>${Player}</fmt:param></fmt:message>
+                <c:choose>
+                    <c:when test="${empty sessionScope.user}">
+                        <div class="alert alert-info unit-2">
+                            <fmt:message key="LogInToContact"><fmt:param value="${Player}"/></fmt:message>
+                        </div>
+                        <c:url value="/players/player/${Player.UUID}" var="playerURL"/>
+                        <a class="btn btn-primary btn-block unit-2 ajaxify" href="/login?redirect=${playerURL}"><fmt:message key="Login"/></a>
+                        <a class="btn btn-primary btn-block ajaxify" href="/login/register?redirect=${playerURL}"><fmt:message key="Register"/></a>
+                    </c:when>
+                    <c:when test="${not sessionScope.user.verified and not AccountVerificationLinkSent}">
+                        <div class="alert alert-info unit-2">
+                            <fmt:message key="VerifyAccountToContact"><fmt:param value="${Player}"/></fmt:message>
+                        </div>
+                        <form class="unit-2" method="POST">
+                            <button type="submit" class="btn btn-block btn-primary"><fmt:message key="ResendVerificationEmail"/></button>
+                        </form>
+                    </c:when>
+                    <c:when test="${not sessionScope.user.verified and AccountVerificationLinkSent}">
+                        <div class="alert alert-info unit-2">
+                            <fmt:message key="AccountVerificationLinkSent"/>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="list-group unit-2">
+                            <a href="/teams/player/${Player.UUID}" class="list-group-item ajaxify">
+                                <div class="list-item-text"><fmt:message key="TeamsWith"><fmt:param>${Player}</fmt:param></fmt:message>
                                     <div class="list-group-item-icon"><div class="fa fa-group"></div></div>
                                 </div>
                             </a>
-                    <c:if test="${sessionScope.accessLevel == 'loggedInAndParticipant'}">
-                        <a class="list-group-item private-data" data-fake="${Player.obfuscatedPhone}" data-prefix="tel:">
-                            <div class="list-item-text"><fmt:message key="Call"/>
-                                <div class="list-group-item-icon"><div class="fa fa-phone"></div></div>
-                            </div>
-                        </a>
-                        <a class="list-group-item private-data" data-fake="${Player.obfuscatedPhone}" data-prefix="sms:">
-                            <div class="list-item-text"><fmt:message key="SendSMS"/>
-                                <div class="list-group-item-icon"><div class="fa fa-envelope"></div></div>
-                            </div>
-                        </a>
-                        <a class="list-group-item private-data" data-fake="${Player.obfuscatedEmail}" data-prefix="mailto:">
-                            <div class="list-item-text"><fmt:message key="SendMail"/>
-                                <div class="list-group-item-icon"><div class="fa fa-at"></div></div>
-                            </div>
-                        </a>
-                        <a href="/players/player/${Player.UUID}/vcard.vcf" class="list-group-item" download>
-                            <div class="list-item-text"><fmt:message key="AddToContacts"/>
-                                <div class="list-group-item-icon"><div class="fa fa-phone-square"></div></div>
-                            </div>
-                        </a>     
-                    </c:if>
-                </div>
-
-                <c:if test="${empty sessionScope.accessLevel}">
-                    <div class="alert alert-info unit">
-                        <fmt:message key="LogInToContact"><fmt:param value="${Player}"/></fmt:message>
+                            <a class="list-group-item private-data" data-fake="${Player.obfuscatedPhone}" data-prefix="tel:">
+                                <div class="list-item-text"><fmt:message key="Call"/>
+                                    <div class="list-group-item-icon"><div class="fa fa-phone"></div></div>
+                                </div>
+                            </a>
+                            <a class="list-group-item private-data" data-fake="${Player.obfuscatedPhone}" data-prefix="sms:">
+                                <div class="list-item-text"><fmt:message key="SendSMS"/>
+                                    <div class="list-group-item-icon"><div class="fa fa-envelope"></div></div>
+                                </div>
+                            </a>
+                            <a class="list-group-item private-data" data-fake="${Player.obfuscatedEmail}" data-prefix="mailto:">
+                                <div class="list-item-text"><fmt:message key="SendMail"/>
+                                    <div class="list-group-item-icon"><div class="fa fa-at"></div></div>
+                                </div>
+                            </a>
+                            <a href="/players/player/${Player.UUID}/vcard.vcf" class="list-group-item" download>
+                                <div class="list-item-text"><fmt:message key="AddToContacts"/>
+                                    <div class="list-group-item-icon"><div class="fa fa-phone-square"></div></div>
+                                </div>
+                            </a>  
                         </div>
-                    <c:url value="/players/player/${Player.UUID}" var="playerURL"/>
-                    <a class="btn btn-primary btn-block unit ajaxify" href="/login?redirect=${playerURL}"><fmt:message key="Login"/></a>
-                    <a class="btn btn-primary btn-block ajaxify" href="/login/register?redirect=${playerURL}"><fmt:message key="Register"/></a>
-                </c:if>
-
-                <c:if test="${sessionScope.accessLevel == 'loggedIn'}">
-                    <div class="alert alert-info unit">
-                        <fmt:message key="NeedToParticipateToContact"><fmt:param value="${Player}"/></fmt:message>
-                        </div>
-                </c:if>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
     </div>

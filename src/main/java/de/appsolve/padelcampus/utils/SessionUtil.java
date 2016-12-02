@@ -60,14 +60,6 @@ public class SessionUtil {
                     privileges.addAll(adminGroup.getPrivileges());
                 }
                 session.setAttribute(SESSION_PRIVILEGES, privileges);
-                
-                //set access level
-                String accessLevel = "loggedIn";
-                List<Event> eventsWithParticipant = eventDAO.findAllWithParticipant(player);
-                if (!eventsWithParticipant.isEmpty()){
-                    accessLevel = "loggedInAndParticipant";
-                }
-                session.setAttribute(SESSION_ACCESS_LEVEL, accessLevel);
             }
         }
     }

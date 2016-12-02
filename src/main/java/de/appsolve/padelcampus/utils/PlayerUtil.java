@@ -7,6 +7,7 @@ package de.appsolve.padelcampus.utils;
 
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Player;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -36,5 +37,9 @@ public class PlayerUtil {
         } else {
             return BCrypt.checkpw(password, player.getPasswordHash());
         }
+    }
+    
+    public static String getAccountVerificationLink(HttpServletRequest request, Player player){
+        return RequestUtil.getBaseURL(request)+"/login/confirm/"+player.getUUID();
     }
 }
