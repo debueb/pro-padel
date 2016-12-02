@@ -71,6 +71,7 @@ public class RootController extends BaseController{
     public ModelAndView getIndex(HttpServletRequest request, @PathVariable("moduleId") String moduleTitle){
         switch (moduleTitle){
             case "home":
+            case "netbeans-tomcat-status-test":
                 HttpSession session = request.getSession(true);
                 session.setAttribute("LANDINGPAGE_PAGE_CHECKED", true);
                 return getHomePage(); 
