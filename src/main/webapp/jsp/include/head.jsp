@@ -54,8 +54,8 @@
         <c:set var="compressJS" value="${compress.js}"/>
         <c:choose>
             <c:when test="${compressJS and empty param.debug}">
-                <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-                <script>window.jQuery || document.write('<script src="/js/noconcat/10_jquery-1.12.4.min.js">\x3C/script>');</script>
+                <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+                <script>window.jQuery || document.write('<script src="/js/noconcat/10_jquery-2.2.4.min.js">\x3C/script>');</script>
                 <script src="/js/all.min.js"></script>
                 <script src="/js/noconcat/31_datepicker-de.js"></script>
             </c:when>
