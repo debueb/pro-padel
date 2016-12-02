@@ -362,6 +362,7 @@
                         <exclude>**/css/**</exclude> <!-- each customer gets their own minified css generated during app start -->
                         <exclude>**/pro/js/**</exclude> <!-- do not include js from /pro submodule -->
                         <exclude>**/js/noconcat/**</exclude> <!-- do not include js for paths that load conditionally -->
+                        <exclude>**/file-manager/**</exclude> <!-- do not include js for paths that load conditionally -->
                     </excludes>
                     <jswarn>false</jswarn>
                     <nosuffix>true</nosuffix>

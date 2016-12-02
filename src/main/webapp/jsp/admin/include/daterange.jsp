@@ -1,5 +1,5 @@
 <%@include file="/jsp/include/include.jsp"%>
-<spf:form method="POST" modelAttribute="DateRange">
+<spf:form method="POST" class="ajaxify" modelAttribute="DateRange">
     <%-- Start Datum --%>
     <div class="datepicker-container">
         <div class="datepicker-text-container form-top-element">

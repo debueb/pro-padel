@@ -1,42 +1,5 @@
 var initTinyMce = function () {
     
-    window.app = app || {};
-    app.imageHandler = {};
-    
-    app.imageHandler.uploadImage = function(files, callback){
-        app.main.showSpinner();
-        var data = new FormData(),
-            file = files[0];
-        
-        if (!(/^image\//.test(file.type))){
-            app.main.hideSpinner();
-            alert('Currently only image uploads are supported.');
-            return;
-        }
-        
-        data.append("file", file);
-        $.ajax({
-            accepts: "text/plain",
-            dataType: "text",
-            data: data,
-            type: 'POST',
-            enctype: 'multipart/form-data',
-            url: '/images/upload',
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function(url) {
-                callback(url);
-            },
-            error: function(e){
-                alert("Failed to upload image: Error "+e.status+" "+e.statusText);
-            }, 
-            complete: function(){
-                app.main.hideSpinner();
-            }
-        });
-    };
-    
     var cssLinks =  $('link[title="project_css"]').map(function(i, link) {
                         return $(link).attr('href');
                     }).toArray().join(',');
@@ -85,11 +48,17 @@ var initTinyMce = function () {
             }
 
             if (meta.filetype === 'image') {
-                $('body').append($('<input id="file-input" name="image" type="file">'));
-                $('#file-input').off('change').on('change', function(){
-                    app.imageHandler.uploadImage(this.files, callback);
+                $('#file-manager').data({
+                    'basePath': '/admin/files',
+                    'onFileSelect': function(url){
+                        callback(url);
+                    }
                 });
-                $('#file-input').click();
+                
+                $('head').append('<script src="/file-manager/dist/assets/vendor.js"></script>');
+                $('head').append('<script src="/file-manager/dist/assets/file-manager.js"></script>');
+                $('head').append('<link href="/file-manager/dist/assets/vendor.css" rel="stylesheet"/>');
+                $('head').append('<link href="/file-manager/dist/assets/file-manager.css" rel="stylesheet"/>');
             }
         },
         file_picker_types: 'image',

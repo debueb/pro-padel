@@ -60,8 +60,7 @@
                 <script src="/js/noconcat/31_datepicker-de.js"></script>
             </c:when>
             <c:otherwise>
-                <%-- we use jquery 1.x instead of 2.x to support older Android browsers. Specifically, jQuery.on() does not work on Android 2.1 --%>
-                <script src="/js/noconcat/10_jquery-1.12.4.min.js"></script>
+                <script src="/js/noconcat/10_jquery-2.2.4.min.js"></script>
                 <script src="/js/20_bootstrap.min.js"></script>
                 <script src="/js/25_bootstrap-select.js"></script>
                 <script src="/js/26_ajax-bootstrap-select.js"></script>

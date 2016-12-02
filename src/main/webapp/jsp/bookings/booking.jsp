@@ -14,7 +14,7 @@
                         <div class="alert alert-danger">${error}</div>
                     </c:when>
                     <c:otherwise>
-                        <spf:form method="POST" class="form-signin" role="form" modelAttribute="Booking">
+                        <spf:form method="POST" class="ajaxify" modelAttribute="Booking">
                             <spf:input type="hidden" path="bookingType"/>
                             <spf:input type="hidden" path="publicBooking" value="true"/>
                             
