@@ -41,11 +41,11 @@ public class MatchOffer extends CustomerEntity{
     @ManyToOne(fetch = FetchType.EAGER)
     private Player owner;
     
-    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name = "MatchOffer_players", joinColumns = @JoinColumn(name = "matchoffer_id"), inverseJoinColumns = @JoinColumn(name = "player_id"))
     private Set<Player> players;
     
-    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name = "MatchOffer_waitingList", joinColumns = @JoinColumn(name = "matchoffer_id"), inverseJoinColumns = @JoinColumn(name = "waitingList_id"))
     private Set<Player> waitingList;
     
