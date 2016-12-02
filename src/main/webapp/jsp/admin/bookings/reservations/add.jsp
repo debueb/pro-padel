@@ -11,7 +11,7 @@
             </div>
             <div class="panel-body">
 
-                <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
+                <spf:form method="POST" class="ajaxify" modelAttribute="Model">
                     <div class="alert alert-info"><fmt:message key="CourtReservationDesc"/></div>
                     <div class="alert alert-danger unit-2"><spf:errors path="*" cssClass="error" htmlEscape="false"/></div>
                     <spf:input path="id" type="hidden"/>
