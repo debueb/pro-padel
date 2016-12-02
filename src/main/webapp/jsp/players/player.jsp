@@ -15,7 +15,6 @@
                 <div class="text-center">
                     <jsp:include page="/jsp/players/include/profile-image.jsp"/>
                 </div>
-
                 <c:choose>
                     <c:when test="${empty sessionScope.user}">
                         <div class="alert alert-info unit-2">
@@ -29,7 +28,7 @@
                         <div class="alert alert-info unit-2">
                             <fmt:message key="VerifyAccountToContact"><fmt:param value="${Player}"/></fmt:message>
                         </div>
-                        <form class="unit-2" method="POST">
+                        <form class="unit-2" method="POST" action="/players/player/${Player.UUID}">
                             <button type="submit" class="btn btn-block btn-primary"><fmt:message key="ResendVerificationEmail"/></button>
                         </form>
                     </c:when>
