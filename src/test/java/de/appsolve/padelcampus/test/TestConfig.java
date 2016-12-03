@@ -12,7 +12,8 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -28,6 +29,35 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan(basePackages = "de.appsolve")
 public class TestConfig {
     
+//    @Bean
+//    public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
+//        LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
+//        emf.setDataSource(dataSource());
+//        emf.setPackagesToScan("de.appsolve.padelcampus.db.model");
+//        emf.setJpaVendorAdapter(jpaVendorAdapter());
+//        Map<String, Object> propertyMap = new HashMap<>();
+//        propertyMap.put("hibernate.hbm2ddl.auto", "create");
+//        propertyMap.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+//        propertyMap.put("jadira.usertype.autoRegisterUserTypes", "true");
+//        emf.setJpaPropertyMap(propertyMap);
+//        return emf;
+//    }
+    
+//    @Bean
+//    public DataSource dataSource(){
+//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+//        dataSource.setUrl("jdbc:mysql://localhost:3306/padelcampustest?useSSL=false");
+//        dataSource.setUsername("padelcampustest");
+//        dataSource.setPassword("padelcampustest");
+//        return dataSource;
+//    }
+
+    @Bean
+    public JpaVendorAdapter jpaVendorAdapter(){
+        return new HibernateJpaVendorAdapter();
+    }
+    
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
@@ -36,25 +66,17 @@ public class TestConfig {
         emf.setJpaVendorAdapter(jpaVendorAdapter());
         Map<String, Object> propertyMap = new HashMap<>();
         propertyMap.put("hibernate.hbm2ddl.auto", "create");
-        propertyMap.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+        propertyMap.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
         propertyMap.put("jadira.usertype.autoRegisterUserTypes", "true");
         emf.setJpaPropertyMap(propertyMap);
         return emf;
     }
     
     @Bean
-    public JpaVendorAdapter jpaVendorAdapter(){
-        return new HibernateJpaVendorAdapter();
-    }
-
-    @Bean
     public DataSource dataSource(){
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/padelcampustest?useSSL=false");
-        dataSource.setUsername("padelcampustest");
-        dataSource.setPassword("padelcampustest");
-        return dataSource;
+        return new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.H2)
+                .build();
     }
     
     @Bean

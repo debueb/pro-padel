@@ -305,6 +305,12 @@
             <version>1.5</version>
             <classifier>jar-with-dependencies</classifier>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.193</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
