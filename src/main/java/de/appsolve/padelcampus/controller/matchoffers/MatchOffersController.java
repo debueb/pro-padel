@@ -303,9 +303,10 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
     private ModelAndView getShowView(HttpServletRequest request, MatchOffer model) {
         LocalDate today = new LocalDate();
         LocalTime now = new LocalTime(Constants.DEFAULT_TIMEZONE);
-        if (model.getStartDate().isBefore(today) || (model.getStartDate().equals(today) && model.getStartTime().isBefore(now))){
-            ModelAndView expired = new ModelAndView("matchoffers/expired", "Model", model);
-            return expired;
+        if (model == null){
+            return new ModelAndView("matchoffers/invalid");
+        } else if (model.getStartDate().isBefore(today) || (model.getStartDate().equals(today) && model.getStartTime().isBefore(now))){
+            return new ModelAndView("matchoffers/expired", "Model", model);
         } else {
             ModelAndView mav = new ModelAndView("matchoffers/offer", "Model", model);
             mav.addObject("OfferURL", getOfferURL(request, model));
