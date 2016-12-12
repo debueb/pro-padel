@@ -158,8 +158,8 @@ public class AppConfig extends WebMvcConfigurerAdapter{
     @Bean
     public ClientHttpRequestFactory openshiftClientHttpRequestFactory() {
         HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        factory.setReadTimeout(60000);
-        factory.setConnectTimeout(60000);
+        factory.setReadTimeout(3*60000);
+        factory.setConnectTimeout(3*60000);
         return factory;
     }
     
