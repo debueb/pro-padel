@@ -11,11 +11,19 @@
             </div>
             <div class="panel-body">
                 <div class="list-group">
-                    <c:forEach var="Participant" items="${Teams}">
-                        <a href="/teams/team/${Participant.UUID}" class="list-group-item ajaxify">
-                            <div class="list-item-text">${Participant}</div>
-                        </a>
-                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${empty Teams}">
+                            <div class="alert alert-info"><fmt:message key="NoTeams"/></div>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach var="Participant" items="${Teams}">
+                                <a href="/teams/team/${Participant.UUID}" class="list-group-item ajaxify">
+                                    <div class="list-item-text">${Participant}</div>
+                                </a>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
+                    
                 </div>
             </div>
         </div>
