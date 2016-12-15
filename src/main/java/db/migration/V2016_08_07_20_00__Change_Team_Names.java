@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import org.apache.log4j.Logger;
 import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,10 +35,10 @@ public class V2016_08_07_20_00__Change_Team_Names implements SpringJdbcMigration
     @Override
     public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
         LOG.info("Updating Team names");
-        List<TeamObject> data = jdbcTemplate.query("select `" + ID_FIELD_NAME + "` from `"+TABLE_NAME+"` where `participantType` = 'Team'", new TeamObjectRowMapper<TeamObject>());
+        List<TeamObject> data = jdbcTemplate.query("select `" + ID_FIELD_NAME + "` from `"+TABLE_NAME+"` where `participantType` = 'Team'", new TeamObjectRowMapper<>());
         for (TeamObject entry: data){
             //get team members
-            List<MemberObject> members = jdbcTemplate.query("select `"+PLAYERS_ID_FIELD_NAME+"`, `"+LASTNAME_FIELD_NAME+"` from `"+TABLE_NAME_2+"` inner join `"+TABLE_NAME+"` where `"+PARTICIPANTS_ID_FIELD_NAME+"` = "+entry.getId()+" and "+TABLE_NAME+".participantType = 'Player' and "+TABLE_NAME+".id = "+PLAYERS_ID_FIELD_NAME+";", new MemberObjectRowMapper<MemberObject>());
+            List<MemberObject> members = jdbcTemplate.query("select `"+PLAYERS_ID_FIELD_NAME+"`, `"+LASTNAME_FIELD_NAME+"` from `"+TABLE_NAME_2+"` inner join `"+TABLE_NAME+"` where `"+PARTICIPANTS_ID_FIELD_NAME+"` = "+entry.getId()+" and "+TABLE_NAME+".participantType = 'Player' and "+TABLE_NAME+".id = "+PLAYERS_ID_FIELD_NAME+";", new MemberObjectRowMapper<>());
             Collections.sort(members);
             StringBuilder teamName = new StringBuilder();
             for (int i=0; i<members.size(); i++){
@@ -88,6 +89,35 @@ public class V2016_08_07_20_00__Change_Team_Names implements SpringJdbcMigration
         @Override
         public int compareTo(MemberObject o) {
             return getLastName().compareToIgnoreCase(o.getLastName());
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 29 * hash + Objects.hashCode(this.players_id);
+            hash = 29 * hash + Objects.hashCode(this.lastName);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final MemberObject other = (MemberObject) obj;
+            if (!Objects.equals(this.lastName, other.lastName)) {
+                return false;
+            }
+            if (!Objects.equals(this.players_id, other.players_id)) {
+                return false;
+            }
+            return true;
         }
     }
     

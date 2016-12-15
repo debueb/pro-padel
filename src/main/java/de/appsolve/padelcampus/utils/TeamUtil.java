@@ -23,21 +23,19 @@ public class TeamUtil {
         StringBuilder name = new StringBuilder();
         int i=0;
         Set<Player> players = model.getPlayers();
-        if (players != null){
-            List<Player> sortedPlayers = new ArrayList<>(players);
-            Collections.sort(sortedPlayers, new Comparator<Player>(){
-                @Override
-                public int compare(Player o1, Player o2) {
-                    return o1.getLastName().compareTo(o2.getLastName());
-                }
-            });
-            for (Player player: sortedPlayers){
-                name.append(player.getLastName());
-                if (i<model.getPlayers().size()-1){
-                    name.append(" / ");
-                }
-                i++;
+        List<Player> sortedPlayers = new ArrayList<>(players);
+        Collections.sort(sortedPlayers, new Comparator<Player>(){
+            @Override
+            public int compare(Player o1, Player o2) {
+                return o1.getLastName().compareTo(o2.getLastName());
             }
+        });
+        for (Player player: sortedPlayers){
+            name.append(player.getLastName());
+            if (i<model.getPlayers().size()-1){
+                name.append(" / ");
+            }
+            i++;
         }
         return name.toString();
     }

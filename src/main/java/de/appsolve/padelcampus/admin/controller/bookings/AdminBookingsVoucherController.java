@@ -81,9 +81,6 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
     @Autowired
     GameDAOI gameDAO;
     
-    @Autowired
-    MailUtils mailUtils;
-    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));

@@ -17,6 +17,8 @@ import org.joda.time.LocalDate;
 @Entity
 public class LoginCookie extends CustomerEntity{
     
+    private static final long serialVersionUID = 1L;
+    
     private String UUID;
     
     private String playerUUID;

@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -125,14 +126,15 @@ public class EventsController extends BaseController{
         SortedMap<Community, Map<Participant, Map<Game, String>>> communityParticipantGameResultMap = new TreeMap<>();
         
         Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(event.getGames(), false);
-        for (Participant p: participantGameResultMap.keySet()){
+        for (Entry<Participant,Map<Game,String>> entry: participantGameResultMap.entrySet()){
+            Participant p = entry.getKey();
             if (p instanceof Team){
                 Team team = (Team) p;
                 Map<Participant, Map<Game, String>> participantMap = communityParticipantGameResultMap.get(team.getCommunity());
                 if (participantMap == null){
                     participantMap = new HashMap<>();
                 }
-                participantMap.put(p, participantGameResultMap.get(p));
+                participantMap.put(p, entry.getValue());
                 communityParticipantGameResultMap.put(team.getCommunity(), participantMap);
             }
         }

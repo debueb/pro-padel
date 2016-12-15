@@ -118,9 +118,6 @@ public class EventsUtil {
                         }
                         if (second.getParticipants().size()==1){
                             Set<Participant> existingParticipants = game.getParticipants();
-                            if (existingParticipants == null){
-                                existingParticipants = new HashSet<>();
-                            }
                             existingParticipants.addAll(new HashSet<>(second.getParticipants()));
                             game.setParticipants(existingParticipants);
                         }
@@ -128,9 +125,9 @@ public class EventsUtil {
 
                 }
 
-                if (numGamesPerRound == 1){
-                    //TODO: when we are in the final, check if we also play for third place
-                }
+//                if (numGamesPerRound == 1){
+//                    //TODO: when we are in the final, check if we also play for third place
+//                }
 
                 game = gameDAO.saveOrUpdate(game);
                 games.add(game);

@@ -16,8 +16,10 @@ import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import java.math.BigDecimal;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.SortedMap;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,18 +62,20 @@ public class RankingController extends BaseController {
             case "team":
                 rankings = rankingUtil.getTeamRanking(gender);
                 break;
+            default:
+                throw new NotImplementedException("unsupported category");
         }
         BigDecimal hundred = new BigDecimal("100");
         if (rankings != null){
-            Iterator<? extends Participant> iterator = rankings.keySet().iterator();
+            Iterator<Map.Entry<Participant, BigDecimal>> iterator = rankings.entrySet().iterator();
             while (iterator.hasNext()){
-                Participant p = iterator.next();
-                BigDecimal ranking = rankings.get(p);
+                Map.Entry<Participant, BigDecimal> entry = iterator.next();
+                Participant p = entry.getKey();
+                BigDecimal ranking = entry.getValue();
                 ranking = ranking.divide(hundred);
                 rankings.put(p, ranking);
             }
         }
-        
         mav.addObject("Rankings", rankings);
         mav.addObject("path", getPath());
         return mav;

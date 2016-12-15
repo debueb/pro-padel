@@ -19,8 +19,8 @@ import org.springframework.http.client.ClientHttpResponse;
  */
 public class CloudFlareApiRequestInterceptor implements ClientHttpRequestInterceptor{
 
-    private final String CLOUDFLARE_API_EMAIL   = "d.wisskirchen@gmail.com";
-    private final String CLOUDFLARE_API_KEY     = "83e79b3c1fc04c0ba4a27c7205cfff520381b";
+    private static final String CLOUDFLARE_API_EMAIL   = "d.wisskirchen@gmail.com";
+    private static final String CLOUDFLARE_API_KEY     = "83e79b3c1fc04c0ba4a27c7205cfff520381b";
     
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {

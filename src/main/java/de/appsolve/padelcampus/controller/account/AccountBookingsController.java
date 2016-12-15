@@ -11,7 +11,6 @@ import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.util.Iterator;
 import java.util.List;
@@ -38,9 +37,6 @@ public class AccountBookingsController extends BaseController {
     
     @Autowired
     SessionUtil sessionUtil;
-    
-    @Autowired
-    Msg msg;
     
     @RequestMapping()
     public ModelAndView getIndex(HttpServletRequest request){

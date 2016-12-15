@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.admin.controller.general;
 
+import de.appsolve.padelcampus.comparators.CssAttributeComparator;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.CssAttributeDAOI;
@@ -19,7 +20,6 @@ import de.appsolve.padelcampus.utils.SessionUtil;
 import de.appsolve.padelcampus.utils.imaging.ImageUtilI;
 import java.io.File;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.codec.binary.Base64;
@@ -166,18 +166,7 @@ public class AdminGeneralDesignController extends BaseController{
             }
         }
         
-        Collections.sort(cssAttributes, new Comparator<CssAttribute>() {
-
-            @Override
-            public int compare(CssAttribute o1, CssAttribute o2) {
-                if (o1.getName().equals("customCss")){
-                    return o2.getName().endsWith("Color") ? 1 : -1;
-                }
-                Boolean endsWith1 = o1.getName().endsWith("Color");
-                Boolean endsWith2 = o2.getName().endsWith("Color");
-                return endsWith2.compareTo(endsWith1);
-            }
-        });
+        Collections.sort(cssAttributes, new CssAttributeComparator());
         return cssAttributes;
     }
 

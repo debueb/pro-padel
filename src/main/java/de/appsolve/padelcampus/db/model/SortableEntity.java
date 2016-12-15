@@ -13,7 +13,7 @@ import javax.persistence.MappedSuperclass;
  * @author dominik
  */
 @MappedSuperclass
-public abstract class SortableEntity extends ComparableEntity implements Comparable<BaseEntityI>{
+public abstract class SortableEntity extends ComparableEntity{
     
     @Column
     private Long position;

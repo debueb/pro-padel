@@ -7,7 +7,6 @@ package de.appsolve.padelcampus.controller.bookings;
 
 import de.appsolve.padelcampus.db.dao.PayDirektConfigDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
-import de.appsolve.padelcampus.db.model.PayDirektConfig;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +28,7 @@ public class BookingsPayDirektController extends BookingsPaymentController {
         if (booking.getPaymentConfirmed()){
             return BookingsController.getRedirectToSuccessView(booking);
         }
-        PayDirektConfig payDirektConfig = payDirektConfigDAO.findFirst();
+        payDirektConfigDAO.findFirst();
         throw new Exception("PayDirekt Zahlungen noch nicht implementiert.");
     }
     

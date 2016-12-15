@@ -29,7 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  * @param <T>
  */
-public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEntityController<T> implements BaseEntityControllerI{
+public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEntityController<T>{
     
     protected static final Logger LOG = Logger.getLogger(AdminBaseController.class);
     

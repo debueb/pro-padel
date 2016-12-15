@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public abstract class GenericDAO<T extends CustomerEntity> extends BaseEntityDAO<T> implements BaseEntityDAOI<T> {
+public abstract class GenericDAO<T extends CustomerEntity> extends BaseEntityDAO<T>{
 
     private static final Logger LOG = Logger.getLogger(GenericDAO.class);
     

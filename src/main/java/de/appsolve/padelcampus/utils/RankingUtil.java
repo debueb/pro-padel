@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.utils;
 
+import de.appsolve.padelcampus.comparators.GameByStartDateComparator;
 import static de.appsolve.padelcampus.constants.Constants.MATCH_PLAY_FACTOR;
 import static de.appsolve.padelcampus.constants.Constants.MATCH_WIN_FACTOR;
 import de.appsolve.padelcampus.constants.Gender;
@@ -24,7 +25,6 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -126,15 +126,7 @@ public class RankingUtil {
     
     private SortedMap<Participant, BigDecimal> getRanking(List<Game> games) {
         rankingMap = new TreeMap<>();
-        SortedSet<Game> sortedGames = new TreeSet<>(new Comparator<Game>() {
-            @Override
-            public int compare(Game o1, Game o2) {
-                if (o1.getStartDate()!=null && o2.getStartDate()!=null){
-                    return o1.getStartDate().compareTo(o2.getStartDate());
-                }
-                return o1.getId().compareTo(o2.getId());
-            }
-        });
+        SortedSet<Game> sortedGames = new TreeSet<>(new GameByStartDateComparator());
         sortedGames.addAll(games);
         for (Game game : sortedGames) {
             Set<Participant> participants = game.getParticipants();
@@ -248,8 +240,10 @@ public class RankingUtil {
         int setsPlayed = game.getGameSets().size() / 2;
 
         int setsWon = 0;
-        for (Integer set : setMapT1.keySet()) {
-            int gamesWonP1 = setMapT1.get(set) == null ? 0 : setMapT1.get(set);
+        for (Map.Entry<Integer, Integer> entry : setMapT1.entrySet()) {
+            Integer set = entry.getKey();
+            Integer games = entry.getValue();
+            int gamesWonP1 = games == null ? 0 : games;
             int gamesWonP2 = setMapT2.get(set) == null ? 0 : setMapT2.get(set);
             if (gamesWonP1 > gamesWonP2) {
                 setsWon++;
@@ -299,10 +293,12 @@ public class RankingUtil {
                     }
                 }
 
-                for (Integer set : setMapP1.keySet()) {
+                for (Map.Entry<Integer, Integer> entry : setMapP1.entrySet()) {
+                    Integer set = entry.getKey();
+                    Integer setGames = entry.getValue();
                     setsPlayed++;
                     totalSetsPlayed++;
-                    int gamesWonP1 = setMapP1.get(set) == null ? 0 : setMapP1.get(set);
+                    int gamesWonP1 = setGames == null ? 0 : setGames;
                     int gamesWonP2 = setMapP2.get(set) == null ? 0 : setMapP2.get(set);
                     totalGamesWon += gamesWonP1;
                     setsWon += gamesWonP1 > gamesWonP2 ? 1 : 0;

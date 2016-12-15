@@ -69,9 +69,14 @@ public class TimeHeatMapEntry implements Comparable<TimeHeatMapEntry>{
 
     @Override
     public int compareTo(TimeHeatMapEntry o) {
-        int result = time.compareTo(o.time);
-        if (result == 0){
-            result = dayOfWeek.compareTo(o.dayOfWeek);
+        int result = 0;
+        if (time != null){
+            result = time.compareTo(o.time);
+            if (result == 0){
+                if (dayOfWeek != null){
+                    result = dayOfWeek.compareTo(o.dayOfWeek);
+                }
+            }
         }
         return result;
     }

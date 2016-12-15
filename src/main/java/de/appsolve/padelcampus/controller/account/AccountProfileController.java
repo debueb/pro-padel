@@ -14,7 +14,6 @@ import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Image;
 import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import de.appsolve.padelcampus.utils.imaging.ImageUtilI;
 import java.awt.image.BufferedImage;
@@ -43,16 +42,13 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/account/profile")
 public class AccountProfileController extends BaseController {
 
-    private static final Logger log = Logger.getLogger(AccountProfileController.class);
+    private static final Logger LOG = Logger.getLogger(AccountProfileController.class);
 
     @Autowired
     PlayerDAOI playerDAO;
 
     @Autowired
     SessionUtil sessionUtil;
-
-    @Autowired
-    Msg msg;
 
     @Autowired
     @Qualifier("TinifyImageUtil")
@@ -92,8 +88,6 @@ public class AccountProfileController extends BaseController {
             persistedPlayer.setAllowEmailContact(player.getAllowEmailContact());
 
             //resize Image
-            BufferedImage originalImage = null;
-            BufferedImage resizedImage = null;
             try {
                 MultipartFile pictureMultipartFile = player.getProfileImageMultipartFile();
                 if (!pictureMultipartFile.isEmpty()) {
@@ -105,7 +99,7 @@ public class AccountProfileController extends BaseController {
                         if (profileFile.exists()){
                             boolean deleteSuccess = profileFile.delete();
                             if (!deleteSuccess){
-                                log.warn("Unale to delete file "+profileFile.getAbsolutePath());
+                                LOG.warn("Unale to delete file "+profileFile.getAbsolutePath());
                             }
                         }
                     }
@@ -114,18 +108,10 @@ public class AccountProfileController extends BaseController {
                     persistedPlayer.setProfileImage(image);
                 }
             } catch (IOException | ImageProcessingException e) {
-                log.warn("Error while resiging image: " + e.getMessage());
+                LOG.warn("Error while resiging image: " + e.getMessage());
                 bindingResult.addError(new ObjectError("pictureMultipartFile", msg.get("ErrorWhileResizingImage")));
                 return profileView;
-            } finally {
-                if (originalImage!=null){
-                    originalImage.flush();
-                }
-                if (resizedImage!=null){
-                    resizedImage.flush();
-                }
             }
-
             playerDAO.saveOrUpdate(persistedPlayer);
             sessionUtil.setUser(request, persistedPlayer);
         }

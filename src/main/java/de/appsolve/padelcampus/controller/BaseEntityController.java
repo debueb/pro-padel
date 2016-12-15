@@ -6,10 +6,8 @@
 package de.appsolve.padelcampus.controller;
 
 import de.appsolve.padelcampus.db.model.BaseEntityI;
-import de.appsolve.padelcampus.utils.Msg;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public abstract class BaseEntityController<T extends BaseEntityI> extends BaseController implements BaseEntityControllerI {
     
-    private static final Logger log = Logger.getLogger(BaseEntityController.class);
-    
-    @Autowired
-    protected Msg msg;
+    private static final Logger LOG = Logger.getLogger(BaseEntityController.class);
     
     @RequestMapping(value = "/{id}/delete")
     public ModelAndView getDelete(@PathVariable("id") Long id){
@@ -42,7 +37,7 @@ public abstract class BaseEntityController<T extends BaseEntityI> extends BaseCo
         } catch (DataIntegrityViolationException e){
             @SuppressWarnings("unchecked")
             T model = (T)getDAO().findById(id);
-            log.warn("Attempt to delete "+model+" failed due to "+e);
+            LOG.warn("Attempt to delete "+model+" failed due to "+e);
             ModelAndView deleteView = getDeleteView(model);
             deleteView.addObject("error", msg.get("CannotDeleteDueToRefrence", new Object[]{model.toString()}));
             return deleteView;

@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.utils;
 
+import de.appsolve.padelcampus.comparators.PathByFileNameComparator;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.data.CustomerI;
 import de.appsolve.padelcampus.db.dao.CssAttributeBaseDAOI;
@@ -128,9 +129,12 @@ public class HtmlResourceUtil {
             //copy css sortedFiles to data directory
             copyResources(context, FOLDER_CSS, destDir);
             //FileUtils.copyDirectory(new File(rootPath + FOLDER_CSS), new File(DATA_DIR + FOLDER_CSS));
-
             //remove all.min.css from data directory as we do not want to concatenate it with itself
-            new File(destDir, ALL_MIN_CSS).delete();
+            File allMinCssFile = new File(destDir, ALL_MIN_CSS);
+            boolean delete = allMinCssFile.delete();
+            if (!delete){
+                LOG.warn("Unable to delete "+allMinCssFile);
+            }
 
             //copy less sortedFiles
             copyResources(context, FOLDER_LESS, destDir);
@@ -159,7 +163,7 @@ public class HtmlResourceUtil {
     }
 
     private void concatenateCss(Path path, Path outFile) throws FileNotFoundException, IOException {
-        DirectoryStream<Path> cssFiles = getFiles(path, ".css");
+        DirectoryStream<Path> cssFiles = Files.newDirectoryStream(path, "*.css");
         if (Files.exists(outFile)){
             Files.delete(outFile);
         }
@@ -168,30 +172,13 @@ public class HtmlResourceUtil {
             sortedFiles.add(cssFile);
         }
         
-        Collections.sort(sortedFiles, new Comparator<Path>() {
-            @Override
-            public int compare(Path o1, Path o2) {
-                return o1.getFileName().compareTo(o2.getFileName());
-            }
-        });
+        Collections.sort(sortedFiles, new PathByFileNameComparator());
         
         for (Path cssFile : sortedFiles) {
             Files.write(outFile, Files.readAllBytes(cssFile), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         }
     }
     
-    private DirectoryStream<Path> getFiles(Path path, final String fileExtension) throws IOException {
-
-        DirectoryStream<Path> stream = Files.newDirectoryStream(path, new DirectoryStream.Filter<Path>() {
-            @Override
-            public boolean accept(Path entry) throws IOException {
-                String name = entry.getFileName().toString();
-                return !name.equals("all.min"+fileExtension) && name.endsWith(fileExtension);
-            }
-        });
-        return stream;
-    }
-
     public String getAllMinCss(ServletContext context, String customerName) throws IOException{
         String cssContent = (String) context.getAttribute(customerName);
         if (cssContent == null){

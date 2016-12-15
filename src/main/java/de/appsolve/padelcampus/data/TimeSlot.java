@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
@@ -92,7 +93,10 @@ public class TimeSlot implements Comparable<TimeSlot> {
 
     //jstl
     public List<Offer> getAvailableOffers() {
-        List<Offer> sortedOffers = new ArrayList<>(config.getOffers());
+        List<Offer> sortedOffers = new ArrayList<>();
+        if (config != null){
+            sortedOffers.addAll(config.getOffers());
+        }
         Collections.sort(sortedOffers);
         Iterator<Offer> iterator = sortedOffers.iterator();
         while (iterator.hasNext()){
@@ -121,7 +125,32 @@ public class TimeSlot implements Comparable<TimeSlot> {
     }
 
     @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 11 * hash + Objects.hashCode(this.startTime);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TimeSlot other = (TimeSlot) obj;
+        if (!Objects.equals(this.startTime, other.startTime)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public String toString() {
-        return date.toString("EEE") + " " + getStartTime() + " - " + getEndTime();
+        return getDate().toString("EEE") + " " + getStartTime() + " - " + getEndTime();
     }
 }

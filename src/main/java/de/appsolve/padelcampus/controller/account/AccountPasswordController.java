@@ -8,7 +8,6 @@ package de.appsolve.padelcampus.controller.account;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.PlayerUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import javax.servlet.http.HttpServletRequest;
@@ -36,9 +35,6 @@ public class AccountPasswordController extends BaseController {
     @Autowired
     SessionUtil sessionUtil;
 
-    @Autowired
-    Msg msg;
-    
     @Autowired
     PlayerUtil playerUtil;
 

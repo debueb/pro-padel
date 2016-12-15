@@ -5,6 +5,8 @@
  */
 package de.appsolve.padelcampus.admin.controller.files;
 
+import java.util.Objects;
+
 /**
  *
  * @author dominik
@@ -59,5 +61,39 @@ public class ApiFile implements Comparable<ApiFile>{
             }
         }
         return getType().equals("folder") ? -1 : 1;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.type);
+        hash = 97 * hash + Objects.hashCode(this.name);
+        hash = 97 * hash + Objects.hashCode(this.url);
+        hash = 97 * hash + Objects.hashCode(this.fileSize);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ApiFile other = (ApiFile) obj;
+        if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.url, other.url)) {
+            return false;
+        }
+        return Objects.equals(this.fileSize, other.fileSize);
     }
 }

@@ -111,7 +111,7 @@ public class AdminGeneralModulesPageController extends AdminSortableController<P
     private Module getModule(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         int index = requestURI.indexOf(getModuleName()) + getModuleName().length() + 1;
-        int toIndex = requestURI.indexOf("/", index);
+        int toIndex = requestURI.indexOf('/', index);
         toIndex = (toIndex == -1) ? requestURI.length() : toIndex;
         String moduleIdentifier = requestURI.substring(index, toIndex);
         return moduleDAO.findById(Long.parseLong(moduleIdentifier));

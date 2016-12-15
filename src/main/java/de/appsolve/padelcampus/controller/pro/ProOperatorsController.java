@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.controller.pro;
 
+import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.CONTACT_FORM_RECIPIENT_MAIL;
 import de.appsolve.padelcampus.constants.Privilege;
 import de.appsolve.padelcampus.data.CustomerRegistrationModel;
@@ -104,7 +105,7 @@ public class ProOperatorsController implements ServletContextAware{
             if (StringUtils.isEmpty(customerAccount.getCustomer().getName())){
                 throw new Exception(msg.get("ProjectNameFormatRequirements"));
             }
-            String projectName = customerAccount.getCustomer().getName().toLowerCase().replace(" ", "-");
+            String projectName = customerAccount.getCustomer().getName().toLowerCase(Constants.DEFAULT_LOCALE).replace(" ", "-");
             //verify dns name requirements
             if (!DNS_SUBDOMAIN_PATTERN.matcher(projectName).matches()){
                 throw new Exception(msg.get("ProjectNameFormatRequirements"));

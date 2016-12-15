@@ -19,6 +19,7 @@ import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.utils.FileUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.ModuleUtil;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -290,6 +291,7 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         }
     }
 
+    @SuppressFBWarnings("DLS_DEAD_LOCAL_STORE")
     private void checkPosition(Module module) {
         if (module.getPosition() == null){
             Long position = 0L;

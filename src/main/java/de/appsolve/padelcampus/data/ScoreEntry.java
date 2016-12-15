@@ -6,6 +6,7 @@
 package de.appsolve.padelcampus.data;
 
 import de.appsolve.padelcampus.db.model.Participant;
+import java.util.Objects;
 
 /**
  *
@@ -120,6 +121,58 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
         }
         return -1;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 31 * hash + Objects.hashCode(this.participant);
+        hash = 31 * hash + this.totalPoints;
+        hash = 31 * hash + this.matchesPlayed;
+        hash = 31 * hash + this.matchesWon;
+        hash = 31 * hash + this.setsPlayed;
+        hash = 31 * hash + this.setsWon;
+        hash = 31 * hash + this.gamesPlayed;
+        hash = 31 * hash + this.gamesWon;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ScoreEntry other = (ScoreEntry) obj;
+        if (this.totalPoints != other.totalPoints) {
+            return false;
+        }
+        if (this.matchesPlayed != other.matchesPlayed) {
+            return false;
+        }
+        if (this.matchesWon != other.matchesWon) {
+            return false;
+        }
+        if (this.setsPlayed != other.setsPlayed) {
+            return false;
+        }
+        if (this.setsWon != other.setsWon) {
+            return false;
+        }
+        if (this.gamesPlayed != other.gamesPlayed) {
+            return false;
+        }
+        if (this.gamesWon != other.gamesWon) {
+            return false;
+        }
+        return Objects.equals(this.participant, other.participant);
+    }
+    
+    
 
     private int getDiff(int played, int won, int oPlayed, int oWon) {
         int lost = played-won;

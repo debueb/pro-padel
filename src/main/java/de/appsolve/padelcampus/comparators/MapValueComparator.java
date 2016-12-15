@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.comparators;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Map;
 
@@ -14,7 +15,9 @@ import java.util.Map;
  * @param <K>
  * @param <V>
  */
-public class MapValueComparator<K extends Comparable<K>, V extends Comparable<V>> implements Comparator<K>{
+public class MapValueComparator<K extends Comparable<K>, V extends Comparable<V>> implements Comparator<K>, Serializable{
+    
+    private static final long serialVersionUID = 1L;
     
     Map<K,V> map;
  

@@ -24,7 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Component
 public class CloudFlareApiClient {
 
-    private final String CLOUDFLARE_API_URL     = "https://api.cloudflare.com/client/v4/";
+    private static final String CLOUDFLARE_API_URL     = "https://api.cloudflare.com/client/v4/";
     
     @Autowired
     RestTemplate cloudFlareApiRestTemplate;
@@ -49,7 +49,7 @@ public class CloudFlareApiClient {
 
     private ZonesResponse getZones(String dnsName) throws CloudFlareApiException {
         ZonesResponse response = cloudFlareApiRestTemplate.getForObject(CLOUDFLARE_API_URL + "zones?status=active&name="+dnsName, ZonesResponse.class);
-        if (response == null  || !response.isSuccess()){
+        if (!response.isSuccess()){
             throw new CloudFlareApiException(response);
         }
         return response;
@@ -58,7 +58,7 @@ public class CloudFlareApiClient {
     private DnsRecordsResponse getDnsRecords(String zoneId, String recordType, String recordName) throws CloudFlareApiException {
         String url = getDnsEntriesUrl(zoneId, recordType, recordName);
         DnsRecordsResponse response = cloudFlareApiRestTemplate.getForObject(url, DnsRecordsResponse.class);
-        if (response == null  || !response.isSuccess()){
+        if (!response.isSuccess()){
             throw new CloudFlareApiException(response);
         }
         return response;
@@ -78,7 +78,7 @@ public class CloudFlareApiClient {
     private CloudFlareApiResponse postDnsRecord(String zoneId, DnsRecord dnsRecord) throws CloudFlareApiException {
         String url = getDnsEntriesUrl(zoneId, null, null);
         CloudFlareApiResponse response = cloudFlareApiRestTemplate.postForObject(url, dnsRecord, CloudFlareApiResponse.class);
-        if (response == null || !response.isSuccess()){
+        if (!response.isSuccess()){
            throw new CloudFlareApiException(response); 
         }
         return response;

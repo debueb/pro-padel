@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.external.openshift;
 
+import com.googlecode.webutilities.common.Constants;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.codec.binary.Base64;
@@ -28,7 +29,7 @@ public class OpenshiftApiRequestInterceptor implements ClientHttpRequestIntercep
         HttpHeaders headers = request.getHeaders();
         String auth = OPENSHIFT_USERNAME + ":" + OPENSHIFT_PASSWORD;
         byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
-        headers.add(HttpHeaders.AUTHORIZATION, new String(encodedAuth));
+        headers.add(HttpHeaders.AUTHORIZATION, new String(encodedAuth, Constants.DEFAULT_CHARSET));
         headers.add("Content-Type", "application/json, version=1.7");
         return execution.execute(request, body);
     }

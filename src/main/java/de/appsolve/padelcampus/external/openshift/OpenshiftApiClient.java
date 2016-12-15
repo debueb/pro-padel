@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class OpenshiftApiClient {
     
-    private final String OPENSHIFT_API_URL = "https://openshift.redhat.com/broker/rest/";
+    private static final String OPENSHIFT_API_URL = "https://openshift.redhat.com/broker/rest/";
     
     @Autowired
     RestTemplate openshiftApiRestTemplate;
@@ -53,7 +53,7 @@ public class OpenshiftApiClient {
     
     private ApplicationsApiResponse getApplications() throws OpenshiftApiException{
         ApplicationsApiResponse response = openshiftApiRestTemplate.getForObject(OPENSHIFT_API_URL + "applications", ApplicationsApiResponse.class);
-        if (response == null || response.getStatus() == null || !response.getStatus().equals("ok")){
+        if (response.getStatus() == null || !response.getStatus().equals("ok")){
             throw new OpenshiftApiException(response);
         }
         return response;

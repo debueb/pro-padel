@@ -20,7 +20,6 @@ import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.utils.GameUtil;
-import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.util.ArrayList;
@@ -64,9 +63,6 @@ public class GamesController extends BaseController{
     
     @Autowired
     SessionUtil sessionUtil;
-    
-    @Autowired
-    Msg msg;
     
     @Autowired
     RankingUtil rankingUtil;

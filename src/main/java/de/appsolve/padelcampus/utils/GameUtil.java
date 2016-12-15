@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.utils;
 
+import de.appsolve.padelcampus.comparators.ParticipantByGameResultComparator;
 import static de.appsolve.padelcampus.constants.Constants.FIRST_SET;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.model.Event;
@@ -16,7 +17,6 @@ import de.appsolve.padelcampus.db.model.Team;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -65,18 +65,7 @@ public class GameUtil {
             int participantId = 0;
             Set<Participant> participants = game.getParticipants();
             if (sortByParticipant != null){
-                SortedSet<Participant> sortedParticipants = new TreeSet<>(new Comparator<Participant>() {
-                    @Override
-                    public int compare(Participant o1, Participant o2) {
-                        if (o1.equals(o2)){
-                            return 0;
-                        }
-                        if (o1.equals(sortByParticipant)){
-                            return reverseGameResult ? 1 : -1;
-                        }
-                        return reverseGameResult ? -1 : 1;
-                    }
-                });
+                SortedSet<Participant> sortedParticipants = new TreeSet<>(new ParticipantByGameResultComparator(sortByParticipant, reverseGameResult));
                 sortedParticipants.addAll(participants);
                 participants = sortedParticipants;
             }

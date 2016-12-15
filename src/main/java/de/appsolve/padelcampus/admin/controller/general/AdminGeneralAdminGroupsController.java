@@ -14,6 +14,7 @@ import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.AdminGroup;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
+import de.appsolve.padelcampus.spring.PrivilegeCollectionPropertyEditor;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,7 +24,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import jersey.repackaged.com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -51,18 +51,15 @@ public class AdminGeneralAdminGroupsController extends AdminBaseController<Admin
     PlayerCollectionEditor playerCollectionEditor;
     
     @Autowired
+    PrivilegeCollectionPropertyEditor privilegeCollectionEditor;
+    
+    @Autowired
     SessionUtil sessionUtil;
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Set.class, "players", playerCollectionEditor);
-        
-        binder.registerCustomEditor(Set.class, "privileges", new CustomCollectionEditor(Set.class) {
-            @Override
-            protected Object convertElement(Object element) {
-                return Privilege.valueOf((String) element);
-            }
-        });
+        binder.registerCustomEditor(Set.class, "privileges", privilegeCollectionEditor);
     }
     
     @Override

@@ -8,6 +8,7 @@ package de.appsolve.padelcampus.db.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.appsolve.padelcampus.annotations.EmailWithTld;
+import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.data.EmailContact;
@@ -284,7 +285,7 @@ public class Player extends Participant implements EmailContact, Validatable{
 
     @Override
     public boolean isValid() {
-        if (!StringUtils.isEmpty(getFirstName()) && !StringUtils.isEmpty(getLastName()) && getFirstName().toLowerCase().equals(getLastName().toLowerCase())){
+        if (!StringUtils.isEmpty(getFirstName()) && !StringUtils.isEmpty(getLastName()) && getFirstName().toLowerCase(Constants.DEFAULT_LOCALE).equals(getLastName().toLowerCase(Constants.DEFAULT_LOCALE))){
             return false;
         }
         return true;

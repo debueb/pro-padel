@@ -9,6 +9,6 @@ package de.appsolve.padelcampus.db.model;
  *
  * @author dominik
  */
-public abstract class ComparableEntity extends CustomerEntity implements Comparable<BaseEntityI>{
+public abstract class ComparableEntity extends CustomerEntity{
     
 }
