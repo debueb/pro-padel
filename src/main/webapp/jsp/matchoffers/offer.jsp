@@ -16,10 +16,10 @@
                 
                 <jsp:include page="/jsp/matchoffers/include/offer-details.jsp"/>
                 <div class="row">
-                    <div class="col-xs-3" style="height: 32px; line-height: 32px;">
-                        <fmt:message key="ShareVia"/>:
+                    <div class="col-xs-4 booking-cell" style="height: 32px; line-height: 32px;">
+                        <fmt:message key="ShareVia"/>
                     </div>
-                    <div class="col-xs-9">
+                    <div class="col-xs-8">
                         <c:set var="shareUrl" scope="request" value="${pageContext.request.scheme}://${pageContext.request.serverName}${pageContext.request.contextPath}${url}"/>
                         <jsp:include page="/jsp/include/share.jsp"/>
                     </div>
