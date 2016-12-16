@@ -9,6 +9,7 @@ import com.googlecode.webutilities.common.Constants;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
@@ -21,13 +22,21 @@ import org.springframework.http.client.ClientHttpResponse;
  */
 public class OpenshiftApiRequestInterceptor implements ClientHttpRequestInterceptor{
     
-    private static final String OPENSHIFT_USERNAME = "d.wisskirchen@gmail.com";
-    private static final String OPENSHIFT_PASSWORD = "Gukn6$PanzQuve";
+    private String openshiftUsername = "d.wisskirchen@gmail.com";
+    private String openshiftPassword = "Gukn6$PanzQuve";
+    
+    public OpenshiftApiRequestInterceptor(String username, String password){
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)){
+            throw new IllegalArgumentException("Missing OPENSHIFT_USERNAME and/or OPENSHIFT_PASSWORD");
+        }
+        this.openshiftUsername = username;
+        this.openshiftPassword = password;
+    }
     
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         HttpHeaders headers = request.getHeaders();
-        String auth = OPENSHIFT_USERNAME + ":" + OPENSHIFT_PASSWORD;
+        String auth = openshiftUsername + ":" + openshiftPassword;
         byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
         headers.add(HttpHeaders.AUTHORIZATION, new String(encodedAuth, Constants.DEFAULT_CHARSET));
         headers.add("Content-Type", "application/json, version=1.7");

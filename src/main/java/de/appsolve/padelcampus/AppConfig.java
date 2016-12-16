@@ -167,7 +167,7 @@ public class AppConfig extends WebMvcConfigurerAdapter{
     public RestTemplate cloudFlareApiRestTemplate(){
         RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory());
         ArrayList<ClientHttpRequestInterceptor> arrayList = new ArrayList<>();
-        arrayList.add(new CloudFlareApiRequestInterceptor());
+        arrayList.add(new CloudFlareApiRequestInterceptor(env.getProperty("CLOUDFLARE_API_EMAIL"), env.getProperty("CLOUDFLARE_API_KEY")));
         restTemplate.setInterceptors(arrayList);
         return restTemplate;
     }
@@ -176,7 +176,7 @@ public class AppConfig extends WebMvcConfigurerAdapter{
     public RestTemplate openshiftApiRestTemplate(){
         RestTemplate restTemplate = new RestTemplate(openshiftClientHttpRequestFactory());
         ArrayList<ClientHttpRequestInterceptor> arrayList = new ArrayList<>();
-        arrayList.add(new OpenshiftApiRequestInterceptor());
+        arrayList.add(new OpenshiftApiRequestInterceptor(env.getProperty("OPENSHIFT_USERNAME"), env.getProperty("OPENSHIFT_PASSWORD")));
         restTemplate.setInterceptors(arrayList);
         return restTemplate;
     }
