@@ -12,17 +12,21 @@ import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Event;
+import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.ParticipantI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.utils.PlayerUtil;
+import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -56,6 +60,9 @@ public class PlayersController extends BaseController {
     
     @Autowired
     SessionUtil sessionUtil;
+    
+    @Autowired
+    RankingUtil rankingUtil;
     
     @RequestMapping(method=GET, value="/player/{UUID}")
     public ModelAndView getPlayer(@PathVariable("UUID") String UUID, HttpServletRequest request){
@@ -113,7 +120,10 @@ public class PlayersController extends BaseController {
     }
 
     private ModelAndView getPlayerView(Player player) {
+        SortedMap<Participant, BigDecimal> ranking = rankingUtil.getRanking(player.getGender());
+        BigDecimal playerRanking = ranking.get(player);
         ModelAndView mav = new ModelAndView("players/player", "Player", player);
+        mav.addObject("RankingValue", rankingUtil.rankingString(playerRanking));
         return mav;
     }
 }

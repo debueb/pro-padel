@@ -9,6 +9,7 @@ package de.appsolve.padelcampus.controller.ranking;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.controller.BaseController;
+import de.appsolve.padelcampus.db.dao.ParticipantDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.Participant;
@@ -41,6 +42,9 @@ public class RankingController extends BaseController {
     TeamDAOI teamDAO;
     
     @Autowired
+    ParticipantDAOI participantDAO;
+    
+    @Autowired
     ModuleUtil moduleUtil;
     
     @RequestMapping
@@ -51,6 +55,11 @@ public class RankingController extends BaseController {
     
     @RequestMapping("{gender}/{category}")
     public ModelAndView getRanking(@PathVariable("gender") Gender gender, @PathVariable("category") String category){
+        return getRanking(gender, category, null);
+    }
+    
+    @RequestMapping("{gender}/{category}/{participant}")
+    public ModelAndView getRanking(@PathVariable("gender") Gender gender, @PathVariable("category") String category, @PathVariable("participant") String participantUUID){
         ModelAndView mav = new ModelAndView("ranking/ranking");
         mav.addObject("gender", gender);
         mav.addObject("category", category);
@@ -65,16 +74,19 @@ public class RankingController extends BaseController {
             default:
                 throw new NotImplementedException("unsupported category");
         }
-        BigDecimal hundred = new BigDecimal("100");
         if (rankings != null){
             Iterator<Map.Entry<Participant, BigDecimal>> iterator = rankings.entrySet().iterator();
             while (iterator.hasNext()){
                 Map.Entry<Participant, BigDecimal> entry = iterator.next();
                 Participant p = entry.getKey();
                 BigDecimal ranking = entry.getValue();
-                ranking = ranking.divide(hundred);
+                ranking = rankingUtil.rankingString(ranking);
                 rankings.put(p, ranking);
             }
+        }
+        if (participantUUID != null){
+            Participant participant = participantDAO.findByUUID(participantUUID);
+            mav.addObject("SelectedParticipant", participant);
         }
         mav.addObject("Rankings", rankings);
         mav.addObject("path", getPath());

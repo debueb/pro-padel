@@ -9,8 +9,8 @@
                 ${param.title}
             </c:otherwise>
         </c:choose>
-        <c:if test="${not empty param.icon}">
-            <div class="list-group-item-icon"><div class="fa fa-${param.icon} fa-fw"></div></div>
-            </c:if>
     </div>
+    <c:if test="${not empty param.icon}">
+        <div class="list-group-item-icon"><div class="fa fa-${param.icon} fa-fw"></div></div>
+    </c:if>
 </a>

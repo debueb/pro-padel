@@ -27,13 +27,14 @@
                                     <c:set var="req" value="${pageContext.request}" />
                                     <c:forEach var="Ranking" items="${Rankings}" varStatus="status">
                                         <c:set var="Participant" value="${Ranking.key}"/>
+                                        <c:set var="RowClass" value="${not empty SelectedParticipant and Participant eq SelectedParticipant ? 'selected-participant' : ''}"/>
                                         <c:if test="${empty sessionScope.customer}">
                                             <c:set var="hostPrefix" value="${req.scheme}://${Participant.customer.domainName}:${req.serverPort}"/>
                                         </c:if>
                                         <tr>
-                                            <td class="text-center">${status.index+1}</td>
-                                            <td><a href="${hostPrefix}${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}" class="ajaxify">${Participant}</a></td>
-                                            <td class="text-center"><fmt:formatNumber value="${Ranking.value}" minFractionDigits="2" maxFractionDigits="2"/></td>
+                                            <td class="text-center ${RowClass}">${status.index+1}</td>
+                                            <td class="${RowClass}"><a href="${hostPrefix}${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}" class="ajaxify">${Participant}</a></td>
+                                            <td class="text-center ${RowClass}"><fmt:formatNumber value="${Ranking.value}" minFractionDigits="2" maxFractionDigits="2"/></td>
                                         </tr>
                                     </c:forEach>
                                 </tbody>

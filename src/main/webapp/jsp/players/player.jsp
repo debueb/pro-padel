@@ -39,30 +39,33 @@
                     </c:when>
                     <c:otherwise>
                         <div class="list-group unit-2">
+                            <c:if test="${not empty RankingValue}">
+                                <a href="/ranking/${Player.gender}/individual/${Player.UUID}" class="list-group-item">
+                                    <div class="list-item-text"><fmt:message key="Ranking"/></div>
+                                    <div class="list-group-item-icon">
+                                        <fmt:formatNumber value="${RankingValue}" minFractionDigits="2" maxFractionDigits="2"/>
+                                    </div>
+                                </a>
+                            </c:if>
                             <a href="/teams/player/${Player.UUID}" class="list-group-item ajaxify">
-                                <div class="list-item-text"><fmt:message key="TeamsWith"><fmt:param>${Player}</fmt:param></fmt:message>
-                                    <div class="list-group-item-icon"><div class="fa fa-group"></div></div>
-                                </div>
+                                <div class="list-item-text"><fmt:message key="TeamsWith"><fmt:param>${Player}</fmt:param></fmt:message></div>
+                                <div class="list-group-item-icon"><div class="fa fa-group"></div></div>
                             </a>
                             <a class="list-group-item private-data" data-fake="${Player.obfuscatedPhone}" data-prefix="tel:">
-                                <div class="list-item-text"><fmt:message key="Call"/>
-                                    <div class="list-group-item-icon"><div class="fa fa-phone"></div></div>
-                                </div>
+                                <div class="list-item-text"><fmt:message key="Call"/></div>
+                                <div class="list-group-item-icon"><div class="fa fa-phone"></div></div>
                             </a>
                             <a class="list-group-item private-data" data-fake="${Player.obfuscatedPhone}" data-prefix="sms:">
-                                <div class="list-item-text"><fmt:message key="SendSMS"/>
-                                    <div class="list-group-item-icon"><div class="fa fa-envelope"></div></div>
-                                </div>
+                                <div class="list-item-text"><fmt:message key="SendSMS"/></div>
+                                <div class="list-group-item-icon"><div class="fa fa-envelope"></div></div>
                             </a>
                             <a class="list-group-item private-data" data-fake="${Player.obfuscatedEmail}" data-prefix="mailto:">
-                                <div class="list-item-text"><fmt:message key="SendMail"/>
-                                    <div class="list-group-item-icon"><div class="fa fa-at"></div></div>
-                                </div>
+                                <div class="list-item-text"><fmt:message key="SendMail"/></div>
+                                <div class="list-group-item-icon"><div class="fa fa-at"></div></div>
                             </a>
                             <a href="/players/player/${Player.UUID}/vcard.vcf" class="list-group-item" download>
-                                <div class="list-item-text"><fmt:message key="AddToContacts"/>
-                                    <div class="list-group-item-icon"><div class="fa fa-phone-square"></div></div>
-                                </div>
+                                <div class="list-item-text"><fmt:message key="AddToContacts"/></div>
+                                <div class="list-group-item-icon"><div class="fa fa-phone-square"></div></div>
                             </a>  
                         </div>
                     </c:otherwise>
