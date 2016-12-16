@@ -29,30 +29,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan(basePackages = "de.appsolve")
 public class TestConfig {
     
-//    @Bean
-//    public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
-//        LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-//        emf.setDataSource(dataSource());
-//        emf.setPackagesToScan("de.appsolve.padelcampus.db.model");
-//        emf.setJpaVendorAdapter(jpaVendorAdapter());
-//        Map<String, Object> propertyMap = new HashMap<>();
-//        propertyMap.put("hibernate.hbm2ddl.auto", "create");
-//        propertyMap.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-//        propertyMap.put("jadira.usertype.autoRegisterUserTypes", "true");
-//        emf.setJpaPropertyMap(propertyMap);
-//        return emf;
-//    }
-    
-//    @Bean
-//    public DataSource dataSource(){
-//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-//        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-//        dataSource.setUrl("jdbc:mysql://localhost:3306/padelcampustest?useSSL=false");
-//        dataSource.setUsername("padelcampustest");
-//        dataSource.setPassword("padelcampustest");
-//        return dataSource;
-//    }
-
     @Bean
     public JpaVendorAdapter jpaVendorAdapter(){
         return new HibernateJpaVendorAdapter();
