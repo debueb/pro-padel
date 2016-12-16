@@ -8,9 +8,9 @@
             </span>
             <c:if test="${param.includeName}">
                 <span class="block"><a href="/players/player/${Player.UUID}">${Player}</a></span>
-                </c:if>
-            </c:when>
-            <c:otherwise>
+            </c:if>
+        </c:when>
+        <c:otherwise>
             <a href="/players/player/${Player.UUID}">
                 <img src="/images/image/${Player.profileImage.sha256}"/>
                 <c:if test="${param.includeName}">
