@@ -19,8 +19,8 @@ import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.exceptions.MailException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -98,7 +98,7 @@ public class MailUtils {
         return recipients;
     }
 
-    public static String getMailTo(Set<? extends EmailContact> emailContacts) {
+    public static String getMailTo(Collection<? extends EmailContact> emailContacts) {
         StringBuilder emails = new StringBuilder();
         int i=0;
         for (EmailContact p: emailContacts){

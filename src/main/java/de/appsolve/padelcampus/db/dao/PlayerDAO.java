@@ -88,6 +88,16 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
     }
     
     @Override
+    public List<Player> findPlayersRegisteredForEmails() {
+        Criteria criteria = getCriteria();
+        criteria.add(Restrictions.isNotNull("passwordHash"));
+        criteria.add(Restrictions.isNotNull("allowEmailContact"));
+        criteria.add(Restrictions.eq("allowEmailContact", true));
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        return (List<Player>) criteria.list();
+    }
+    
+    @Override
     protected Set<String> getIndexedProperties(){
        return new HashSet<>(Arrays.asList("firstName", "lastName", "email", "phone")); 
     }

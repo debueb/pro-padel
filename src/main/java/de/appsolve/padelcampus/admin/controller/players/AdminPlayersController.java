@@ -10,13 +10,12 @@ import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.utils.MailUtils;
-import java.util.Set;
-import java.util.TreeSet;
+import de.appsolve.padelcampus.utils.RequestUtil;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -73,24 +72,15 @@ public class AdminPlayersController extends AdminBaseController<Player> {
     }
     
     @RequestMapping("mail")
-    public ModelAndView mailAll(){
-        int page = 0;
-        int size = 50;
-        Set<Player> allPlayers = new TreeSet<>();
-        while (true){
-            Pageable pageable = new PageRequest(page, size);
-            Page<Player> pageResponse = playerDAO.findAll(pageable);
-            if (pageResponse != null && pageResponse.hasContent()){
-                allPlayers.addAll(pageResponse.getContent());
-                if (!pageResponse.hasNext()){
-                    break;
-                }
-                page++;
-            } else {
-                break;
-            }
+    public ModelAndView mailAll(HttpServletRequest request){
+        List<Player> allPlayers = playerDAO.findPlayersRegisteredForEmails();
+        List<String> emails = new ArrayList<>();
+        for (Player player: allPlayers){
+            emails.add(player.getEmail());
         }
-        ModelAndView mav = new ModelAndView("redirect:mailto:"+MailUtils.getMailTo(allPlayers));
+        ModelAndView mav = new ModelAndView("admin/players/mail");
+        mav.addObject("bcc", StringUtils.join(emails, ","));
+        mav.addObject("body", msg.get("MailAllPlayersBody", new Object[]{RequestUtil.getBaseURL(request)+"/account/profile"}));
         return mav;
     }
     
