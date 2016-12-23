@@ -7,66 +7,79 @@
         </div>
         <div class="panel-body">
             <div class="container-fluid">
-                <div class="col-xs-4 text-right">
-                    <fmt:message key="Date"/>:
-                </div>
-                <div class="col-xs-8">
-                    <joda:format value="${Model.startDate}" pattern="EEE, dd. MMM yyyy"/>
-                    <c:if test="${Model.startDate ne Model.endDate}">
-                        - <joda:format value="${Model.endDate}" pattern="EEE, dd. MMM yyyy"/>
-                    </c:if>
+                <div class="row">
+                    <div class="col-xs-4 text-right">
+                        <fmt:message key="Date"/>
+                    </div>
+                    <div class="col-xs-8">
+                        <joda:format value="${Model.startDate}" pattern="EEE, dd. MMM yyyy"/>
+                        <c:if test="${Model.startDate ne Model.endDate}">
+                            - <joda:format value="${Model.endDate}" pattern="EEE, dd. MMM yyyy"/>
+                        </c:if>
+                    </div>
                 </div>
                     
                 <c:if test="${not empty Model.startTime}">
                     <joda:format value="${Model.startTime}" pattern="HH:mm" var="startTimeFormatted"/>
                     <c:if test="${not startTimeFormatted eq '00:00'}">
-                        <div class="col-xs-4 text-right">
-                            <fmt:message key="StartTime"/>:
-                        </div>
-                        <div class="col-xs-8">
-                            ${startTimeFormatted}
+                        <div class="row">
+                            <div class="col-xs-4 text-right">
+                            <fmt:message key="StartTime"/>
+                            </div>
+                            <div class="col-xs-8">
+                                ${startTimeFormatted}
+                            </div>
                         </div>
                     </c:if>
                 </c:if>
-                    
-                <div class="col-xs-4 text-right">
-                    <fmt:message key="Category"/>:
-                </div>
-                <div class="col-xs-8">
-                    <fmt:message key="Mode_${Model.gender}"/>
+                <div class="row">    
+                    <div class="col-xs-4 text-right">
+                        <fmt:message key="Category"/>
+                    </div>
+                    <div class="col-xs-8">
+                        <fmt:message key="Mode_${Model.gender}"/>
+                    </div>
                 </div>
                 
-                <div class="col-xs-4 text-right">
-                    <fmt:message key="Mode"/>:
-                </div>
-                <div class="col-xs-8">
-                    <fmt:message key="${Model.eventType}"/>
+                <div class="row">
+                    <div class="col-xs-4 text-right">
+                        <fmt:message key="Mode"/>
+                    </div>
+                    <div class="col-xs-8">
+                        <fmt:message key="${Model.eventType}"/>
+                    </div>
                 </div>
                 
                 <c:if test="${not empty Model.maxNumberOfParticipants and Model.maxNumberOfParticipants ne 0}">
-                    <div class="col-xs-4 text-right">
-                        <fmt:message key="MaxNumberOfParticipants"/>:
-                    </div>
-                    <div class="col-xs-8">
-                        ${Model.maxNumberOfParticipants}
+                    <div class="row">
+                        <div class="col-xs-4 text-right">
+                            <fmt:message key="MaxNumberOfParticipants"/>
+                        </div>
+                        <div class="col-xs-8">
+                            ${Model.maxNumberOfParticipants}
+                        </div>
                     </div>
                 </c:if>
                 
                 <c:if test="${not empty Model.location}">
-                    <div class="col-xs-4 text-right">
-                        <fmt:message key="Location"/>:
-                    </div>
-                    <div class="col-xs-8">
-                        <a href="https://www.google.com/maps/search/${Model.location}" target="blank">${Model.location}</a>
+                    <div class="row">
+                        <div class="col-xs-4 text-right">
+                            <fmt:message key="Location"/>
+                        </div>
+                        <div class="col-xs-8">
+                            <a href="https://www.google.com/maps/search/${Model.location}" target="blank">${Model.location}</a>
+                        </div>
                     </div>
                 </c:if>
                 
                 <c:if test="${not empty Model.description and Model.description ne '<p><br></p>'}">
-                    <div class="col-xs-4 text-right">
-                        <fmt:message key="Description"/>:
-                    </div>
-                    <div class="col-xs-8">
-                        ${Model.description}
+                    <div class="row">
+                        <div class="col-xs-4 text-right">
+                            <fmt:message key="Description"/>
+                        </div>
+                        <div class="col-xs-8">
+                            ${Model.description}
+                        </div>
                     </div>
                 </c:if>
             </div>
