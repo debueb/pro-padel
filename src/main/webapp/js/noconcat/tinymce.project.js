@@ -17,6 +17,7 @@ var initTinyMce = function () {
           'insertdatetime media nonbreaking save table contextmenu directionality',
           'template paste textcolor colorpicker textpattern imagetools'
         ],
+        imagetools_toolbar: "rotateleft rotateright | flipv fliph | imageoptions",
         menu: {
             edit: {title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall'},
             insert: {title: 'Insert', items: 'link image media | template hr'},
