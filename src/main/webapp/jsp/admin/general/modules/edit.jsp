@@ -42,7 +42,7 @@
                         <div class="explanation"><fmt:message key="Title"/></div>
                     </div>
                     
-                    <div class="select-toggle-Page select-toggle-Events relative">
+                    <div class="select-toggle-Page select-toggle-Blog select-toggle-Events relative">
                         <spf:input path="urlTitle" type="text" class="form-control form-center-element"/>
                         <div class="explanation"><fmt:message key="URLTitle"/></div>
                     </div>
@@ -108,6 +108,9 @@
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
                     <c:if test="${Model.moduleType == 'Page' || Model.moduleType == 'HomePage' || Model.moduleType == 'LandingPage'}">
                         <a class="btn btn-primary btn-block ajaxify" href="/admin/general/modules/page/${Model.id}"><fmt:message key="ManageEntries"/></a>
+                    </c:if>
+                    <c:if test="${Model.moduleType == 'Blog'}">
+                        <a class="btn btn-primary btn-block ajaxify" href="/admin/general/modules/blog/${Model.id}"><fmt:message key="ManageBlogEntries"/></a>
                     </c:if>
                     <c:if test="${not empty Model.id}">
                         <a href="/admin/general/modules/edit/${Model.id}/submodules" class="btn btn-primary btn-block unit-2 ajaxify"><fmt:message key="ManageSubmodules"/></a>

@@ -14,6 +14,7 @@ public enum ModuleType {
     Page,
     HomePage,
     LandingPage,
+    Blog,
     Link,
     Events,
     Ranking,

@@ -4,22 +4,22 @@
     <div class="col-xs-12 col-lg-10 col-lg-offset-1">
         <jsp:include page="/jsp/include/back.jsp"/>
         
-        <fmt:message var="AddEntry" key="AddEntry"/>
-        <fmt:message var="EditEntry" key="EditEntry"/>
+        <fmt:message var="AddBlogEntry" key="AddBlogEntry"/>
+        <fmt:message var="EditBlogEntry" key="EditBlogEntry"/>
                 
         <ol class="unit-2 breadcrumb">
             <li><a href="/admin"><fmt:message key="Administration"/></a></li>
             <li><a href="/admin/general"><fmt:message key="General"/></a></li>
             <li><a href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
             <li><a href="/admin/general/modules/edit/${Parent.id}">${Parent.title}</a></li>
-            <li><a href="/admin/general/modules/page/${Parent.id}"><fmt:message key="Entries"/></a></li>
-            <li class="active">${empty Model.id ? AddEntry : EditEntry}</li>
+            <li><a href="/${moduleName}/${Parent.id}"><fmt:message key="BlogEntries"/></a></li>
+            <li class="active">${empty Model.id ? AddBlogEntry : EditBlogEntry}</li>
         </ol>
 
         <div class="page-header"></div>
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4>${empty Model.id ? AddEntry : EditEntry}</h4>
+                <h4>${empty Model.id ? AddBlogEntry : EditBlogEntry}</h4>
             </div>
             <div class="panel-body">
 
@@ -42,12 +42,6 @@
                     <div class="relative">
                         <spf:textarea path="message" class="form-control form-bottom-element text-editor"/>
                         <div class="explanation"><fmt:message key="Description"/></div>
-                    </div>
-                    <div class="unit">
-                        <spf:checkbox path="fullWidth" id="fullWidth"/><label for="fullWidth"><fmt:message key="FullWidth"/></label>
-                    </div>
-                    <div class="unit">
-                        <spf:checkbox path="showContactForm" id="showContactForm"/><label for="showContactForm"><fmt:message key="ShowContactForm"/></label>
                     </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
                 </spf:form>

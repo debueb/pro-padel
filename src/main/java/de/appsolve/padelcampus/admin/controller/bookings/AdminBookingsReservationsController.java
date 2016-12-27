@@ -228,7 +228,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     }
     
     @Override
-    public ModelAndView showAddView(){
+    public ModelAndView showAddView(HttpServletRequest httpRequest){
         ReservationRequest request = new ReservationRequest();
         request.setPublicBooking(Boolean.TRUE);
         request.setStartTimeHour(Constants.BOOKING_DEFAULT_VALID_FROM_HOUR);

@@ -13,6 +13,7 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.spring.OfferOptionCollectionEditor;
 import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -43,7 +44,7 @@ public class AdminBookingsOffersController extends AdminSortableController<Offer
     }
     
     @Override
-    public ModelAndView showAddView(){
+    public ModelAndView showAddView(HttpServletRequest request){
         Offer newOffer = createNewInstance();
         Long position = 0L;
         for (Offer offer: offerDAO.findAll()){

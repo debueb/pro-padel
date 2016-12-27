@@ -184,6 +184,7 @@ public class Module extends SortableEntity{
                 eventsName = eventsName.replace(" ", "-");
                 return eventsName;
             case Page:
+            case Blog:
                 String moduleName = "/" + getUrlTitle();
                 moduleName = moduleName.replace(" ", "-");
                 return moduleName;

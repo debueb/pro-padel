@@ -39,6 +39,8 @@ var initTinyMce = function () {
           { title: 'Content Only', url: '/templates/ContentOnly.html' },
           { title: 'Content Left Image Right', url: '/templates/ContentLeftImageRight.html' },
           { title: 'Content Richt Image Left', url: '/templates/ContentRightImageLeft.html' },
+          { title: 'Blog Post Image Right', url: '/templates/BlogPostImageRight.html' },
+          { title: 'Blog Post Image Left', url: '/templates/BlogPostImageLeft.html' },
           { title: 'Jumbotron', url: '/templates/Jumbotron.html' },
           { title: 'Panel', url: '/templates/Panel.html' }
         ],

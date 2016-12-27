@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -29,6 +30,9 @@ public class PageEntry extends SortableEntity{
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate lastModified;
+    
+    @OneToOne
+    private Player author;
     
     @NotEmpty(message = "{NotEmpty.title}")
     @Column
@@ -53,6 +57,14 @@ public class PageEntry extends SortableEntity{
 
     public void setLastModified(LocalDate newsDte) {
         this.lastModified = newsDte;
+    }
+
+    public Player getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Player author) {
+        this.author = author;
     }
 
     public String getTitle() {

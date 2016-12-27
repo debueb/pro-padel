@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.admin.controller.general;
 
+import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.dao.PageEntryDAOI;
@@ -14,9 +15,13 @@ import de.appsolve.padelcampus.db.model.PageEntry;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.SessionUtil;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.io.IOUtils;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -36,14 +41,17 @@ import org.springframework.web.servlet.ModelAndView;
  * @author dominik
  */
 @Controller()
-@RequestMapping("/admin/general/modules/page/{moduleId}")
-public class AdminGeneralModulesPageController extends AdminSortableController<PageEntry>{
+@RequestMapping("/admin/general/modules/blog/{moduleId}")
+public class AdminGeneralModulesBlogController extends AdminSortableController<PageEntry>{
     
     @Autowired
     ModuleDAOI moduleDAO;
     
     @Autowired
     PageEntryDAOI pageEntryDAO;
+    
+    @Autowired
+    ServletContext context;
     
     @Autowired
     SessionUtil sessionUtil;
@@ -55,7 +63,7 @@ public class AdminGeneralModulesPageController extends AdminSortableController<P
     
     @Override
     public String getModuleName() {
-        return "admin/general/modules/page";
+        return "admin/general/modules/blog";
     }
     
     @Override
@@ -80,7 +88,15 @@ public class AdminGeneralModulesPageController extends AdminSortableController<P
 
     @Override
     public ModelAndView showAddView(HttpServletRequest request){
-        ModelAndView mav = super.showAddView(request);
+        PageEntry entry = createNewInstance();
+        try {
+            InputStream is = context.getResourceAsStream("templates/BlogPostImageRight.html");
+            String html = IOUtils.toString(is, Constants.UTF8);
+            entry.setMessage(html);
+        } catch (IOException ex) {
+            LOG.error(ex);
+        }
+        ModelAndView mav = getEditView(entry);
         mav.addObject("Parent", getModule(request));
         return mav;
     }

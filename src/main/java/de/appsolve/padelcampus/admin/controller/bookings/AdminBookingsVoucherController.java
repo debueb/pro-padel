@@ -67,7 +67,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/admin/bookings/voucher")
 public class AdminBookingsVoucherController extends AdminBaseController<Voucher>{
     
-    private static final Logger log = Logger.getLogger(AdminBookingsVoucherController.class);
+    private static final Logger LOG = Logger.getLogger(AdminBookingsVoucherController.class);
     
     @Autowired
     VoucherDAOI voucherDAO;
@@ -94,7 +94,7 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
     }
     
     @Override
-    public ModelAndView showAddView(){
+    public ModelAndView showAddView(HttpServletRequest request){
         return getEditView(createNewInstance());
     }
     
@@ -203,7 +203,7 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
                     try {
                         mailUtils.send(mail, request);
                     } catch (MailException | IOException ex) {
-                        log.error("Error while sending voucher list to "+player.getEmail(), ex);
+                        LOG.error("Error while sending voucher list to "+player.getEmail(), ex);
                     }
                 }
             }

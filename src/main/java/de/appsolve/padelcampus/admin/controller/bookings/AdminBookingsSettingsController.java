@@ -72,7 +72,7 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
     }
     
     @Override
-    public ModelAndView showAddView(){
+    public ModelAndView showAddView(HttpServletRequest request){
         return getEditView(getDefaultCalendarConfig());
     }
     

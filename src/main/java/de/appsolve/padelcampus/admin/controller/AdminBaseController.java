@@ -48,7 +48,7 @@ public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEnt
     }
     
     @RequestMapping(value={"add"}, method=GET)
-    public ModelAndView showAddView(){
+    public ModelAndView showAddView(HttpServletRequest request){
         return getEditView(createNewInstance());
     }
     
