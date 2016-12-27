@@ -17,22 +17,16 @@
     // Wait for Document
     $(function () {
         // Prepare Variables
-        var
-            /* Application Specific Variables */
-            contentSelector = '.wrapper',
-            $content = $(contentSelector).filter(':first'),
-            contentNode = $content.get(0),
+        var contentSelector,
+            $content,
+            replaceElement,
+            $body = $(document.body),
             completedEventName = 'statechangecomplete',
             /* Application Generic Variables */
             $window = $(window),
-            $body = $(document.body),
             rootUrl = History.getRootUrl();
             
-        // Ensure Content
-        if ($content.length === 0) {
-            $content = $body;
-        }
-
+        
         // HTML Helper
         var documentHtml = function (html) {
             // Prepare
@@ -56,7 +50,7 @@
             });
             
             // Ajaxify
-            $this.find('a.ajaxify').click(function (event) {
+            $this.find('a.ajaxify').off().on('click', function (event) {
                 if (!window.navigator.onLine){
                     $('#shadow').show();
                     $('#offline-msg').show();
@@ -64,11 +58,25 @@
                 }
                 
                 // Prepare
-                var
-                    $this = $(this),
+                var $this = $(this),
                     url = $this.attr('href'),
                     title = $this.attr('title') || null;
+                    
+                    contentSelector = $this.attr('data-content') || '.wrapper';
+                    if ($this.attr('data-replace')){
+                        $content = $($this.attr('data-replace')).filter(':first');
+                        replaceElement = true;
+                    } else {
+                        $content = $(contentSelector).filter(':first');
+                        replaceElement = false;
+                    }
+                    // Ensure Content
+                    if ($content.length === 0) {
+                        $content = $body;
+                    }
 
+                    
+                    
                 // Continue as normal for cmd clicks etc
                 if (event.which === 2 || event.metaKey) {
                     return true;
@@ -80,7 +88,7 @@
                 return false;
             });
             
-            $this.find('form.ajaxify').on('submit', function (event) {
+            $this.find('form.ajaxify').off().on('submit', function (event) {
                 if (!window.navigator.onLine){
                     $('#shadow').show();
                     $('#offline-msg').show();
@@ -158,7 +166,12 @@
 
                     // Update the content
                     $content.stop(true, true);
-                    $content.html(contentHtml).ajaxify().show();
+                    if (replaceElement){
+                        $content.replaceWith(contentHtml);
+                    } else {
+                        $content.html(contentHtml);
+                    }
+                    $(contentSelector).ajaxify().show();
 
                     // Update the title and meta tags
                     document.title = $data.find('.document-title:first').text();
@@ -191,13 +204,15 @@
                             scriptNode.src = $script.attr('src');
                         }
                         scriptNode.appendChild(document.createTextNode(scriptText));
-                        contentNode.appendChild(scriptNode);
+                        $content.get(0).appendChild(scriptNode);
                     });
 
                     $window.trigger(completedEventName);
 
                     // Complete the change
-                    $(window).scrollTop(0);
+                    if (!replaceElement){
+                        $(window).scrollTop(0);
+                    }
 
                     // Inform Google Analytics of the change
                     if (typeof window._gaq !== 'undefined') {

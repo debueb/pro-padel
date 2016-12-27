@@ -12,6 +12,6 @@
         </div>
         </c:if>
     </div>
-    <div class="unit-4"></div>
 </div>
+<div class="unit-4"></div>
 <jsp:include page="/jsp/include/footer.jsp"/>
