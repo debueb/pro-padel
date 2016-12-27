@@ -41,7 +41,7 @@ public class RootController extends BaseController{
     
     private static final Logger LOG = Logger.getLogger(RootController.class);
     
-    private static final int BLOG_PAGE_SIZE = 1;
+    private static final int BLOG_PAGE_SIZE = 10;
     
     @Autowired
     ModuleDAOI moduleDAO;
