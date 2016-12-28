@@ -319,7 +319,7 @@ input[type="checkbox"]:checked ~ label:before {
   box-shadow: 0 0px 0 0px #fff;
 }
 hr {
-  border-top: 1px solid #afafaf;
+  border-top: 1px solid #ddd;
   border-bottom: 1px solid #fff;
 }
 .list-group-item,
@@ -1162,6 +1162,8 @@ div.product-chooser div.product-chooser-item input {
 }
 textarea {
   resize: none;
+  border-color: #ccc;
+  outline: none;
 }
 .bootstrap-select .btn:focus,
 a:focus {

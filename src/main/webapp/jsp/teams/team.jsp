@@ -22,21 +22,41 @@
                 </div>
 
                 <hr>
-                <h4><fmt:message key="EventParticipations"/></h4>
+                <h4><fmt:message key="ActiveEventParticipations"/></h4>
                 <c:choose>
-                    <c:when test="${not empty Events}">
+                    <c:when test="${empty Events}">
+                        <div class="alert alert-info">
+                            <fmt:message key="NoActiveGames"><fmt:param value="${Team}"/></fmt:message>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
                         <div class="list-group">
                             <c:forEach var="Event" items="${Events}">
                                 <jsp:include page="/jsp/include/list-badge-item.jsp">
-                                    <jsp:param name="msg" value="${Event.name}"/>
+                                    <jsp:param name="msg" value="${Event.name} / ${Event.startDate}"/>
                                     <jsp:param name="url" value="/events/event/${Event.id}"/>
                                 </jsp:include>
                             </c:forEach>
                         </div>
+                    </c:otherwise>
+                </c:choose>
+                
+                <hr>
+                <h4><fmt:message key="PastEventParticipations"/></h4>
+                <c:choose>
+                    <c:when test="${empty PastEvents}">
+                        <div class="alert alert-info">
+                            <fmt:message key="NoPastGames"><fmt:param value="${Team}"/></fmt:message>
+                        </div>
                     </c:when>
                     <c:otherwise>
-                        <div class="alert alert-info">
-                            <fmt:message key="NoActiveGames"><fmt:param value="${Team}"/></fmt:message>
+                        <div class="list-group">
+                            <c:forEach var="Event" items="${PastEvents}">
+                                <jsp:include page="/jsp/include/list-badge-item.jsp">
+                                    <jsp:param name="msg" value="${Event.name} / ${Event.startDate}"/>
+                                    <jsp:param name="url" value="/events/event/${Event.id}"/>
+                                </jsp:include>
+                            </c:forEach>
                         </div>
                     </c:otherwise>
                 </c:choose>

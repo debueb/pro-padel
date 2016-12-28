@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,14 +98,19 @@ public class TeamsController extends BaseController{
     private ModelAndView getTeamView(Team team) {
         ModelAndView mav = new ModelAndView("teams/team", "Team", team);
         List<Game> games = gameDAO.findByParticipant(team);
-        Set<Event> events = new TreeSet<>();
+        Set<Event> currentEvents = new TreeSet<>();
+        Set<Event> pastEvents = new TreeSet<>();
+        LocalDate today = LocalDate.now();
         for (Game game: games){
             Event event = game.getEvent();
-            if (event.getActive()){
-                events.add(event);
+            if (event.getEndDate().isAfter(today)){
+                currentEvents.add(event);
+            } else {
+                pastEvents.add(event);
             }
         }
-        mav.addObject("Events", events);
+        mav.addObject("Events", currentEvents);
+        mav.addObject("PastEvents", pastEvents);
         return mav;
     }
 
