@@ -561,7 +561,10 @@ app.main = {};
     
     self.enableTooltips = function(){
         $('[data-toggle="tooltip"]').livequery(function(){
-            $(this).webuiPopover({animation: 'pop'});
+            $(this).webuiPopover({
+                animation: 'pop',
+                maxWidth: '200px'
+            });
         });
         $(window).on('statechange', function(){
            $('[data-toggle="tooltip"]').webuiPopover('destroy'); 
