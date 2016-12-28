@@ -102,7 +102,9 @@
                                                                         <c:if test="${Booking.offer eq Offer}">
                                                                             <c:choose>
                                                                                 <c:when test="${TimeSlot.startTime ge Booking.bookingTime}">
-                                                                                    <i class="fa fa-info-circle text-center" data-toggle="tooltip" data-placement="top" data-container="body" data-content="${Booking.publicBooking ? empty Booking.comment ? Booking.player : Booking.comment : BookingMsg}<br /> <joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/>${Booking.confirmed ? '' : BookingPendingMsg}"></i>
+                                                                                    <div data-toggle="tooltip" data-placement="top" data-container="body" data-content="${Booking.publicBooking ? empty Booking.comment ? Booking.player : Booking.comment : BookingMsg}<br /> <joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/>${Booking.confirmed ? '' : BookingPendingMsg}">
+                                                                                        <i class="fa fa-info-circle text-center"></i>
+                                                                                    </div>
                                                                                     <c:set var="timeSlotFilled" value="true"/>
                                                                                 </c:when>
                                                                                 <c:when test="${not timeSlotFilled}">
