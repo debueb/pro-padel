@@ -50,7 +50,8 @@
             });
             
             // Ajaxify
-            $this.find('a.ajaxify').off().on('click', function (event) {
+            //$this.find('a.ajaxify').off().on('click', function (event) { //this does not trigger correctly
+            $this.find('a.ajaxify').click(function (event) {
                 if (!window.navigator.onLine){
                     $('#shadow').show();
                     $('#offline-msg').show();
