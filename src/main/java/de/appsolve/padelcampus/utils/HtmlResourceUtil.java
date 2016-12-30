@@ -254,11 +254,11 @@ public class HtmlResourceUtil {
     public List<CssAttribute> getDefaultCssAttributes() {
         List<CssAttribute> atts = new ArrayList<>();
         atts.add(getCssAttribute("bgColor", "#94cfea", "#94cfea"));
-        atts.add(getCssAttribute("primaryColor", "#613815", "#613815"));
+        atts.add(getCssAttribute("primaryColor", "#0094ff", "#0094ff"));
         atts.add(getCssAttribute("primaryLinkColor", "#31708f", "#31708f"));
         atts.add(getCssAttribute("primaryLinkHoverColor", "#94cfeb", "#94cfeb"));
-        atts.add(getCssAttribute("headerColor", "#613816", "#613816"));
-        atts.add(getCssAttribute("footerColor", "#613814", "#613814"));
+        atts.add(getCssAttribute("headerColor", "#070056", "#070056"));
+        atts.add(getCssAttribute("footerColor", "#070054", "#070054"));
         atts.add(getCssAttribute("backgroundImage", "url\\('\\/images\\/bg\\.jpg'\\)", "url('/images/bg.jpg')"));
         atts.add(getCssAttribute("backgroundRepeat", "no-repeat", "no-repeat"));
         atts.add(getCssAttribute("backgroundSize", "cover", "cover"));
