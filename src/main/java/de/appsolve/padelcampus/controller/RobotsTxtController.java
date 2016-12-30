@@ -27,6 +27,7 @@ public class RobotsTxtController {
         builder.append("User-Agent: *\n");
         builder.append("Disallow: /players/\n");
         builder.append("Disallow: /teams/\n");
+        builder.append("Disallow: /scores/\n");
         builder.append("Sitemap: ").append(RequestUtil.getBaseURL(request)).append("/sitemap.xml");
         return builder.toString();
     }
