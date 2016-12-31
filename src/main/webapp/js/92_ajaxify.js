@@ -42,6 +42,23 @@
         $.fn.ajaxify = function () {
             // Prepare
             var $this = $(this);
+            
+            var getContent = function(){
+                var content;
+                contentSelector = $this.attr('data-content') || '.wrapper';
+                if ($this.attr('data-replace')){
+                    content = $($this.attr('data-replace')).filter(':first');
+                    replaceElement = true;
+                } else {
+                    content = $(contentSelector).filter(':first');
+                    replaceElement = false;
+                }
+                // Ensure Content
+                if (content.length === 0) {
+                    content = $body;
+                }
+                return content;
+            };
 
             $('#offline-msg-btn').on('click', function(){
                 $('#shadow').hide();
@@ -62,21 +79,8 @@
                 var $this = $(this),
                     url = $this.attr('href'),
                     title = $this.attr('title') || null;
-                    
-                    contentSelector = $this.attr('data-content') || '.wrapper';
-                    if ($this.attr('data-replace')){
-                        $content = $($this.attr('data-replace')).filter(':first');
-                        replaceElement = true;
-                    } else {
-                        $content = $(contentSelector).filter(':first');
-                        replaceElement = false;
-                    }
-                    // Ensure Content
-                    if ($content.length === 0) {
-                        $content = $body;
-                    }
-
-                    
+                
+                $content = getContent();
                     
                 // Continue as normal for cmd clicks etc
                 if (event.which === 2 || event.metaKey) {
@@ -99,6 +103,8 @@
                 var data = $(this).serialize(),
                     method = $(this).attr('method'),
                     url = $(this).attr('action') || "";
+                
+                $content = getContent();
                 
                 //in order to update the URL in the browser, we construct the URL here
                 //to avoid the ajax call from duplicating all parameters we set the data to null
