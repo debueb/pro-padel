@@ -18,6 +18,7 @@
                     <button class="btn btn-primary btn-block" type="submit"><fmt:message key="Register"/></button>
                 </spf:form>
             </div>
+            <jsp:include page="/jsp/include/poweredby.jsp"/>
         </div>
     </div>
 </div>

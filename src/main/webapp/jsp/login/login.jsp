@@ -8,7 +8,10 @@
         <div class="page-header"></div>
 
         <div class="panel panel-info unit">
-            <div class="panel-heading"><h4><fmt:message key="LoginSignup"/></h4></div>
+            <div class="panel-heading">
+                <!--<img src="${contextPath}/images/powerd-by-pro-padel.png" height="44px" style="float: right;"/>-->
+                <h4><fmt:message key="LoginSignup"/></h4>
+            </div>
             <div class="panel-body">
                 <spf:form class="ajaxify" modelAttribute="Model" method="POST">
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
@@ -24,6 +27,7 @@
                     <button class="btn btn-primary btn-block btn-form-submit" type="submit" data-href="/login/forgot-password"><fmt:message key="ForgotPassword"/></button>
                 </spf:form>
             </div>
+            <jsp:include page="/jsp/include/poweredby.jsp"/>
         </div>
     </div>
 </div>
