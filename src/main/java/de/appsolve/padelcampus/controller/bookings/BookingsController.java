@@ -224,7 +224,7 @@ public class BookingsController extends BaseController {
             }
             player.setId(existingPlayer.getId());
         }
-        playerDAO.saveOrUpdate(player);
+        player = playerDAO.saveOrUpdate(player);
         booking.setPlayer(player);
         sessionUtil.setBooking(request, booking);
         String day = booking.getBookingDate().toString(FormatUtils.DATE_HUMAN_READABLE);
