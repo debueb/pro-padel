@@ -40,7 +40,7 @@
                     <c:otherwise>
                         <div class="list-group unit-2">
                             <c:if test="${not empty RankingValue}">
-                                <a href="/ranking/${Player.gender}/individual/${Player.UUID}" class="list-group-item">
+                                <a href="/ranking/${Player.gender}/individual/${Player.UUID}" class="list-group-item ajaxify">
                                     <div class="list-item-text"><fmt:message key="Ranking"/></div>
                                     <div class="list-group-item-icon">
                                         <fmt:formatNumber value="${RankingValue}" minFractionDigits="2" maxFractionDigits="2"/>
