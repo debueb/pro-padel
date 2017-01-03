@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
@@ -50,10 +51,10 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
             player.setSalted(true);
         }
         if (!StringUtils.isEmpty(player.getFirstName())){
-            player.setFirstName(StringUtils.capitalize(player.getFirstName()));
+            player.setFirstName(WordUtils.capitalizeFully(player.getFirstName(), new char[]{' ', '-'}));
         }
         if (!StringUtils.isEmpty(player.getLastName())){
-            player.setLastName(StringUtils.capitalize(player.getLastName()));
+            player.setLastName(WordUtils.capitalizeFully(player.getLastName(), new char[]{' ', '-'}));
         }
         player.setCustomer(getCustomer());
         return super.saveOrUpdate(player);
