@@ -13,7 +13,6 @@ import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_
 import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_UNTIL_HOUR;
 import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_UNTIL_MINUTE;
 import de.appsolve.padelcampus.constants.PaymentMethod;
-import de.appsolve.padelcampus.db.dao.VoucherDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Voucher;
@@ -22,7 +21,6 @@ import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
 import de.appsolve.padelcampus.utils.VoucherUtil;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import org.springframework.util.Assert;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,9 +30,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
  * @author dominik
  */
 public abstract class TestBookingVoucher extends TestBase{
-    
-    @Autowired
-    private VoucherDAOI voucherDAO;
     
     protected void bookViaVoucherAndNoLogin(Offer offer) throws Exception {
         LOG.info("Test booking workflow [paymentMethod: Voucher, bookingType: nologin]");
