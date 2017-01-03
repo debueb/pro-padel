@@ -17,7 +17,8 @@
     // Wait for Document
     $(function () {
         // Prepare Variables
-        var contentSelector,
+        var defaultContentSelector = '.wrapper',
+            contentSelector, 
             $content,
             replaceElement,
             $body = $(document.body),
@@ -41,13 +42,12 @@
         // Ajaxify Helper
         $.fn.ajaxify = function () {
             // Prepare
-            var $this = $(this);
             
             var getContent = function(){
                 var content;
-                contentSelector = $this.attr('data-content') || '.wrapper';
-                if ($this.attr('data-replace')){
-                    content = $($this.attr('data-replace')).filter(':first');
+                contentSelector = $(this).attr('data-content') || defaultContentSelector;
+                if ($(this).attr('data-replace')){
+                    content = $($(this).attr('data-replace')).filter(':first');
                     replaceElement = true;
                 } else {
                     content = $(contentSelector).filter(':first');
@@ -66,7 +66,9 @@
                 return false;
             });
             
+            
             // Ajaxify
+            var $this = $(this);
             //$this.find('a.ajaxify').off().on('click', function (event) { //this does not trigger correctly
             $this.find('a.ajaxify').click(function (event) {
                 if (!window.navigator.onLine){
@@ -80,7 +82,7 @@
                     url = $this.attr('href'),
                     title = $this.attr('title') || null;
                 
-                $content = getContent();
+                $content = getContent.apply(this);
                     
                 // Continue as normal for cmd clicks etc
                 if (event.which === 2 || event.metaKey) {
@@ -104,7 +106,7 @@
                     method = $(this).attr('method'),
                     url = $(this).attr('action') || "";
                 
-                $content = getContent();
+                $content = getContent.apply(this);
                 
                 //in order to update the URL in the browser, we construct the URL here
                 //to avoid the ajax call from duplicating all parameters we set the data to null
@@ -169,6 +171,10 @@
                     if (!contentHtml) {
                         document.location.href = url;
                         return false;
+                    }
+
+                    if (!$content){
+                        $content = $(defaultContentSelector);
                     }
 
                     // Update the content

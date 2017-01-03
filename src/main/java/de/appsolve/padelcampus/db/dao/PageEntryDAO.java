@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.data.domain.Page;
@@ -32,20 +32,29 @@ public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEnt
     
     @Override
     public Page<PageEntry> findByModule(Module module, Pageable pageable) {
+       
+        
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.eq("module", module));
-        criteria.setFirstResult(pageable.getOffset()+1);
         criteria.setMaxResults(pageable.getPageSize());
-        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        criteria.setFirstResult(pageable.getOffset());
+        criteria.setProjection(Projections.distinct(Projections.property("id")));
+        criteria.addOrder(Order.asc("position"));
         @SuppressWarnings("unchecked")
-        List<PageEntry> list = criteria.list();
-        sort(list);
+        List<Long> list = criteria.list();
+        
+        Criteria c = getCriteria();
+        c.add(Restrictions.eq("module", module));
+        c.add(Restrictions.in("id", list));
+        c.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        List<PageEntry> pageEntries = c.list();
+        sort(pageEntries);
         
         Criteria countCriteria = getCriteria();
         countCriteria.add(Restrictions.eq("module", module));
         countCriteria.setProjection(Projections.rowCount());
         Long rowCount = (Long) countCriteria.uniqueResult();
-        Page<PageEntry> page = new PageImpl(list, pageable, rowCount);
+        Page<PageEntry> page = new PageImpl(pageEntries, pageable, rowCount);
         return page;
     }
 }
