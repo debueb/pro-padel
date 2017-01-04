@@ -79,7 +79,7 @@ public class LoginController extends BaseController{
             return loginView;
         }
         
-        String redirectPath = sessionUtil.getLoginRedirectPath(request) == null ? "/" : sessionUtil.getLoginRedirectPath(request);
+        String redirectPath = sessionUtil.getLoginRedirectPath(request) == null ? "/home" : sessionUtil.getLoginRedirectPath(request);
         sessionUtil.setLoginRedirectPath(request, null);
         return new ModelAndView("redirect:"+redirectPath);
     }
