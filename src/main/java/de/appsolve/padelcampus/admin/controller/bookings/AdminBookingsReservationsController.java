@@ -202,7 +202,9 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         
         BigDecimal total = new BigDecimal(0);
         for (Booking booking: bookings){
-            total = total.add(booking.getAmount());
+            if (booking.getAmount() != null){
+                total = total.add(booking.getAmount());
+            }
         }
         ModelAndView listView = new ModelAndView("admin/bookings/reservations/index");
         listView.addObject("Total", total);
