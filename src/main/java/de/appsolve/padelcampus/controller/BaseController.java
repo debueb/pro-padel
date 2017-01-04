@@ -15,8 +15,10 @@ import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,7 +54,8 @@ public abstract class BaseController {
     
     @ExceptionHandler(value=Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ModelAndView handleException(Exception ex){
+    public ModelAndView handleException(HttpServletRequest req, Exception ex){
+        sendErrorMail(req, ex);
         log.error(ex.getMessage(), ex);
         return new ModelAndView("error/500", "Exception", ex);
     }
@@ -109,5 +112,52 @@ public abstract class BaseController {
         contact.setEmailAddress(CONTACT_FORM_RECIPIENT_MAIL);
         contact.setEmailDisplayName(CONTACT_FORM_RECIPIENT_NAME);
         return contact;
+    }
+    
+    private void sendErrorMail(HttpServletRequest request, Exception ex) {
+        boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
+        if (!isDebug){
+            Mail mail = new Mail();
+            mail.setSubject("pro padel error - "+ex.toString());
+            StringBuilder body = new StringBuilder();
+            body.append("METHOD URL:\n");
+            body.append(request.getMethod());
+            body.append(" ");
+            body.append(request.getRequestURL());
+            body.append("\n\nREQUEST HEADERS\n");
+            Enumeration<String> headerNames = request.getHeaderNames();
+            if (headerNames != null){
+                while (headerNames.hasMoreElements()){
+                    String attr = headerNames.nextElement();
+                    body.append(attr);
+                    body.append("=");
+                    body.append(request.getHeader(attr));
+                    body.append("\n");
+                }
+            }
+            body.append("\n\nREQUEST PARAMETERS\n");
+            body.append(request.getParameterMap());
+            body.append("\n\nSESSION ATTRIBUTES\n");
+            Enumeration<String> attributeNames = request.getSession().getAttributeNames();
+            if (attributeNames != null){
+                while (attributeNames.hasMoreElements()){
+                    String attr = attributeNames.nextElement();
+                    body.append(attr);
+                    body.append("=");
+                    body.append(request.getSession().getAttribute(attr));
+                    body.append("\n");
+                }
+            }
+            body.append("\n\nEXCEPTION MESSAGE\n");
+            body.append(ex.getMessage());
+            body.append("\n\nEXCEPTION STACKTRACE\n");
+            body.append(ExceptionUtils.getStackTrace(ex));
+            mail.setBody(body.toString());
+            try {
+                mailUtils.send(mail, request);
+            } catch (MailException | IOException e){
+                log.error(e.getMessage(), e);
+            }
+        }
     }
 }
