@@ -38,12 +38,13 @@ public class TestBookingDirectDebitLogin extends TestBase {
         
         mockMvc.perform(post("/bookings/" + nextMonday + "/10:00/offer/"+offer1.getId())
                 .session(session)
-                .param("bookingDate", nextMonday.toString())
                 .param("bookingTime", "10:00")
                 .param("offer", offer1.getId().toString())
                 .param("bookingType", BookingType.login.name())
                 .param("duration", "60")
                 .param("paymentMethod", PaymentMethod.DirectDebit.name()))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(model().hasNoErrors())
             .andExpect(redirectedUrl("/login"));
         
         Booking booking = (Booking) session.getAttribute(SESSION_BOOKING);

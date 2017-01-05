@@ -30,6 +30,7 @@ import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Voucher;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.spring.OfferOptionCollectionEditor;
+import de.appsolve.padelcampus.spring.OfferPropertyEditor;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import de.appsolve.padelcampus.utils.FormatUtils;
@@ -131,9 +132,13 @@ public class BookingsController extends BaseController {
     @Autowired
     OfferOptionCollectionEditor offerOptionCollectionEditor;
     
+    @Autowired
+    OfferPropertyEditor offerPropertyEditor;
+    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Set.class, "offerOptions", offerOptionCollectionEditor);
+        binder.registerCustomEditor(Offer.class, "offer", offerPropertyEditor);
     }
     
     @RequestMapping()
@@ -169,10 +174,8 @@ public class BookingsController extends BaseController {
     @RequestMapping(value = "{day}/{time}/offer/{offerId}", method = POST)
     public ModelAndView selectBooking(@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("offerId") Long offerId, @ModelAttribute("Booking") Booking booking, BindingResult bindingResult, HttpServletRequest request) throws Exception {
         ModelAndView bookingView = getBookingView();
-        Offer offer = offerDAO.findByIdFetchWithOfferOptions(offerId);
-        booking.setOffer(offer);
         try {
-            validateAndAddObjectsToView(bookingView, request, booking, day, time, offer);
+            validateAndAddObjectsToView(bookingView, request, booking, day, time, booking.getOffer());
         } catch (Exception e){
             bookingView.addObject("error", e.getMessage());
             return bookingView;
@@ -305,7 +308,7 @@ public class BookingsController extends BaseController {
                     return confirmView;
             }
         } catch (Exception e) {
-            LOG.error("Error while processing booking request: "+e.getMessage(), e);
+            LOG.error("Error while processing booking request: "+e.getMessage());
             confirmView.addObject("error", e.getMessage());
             return confirmView;
         }

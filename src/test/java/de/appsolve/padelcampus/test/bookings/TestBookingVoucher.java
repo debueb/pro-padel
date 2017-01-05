@@ -24,6 +24,8 @@ import org.joda.time.LocalTime;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import org.springframework.util.Assert;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  *
@@ -42,13 +44,14 @@ public abstract class TestBookingVoucher extends TestBase{
 
         mockMvc.perform(post("/bookings/" + nextMonday + "/10:00/offer/"+offer.getId())
                 .session(session)
-                .param("bookingDate", nextMonday.toString())
                 .param("bookingTime", "10:00")
                 .param("offer", offer.getId().toString())
                 .param("bookingType", BookingType.nologin.name())
                 .param("duration", "60")
                 .param("paymentMethod", PaymentMethod.Voucher.name()))
-            .andExpect(redirectedUrl("/bookings/nologin"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(model().hasNoErrors())
+                .andExpect(redirectedUrl("/bookings/nologin"));
         
         Booking booking = (Booking) session.getAttribute(SESSION_BOOKING);
         Assert.notNull(booking);

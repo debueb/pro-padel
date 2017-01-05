@@ -40,12 +40,12 @@ public class TestBookingOverbooking extends TestBookingVoucher {
         
         mockMvc.perform(post("/bookings/" + nextMonday + "/10:00/offer/"+offer1.getId())
                 .session(session)
-                .param("bookingDate", nextMonday.toString())
                 .param("bookingTime", "10:00")
                 .param("offer", offer1.getId().toString())
                 .param("bookingType", BookingType.nologin.name())
                 .param("duration", "60")
                 .param("paymentMethod", PaymentMethod.Voucher.name()))
+            .andExpect(status().is2xxSuccessful())
             .andExpect(view().name("bookings/booking"))
             .andExpect(model().attribute("error", msg.get("NoFreeCourtsForSelectedTimeAndDate")));
         
