@@ -5,8 +5,6 @@
  */
 package de.appsolve.padelcampus.controller;
 
-import static de.appsolve.padelcampus.constants.Constants.CONTACT_FORM_RECIPIENT_MAIL;
-import static de.appsolve.padelcampus.constants.Constants.CONTACT_FORM_RECIPIENT_NAME;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.ContactDAOI;
 import de.appsolve.padelcampus.db.model.Contact;
@@ -21,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -51,6 +50,9 @@ public abstract class BaseController {
     
     @Autowired
     public MailUtils mailUtils;
+    
+    @Autowired
+    Environment environment;
     
     @ExceptionHandler(value=Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -109,16 +111,13 @@ public abstract class BaseController {
 
     protected Contact getDefaultContact() {
         Contact contact = new Contact();
-        contact.setEmailAddress(CONTACT_FORM_RECIPIENT_MAIL);
-        contact.setEmailDisplayName(CONTACT_FORM_RECIPIENT_NAME);
+        contact.setEmailAddress(environment.getProperty("DEFAULT_EMAIL_ADDRESS"));
         return contact;
     }
     
-    private void sendErrorMail(HttpServletRequest request, Exception ex) {
+    protected void sendErrorMail(HttpServletRequest request, Exception ex) {
         boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
         if (!isDebug){
-            Mail mail = new Mail();
-            mail.setSubject("pro padel error - "+ex.toString());
             StringBuilder body = new StringBuilder();
             body.append("METHOD URL:\n");
             body.append(request.getMethod());
@@ -152,6 +151,9 @@ public abstract class BaseController {
             body.append(ex.getMessage());
             body.append("\n\nEXCEPTION STACKTRACE\n");
             body.append(ExceptionUtils.getStackTrace(ex));
+            Mail mail = new Mail();
+            mail.addRecipient(getDefaultContact());
+            mail.setSubject("pro padel error - "+ex.toString());
             mail.setBody(body.toString());
             try {
                 mailUtils.send(mail, request);

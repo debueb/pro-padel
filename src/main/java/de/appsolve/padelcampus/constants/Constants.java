@@ -32,9 +32,6 @@ public class Constants {
     public static final int BOOKING_DEFAULT_DURATION            = 60;
     public static final int BOOKING_DEFAULT_MIN_INTERVAL        = 30;
     
-    public static final String CONTACT_FORM_RECIPIENT_MAIL  = "d.wisskirchen@gmail.com";
-    public static final String CONTACT_FORM_RECIPIENT_NAME  = "Dominik Wisskirchen";
-    
     public static final String SESSION_USER                 = "user";
     public static final String SESSION_CUSTOMER             = "customer";
     public static final String SESSION_PRIVILEGES           = "privileges";

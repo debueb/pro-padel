@@ -6,31 +6,25 @@
 package de.appsolve.padelcampus.controller.pro;
 
 import de.appsolve.padelcampus.constants.Constants;
-import static de.appsolve.padelcampus.constants.Constants.CONTACT_FORM_RECIPIENT_MAIL;
 import de.appsolve.padelcampus.constants.Privilege;
+import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.CustomerRegistrationModel;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.AdminGroupDAOI;
 import de.appsolve.padelcampus.db.dao.CustomerDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.AdminGroup;
-import de.appsolve.padelcampus.db.model.Contact;
 import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.external.cloudflare.CloudFlareApiClient;
 import de.appsolve.padelcampus.external.openshift.OpenshiftApiClient;
 import de.appsolve.padelcampus.utils.HtmlResourceUtil;
-import de.appsolve.padelcampus.utils.MailUtils;
-import de.appsolve.padelcampus.utils.Msg;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +45,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 @RequestMapping("/pro/operators")
-public class ProOperatorsController implements ServletContextAware{
+public class ProOperatorsController extends BaseController implements ServletContextAware{
     
     private static final Logger LOG = Logger.getLogger(ProOperatorsController.class);
     
@@ -67,9 +61,6 @@ public class ProOperatorsController implements ServletContextAware{
     AdminGroupDAOI adminGroupDAO;
     
     @Autowired
-    Msg msg;
-    
-    @Autowired
     CloudFlareApiClient cloudFlareApiClient;
     
     @Autowired
@@ -77,9 +68,6 @@ public class ProOperatorsController implements ServletContextAware{
     
     @Autowired
     HtmlResourceUtil htmlResourceUtil;
-    
-    @Autowired
-    MailUtils mailUtils;
     
     private final static Pattern DNS_SUBDOMAIN_PATTERN = Pattern.compile("(?:[A-Za-z0-9][A-Za-z0-9\\-]{0,61}[A-Za-z0-9]|[A-Za-z0-9])");
     
@@ -151,12 +139,16 @@ public class ProOperatorsController implements ServletContextAware{
             //create all.min.css.stylesheet for new customer
             htmlResourceUtil.updateCss(servletContext, customer);
             
-            sendMail(request, customerAccount, "registration successful");
+            Mail mail = new Mail();
+            mail.addRecipient(getDefaultContact());
+            mail.setSubject("New Customer Registration");
+            mail.setBody(customer.toString());
+            mailUtils.send(mail, request);
             
             return new ModelAndView("redirect:/pro/operators/newaccount/"+customer.getId());
         } catch (Exception e){
             LOG.error(e.getMessage(), e);
-            sendMail(request, customerAccount, e.getMessage());
+            sendErrorMail(request, e);
             bindingResult.addError(new ObjectError("id", e.getMessage()));
             return new ModelAndView("pro/newaccount", "Model", customerAccount);
         }
@@ -171,46 +163,6 @@ public class ProOperatorsController implements ServletContextAware{
         mav.addObject("domainName", domainName);
         return mav;
     }
-
-    private void sendMail(HttpServletRequest request, CustomerRegistrationModel customerAccount, String message) {
-        try {
-            Contact contact = new Contact();
-            contact.setEmailAddress(CONTACT_FORM_RECIPIENT_MAIL);
-            Mail mail = new Mail();
-            mail.addRecipient(contact);
-            mail.setReplyTo("noreply@"+CLOUDFLARE_URL);
-            mail.setSubject("Customer Registration");
-            StringBuilder body = new StringBuilder();
-            body.append("Customer name: ").append(customerAccount.getCustomer().getName()).append("\n");
-            body.append("Player name: ").append(customerAccount.getPlayer().toString()).append("\n");
-            body.append("Player email: ").append(customerAccount.getPlayer().getEmailAddress()).append("\n");
-            body.append("Message: ").append(message);
-            mail.setBody(body.toString());
-            mailUtils.send(mail, request);
-        } catch (MailException | IOException ex) {
-            LOG.error(ex);
-        }
-    }
-
-    //does not work on openshift: permission denied
-//    private Attribute getDnsRecord(String domainName) {
-//        Hashtable<String, String> env = new Hashtable<>();
-//
-//        env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
-//        env.put("com.sun.jndi.dns.timeout.initial", "5000");    /* quite short... too short? */
-//        env.put("com.sun.jndi.dns.timeout.retries", "1");
-//
-//        try {
-//            DirContext ictx = new InitialDirContext(env);
-//            String[] ids = new String[] {"A"};
-//            Attributes attrs = ictx.getAttributes(domainName, ids);
-//            Attribute a = attrs.get("A");
-//            return a;
-//        } catch (NamingException e){
-//            LOG.warn(e);
-//        }
-//        return null;
-//    }
 
     @Override
     public void setServletContext(ServletContext servletContext) {

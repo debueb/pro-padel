@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -58,17 +59,19 @@ public class MailUtils {
             TransmissionWithRecipientArray transmission = new TransmissionWithRecipientArray();
 
             List<RecipientAttributes> recipientArray = new ArrayList<>();
-            
-            List<String> recipients = getRecipients(mail);
-            for (String recpient : recipients) {
-                RecipientAttributes recipientAttribs = new RecipientAttributes();
-                recipientAttribs.setAddress(new AddressAttributes(recpient));
-                recipientArray.add(recipientAttribs);
+            for (EmailContact contact: mail.getRecipients()) {
+                if (EmailValidator.getInstance(false, true).isValid(contact.getEmailAddress())){
+                    RecipientAttributes recipientAttribs = new RecipientAttributes();
+                    recipientAttribs.setAddress(new AddressAttributes(contact.getEmailAddress()));
+                    recipientArray.add(recipientAttribs);
+                }
+            }
+            if (recipientArray.isEmpty()){
+                throw new MailException("No recipient specified for mail "+mail);
             }
             transmission.setRecipientArray(recipientArray);
 
             TemplateContentAttributes contentAttributes = new TemplateContentAttributes();
-
             contentAttributes.setFrom(new AddressAttributes(from));
             contentAttributes.setReplyTo(replyTo);
             contentAttributes.setSubject(mail.getSubject());
@@ -78,7 +81,6 @@ public class MailUtils {
 
             RestConnection connection = new RestConnection(client);
             ResourceTransmissions.create(connection, 0, transmission);
-
         
         } catch (SparkPostException e){
             throw new MailException(e.getMessage(), e);
@@ -88,14 +90,6 @@ public class MailUtils {
     private String getHTML(String string) {
         string = string.replaceAll("(\r\n|\n)", "<br />");
         return string;
-    }
-
-    private List<String> getRecipients(Mail mail) {
-        List<String> recipients = new ArrayList<>();
-        for (EmailContact contact: mail.getRecipients()){
-            recipients.add(contact.getEmailAddress());
-        }
-        return recipients;
     }
 
     public static String getMailTo(Collection<? extends EmailContact> emailContacts) {
