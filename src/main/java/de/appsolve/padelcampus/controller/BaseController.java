@@ -17,6 +17,7 @@ import java.util.Enumeration;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -128,6 +129,12 @@ public abstract class BaseController {
             if (headerNames != null){
                 while (headerNames.hasMoreElements()){
                     String attr = headerNames.nextElement();
+                    if (!StringUtils.isEmpty(attr) && attr.equalsIgnoreCase("user-agent")){
+                        String ua = request.getHeader(attr);
+                        if (!StringUtils.isEmpty(ua) && ua.contains("tinfoilsecurity")){
+                            return;
+                        }
+                    }
                     body.append(attr);
                     body.append("=");
                     body.append(request.getHeader(attr));
