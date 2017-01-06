@@ -1338,6 +1338,7 @@ th.normal {
   line-height: 40px;
   text-align: center;
   line-height: 13px;
+  border-top: 1px solid #ccc;
 }
 .booking-slick {
   background: white;
@@ -1361,6 +1362,8 @@ th.normal {
     -o-transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
     transform: rotate(-90deg);
+    border-top: 0;
+    border-right: 1px solid #ccc;
   }
   .booking-slick {
     padding-left: 12px;
