@@ -26,7 +26,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Component("loginFilter")
 public class LoginFilter implements Filter {
@@ -87,7 +90,20 @@ public class LoginFilter implements Filter {
                     customer = customerDAO.findByDomainName(hostHeaderSplit[0]);
                 } 
                 if (customer == null){
-                    httpResponse.sendRedirect(PATH_START_PAGE);
+                    String url = "";
+                    String serverName = httpRequest.getServerName();
+                    if (!StringUtils.isEmpty(serverName)){
+                        String[] domainParts = serverName.split("\\.");
+                        if (domainParts.length>2){
+                            url = httpRequest.getScheme()+"://"+domainParts[domainParts.length-2]+"."+domainParts[domainParts.length-1];
+                            if (httpRequest.getScheme().equals("http") && httpRequest.getServerPort() != 80){
+                                url += ":"+httpRequest.getServerPort();
+                            }
+                        }
+                    }
+                    url += PATH_START_PAGE;
+                    httpResponse.setStatus(HttpStatus.PERMANENT_REDIRECT.value());
+                    httpResponse.sendRedirect(url);
                     return;
                 }
                 sessionUtil.setCustomer(httpRequest, customer);
