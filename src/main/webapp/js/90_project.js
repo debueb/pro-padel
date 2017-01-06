@@ -598,30 +598,6 @@ app.main = {};
         });
     };
     
-    self.enableFadeInOnScroll = function(){
-        
-        var fadeIn = function(){
-            $('.fadeIn:not(.fadedIn)').each( function(i){
-                var $elem = $(this);
-                var topOfObject = $elem.offset().top;
-                var bottomOfWindow = $(window).scrollTop() + $(window).height();
-
-                /* If the object is completely visible in the window, fade it it */
-                if( bottomOfWindow > topOfObject ){
-                    $elem.css({'opacity':'1'});
-                    $elem.addClass('fadedIn');
-                }
-            });
-        };
-        
-        fadeIn();
-        $(window).scroll( function(){
-             fadeIn();
-        });
-        $(window).on('statechangecomplete', fadeIn);
-        $(window).on('slickinitialized', fadeIn);
-    };
-    
     self.enableSlick = function(){
         $('.gallery-autoplay').livequery(function(){
             var $elem = $(this);
@@ -667,6 +643,5 @@ $(document).ready(function () {
     app.main.enableAutoSearch();
     app.main.enableTooltips();
     app.main.enableSubmodules();
-    app.main.enableFadeInOnScroll();
     app.main.enableSlick();
 });
