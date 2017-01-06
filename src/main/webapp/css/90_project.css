@@ -483,6 +483,7 @@ a.navbar-icon {
 .table > tbody > tr > td,
 .table > thead > tr > th {
   background-color: #fff;
+  vertical-align: middle;
 }
 .table > thead > tr > th {
   border-bottom: 1px solid #999;
