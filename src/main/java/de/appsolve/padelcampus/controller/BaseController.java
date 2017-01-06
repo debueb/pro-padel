@@ -65,8 +65,8 @@ public abstract class BaseController {
     
     @ExceptionHandler(value=ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ModelAndView handleResourceNotFoundException(Exception ex){
-        log.error(ex.getMessage(), ex);
+    public ModelAndView handleResourceNotFoundException(HttpServletRequest request, Exception ex){
+        log.error(ex.getMessage() + " " + request.getRequestURL());
         return new ModelAndView("error/404", "Exception", ex);
     }
     
