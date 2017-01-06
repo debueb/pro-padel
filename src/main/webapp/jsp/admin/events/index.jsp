@@ -18,6 +18,7 @@
                         <th><fmt:message key="StartDate"/></th>
                         <th><fmt:message key="EventType"/></th>
                         <th class="text-center"><fmt:message key="Participants"/></th>
+                        <th class="text-center"><fmt:message key="MaxNumberOfParticipants"/></th>
                         <th class="text-center"><fmt:message key="SendMail"/></th>
                         <th class="text-center"><fmt:message key="Active"/></th>
                         <th class="delete"><fmt:message key="Delete"/></th>
@@ -29,9 +30,8 @@
                                     <td><a class="ajaxify" href="${url}">${Event.name}</a></td>
                                     <td><a class="ajaxify" href="${url}"><joda:format value="${Event.startDate}" pattern="yyyy-MM-dd"/></a></td>
                                     <td><a class="ajaxify" href="${url}"><fmt:message key="${Event.eventType}"/></a></td>
-                                    <td class="text-center">
-                                        ${fn:length(Event.participants)}
-                                    </td>
+                                    <td class="text-center">${fn:length(Event.participants)}</td>
+                                    <td class="text-center">${Event.maxNumberOfParticipants}</td>
                                     <td><a class="block text-center" href="mailto:${Event.mailTo}"><i class="fa fa-envelope"></i></a></td>
                                     <td class="text-center" data-order="${Event.active}"><a class="ajaxify" href="${url}"><i class="fa fa-${Event.active ? 'check' : 'close'}"/></a></td>
                                     <td class="delete"><a href="/admin/events/${Event.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
