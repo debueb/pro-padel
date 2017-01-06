@@ -24,6 +24,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -37,12 +38,12 @@ public class MailUtils {
     @Autowired
     SessionUtil sessionUtil;
     
-    private static final String API_KEY             = "3def953e23ed9c354a77cb6465c65cb34b32f2b4";
-    private static final String DEFAULT_FROM_EMAIL  = "noreply@pro-padel.de";
-        
+    @Autowired
+    Environment environment;
+    
     public void send(Mail mail, HttpServletRequest request) throws MailException, IOException {
         
-        String from = DEFAULT_FROM_EMAIL;
+        String from = environment.getProperty("SPARKPOST_DEFAULT_SENDER");
         if (request != null){
             CustomerI customer = sessionUtil.getCustomer(request);
             if (customer != null){
@@ -53,7 +54,7 @@ public class MailUtils {
         }
         String replyTo = StringUtils.isEmpty(mail.getFrom()) ? from : mail.getFrom();
         
-        Client client = new Client(API_KEY);
+        Client client = new Client(environment.getProperty("SPARKPOST_API_KEY"));
 
         try {
             TransmissionWithRecipientArray transmission = new TransmissionWithRecipientArray();
