@@ -3,6 +3,7 @@ package de.appsolve.padelcampus.db.dao;
 import de.appsolve.padelcampus.db.dao.generic.SortedGenericDAO;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.PageEntry;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,13 @@ public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEnt
     
     @Override
     public Page<PageEntry> findByModule(Module module, Pageable pageable) {
-       
+        Criteria countCriteria = getCriteria();
+        countCriteria.add(Restrictions.eq("module", module));
+        countCriteria.setProjection(Projections.rowCount());
+        Long rowCount = (Long) countCriteria.uniqueResult();
+        if (rowCount == 0L){
+            return new PageImpl(new ArrayList<>(), pageable, rowCount);
+        }
         
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.eq("module", module));
@@ -50,10 +57,7 @@ public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEnt
         List<PageEntry> pageEntries = c.list();
         sort(pageEntries);
         
-        Criteria countCriteria = getCriteria();
-        countCriteria.add(Restrictions.eq("module", module));
-        countCriteria.setProjection(Projections.rowCount());
-        Long rowCount = (Long) countCriteria.uniqueResult();
+        
         Page<PageEntry> page = new PageImpl(pageEntries, pageable, rowCount);
         return page;
     }
