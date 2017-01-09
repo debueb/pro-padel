@@ -1,0 +1,25 @@
+.dd3-content{
+    height: 40px;
+    line-height: 40px;
+    padding: 0 10px 0 50px
+}
+.dd-handle{
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+}
+.dd-handle:before{
+    top:0;
+    font-size: 24px;
+}
+.dd-list .dd-list { 
+    padding-left: 40px; 
+}
+.dd3-content { 
+    background: #fafafa;
+    background: -webkit-linear-gradient(top, #fafafa 0%, #d4d4d4 100%);
+    background:    -moz-linear-gradient(top, #fafafa 0%, #d4d4d4 100%);
+    background:         linear-gradient(top, #fafafa 0%, #d4d4d4 100%);
+    box-sizing: border-box; -moz-box-sizing: border-box;
+    overflow: hidden;
+}

@@ -93,18 +93,20 @@
                         </c:forEach>
                     </spf:select>
                     
-                    <div>
-                        <spf:checkbox path="showOnHomepage" />
-                        <label class="checkbox" for="showOnHomepage1"><fmt:message key="ShowOnHomepage"/></label>
-                    </div>
-                    <div>
-                        <spf:checkbox path="showInMenu" />
-                        <label class="checkbox" for="showInMenu1"><fmt:message key="ShowInMenu"/></label>
-                    </div>
-                    <div>
-                        <spf:checkbox path="showInFooter" />
-                        <label class="checkbox" for="showInFooter1"><fmt:message key="ShowInFooter"/></label>
-                    </div>
+                    <c:if test="${isRootModule}">
+                        <div>
+                            <spf:checkbox path="showOnHomepage" />
+                            <label class="checkbox" for="showOnHomepage1"><fmt:message key="ShowOnHomepage"/></label>
+                        </div>
+                        <div>
+                            <spf:checkbox path="showInMenu" />
+                            <label class="checkbox" for="showInMenu1"><fmt:message key="ShowInMenu"/></label>
+                        </div>
+                        <div>
+                            <spf:checkbox path="showInFooter" />
+                            <label class="checkbox" for="showInFooter1"><fmt:message key="ShowInFooter"/></label>
+                        </div>
+                    </c:if>
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
                     <c:if test="${Model.moduleType == 'Page' || Model.moduleType == 'HomePage' || Model.moduleType == 'LandingPage'}">
                         <a class="btn btn-primary btn-block ajaxify" href="/admin/general/modules/page/${Model.id}"><fmt:message key="ManageEntries"/></a>
@@ -113,7 +115,7 @@
                         <a class="btn btn-primary btn-block ajaxify" href="/admin/general/modules/blog/${Model.id}"><fmt:message key="ManageBlogEntries"/></a>
                     </c:if>
                     <c:if test="${not empty Model.id}">
-                        <a href="/admin/general/modules/edit/${Model.id}/submodules" class="btn btn-primary btn-block unit-2 ajaxify"><fmt:message key="ManageSubmodules"/></a>
+                        <a href="/admin/general/modules/${Model.id}/delete" class="btn btn-danger btn-block unit-2 ajaxify"><fmt:message key="Delete"/></a>
                     </c:if>
                     <a class="btn btn-primary btn-block btn-back unit-2 ajaxify"><fmt:message key="Cancel"/></a>
 

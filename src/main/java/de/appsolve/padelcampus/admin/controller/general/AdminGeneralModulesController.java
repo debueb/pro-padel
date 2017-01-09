@@ -6,7 +6,9 @@
 
 package de.appsolve.padelcampus.admin.controller.general;
 
+import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.constants.ModuleType;
+import de.appsolve.padelcampus.data.NestableItem;
 import de.appsolve.padelcampus.db.dao.EventGroupDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
@@ -21,7 +23,7 @@ import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATT
 import de.appsolve.padelcampus.utils.ModuleUtil;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import static org.springframework.http.HttpStatus.OK;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -48,7 +49,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
@@ -60,7 +61,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
  */
 @Controller()
 @RequestMapping("/admin/general/modules")
-public class AdminGeneralModulesController extends AdminSortableController<Module> {
+public class AdminGeneralModulesController extends AdminBaseController<Module> {
     
     private final static Logger LOG = Logger.getLogger(AdminGeneralModulesController.class);
     
@@ -110,9 +111,22 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
     
     @Override
     protected ModelAndView getEditView(Module model){
-        ModelAndView mav = super.getEditView(model);
-        addEditObjects(mav);
-        return mav;
+        ModelAndView editView = super.getEditView(model);
+        editView.addObject("ModuleTypes", ModuleType.values());
+        editView.addObject("EventGroups", eventGroupDAO.findAll());
+        Boolean isRootModule = model.getId() == null;
+        if (!isRootModule){
+            isRootModule = moduleDAO.findAllRootModules().contains(model);
+        }
+        editView.addObject("isRootModule", isRootModule);
+        try {
+            String fileContents = FileUtil.getFileContents("font-awesome-icon-names.txt");
+            String[] iconNames = fileContents.split("\n");
+            editView.addObject("FontAwesomeIconNames", iconNames);
+        } catch (IOException ex) {
+            LOG.warn("Unable to get list of font-aweseome icon names", ex);
+        }
+        return editView;
     }
     
     @Override
@@ -126,7 +140,7 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         rewriteLinks(model);
         
         ModelAndView mav = super.postEditView(model, request, result);
-        reloadModules(request);
+        moduleUtil.reloadModules(request);
         return mav;
     }
     
@@ -147,107 +161,44 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
             moduleDAO.saveOrUpdate(parent);
         }
         ModelAndView mav = super.postDelete(request, id);
-        reloadModules(request);
-        return mav;
-    }
-    
-    @RequestMapping("/edit/{id}/submodules")
-    public ModelAndView showSubmodules(@PathVariable("id") Long id){
-        Module module = moduleDAO.findById(id);
-        return getSubmoduleView(module);
-    }
-    
-    @RequestMapping(value={"/edit/{id}/submodules/add"}, method=GET)
-    public ModelAndView showSubModuleAddView(@PathVariable("id") Long id){
-        return getSubmoduleEditView(id, createNewInstance());
-    }
-    
-    @RequestMapping(value="/edit/{id}/submodules/edit/{modelId}", method=GET)
-    public ModelAndView showSubmoduleEditView(@PathVariable("id") Long id, @PathVariable("modelId") Long modelId){
-        return getSubmoduleEditView(id, findById(modelId));
-    }
-    
-    @RequestMapping(value={"/edit/{id}/submodules/add", "/edit/{id}/submodules/edit/{modelId}"}, method=POST)
-    public ModelAndView postSubmoduleEditView(@PathVariable("id") Long parentModuleId, @ModelAttribute("Model") Module model, HttpServletRequest request, BindingResult result){
-        validator.validate(model, result);
-        checkTitleRequirements(model, result);
-        if (result.hasErrors()){
-            return getEditView(model);
-        }
-        model.setShowInMenu(Boolean.TRUE);
-        model.setShowInFooter(Boolean.FALSE);
-        model.setShowOnHomepage(Boolean.FALSE);
-        keepSubModules(model);
-        checkPosition(model);
-        rewriteLinks(model);
-        model = moduleDAO.saveOrUpdate(model);
-        Module parent = moduleDAO.findById(parentModuleId);
-        Set<Module> subModules = parent.getSubModules();
-        if (subModules == null){
-            subModules = new HashSet<>();
-        }
-        subModules.add(model);
-        parent.setSubModules(subModules);
-        parent = moduleDAO.saveOrUpdate(parent);
-        reloadModules(request);
-        return new ModelAndView("redirect:/admin/general/modules/edit/"+parent.getId()+"/submodules");
-    }
-    
-    @Override
-    public void updateSortOrder(HttpServletRequest request, @ModelAttribute("Model") Module model, @RequestBody List<Long> orderedIds){
-        //zero out positions first
-        for (Long id: orderedIds){
-            Module object = (Module) moduleDAO.findById(id);
-            object.setPosition(null);
-            moduleDAO.saveOrUpdate(object);
-        }
-        Long position = 0L;
-        for (Long id: orderedIds){
-            updateModulePosition(id, position);
-        }
-        reloadModules(request);
-    }
-    
-    @RequestMapping(value="/edit/{moduleId}/submodules/updatesortorder", method=POST)
-    @ResponseStatus(OK)
-    public void updateSubmoduleSortOrder(HttpServletRequest request, @ModelAttribute("Model") Module model, @RequestBody List<Long> orderedIds){
-        updateSortOrder(request, model, orderedIds);
-        reloadModules(request);
-    }
-    
-    protected ModelAndView getSubmoduleView(Module module){
-        ModelAndView mav = new ModelAndView(getModuleName()+"/submodules/index");
-        mav.addObject("Parent", module);
-        mav.addObject("Models", module.getSubModules());
-        mav.addObject("moduleName", getModuleName());
-        return mav;
-    }
-    
-    protected ModelAndView getSubmoduleEditView(Long parentModuleId, Module model){
-        ModelAndView mav =  new ModelAndView("/"+getModuleName()+"/submodules/edit");
-        mav.addObject("Parent", moduleDAO.findById(parentModuleId));
-        mav.addObject("Model", model);
-        mav.addObject("moduleName", getModuleName());
-        addEditObjects(mav);
-        return mav;
-    }
-    
-    private void reloadModules(HttpServletRequest request) {
         moduleUtil.reloadModules(request);
+        return mav;
     }
-
-    private void addEditObjects(ModelAndView mav) {
-        mav.addObject("ModuleTypes", ModuleType.values());
-        mav.addObject("EventGroups", eventGroupDAO.findAll());
-        try {
-            String fileContents = FileUtil.getFileContents("font-awesome-icon-names.txt");
-            String[] iconNames = fileContents.split("\n");
-            mav.addObject("FontAwesomeIconNames", iconNames);
-        } catch (IOException ex) {
-            LOG.warn("Unable to get list of font-aweseome icon names");
+    
+    @RequestMapping(method=POST, value="/updateposition")
+    @ResponseBody
+    public List<Module> updatePosition(HttpServletRequest request, @RequestBody List<NestableItem> nestableItems){
+        for (Module module: moduleDAO.findAll()){
+            module.setSubModules(null);
+            moduleDAO.saveOrUpdate(module);
         }
+        
+        Long position = 0L;
+        List<Module> modules = new ArrayList<>();
+        for (NestableItem nestableItem: nestableItems){
+            modules.add(updateNestableItemPosition(nestableItem, position));
+            position++;
+        }
+        moduleUtil.reloadModules(request);
+        return modules;
     }
-
+    
+    private Module updateNestableItemPosition(NestableItem nestableItem, Long position){
+        Module module = moduleDAO.findById(nestableItem.getId());
+        module.setPosition(position);
+        if (nestableItem.getChildren()==null){
+            module.setSubModules(null);
+        } else {
+            Set<Module> subModules = new TreeSet<>();
+            for (NestableItem subItem: nestableItem.getChildren()){
+                subModules.add(updateNestableItemPosition(subItem, position++));
+            }
+            module.setSubModules(subModules);
+        }
+        module = moduleDAO.saveOrUpdate(module);
+        return module;
+    }
+    
     private void checkTitleRequirements(Module module, BindingResult result) {
         if (result.hasErrors()){
             return;
@@ -275,19 +226,6 @@ public class AdminGeneralModulesController extends AdminSortableController<Modul
         if (model.getId() != null){
             Module existing = moduleDAO.findById(model.getId());
             model.setSubModules(existing.getSubModules());
-        }
-    }
-
-    private void updateModulePosition(Long id, Long position) {
-        Module object = (Module) moduleDAO.findById(id);
-        Module existingObject = moduleDAO.findByPosition(position);
-        if (existingObject == null){
-            object.setPosition(position);
-            moduleDAO.saveOrUpdate(object);
-            position++;
-        } else {
-            position++;
-            updateModulePosition(id, position);
         }
     }
 
