@@ -21,15 +21,14 @@
                         </thead>
                         <tbody>
                             <c:forEach var="ScoreEntry" items="${ScoreEntries}" varStatus="status">
-                                <c:set var="UrlTeam" value="/teams/team/${ScoreEntry.participant.UUID}"/>
-                                <c:set var="UrlTeamGames" value="/games/team/${ScoreEntry.participant.UUID}"/>
+                                <c:set var="UrlParticipant" value="${ScoreEntry.participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${ScoreEntry.participant.UUID}"/>
                                 <tr>
                                     <td class="text-center">${status.index+1}</td>
-                                    <td><a href="${UrlTeam}" class="ajaxify">${ScoreEntry.participant}</a></td>
-                                    <td class="text-center"><a href="${UrlTeamGames}" class="ajaxify">${ScoreEntry.totalPoints}</a></td>
-                                    <td class="text-center"><a href="${UrlTeamGames}" class="ajaxify">${ScoreEntry.matchesWon}:${ScoreEntry.matchesPlayed-ScoreEntry.matchesWon}</a></td>
-                                    <td class="text-center"><a href="${UrlTeamGames}" class="ajaxify">${ScoreEntry.setsWon}:${ScoreEntry.setsPlayed-ScoreEntry.setsWon}</a></td>
-                                    <td class="text-center"><a href="${UrlTeamGames}" class="ajaxify">${ScoreEntry.gamesWon}:${ScoreEntry.gamesPlayed-ScoreEntry.gamesWon}</a></td>
+                                    <td><a href="${UrlParticipant}" class="ajaxify">${ScoreEntry.participant}</a></td>
+                                    <td class="text-center">${ScoreEntry.totalPoints}</td>
+                                    <td class="text-center">${ScoreEntry.matchesWon}:${ScoreEntry.matchesPlayed-ScoreEntry.matchesWon}</td>
+                                    <td class="text-center">${ScoreEntry.setsWon}:${ScoreEntry.setsPlayed-ScoreEntry.setsWon}</td>
+                                    <td class="text-center">${ScoreEntry.gamesWon}:${ScoreEntry.gamesPlayed-ScoreEntry.gamesWon}</td>
                                 </tr>
                             </c:forEach>
                         </tbody>
