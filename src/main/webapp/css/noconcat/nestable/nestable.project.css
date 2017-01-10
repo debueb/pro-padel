@@ -1,19 +1,5 @@
-.dd3-content{
-    height: 40px;
-    line-height: 40px;
-    padding: 0 10px 0 50px
-}
-.dd-handle{
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-}
 .dd-handle:before{
-    top:0;
     font-size: 24px;
-}
-.dd-list .dd-list { 
-    padding-left: 40px; 
 }
 .dd3-content { 
     background: #fafafa;
