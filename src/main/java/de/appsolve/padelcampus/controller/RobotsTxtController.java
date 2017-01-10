@@ -28,6 +28,8 @@ public class RobotsTxtController {
         builder.append("Disallow: /players/\n");
         builder.append("Disallow: /teams/\n");
         builder.append("Disallow: /scores/\n");
+        builder.append("Disallow: /games/\n");
+        builder.append("Disallow: /matchoffers/\n");
         builder.append("Sitemap: ").append(RequestUtil.getBaseURL(request)).append("/sitemap.xml");
         return builder.toString();
     }
