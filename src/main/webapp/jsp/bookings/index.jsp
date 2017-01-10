@@ -7,11 +7,11 @@
 
         <jsp:include page="/jsp/include/module-description.jsp"/>
         
-        <div class="panel panel-info unit">
+        <div class="panel panel-info unit" id="date">
             <div class="panel-heading"><h4><fmt:message key="Date"/></h4></div>
             <div class="panel-body">
 
-                <form method="GET" class="ajaxify" action="${contextPath}/bookings">
+                <form method="GET" class="ajaxify" action="${contextPath}/bookings" data-anchor="#date">
                     <div class="datepicker-container ">
                         <div class="datepicker-text-container ${empty RangeMap or empty Facilities ? '' : 'form-top-element'}">
                             <div class="datepicker-label"><fmt:message key="Date"/></div>

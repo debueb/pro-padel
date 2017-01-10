@@ -102,9 +102,10 @@
                     return false;
                 }
 
-                var data = $(this).serialize(),
-                    method = $(this).attr('method'),
-                    url = $(this).attr('action') || "";
+                var data    = $(this).serialize(),
+                    method  = $(this).attr('method'),
+                    url     = $(this).attr('action') || "",
+                    anchor  = $(this).attr('data-anchor');
                 
                 $content = getContent.apply(this);
                 
@@ -115,7 +116,7 @@
                     data = null;
                 }
                 // Ajaxify this link
-                History.pushState({data: data, method: method}, null, url);
+                History.pushState({data: data, method: method, anchor: anchor}, null, url);
                 event.preventDefault();
                 return false;
             });
@@ -223,7 +224,9 @@
                     $window.trigger(completedEventName);
 
                     // Complete the change
-                    if (!replaceElement){
+                    if (!!data.anchor){
+                        $(window).scrollTop($(data.anchor).offset.top);
+                    } else if (!replaceElement){
                         $(window).scrollTop(0);
                     }
 
