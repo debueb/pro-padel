@@ -19,6 +19,7 @@ import de.appsolve.padelcampus.db.model.Team;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -85,6 +86,14 @@ public class TeamsController extends BaseController{
     public ModelAndView getTeamsForPlayer(@PathVariable("playerUUID") String playerUUID){
         Player player = playerDAO.findByUUID(playerUUID);
         List<Team> participants = teamDAO.findByPlayer(player);
+        Iterator<Team> iterator = participants.iterator();
+        while (iterator.hasNext()){
+            Team team = iterator.next();
+            List<Game> games = gameDAO.findByParticipant(team);
+            if (games.isEmpty()){
+                iterator.remove();
+            }
+        }
         return getTeamsView(null, msg.get("TeamsWith", new Object[]{player.toString()}), participants);
     }
 
