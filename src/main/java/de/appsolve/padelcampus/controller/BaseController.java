@@ -15,12 +15,14 @@ import de.appsolve.padelcampus.utils.Msg;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -38,7 +40,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public abstract class BaseController {
     
-    private static final Logger log = Logger.getLogger(BaseController.class);
+    private static final Logger LOG = Logger.getLogger(BaseController.class);
+    
+    private static final Pattern IGNORED_USER_AGENT_PATTERN = Pattern.compile(".*(tinfoilsecurity|Googlebot|bingbot).*");
     
     @Autowired
     Validator validator;
@@ -59,14 +63,14 @@ public abstract class BaseController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView handleException(HttpServletRequest req, Exception ex){
         sendErrorMail(req, ex);
-        log.error(ex.getMessage(), ex);
+        LOG.error(ex.getMessage(), ex);
         return new ModelAndView("error/500", "Exception", ex);
     }
     
     @ExceptionHandler(value=ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ModelAndView handleResourceNotFoundException(HttpServletRequest request, Exception ex){
-        log.error(ex.getMessage() + " " + request.getRequestURL());
+        LOG.error(ex.getMessage() + " " + request.getRequestURL());
         return new ModelAndView("error/404", "Exception", ex);
     }
     
@@ -100,7 +104,7 @@ public abstract class BaseController {
             mav.addObject("path", getPath());
             return mav;
         } catch (MailException | IOException e){
-            log.error("Error while sending contact email", e);
+            LOG.error("Error while sending contact email", e);
             bindingResult.addError(new ObjectError("from", e.toString()));
             return defaultView;
         }
@@ -129,9 +133,11 @@ public abstract class BaseController {
             if (headerNames != null){
                 while (headerNames.hasMoreElements()){
                     String attr = headerNames.nextElement();
-                    if (!StringUtils.isEmpty(attr) && attr.equalsIgnoreCase("user-agent")){
+                    if (!StringUtils.isEmpty(attr) && attr.equalsIgnoreCase(HttpHeaders.USER_AGENT)){
                         String ua = request.getHeader(attr);
-                        if (!StringUtils.isEmpty(ua) && ua.contains("tinfoilsecurity")){
+                        if (!StringUtils.isEmpty(ua) && IGNORED_USER_AGENT_PATTERN.matcher(ua).matches()){
+                            LOG.error("Exception caused by bot "+ua);
+                            LOG.error(ex.getMessage(), ex);
                             return;
                         }
                     }
@@ -165,7 +171,7 @@ public abstract class BaseController {
             try {
                 mailUtils.send(mail, request);
             } catch (MailException | IOException e){
-                log.error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
             }
         }
     }
