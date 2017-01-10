@@ -93,15 +93,16 @@
                         </c:forEach>
                     </spf:select>
                     
+                    <div>
+                        <spf:checkbox path="showInMenu" />
+                        <label class="checkbox" for="showInMenu1"><fmt:message key="ShowInMenu"/></label>
+                    </div>
                     <c:if test="${isRootModule}">
                         <div>
                             <spf:checkbox path="showOnHomepage" />
                             <label class="checkbox" for="showOnHomepage1"><fmt:message key="ShowOnHomepage"/></label>
                         </div>
-                        <div>
-                            <spf:checkbox path="showInMenu" />
-                            <label class="checkbox" for="showInMenu1"><fmt:message key="ShowInMenu"/></label>
-                        </div>
+                        
                         <div>
                             <spf:checkbox path="showInFooter" />
                             <label class="checkbox" for="showInFooter1"><fmt:message key="ShowInFooter"/></label>

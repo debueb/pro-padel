@@ -6,7 +6,7 @@
         <span class="subModules Module-${CustomerModule.id}-subModules">
             <c:set var="firstSubmodule" value="true"/>
             <c:forEach var="SubModule" items="${CustomerModule.subModules}">
-                <c:if test="${not firstSubmodule}">
+                <c:if test="${not firstSubmodule and SubModule.showInMenu}">
                     <div class="menu-separator"></div>
                 </c:if>
                 <c:set var="firstSubmodule" value="false"/>
