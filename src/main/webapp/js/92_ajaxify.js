@@ -102,21 +102,21 @@
                     return false;
                 }
 
-                var data    = $(this).serialize(),
-                    method  = $(this).attr('method'),
-                    url     = $(this).attr('action') || "",
-                    anchor  = $(this).attr('data-anchor');
+                var payload     = $(this).serialize(),
+                    method      = $(this).attr('method'),
+                    url         = $(this).attr('action') || "",
+                    anchorId    = $(this).attr('data-anchor');
                 
                 $content = getContent.apply(this);
                 
                 //in order to update the URL in the browser, we construct the URL here
                 //to avoid the ajax call from duplicating all parameters we set the data to null
                 if (method === 'GET'){
-                    url = url + '?' + decodeURIComponent(data);
-                    data = null;
+                    url = url + '?' + decodeURIComponent(payload);
+                    payload = null;
                 }
                 // Ajaxify this link
-                History.pushState({data: data, method: method, anchor: anchor}, null, url);
+                History.pushState({payload: payload, method: method, anchorId: anchorId}, null, url);
                 event.preventDefault();
                 return false;
             });
@@ -132,9 +132,9 @@
         $window.bind('statechange', function () {
             // Prepare Variables
             var State = History.getState(),
+                stateData = State.data,
                 url = State.url,
-                relativeUrl = url.replace(rootUrl, ''),
-                data = State.data;
+                relativeUrl = url.replace(rootUrl, '');
               
             //close any open select pickers that are absolutely attatched to the body
             $('.select-simple, .select-multiple, .select-ajax-search').selectpicker().each(function(){
@@ -148,12 +148,12 @@
             // Ajax Request the Traditional Page
             $.ajax({
                 url: url,
-                type: data.method,
-                data: data.data,
-                success: function (data, textStatus, jqXHR) {
+                type: stateData.method,
+                data: stateData.payload,
+                success: function (responseData) {
                     // Prepare
                     var
-                            $data = $(documentHtml(data)),
+                            $data = $(documentHtml(responseData)),
                             $dataBody = $data.find('.document-body:first'),
                             $dataContent = $dataBody.find(contentSelector).filter(':first'),
                             contentHtml, $scripts;
@@ -224,8 +224,8 @@
                     $window.trigger(completedEventName);
 
                     // Complete the change
-                    if (!!data.anchor){
-                        $(window).scrollTop($(data.anchor).offset.top);
+                    if (!!stateData.anchorId){
+                        $(window).scrollTop($(stateData.anchorId).offset().top);
                     } else if (!replaceElement){
                         $(window).scrollTop(0);
                     }
