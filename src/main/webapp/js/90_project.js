@@ -161,7 +161,7 @@ app.main = {};
             var toggleDatePicker = function () {
                 if ($(datepicker.datepicker()).css('display') === 'none') {
                     datepicker.slideDown();
-                    $('body', 'html').animate({scrollTop: textContainer.offset().top - $('.navbar-fixed-top').height()});
+                    $('body,html').stop(true,true).animate({scrollTop: textContainer.offset().top - $('.navbar-fixed-top').height()});
                 } else {
                     datepicker.slideUp();
                 }
