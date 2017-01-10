@@ -29,17 +29,9 @@
 
                             <div class="row">
                                 <div class="col-xs-4 booking-cell"><fmt:message key="Offer"/>:</div>
-                                <div class="col-xs-8">
-                                    <spf:select path="offer" class="form-control select-simple" id="booking-court" data-container="body">
-                                        <c:choose>
-                                            <c:when test="${not empty SelectedOffer and SelectedOffer.id == OfferDurationPrice.offer.id}">
-                                                <spf:option selected="true" value="${OfferDurationPrice.offer.id}" data-target="#booking-duration-container-${OfferDurationPrice.offer.id}">${OfferDurationPrice.offer}</spf:option>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <spf:option value="${OfferDurationPrice.offer.id}" data-target="#booking-duration-container-${OfferDurationPrice.offer.id}">${OfferDurationPrice.offer}</spf:option>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </spf:select>
+                                <div class="col-xs-8 booking-cell">
+                                    ${OfferDurationPrice.offer}
+                                    <spf:input type="hidden" path="offer" value="${OfferDurationPrice.offer.id}"/>
                                 </div>
                             </div>
 
