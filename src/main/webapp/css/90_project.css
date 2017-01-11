@@ -966,9 +966,6 @@ pre {
 .panel-body p:last-child {
   margin-bottom: 0;
 }
-.note-popover .popover-content {
-  background: white;
-}
 progress,
 progress[value] {
   /* Reset the default appearance */
@@ -1867,10 +1864,6 @@ a.menu-item {
   .subModule:last-child a.menu-item:last-child {
     border-bottom: 0;
   }
-}
-.note-toolbar.panel-heading {
-  min-height: 46px;
-  height: auto;
 }
 .text-bold {
   font-weight: bold;
