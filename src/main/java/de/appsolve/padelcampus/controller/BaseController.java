@@ -42,7 +42,7 @@ public abstract class BaseController {
     
     private static final Logger LOG = Logger.getLogger(BaseController.class);
     
-    private static final Pattern IGNORED_USER_AGENT_PATTERN = Pattern.compile(".*(tinfoilsecurity|Googlebot|bingbot).*");
+    private static final Pattern IGNORED_USER_AGENT_PATTERN = Pattern.compile(".*(tinfoilsecurity|Googlebot|bingbot|AhrefsBot).*");
     
     @Autowired
     Validator validator;
