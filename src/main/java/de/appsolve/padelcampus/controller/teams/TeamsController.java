@@ -88,9 +88,16 @@ public class TeamsController extends BaseController{
         List<Team> participants = teamDAO.findByPlayer(player);
         Iterator<Team> iterator = participants.iterator();
         while (iterator.hasNext()){
+            boolean remove = true;
             Team team = iterator.next();
             List<Game> games = gameDAO.findByParticipant(team);
-            if (games.isEmpty()){
+            for (Game game: games){
+                if (!game.getGameSets().isEmpty()){
+                    remove = false;
+                    break;
+                }
+            }
+            if (remove){
                 iterator.remove();
             }
         }
