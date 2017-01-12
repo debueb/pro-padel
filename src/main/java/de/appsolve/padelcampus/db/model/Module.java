@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import static de.appsolve.padelcampus.constants.Constants.PATH_HOME;
 import de.appsolve.padelcampus.constants.ModuleType;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -48,7 +49,6 @@ public class Module extends SortableEntity{
     private String seoTitle;
     
     @Column
-    @NotEmpty(message = "{NotEmpty.urlTitle}")
     @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}") 
     private String urlTitle;
     
@@ -168,7 +168,7 @@ public class Module extends SortableEntity{
             case LandingPage:
                 return "/";
             case HomePage:
-                return "/home";
+                return "/"+PATH_HOME;
             case Bookings:
                 return "/bookings";
             case MatchOffers:

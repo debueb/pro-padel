@@ -135,7 +135,6 @@ public class AdminGeneralModulesController extends AdminBaseController<Module> {
             return getEditView(model);
         }
         if (model.getModuleType().equals(ModuleType.HomePage)){
-            model.setUrlTitle(PATH_HOME);
             model.setShowOnHomepage(Boolean.FALSE);
             model.setShowInMenu(Boolean.FALSE);
             model.setShowInFooter(Boolean.FALSE);
@@ -209,21 +208,28 @@ public class AdminGeneralModulesController extends AdminBaseController<Module> {
     }
     
     private void checkTitleRequirements(Module module, BindingResult result) {
-        //make sure title does not conflict with existing request mappings
-        for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMapping.getHandlerMethods().entrySet()) {
-            RequestMappingInfo requestMappingInfo = entry.getKey();
-            List<String> matchingPatterns = requestMappingInfo.getPatternsCondition().getMatchingPatterns("/"+module.getUrlTitle());
-            for (String pattern: matchingPatterns){
-                if (!pattern.equals("/{moduleId}")){
-                    result.rejectValue("title", "ModuleWithUrlTitleAlreadyExists", new Object[]{module.getUrlTitle()}, "ModuleWithUrlTitleAlreadyExists");
-                    return;
+        switch (module.getModuleType()){
+            case Blog:
+            case Page:
+            case Events:
+                
+            //make sure title does not conflict with existing request mappings
+            for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMapping.getHandlerMethods().entrySet()) {
+                RequestMappingInfo requestMappingInfo = entry.getKey();
+                List<String> matchingPatterns = requestMappingInfo.getPatternsCondition().getMatchingPatterns("/"+module.getUrlTitle());
+                for (String pattern: matchingPatterns){
+                    if (!pattern.equals("/{moduleId}")){
+                        result.rejectValue("title", "ModuleWithUrlTitleAlreadyExists", new Object[]{module.getUrlTitle()}, "ModuleWithUrlTitleAlreadyExists");
+                        return;
+                    }
                 }
             }
-        }
-        
-        Module existingModule = moduleDAO.findByUrlTitle(module.getUrlTitle());
-        if (existingModule != null && !existingModule.equals(module)){
-            result.rejectValue("title", "ModuleWithUrlTitleAlreadyExists", new Object[]{module.getUrlTitle()}, "ModuleWithUrlTitleAlreadyExists");
+
+            Module existingModule = moduleDAO.findByUrlTitle(module.getUrlTitle());
+            if (existingModule != null && !existingModule.equals(module)){
+                result.rejectValue("title", "ModuleWithUrlTitleAlreadyExists", new Object[]{module.getUrlTitle()}, "ModuleWithUrlTitleAlreadyExists");
+            }
+            break;
         }
     }
 
