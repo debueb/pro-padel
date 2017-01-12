@@ -173,6 +173,7 @@ public class Customer extends BaseEntity implements CustomerI{
         this.defaultEmail = defaultEmail;
     }
 
+    @Override
     public String getDefaultLanguage() {
         return defaultLanguage == null ? Constants.DEFAULT_LANGUAGE : defaultLanguage;
     }
@@ -181,6 +182,7 @@ public class Customer extends BaseEntity implements CustomerI{
         this.defaultLanguage = defaultLanguage;
     }
 
+    @Override
     public Set<String> getSupportedLanguages() {
         if (supportedLanguages == null){
             return new HashSet<>(Arrays.asList(Constants.DEFAULT_LANGUAGE));

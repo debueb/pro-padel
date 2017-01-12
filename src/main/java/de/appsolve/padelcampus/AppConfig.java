@@ -85,9 +85,7 @@ public class AppConfig extends WebMvcConfigurerAdapter{
     
     @Bean
     public LocaleResolver localeResolver() {
-        SubDomainLocaleResolver resolver = new SubDomainLocaleResolver();
-        resolver.setDefaultLocale(Constants.DEFAULT_LOCALE);
-        return resolver;
+        return new SubDomainLocaleResolver();
     }
     
     @Bean
