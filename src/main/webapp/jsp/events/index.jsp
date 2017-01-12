@@ -13,10 +13,12 @@
         
         <div class="list-group">
             <c:forEach var="Event" items="${Models}">
-                <jsp:include page="/jsp/include/list-group-item.jsp">
-                    <jsp:param name="href" value="/events/event/${Event.id}"/>
-                    <jsp:param name="title" value="${Event.name}"/>
-                </jsp:include>
+                <a href="/events/event/${Event.id}" class="list-group-item ajaxify">
+                    <div class="list-item-text">
+                        ${Event.name}
+                    </div>
+                    <div class="text-right"><joda:format value="${Event.startDate}" pattern="EE, dd. MMMM yyyy"/></div>
+                </a>
             </c:forEach>
         </div>
     </div>
