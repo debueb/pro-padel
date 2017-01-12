@@ -93,21 +93,23 @@
                         </c:forEach>
                     </spf:select>
                     
-                    <div>
-                        <spf:checkbox path="showInMenu" />
-                        <label class="checkbox" for="showInMenu1"><fmt:message key="ShowInMenu"/></label>
+                    <div class="select-toggle-Blog select-toggle-Bookings select-toggle-Events select-toggle-Link select-toggle-MatchOffers select-toggle-Page select-toggle-Ranking select-toggle-Staff">
+                        <div>
+                            <spf:checkbox path="showInMenu" />
+                            <label class="checkbox" for="showInMenu1"><fmt:message key="ShowInMenu"/></label>
+                        </div>
+                        <c:if test="${isRootModule}">
+                            <div>
+                                <spf:checkbox path="showOnHomepage" />
+                                <label class="checkbox" for="showOnHomepage1"><fmt:message key="ShowOnHomepage"/></label>
+                            </div>
+
+                            <div>
+                                <spf:checkbox path="showInFooter" />
+                                <label class="checkbox" for="showInFooter1"><fmt:message key="ShowInFooter"/></label>
+                            </div>
+                        </c:if>
                     </div>
-                    <c:if test="${isRootModule}">
-                        <div>
-                            <spf:checkbox path="showOnHomepage" />
-                            <label class="checkbox" for="showOnHomepage1"><fmt:message key="ShowOnHomepage"/></label>
-                        </div>
-                        
-                        <div>
-                            <spf:checkbox path="showInFooter" />
-                            <label class="checkbox" for="showInFooter1"><fmt:message key="ShowInFooter"/></label>
-                        </div>
-                    </c:if>
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
                     <c:if test="${Model.moduleType == 'Page' || Model.moduleType == 'HomePage' || Model.moduleType == 'LandingPage'}">
                         <a class="btn btn-primary btn-block ajaxify" href="/admin/general/modules/page/${Model.id}"><fmt:message key="ManageEntries"/></a>
