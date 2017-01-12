@@ -54,6 +54,8 @@ public class Constants {
     
     public static final Integer CANCELLATION_POLICY_DEADLINE= 24;
     
+    public static final String PATH_HOME = "home";
+    
     
     public static final List<String> VALID_LANGUAGES = Arrays.asList(new String[]{"de", "en", "es"});
 

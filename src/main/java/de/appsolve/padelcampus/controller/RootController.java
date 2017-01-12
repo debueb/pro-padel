@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.controller;
 
+import static de.appsolve.padelcampus.constants.Constants.PATH_HOME;
 import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
@@ -78,7 +79,7 @@ public class RootController extends BaseController{
     @RequestMapping("/{moduleId}")
     public ModelAndView getIndex(@PathVariable("moduleId") String moduleTitle, @PageableDefault(size = BLOG_PAGE_SIZE) Pageable pageable){
         switch (moduleTitle){
-            case "home":
+            case PATH_HOME:
             case "netbeans-tomcat-status-test":
                 return getHomePage(); 
             default:

@@ -7,6 +7,7 @@
 package de.appsolve.padelcampus.controller;
 
 import de.appsolve.padelcampus.constants.Constants;
+import static de.appsolve.padelcampus.constants.Constants.PATH_HOME;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.data.Credentials;
 import de.appsolve.padelcampus.data.Mail;
@@ -79,7 +80,7 @@ public class LoginController extends BaseController{
             return loginView;
         }
         
-        String redirectPath = sessionUtil.getLoginRedirectPath(request) == null ? "/home" : sessionUtil.getLoginRedirectPath(request);
+        String redirectPath = sessionUtil.getLoginRedirectPath(request) == null ? "/"+PATH_HOME : sessionUtil.getLoginRedirectPath(request);
         sessionUtil.setLoginRedirectPath(request, null);
         return new ModelAndView("redirect:"+redirectPath);
     }

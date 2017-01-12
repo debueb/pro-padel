@@ -7,6 +7,7 @@
 package de.appsolve.padelcampus.admin.controller.general;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
+import static de.appsolve.padelcampus.constants.Constants.PATH_HOME;
 import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.data.NestableItem;
 import de.appsolve.padelcampus.db.dao.EventGroupDAOI;
@@ -46,7 +47,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -131,6 +131,15 @@ public class AdminGeneralModulesController extends AdminBaseController<Module> {
     
     @Override
     public ModelAndView postEditView(@ModelAttribute("Model") Module model, HttpServletRequest request, BindingResult result){
+        if (result.hasErrors()){
+            return getEditView(model);
+        }
+        if (model.getModuleType().equals(ModuleType.HomePage)){
+            model.setUrlTitle(PATH_HOME);
+            model.setShowOnHomepage(Boolean.FALSE);
+            model.setShowInMenu(Boolean.FALSE);
+            model.setShowInFooter(Boolean.FALSE);
+        }
         checkTitleRequirements(model, result);
         if (result.hasErrors()){
             return getEditView(model);
@@ -200,10 +209,6 @@ public class AdminGeneralModulesController extends AdminBaseController<Module> {
     }
     
     private void checkTitleRequirements(Module module, BindingResult result) {
-        if (result.hasErrors()){
-            return;
-        }
-        
         //make sure title does not conflict with existing request mappings
         for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMapping.getHandlerMethods().entrySet()) {
             RequestMappingInfo requestMappingInfo = entry.getKey();
