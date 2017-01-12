@@ -9,7 +9,11 @@
             <div class="panel-body">
                 <fmt:message key="CustomerRegistrationSuccessful"/>
                 <br>
-                <a href="http://${domainName}">${domainName}</a>
+                <a href="http://${domainName}" target="blank">${domainName}</a>
+                <br><br>
+                <fmt:message key="CustomerRegistrationSuccessfulVideos"/>
+                <br><br>
+                <a href="https://www.youtube.com/playlist?list=PLvIfgGS2XDif7p24yWejpvR72jwo-fqnK" target="blank">Tutorials on Youtube</a>
             </div>
         </div>
     </div>
