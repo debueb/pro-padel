@@ -12,7 +12,7 @@
             <div class="panel-body">
                 <jsp:include page="/jsp/admin/include/search.jsp"/>
                 <div class="table-responsive unit-2">
-                    <table class="table table-striped table-bordered datatable">
+                    <table class="table table-striped table-bordered">
                         <thead>
                         <th><fmt:message key="Name"/></th>
                         <th><fmt:message key="StartDate"/></th>
