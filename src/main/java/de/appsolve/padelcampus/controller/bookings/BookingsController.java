@@ -455,7 +455,7 @@ public class BookingsController extends BaseController {
 
         LocalDate today = new LocalDate();
         LocalTime now = new LocalTime();
-        if (selectedDate.compareTo(today)<=0 && selectedTime.compareTo(now)<0){
+        if (selectedDate.compareTo(today)<0 || (selectedDate.equals(today) && selectedTime.compareTo(now)<0)){
             throw new Exception(msg.get("RequestedTimeIsInThePast"));
         }
 
