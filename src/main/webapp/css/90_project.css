@@ -2004,5 +2004,12 @@ a.menu-item.active {
 .float-right {
   float: right;
 }
+.clear-search {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  color: #999;
+  cursor: pointer;
+}
 /*DO NOT REMOVE THE FOLLOWING LINE. WILL BE REPLACED BY CUSTOMER SPECIFIC CSS*/
 /*customCss*/

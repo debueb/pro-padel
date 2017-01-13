@@ -519,25 +519,42 @@ app.main = {};
     
     self.enableAutoSearch = function(){
         $('form.search').livequery(function(){
+            var timeout,
+                $form = $(this),
+                $inuptElement = $(this).find('input[name="search"]'),
+                $clearSearchBtn = $form.find('.clear-search');
             
-            var timeout;
+            var toggleSearchBtnVisibility = function(){
+                if ($inuptElement.val() === ''){
+                    $clearSearchBtn.hide();
+                } else {
+                    $clearSearchBtn.show();
+                }
+            };
+            toggleSearchBtnVisibility();
             
-            var $form = $(this);
-            
-            $form.on('submit', function(){
-               if (!!timeout){
-                    clearTimeout(timeout);
-                } 
-            });
-            
-            $form.find('input[name="search"]').on('keyup', function(){
+            $inuptElement.on('change', toggleSearchBtnVisibility);
+            $inuptElement.on('keyup', function(){
+                toggleSearchBtnVisibility();
                 if (!!timeout){
                     clearTimeout(timeout);
                 }
                 timeout = setTimeout(function(){
                     $form.submit();
                 }, 1000);
-               
+                toggleSearchBtnVisibility;
+            });
+           
+            $form.on('submit', function(){
+                if (!!timeout){
+                    clearTimeout(timeout);
+                } 
+            });
+            
+           
+           $clearSearchBtn.on('click tap', function(){
+               $form.find('input[name="search"]').val('');
+               $form.submit();
            });
         });
     };
