@@ -13,7 +13,7 @@
             <div class="panel-body">
                 <form method="POST" class="ajaxify" role="form" modelAttribute="Model">
                     <input type="hidden" name="id" value="${Model.id}"/>
-                    
+
                     <c:if test="${fn:length(Model.participantList) ge 1}">
                         <select name="participant1" class="select-simple form-control" data-style="form-top-element" data-container="body">
                             <c:forEach var="participant" items="${Event.participants}">
@@ -23,14 +23,14 @@
                     </c:if>
 
                     <select name="participant2" class="select-simple form-control" data-style="form-bottom-element" data-container="body">
-                         <option value="">- Bye -</option>
-                         <c:forEach var="participant" items="${Event.participants}">
+                        <option value="">- Bye -</option>
+                        <c:forEach var="participant" items="${Event.participants}">
                             <option value="${participant.id}" ${fn:length(Model.participantList) ge 2 and Model.participantList[1].id eq participant.id ? 'selected' : ''}>${participant}</option>
                         </c:forEach>
                     </select>
-                    
+
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
-                    
+
                 </form>
             </div>
         </div>    

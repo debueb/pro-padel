@@ -6,14 +6,14 @@
         <jsp:include page="/jsp/include/back.jsp"/>
 
         <div class="page-header"></div>
-        
-         <ol class="unit-2 breadcrumb">
+
+        <ol class="unit-2 breadcrumb">
             <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
             <li><a class="ajaxify" href="/admin/events"><fmt:message key="Events"/></a></li>
             <li><a class="ajaxify" href="/admin/events/edit/${Event.id}">${Event.name}</a></li>
             <li class="active"><fmt:message key="AddGame"/></li>
         </ol>
-        
+
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4>${Event}: <fmt:message key="AddGame"/></h4>
@@ -23,8 +23,8 @@
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
                     <table class="table-full-width table-fixed">
                         <thead>
-                            <th class="text-center"><fmt:message key="Team1"/></th>
-                            <th class="text-center"><fmt:message key="Team2"/></th>
+                        <th class="text-center"><fmt:message key="Team1"/></th>
+                        <th class="text-center"><fmt:message key="Team2"/></th>
                         </thead>
                         <tbody>
                             <tr>
@@ -35,7 +35,7 @@
                                 <fmt:message key="StatusInitialized" var="StatusInitialized"/>
                                 <fmt:message key="SearchNoResults" var="SearchNoResults"/>
                                 <fmt:message key="StatusSearching" var="StatusSearching"/>
-                                        
+
                                 <td>
                                     <div class="relative">
                                         <spf:select 

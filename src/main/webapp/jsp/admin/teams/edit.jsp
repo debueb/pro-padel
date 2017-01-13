@@ -6,15 +6,15 @@
         <jsp:include page="/jsp/include/back.jsp"/>
 
         <div class="page-header"></div>
-        
+
         <fmt:message var="Title" key="${empty Model.name ? 'NewTeam' : 'EditTeam'}"/>
-                
+
         <ol class="unit-2 breadcrumb">
             <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
             <li><a class="ajaxify" href="/admin/teams"><fmt:message key="Teams"/></a></li>
             <li class="active">${Title}</li>
         </ol>
-        
+
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4>${Title}</h4>
@@ -24,7 +24,7 @@
                 <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
-                    
+
                     <div class="unit">
                         <c:if test="${not empty Communities}">
                             <div class="relative">
@@ -40,7 +40,7 @@
                                 <span class="explanation-select"><fmt:message key="Community"/></span>
                             </div>
                         </c:if>
-                        
+
                         <fmt:message key="Players" var="Players"/>
                         <div class="relative">
                             <fmt:message key="CurrentlySelected" var="CurrentlySelected"/>

@@ -4,7 +4,7 @@
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <jsp:include page="/jsp/include/back.jsp"/>
         <div class="page-header"></div>
-        
+
         <ol class="unit-2 breadcrumb">
             <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
             <li><a class="ajaxify" href="/admin/events"><fmt:message key="Events"/></a></li>
@@ -20,11 +20,11 @@
                 <div class="alert alert-danger">${error}</div>
 
                 <h4><fmt:message key="AreYouSureYouWantToDelete"><fmt:param value="${Model}"/></fmt:message></h4>
-                
-                <h4><fmt:message key="ThisWillDeleteAllGamesAsWell"/></h4>
+
+                    <h4><fmt:message key="ThisWillDeleteAllGamesAsWell"/></h4>
 
                 <form method="POST">
-                        <a class="btn btn-primary btn-back unit ajaxify"><fmt:message key="Cancel"/></a>
+                    <a class="btn btn-primary btn-back unit ajaxify"><fmt:message key="Cancel"/></a>
                     <button class="btn btn-danger unit" style="margin-left: 10px;"><fmt:message key="Delete"/></button>
                 </form>
             </div>

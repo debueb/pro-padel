@@ -4,7 +4,7 @@
     <div class="col-xs-12 col-lg-10 col-lg-offset-1">
         <jsp:include page="/jsp/include/back.jsp"/>
         <div class="page-header"></div>
-        
+
         <ol class="unit-2 breadcrumb">
             <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
             <li><a class="ajaxify" href="/admin/events"><fmt:message key="Events"/></a></li>

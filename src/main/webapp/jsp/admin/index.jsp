@@ -6,11 +6,11 @@
         <jsp:include page="/jsp/include/back.jsp"/>
 
         <div class="page-header"></div>
-        
+
         <ol class="unit-2 breadcrumb">
             <li class="active"><fmt:message key="Administration"/></li>
         </ol>
-        
+
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4><fmt:message key="Administration"/></h4>
@@ -32,7 +32,7 @@
                         <jsp:param name="key" value="Reports"/>
                         <jsp:param name="icon" value="pie-chart"/>
                     </jsp:include>
-                     <jsp:include page="/jsp/include/list-group-item.jsp">
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/communities"/>
                         <jsp:param name="key" value="Communities"/>
                         <jsp:param name="icon" value="signing"/>

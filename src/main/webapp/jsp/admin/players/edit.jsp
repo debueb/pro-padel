@@ -7,13 +7,13 @@
 
         <div class="page-header"></div>
         <fmt:message key="${empty Model.id ? 'NewPlayer' : 'EditPlayer'}" var="Title"/>
-                
+
         <ol class="unit-2 breadcrumb">
             <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
             <li><a class="ajaxify" href="/admin/players"><fmt:message key="Players"/></a></li>
             <li class="active">${Title}</li>
         </ol>
-        
+
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4>${Title}</h4>

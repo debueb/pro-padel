@@ -15,7 +15,7 @@
                 <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
-                    
+
                     <div class="relative">
                         <spf:input path="name" type="text" class="form-control form-top-element"/>
                         <div class="explanation">

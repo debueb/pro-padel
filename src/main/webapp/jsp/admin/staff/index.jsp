@@ -9,7 +9,7 @@
             <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
             <li class="active"><fmt:message key="StaffMembers"/></li>
         </ol>
-        
+
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4><fmt:message key="StaffMembers"/></h4>

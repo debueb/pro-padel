@@ -4,7 +4,7 @@
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <jsp:include page="/jsp/include/back.jsp"/>
         <div class="page-header"></div>
-        
+
         <ol class="unit-2 breadcrumb">
             <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
             <li class="active"><fmt:message key="Teams"/></li>
@@ -42,9 +42,9 @@
                         </c:forEach>
                     </tbody>
                 </table>
-                    
+
                 <jsp:include page="/jsp/admin/include/pagination.jsp"/>
-                
+
                 <a href="/admin/teams/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewTeam"/></a>
             </div>
         </div>

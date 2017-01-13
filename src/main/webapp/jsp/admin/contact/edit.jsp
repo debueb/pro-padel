@@ -4,8 +4,8 @@
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <div class="page-header"></div>
-        
-         <ol class="unit-2 breadcrumb">
+
+        <ol class="unit-2 breadcrumb">
             <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
             <li><a class="ajaxify" href="/admin/contact"><fmt:message key="ContactSettings"/></a></li>
             <li class="active"><fmt:message key="Contact"/></li>

@@ -13,7 +13,7 @@
             <li><a class="ajaxify" href="/admin/staff"><fmt:message key="StaffMembers"/></a></li>
             <li class="active">${Title}</li>
         </ol>
-        
+
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4>${Title}</h4>
@@ -46,8 +46,8 @@
                                         <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
                                         <i class="fa fa-user fa-stack-1x"></i>
                                     </span>
-                                    </c:when>
-                                    <c:otherwise>
+                                </c:when>
+                                <c:otherwise>
                                     <img src="/images/image/${Model.profileImage.sha256}"/>
                                 </c:otherwise>
                             </c:choose>
@@ -55,7 +55,7 @@
                         <div class="unit picture-subtext"><fmt:message key="ClickImageToChange"/></div>
                     </figure>
                     <spf:input type="file" capture="camera" accept="image/*" path="profileImageFile" class="picture-input hidden"/>
-                    
+
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
                 </spf:form>
             </div>

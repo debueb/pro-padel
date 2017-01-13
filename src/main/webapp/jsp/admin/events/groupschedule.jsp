@@ -6,14 +6,14 @@
         <jsp:include page="/jsp/include/back.jsp"/>
 
         <div class="page-header"></div>
-        
-         <ol class="unit-2 breadcrumb">
+
+        <ol class="unit-2 breadcrumb">
             <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
             <li><a class="ajaxify" href="/admin/events"><fmt:message key="Events"/></a></li>
             <li><a class="ajaxify" href="/admin/events/edit/${Event.id}">${Event.name}</a></li>
             <li class="active"><fmt:message key="GroupSchedule"/></li>
         </ol>
-        
+
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4><fmt:message key="GameSchedule"/> ${Event.name}</h4>
@@ -53,7 +53,7 @@
                                                     <div class="datepicker" data-show-on-init="false" data-allow-past="true"></div>
                                                 </div>
                                             </span>
-                                            
+
                                             <span class="game-schedule-hour">
                                                 <spf:select path="list[${status.index}].startTimeHour" class="select-simple" data-container="body">
                                                     <c:forEach var="hour" begin="0" end="23">
