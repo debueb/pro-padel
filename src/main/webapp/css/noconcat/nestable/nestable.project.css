@@ -1,5 +1,6 @@
 .dd-handle:before{
     font-size: 24px;
+    cursor: move;
 }
 .dd3-content { 
     background: #fafafa;
