@@ -8,6 +8,8 @@ package de.appsolve.padelcampus.db.dao.generic;
 import de.appsolve.padelcampus.db.model.BaseEntityI;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import org.hibernate.criterion.Criterion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -24,11 +26,15 @@ public interface BaseEntityDAOI<T extends BaseEntityI> {
    
    public Page<T> findAllFetchEagerly(Pageable pageable, String... associations);
    
+   public Page<T> findAllFetchEagerly(Pageable pageable, Set<Criterion> criterions, String... associations);
+   
    public Page<T> findAll(Pageable pageable);
    
    List<T> findAll(List<Long> ids);
    
    public Page<T> findAllByFuzzySearch(String search, String... associations);
+   
+   public Page<T> findAllByFuzzySearch(String search, Set<Criterion> criterions, String... associations);
    
    public Page<T> findAllByFuzzySearch(String search);
    

@@ -71,12 +71,23 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     @SuppressWarnings("unchecked")
     @Override
     public Page<T> findAllFetchEagerly(Pageable pageable, String... associations){
+        return findAllFetchEagerly(pageable, null, associations);
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public Page<T> findAllFetchEagerly(Pageable pageable, Set<Criterion> criterions, String... associations){
         //http://stackoverflow.com/questions/2183617/criteria-api-returns-a-too-small-resultset
         
         //get the ids of every object that matches the pageable conditions
         //we cannot get the objects directly because we use FetchMode.JOIN which returns the scalar product of all rows in all affected tables
         //and CriteriaSpecification.DISTINCT_ROOT_ENTITY does not work on SQL Level but on in Java after the result is returned from SQL
         Criteria criteria = getPageableCriteria(pageable);
+        if (criterions != null){
+            for (Criterion c: criterions) {
+                criteria.add(c);
+            }
+        }
         criteria.setProjection(Projections.distinct(Projections.property("id")));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         List<Long> list = criteria.list();
@@ -130,6 +141,11 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
 
     @Override
     public Page<T> findAllByFuzzySearch(String search, String... associations){
+        return findAllByFuzzySearch(search, null, associations);
+    }
+    
+    @Override
+    public Page<T> findAllByFuzzySearch(String search, Set<Criterion> criterions, String... associations){
         Criteria criteria = getCriteria();
         for (String association: associations){
             criteria.setFetchMode(association, FetchMode.JOIN);
@@ -140,6 +156,11 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         }
         if (!predicates.isEmpty()){
             criteria.add(Restrictions.or(predicates.toArray(new Criterion[predicates.size()])));
+        }
+        if (criterions != null){
+            for (Criterion c: criterions){
+                criteria.add(c);
+            }
         }
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         @SuppressWarnings("unchecked")

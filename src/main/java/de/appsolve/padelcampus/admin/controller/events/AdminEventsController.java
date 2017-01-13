@@ -57,6 +57,9 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -142,6 +145,33 @@ public class AdminEventsController extends AdminBaseController<Event>{
         binder.registerCustomEditor(EventGroup.class, eventGroupPropertyEditor);
     }
 
+    @Override
+    public ModelAndView showIndex(HttpServletRequest request, Pageable pageable, @RequestParam(required = false, name = "search") String search){
+         return new ModelAndView(getModuleName()+"/index");
+    }
+    
+    @RequestMapping(method = GET, value = "/{status}")
+    public ModelAndView showEvents(HttpServletRequest request, Pageable pageable, @RequestParam(required = false, name = "search") String search, @PathVariable("status") String status){
+        Set<Criterion> criterions = new HashSet<>();
+        if (status.equals("active")){
+            criterions.add(Restrictions.eq("active", true));
+        } else {
+            criterions.add(Restrictions.or(Restrictions.isNull("active"), Restrictions.eq("active", false)));
+        }
+        Page<Event> page;
+        if (!StringUtils.isEmpty(search)){
+            page = eventDAO.findAllByFuzzySearch(search, criterions, "participants", "participants.players");
+        } else {
+            page = eventDAO.findAllFetchWithParticipantsAndPlayers(pageable, criterions);
+        }
+        ModelAndView mav = new ModelAndView(getModuleName()+"/events");
+        mav.addObject("Page", page);
+        mav.addObject("Models", page.getContent());
+        mav.addObject("moduleName", getModuleName());
+        mav.addObject("status", status);
+        return mav;
+    }
+    
     @Override
     protected Event findById(Long modelId) {
         return getDAO().findByIdFetchWithParticipants(modelId);
@@ -638,11 +668,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
     public Page<Event> findAll(Pageable pageable){
         Page<Event> page = eventDAO.findAllFetchWithParticipantsAndPlayers(pageable);
         return page;
-    }
-    
-    @Override
-    protected Page<Event> findAllByFuzzySearch(String search) {
-        return eventDAO.findAllByFuzzySearch(search, "participants", "participants.players");
     }
     
     private ModelAndView redirectToDraws(Event model) {

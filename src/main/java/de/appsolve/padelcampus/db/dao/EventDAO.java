@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import org.hibernate.criterion.Criterion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -83,6 +84,11 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI{
     @Override
     public Page<Event> findAllFetchWithParticipantsAndPlayers(Pageable pageable) {
         return super.findAllFetchEagerly(pageable, "participants", "participants.players");
+    }
+    
+    @Override
+    public Page<Event> findAllFetchWithParticipantsAndPlayers(Pageable pageable, Set<Criterion> criterions) {
+        return super.findAllFetchEagerly(pageable, criterions, "participants", "participants.players");
     }
     
     @Override
