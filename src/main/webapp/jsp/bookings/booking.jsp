@@ -12,6 +12,7 @@
                 <c:choose>
                     <c:when test="${not empty error}">
                         <div class="alert alert-danger">${error}</div>
+                        <a class="btn btn-primary btn-block ajaxify" href="/bookings"><fmt:message key="TryAgain"/></a>
                     </c:when>
                     <c:otherwise>
                         <spf:form method="POST" class="ajaxify" modelAttribute="Booking">

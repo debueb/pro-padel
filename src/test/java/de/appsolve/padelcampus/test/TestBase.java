@@ -23,6 +23,7 @@ import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Voucher;
+import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -105,6 +106,9 @@ public abstract class TestBase  {
     @Autowired
     protected SessionUtil sessionUtil;
     
+    @Autowired
+    protected Msg msg;
+
     @Before
     public void setUp() {
         if (mockMvc == null){
@@ -184,6 +188,14 @@ public abstract class TestBase  {
         LocalDate d = new LocalDate();
         if (d.getDayOfWeek() >= DateTimeConstants.MONDAY) {
             d = d.plusWeeks(1);
+        }
+        return d.withDayOfWeek(DateTimeConstants.MONDAY);
+    }
+    
+    protected LocalDate getLastMonday() {
+        LocalDate d = new LocalDate();
+        if (d.getDayOfWeek() >= DateTimeConstants.MONDAY) {
+            d = d.minusWeeks(1);
         }
         return d.withDayOfWeek(DateTimeConstants.MONDAY);
     }
