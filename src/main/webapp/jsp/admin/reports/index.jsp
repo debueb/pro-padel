@@ -6,6 +6,11 @@
         <jsp:include page="/jsp/include/back.jsp"/>
 
         <div class="page-header"></div>
+        
+        <ol class="unit-2 breadcrumb">
+            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li class="active"><fmt:message key="Reports"/></li>
+        </ol>
 
         <div class="panel panel-info">
             <div class="panel-heading">

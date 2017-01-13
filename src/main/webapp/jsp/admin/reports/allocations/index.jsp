@@ -3,6 +3,12 @@
 <div class="row">
     <div class="col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
         <div class="page-header"></div>
+        
+        <ol class="unit-2 breadcrumb">
+            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a class="ajaxify" href="/admin/reports"><fmt:message key="Reports"/></a></li>
+            <li class="active"><fmt:message key="Allocations"/></li>
+        </ol>
 
         <jsp:include page="/jsp/include/module-description.jsp"/>
         

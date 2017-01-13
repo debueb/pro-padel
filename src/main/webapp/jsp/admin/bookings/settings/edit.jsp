@@ -4,6 +4,13 @@
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <div class="page-header"></div>
+        
+        <ol class="unit-2 breadcrumb">
+            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a class="ajaxify" href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
+            <li><a class="ajaxify" href="/admin/bookings/settings"><fmt:message key="BookingSettings"/></a></li>
+            <li class="active"><fmt:message key="BookingSettings"/></li>
+        </ol>
 
         <div class="panel panel-info">
             <div class="panel-heading">

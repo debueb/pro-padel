@@ -5,12 +5,19 @@
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <jsp:include page="/jsp/include/back.jsp"/>
         <div class="page-header"></div>
+        
+        <fmt:message var="Title" key="${empty Model.id ? 'NewAdminGroup' : 'EditAdminGroup'}"/>
+        <ol class="unit-2 breadcrumb">
+            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a class="ajaxify" href="/admin/general"><fmt:message key="General"/></a></li>
+            <li><a class="ajaxify" href="/admin/general/admingroups"><fmt:message key="AdminGroups"/></a></li>
+            <li class="active">${Title}</li>
+        </ol>
 
         <div class="panel panel-info unit">
             <div class="panel-heading">
-                <fmt:message var="NewAdminGroup" key="NewAdminGroup"/>
-                <fmt:message var="EditAdminGroup" key="EditAdminGroup"/>
-                <h4>${empty Model.name ? NewAdminGroup : EditAdminGroup}</h4></div>
+                
+                <h4>${Title}</h4></div>
             <div class="panel-body">
                 <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>

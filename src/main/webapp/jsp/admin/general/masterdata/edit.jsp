@@ -5,6 +5,13 @@
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <jsp:include page="/jsp/include/back.jsp"/>
         <div class="page-header"></div>
+        
+        <ol class="unit-2 breadcrumb">
+            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a class="ajaxify"href="/admin/general"><fmt:message key="General"/></a></li>
+            <li><a class="ajaxify"href="/admin/general/masterdata"><fmt:message key="MasterData"/></a></li>
+            <li class="active"><fmt:message key="MasterData"/></li>
+        </ol>
 
         <div class="panel panel-info unit">
             <div class="panel-heading">

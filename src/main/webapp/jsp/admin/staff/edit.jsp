@@ -7,9 +7,16 @@
 
         <div class="page-header"></div>
 
+        <fmt:message key="${empty Model.id ? 'NewStaffMember' : 'EditStaffMember'}" var="Title"/>
+        <ol class="unit-2 breadcrumb">
+            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a class="ajaxify" href="/admin/staff"><fmt:message key="StaffMembers"/></a></li>
+            <li class="active">${Title}</li>
+        </ol>
+        
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4><fmt:message key="${empty Model.id ? 'NewStaffMember' : 'EditStaffMember'}"/></h4>
+                <h4>${Title}</h4>
             </div>
             <div class="panel-body">
                 <spf:form method="POST" modelAttribute="Model" enctype="multipart/form-data">

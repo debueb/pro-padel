@@ -4,6 +4,14 @@
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
         <jsp:include page="/jsp/include/back.jsp"/>
+        <div class="page-header"></div>
+        
+        <ol class="unit-2 breadcrumb">
+            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a class="ajaxify" href="/admin/events"><fmt:message key="Events"/></a></li>
+            <li><a class="ajaxify" href="/admin/events/edit/${Event.id}">${Event.name}</a></li>
+            <li class="active"><fmt:message key="GameSchedule"/></li>
+        </ol>
 
         <div class="page-header"></div>
         <div class="panel panel-info">

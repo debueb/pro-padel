@@ -6,11 +6,17 @@
         <jsp:include page="/jsp/include/back.jsp"/>
 
         <div class="page-header"></div>
+        <fmt:message key="${empty Model.id ? 'NewPlayer' : 'EditPlayer'}" var="Title"/>
+                
+        <ol class="unit-2 breadcrumb">
+            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a class="ajaxify" href="/admin/players"><fmt:message key="Players"/></a></li>
+            <li class="active">${Title}</li>
+        </ol>
+        
         <div class="panel panel-info">
             <div class="panel-heading">
-                <fmt:message key="NewPlayer" var="NewPlayer"/>
-                <fmt:message key="EditPlayer" var="EditPlayer"/>
-                <h4>${empty Model.email ? NewPlayer : EditPlayer}</h4>
+                <h4>${Title}</h4>
             </div>
             <div class="panel-body">
                 <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">

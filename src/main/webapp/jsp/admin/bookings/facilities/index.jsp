@@ -5,6 +5,12 @@
         <jsp:include page="/jsp/include/back.jsp"/>
         <div class="page-header"></div>
 
+        <ol class="unit-2 breadcrumb">
+            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a class="ajaxify" href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
+            <li class="active"><fmt:message key="Facilities"/></li>
+        </ol>
+        
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4><fmt:message key="Facilities"/></h4>

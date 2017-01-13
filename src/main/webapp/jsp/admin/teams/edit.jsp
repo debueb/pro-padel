@@ -6,11 +6,18 @@
         <jsp:include page="/jsp/include/back.jsp"/>
 
         <div class="page-header"></div>
+        
+        <fmt:message var="Title" key="${empty Model.name ? 'NewTeam' : 'EditTeam'}"/>
+                
+        <ol class="unit-2 breadcrumb">
+            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a class="ajaxify" href="/admin/teams"><fmt:message key="Teams"/></a></li>
+            <li class="active">${Title}</li>
+        </ol>
+        
         <div class="panel panel-info">
             <div class="panel-heading">
-                <fmt:message key="NewTeam" var="NewTeam"/>
-                <fmt:message key="EditTeam" var="EditTeam"/>
-                <h4>${empty Model.name ? NewTeam : EditTeam}</h4>
+                <h4>${Title}</h4>
             </div>
             <div class="panel-body">
 

@@ -7,14 +7,18 @@
 
         <div class="page-header"></div>
 
+        <ol class="unit-2 breadcrumb">
+            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a class="ajaxify" href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
+            <li class="active"><fmt:message key="PayMill"/></li>
+        </ol>
+        
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4>PayMill</h4>
             </div>
             <div class="panel-body">
-
-
-                <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
+        <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
                     <div class="relative">
