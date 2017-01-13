@@ -161,7 +161,7 @@ public class EventsUtil {
         return seedingPositions;
     }
 
-    public void createPullGames(Event model) {
+    public List<Game> createPullGames(Event model) {
         //create teams which do not exist yet
         Set<Team> teams = new HashSet<>();
         for (Player player1: model.getPlayers()){
@@ -189,7 +189,7 @@ public class EventsUtil {
         gameUtil.removeObsoleteGames(model, teams);
 
         //create matches
-        gameUtil.createMissingPullGames(model, teams);
+        return gameUtil.createMissingPullGames(model, teams);
     }
     
 }

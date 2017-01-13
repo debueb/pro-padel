@@ -132,7 +132,7 @@ public class GameUtil {
         }
     }
     
-    public void createMissingPullGames(Event event, Set<Team> participants) {
+    public List<Game> createMissingPullGames(Event event, Set<Team> participants) {
         List<Game> existingGames = gameDAO.findByEvent(event);
         for (Team team1: participants){
             for (Team team2: participants){
@@ -146,6 +146,7 @@ public class GameUtil {
                 }
             }
         }
+        return existingGames;
     }
     
     public Map<Participant, Map<Game, String>> getParticipantGameResultMap(Collection<Game> games, Boolean reverseGameResult) {

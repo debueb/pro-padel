@@ -266,9 +266,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 }
             case PullRoundRobin:
                 model = getDAO().saveOrUpdate(model);
-                eventsUtil.createPullGames(model);
+                List<Game> games = eventsUtil.createPullGames(model);
 
-                if (!model.getParticipants().isEmpty()){
+                if (!games.isEmpty()){
                     return redirectToGameSchedule(model);
                 } else {
                     return redirectToIndex(request);
