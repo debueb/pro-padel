@@ -497,12 +497,14 @@ public class AdminEventsController extends AdminBaseController<Event>{
                     return getGameScheduleView(event);
             }
         }
-        for (Game game: gameList.getList()){
-            Game existingGame = gameDAO.findById(game.getId());
-            existingGame.setStartDate(game.getStartDate());
-            existingGame.setStartTimeHour(game.getStartTimeHour());
-            existingGame.setStartTimeMinute(game.getStartTimeMinute());
-            gameDAO.saveOrUpdate(existingGame);
+        if (gameList.getList() != null){
+            for (Game game: gameList.getList()){
+                Game existingGame = gameDAO.findById(game.getId());
+                existingGame.setStartDate(game.getStartDate());
+                existingGame.setStartTimeHour(game.getStartTimeHour());
+                existingGame.setStartTimeMinute(game.getStartTimeMinute());
+                gameDAO.saveOrUpdate(existingGame);
+            }
         }
         return redirectToIndex(request);
     }
