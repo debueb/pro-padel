@@ -60,6 +60,7 @@
                         </c:otherwise>
                     </c:choose>
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
+                    <a href="/admin/events" class="ajaxify btn btn-primary btn-block unit-2"><fmt:message key="Skip"/></a>
                 </div>
             </spf:form>
         </div>
