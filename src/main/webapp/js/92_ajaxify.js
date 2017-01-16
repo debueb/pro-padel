@@ -78,9 +78,10 @@
                 }
                 
                 // Prepare
-                var $this = $(this),
-                    url = $this.attr('href'),
-                    title = $this.attr('title') || null;
+                var $this       = $(this),
+                    url         = $this.attr('href'),
+                    title       = $this.attr('title') || null,
+                    anchorId    = $(this).attr('data-anchor');
                 
                 $content = getContent.apply(this);
                     
@@ -90,7 +91,7 @@
                 }
 
                 // Ajaxify this link
-                History.pushState({data: null, method: 'GET'}, title, url);
+                History.pushState({payload: null, method: 'GET', anchorId: anchorId}, title, url);
                 event.preventDefault();
                 return false;
             });
@@ -225,7 +226,7 @@
 
                     // Complete the change
                     if (!!stateData.anchorId){
-                        $(window).scrollTop($(stateData.anchorId).offset().top);
+                        $(window).scrollTop($(stateData.anchorId).offset().top - $('.navbar').height());
                     } else if (!replaceElement){
                         $(window).scrollTop(0);
                     }

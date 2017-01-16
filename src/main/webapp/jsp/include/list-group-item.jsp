@@ -1,5 +1,5 @@
 <%@include file="/jsp/include/include.jsp"%>
-<a href="${param.href}" class="list-group-item ajaxify" id="${param.key}">
+<a href="${param.href}" class="list-group-item ajaxify" id="${param.key}" data-anchor="${param.anchor}">
     <div class="list-item-text">
         <c:choose>
             <c:when test="${empty param.title}">
