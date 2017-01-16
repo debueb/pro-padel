@@ -17,6 +17,7 @@ import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
@@ -82,6 +83,9 @@ public class EventsController extends BaseController{
     @RequestMapping("event/{eventId}")
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findById(eventId);
+        if (event == null){
+            throw new ResourceNotFoundException();
+        }
         ModelAndView mav = new ModelAndView("events/event", "Model", event);
         return mav;
     }

@@ -16,6 +16,7 @@ import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.ParticipantI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.exceptions.MailException;
+import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import de.appsolve.padelcampus.utils.PlayerUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.RequestUtil;
@@ -120,6 +121,9 @@ public class PlayersController extends BaseController {
     }
 
     private ModelAndView getPlayerView(Player player) {
+        if (player == null){
+            throw new ResourceNotFoundException();
+        }
         SortedMap<Participant, BigDecimal> ranking = rankingUtil.getRanking(player.getGender());
         BigDecimal playerRanking = ranking.get(player);
         ModelAndView mav = new ModelAndView("players/player", "Player", player);

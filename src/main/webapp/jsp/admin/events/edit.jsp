@@ -199,6 +199,15 @@
                     <div class="unit">
                         <spf:checkbox path="allowSignup" id="allowSignup"/><label for="allowSignup"><fmt:message key="AllowEventSignup"/></label>
                     </div>
+                    <div class="unit">
+                        <spf:checkbox path="showParticipants" id="showParticipants"/><label for="showParticipants"><fmt:message key="ShowParticipants"/></label>
+                    </div>
+                    <div class="unit">
+                        <spf:checkbox path="showGames" id="showGames"/><label for="showGames"><fmt:message key="ShowGames"/></label>
+                    </div>
+                    <div class="unit">
+                        <spf:checkbox path="showScores" id="showScores"/><label for="showScores"><fmt:message key="ShowScores"/></label>
+                    </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
                     <c:if test="${not empty Model.id and (Model.eventType eq 'Knockout')}">
                         <a class="btn btn-primary btn-block unit ajaxify" href="${contextPath}/admin/events/edit/${Model.id}/draws"><fmt:message key="ToDraws"/></a>

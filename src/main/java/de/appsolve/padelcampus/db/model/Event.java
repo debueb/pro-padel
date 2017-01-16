@@ -121,6 +121,15 @@ public class Event extends ComparableEntity{
     
     @Column
     private Boolean allowSignup;
+    
+    @Column
+    private Boolean showParticipants;
+    
+    @Column
+    private Boolean showGames;
+    
+    @Column
+    private Boolean showScores;
 
     public String getName() {
         return name;
@@ -312,6 +321,31 @@ public class Event extends ComparableEntity{
     public void setAllowSignup(Boolean allowSignup) {
         this.allowSignup = allowSignup;
     }
+
+    public Boolean getShowParticipants() {
+        return showParticipants == null ? Boolean.TRUE : showParticipants;
+    }
+
+    public void setShowParticipants(Boolean showParticipants) {
+        this.showParticipants = showParticipants;
+    }
+
+    public Boolean getShowGames() {
+        return showGames == null ? Boolean.TRUE : showGames;
+    }
+
+    public void setShowGames(Boolean showGames) {
+        this.showGames = showGames;
+    }
+
+    public Boolean getShowScores() {
+        return showScores == null ? Boolean.TRUE : showScores;
+    }
+
+    public void setShowScores(Boolean showScores) {
+        this.showScores = showScores;
+    }
+    
     
     public Set<Team> getTeams(){
         Set<Team> teams = new TreeSet<>();

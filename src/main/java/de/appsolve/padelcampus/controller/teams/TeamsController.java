@@ -16,6 +16,7 @@ import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -112,6 +113,9 @@ public class TeamsController extends BaseController{
     }
 
     private ModelAndView getTeamView(Team team) {
+        if (team == null){
+            throw new ResourceNotFoundException();
+        }
         ModelAndView mav = new ModelAndView("teams/team", "Team", team);
         List<Game> games = gameDAO.findByParticipant(team);
         Set<Event> currentEvents = new TreeSet<>();
