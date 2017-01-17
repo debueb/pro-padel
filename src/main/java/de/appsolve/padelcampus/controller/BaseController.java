@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.controller;
 
+import com.google.gson.Gson;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.ContactDAOI;
 import de.appsolve.padelcampus.db.model.Contact;
@@ -149,7 +150,7 @@ public abstract class BaseController {
                     }
                 }
                 body.append("\n\nREQUEST PARAMETERS\n");
-                body.append(request.getParameterMap());
+                body.append(new Gson().toJson(request.getParameterMap()));
                 body.append("\n\nSESSION ATTRIBUTES\n");
                 Enumeration<String> attributeNames = request.getSession().getAttributeNames();
                 if (attributeNames != null){
