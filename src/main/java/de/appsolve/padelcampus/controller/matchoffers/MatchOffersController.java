@@ -35,6 +35,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
@@ -54,7 +55,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/matchoffers")
 public class MatchOffersController extends BaseEntityController<MatchOffer> {
 
-    private static final Logger log = Logger.getLogger(MatchOffersController.class);
+    private static final Logger LOG = Logger.getLogger(MatchOffersController.class);
 
     @Autowired
     PlayerDAOI playerDAO;
@@ -166,7 +167,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
                 }
             }
         } catch (MailException | IOException e){
-            log.error("Error while sending mails about new match offer: "+ e.getMessage());
+            LOG.error("Error while sending mails about new match offer: "+ e.getMessage());
         }
         return new ModelAndView("redirect:/matchoffers/"+model.getId());
     }
@@ -286,13 +287,46 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
             //persist changes
             matchOfferDAO.saveOrUpdate(offer);
         } catch (MailException | IOException e) {
-            log.error(e);
+            LOG.error(e);
             view.addObject("error", msg.get("FailedToSendEmail"));
             return view;
         }
         return view;
     }
-
+    
+    @Override
+    public ModelAndView getDelete(HttpServletRequest request, @PathVariable("id") Long id){
+        Player user = sessionUtil.getUser(request);
+        if (user == null) {
+            return getLoginRequiredView(request,  msg.get("EditMatchOffer"));
+        }
+        MatchOffer model = matchOfferDAO.findById(id);
+        if (model == null || !model.getOwner().equals(user)){
+            return redirectToIndex(request);
+        }
+        return getDeleteView(model);
+    }
+    
+    @Override
+    public ModelAndView postDelete(HttpServletRequest request, @PathVariable("id") Long id){
+        Player user = sessionUtil.getUser(request);
+        if (user == null) {
+            return getLoginRequiredView(request,  msg.get("EditMatchOffer"));
+        }
+        MatchOffer model = matchOfferDAO.findById(id);
+        if (model == null || !model.getOwner().equals(user)){
+            return redirectToIndex(request);
+        }
+        try {
+            getDAO().deleteById(id);
+        } catch (DataIntegrityViolationException e){
+            LOG.warn("Attempt to delete "+model+" failed due to "+e);
+            ModelAndView deleteView = getDeleteView(model);
+            deleteView.addObject("error", msg.get("CannotDeleteDueToRefrence", new Object[]{model.toString()}));
+            return deleteView;
+        }
+        return redirectToIndex(request);
+    }
     private ModelAndView getEditView(MatchOffer model) {
         ModelAndView mav = new ModelAndView("matchoffers/edit", "Model", model);
         mav.addObject("SkillLevels", SkillLevel.values());

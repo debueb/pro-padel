@@ -24,7 +24,7 @@ public abstract class BaseEntityController<T extends BaseEntityI> extends BaseCo
     private static final Logger LOG = Logger.getLogger(BaseEntityController.class);
     
     @RequestMapping(value = "/{id}/delete")
-    public ModelAndView getDelete(@PathVariable("id") Long id){
+    public ModelAndView getDelete(HttpServletRequest request, @PathVariable("id") Long id){
         @SuppressWarnings("unchecked")
         T model = (T)getDAO().findById(id);
         return getDeleteView(model);

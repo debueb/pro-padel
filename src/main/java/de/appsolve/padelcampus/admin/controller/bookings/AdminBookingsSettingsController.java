@@ -129,7 +129,7 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
     }
     
     @Override
-    public ModelAndView getDelete(@PathVariable("id") Long id){
+    public ModelAndView getDelete(HttpServletRequest request, @PathVariable("id") Long id){
         CalendarConfig config = calendarConfigDAO.findById(id);
         ModelAndView mav = getDeleteView(config);
         //add warning about existing bookings that are affected by deleting this calendar configuration
