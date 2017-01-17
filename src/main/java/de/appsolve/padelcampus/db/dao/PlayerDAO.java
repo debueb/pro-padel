@@ -51,10 +51,13 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
             player.setSalted(true);
         }
         if (!StringUtils.isEmpty(player.getFirstName())){
-            player.setFirstName(WordUtils.capitalizeFully(player.getFirstName(), new char[]{' ', '-'}));
+            player.setFirstName(WordUtils.capitalizeFully(player.getFirstName().trim(), new char[]{' ', '-'}));
         }
         if (!StringUtils.isEmpty(player.getLastName())){
-            player.setLastName(WordUtils.capitalizeFully(player.getLastName(), new char[]{' ', '-'}));
+            player.setLastName(WordUtils.capitalizeFully(player.getLastName().trim(), new char[]{' ', '-'}));
+        }
+        if (!StringUtils.isEmpty(player.getEmail())){
+            player.setEmail(player.getEmail().trim());
         }
         player.setCustomer(getCustomer());
         return super.saveOrUpdate(player);
