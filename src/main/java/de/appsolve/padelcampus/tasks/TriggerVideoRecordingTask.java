@@ -12,6 +12,7 @@ import de.appsolve.padelcampus.constants.OfferOptionType;
 import de.appsolve.padelcampus.db.dao.BookingBaseDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.OfferOption;
+import de.appsolve.padelcampus.reporting.ErrorReporter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -36,44 +37,51 @@ public class TriggerVideoRecordingTask {
 
     @Autowired
     BookingBaseDAOI bookingBaseDAO;
+    
+    @Autowired
+    ErrorReporter errorReporter;
 
     //@Scheduled(cron = "0 * * * * ?") //second minute hour day month year, * = any, */5 = every 5
     @Scheduled(cron = "0 0/30 * * * ?") //second minute hour day month year, * = any, */5 = every 5
     public void triggerVideoRecording() {
-        LocalDate date = new LocalDate();
-        DateTime time = new DateTime(DEFAULT_TIMEZONE);
-        time = time.withSecondOfMinute(0).withMillisOfSecond(0);
-        LocalTime localTime = time.toLocalTime();
-        
-        LOG.info(String.format("Looking for bookings eligible to record at %s", localTime));
-        List<Booking> bookings = bookingBaseDAO.findCurrentBookingsWithOfferOptions(date, localTime);
-        LOG.info(String.format("Found %s bookings eligible for video recording", bookings.size()));
+        try {
+            LocalDate date = new LocalDate();
+            DateTime time = new DateTime(DEFAULT_TIMEZONE);
+            time = time.withSecondOfMinute(0).withMillisOfSecond(0);
+            LocalTime localTime = time.toLocalTime();
 
-        for (Booking booking : bookings) {
-            if (booking.getOfferOptions() != null) {
-                for (OfferOption offerOption : booking.getOfferOptions()) {
-                    if (offerOption.getOfferOptionType().equals(OfferOptionType.VideoRecording)) {
-                        try {
-                            LOG.info(String.format("Triggering video recording for booking %s", booking));
-                            Shell ssh = new Shell.Verbose(
-                                new SSH(offerOption.getCameraUrl(), offerOption.getCameraPort(), offerOption.getCameraUser(), offerOption.getCameraKey())
-                            );
-                            ByteArrayOutputStream stdOutStream = new ByteArrayOutputStream();
-                            ByteArrayOutputStream stdErrStream = new ByteArrayOutputStream();
-                            
-                            String callbackURL = String.format("%s/bookings/recording/%s", booking.getCustomer().getHostUrl(), booking.getUUID());
-                            int code = ssh.exec(String.format("nohup ~/record.sh -d %s -c %s > /tmp/record.log 2>&1 &", booking.getDuration()*60, callbackURL), null, stdOutStream, stdErrStream);
-                            LOG.info(String.format("Remote host returned [code: %s, stdout: %s, stderr: %s]", code, stdOutStream.toString("UTF-8"), stdErrStream.toString("UTF-8")));
-                        } catch (UnknownHostException ex) {
-                            LOG.info(ex);
-                        } catch (UnsupportedEncodingException ex) {
-                            LOG.info(ex);
-                        } catch (IOException ex) {
-                            LOG.info(ex);
+            LOG.info(String.format("Looking for bookings eligible to record at %s", localTime));
+            List<Booking> bookings = bookingBaseDAO.findCurrentBookingsWithOfferOptions(date, localTime);
+            LOG.info(String.format("Found %s bookings eligible for video recording", bookings.size()));
+
+            for (Booking booking : bookings) {
+                if (booking.getOfferOptions() != null) {
+                    for (OfferOption offerOption : booking.getOfferOptions()) {
+                        if (offerOption.getOfferOptionType().equals(OfferOptionType.VideoRecording)) {
+                            try {
+                                LOG.info(String.format("Triggering video recording for booking %s", booking));
+                                Shell ssh = new Shell.Verbose(
+                                    new SSH(offerOption.getCameraUrl(), offerOption.getCameraPort(), offerOption.getCameraUser(), offerOption.getCameraKey())
+                                );
+                                ByteArrayOutputStream stdOutStream = new ByteArrayOutputStream();
+                                ByteArrayOutputStream stdErrStream = new ByteArrayOutputStream();
+
+                                String callbackURL = String.format("%s/bookings/recording/%s", booking.getCustomer().getHostUrl(), booking.getUUID());
+                                int code = ssh.exec(String.format("nohup ~/record.sh -d %s -c %s > /tmp/record.log 2>&1 &", booking.getDuration()*60, callbackURL), null, stdOutStream, stdErrStream);
+                                LOG.info(String.format("Remote host returned [code: %s, stdout: %s, stderr: %s]", code, stdOutStream.toString("UTF-8"), stdErrStream.toString("UTF-8")));
+                            } catch (UnknownHostException ex) {
+                                LOG.info(ex);
+                            } catch (UnsupportedEncodingException ex) {
+                                LOG.info(ex);
+                            } catch (IOException ex) {
+                                LOG.info(ex);
+                            }
                         }
                     }
                 }
             }
+        } catch (Throwable t){
+            errorReporter.notify(t);
         }
     }
 }

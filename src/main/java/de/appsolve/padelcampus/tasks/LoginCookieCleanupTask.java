@@ -7,6 +7,7 @@ package de.appsolve.padelcampus.tasks;
 
 import de.appsolve.padelcampus.db.dao.LoginCookieBaseDAOI;
 import de.appsolve.padelcampus.db.model.LoginCookie;
+import de.appsolve.padelcampus.reporting.ErrorReporter;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
@@ -26,13 +27,20 @@ public class LoginCookieCleanupTask {
     @Autowired
     LoginCookieBaseDAOI loginCookieBaseDAO;
     
+    @Autowired
+    ErrorReporter errorReporter;
+    
     @Scheduled(cron = "0 0 1 * * *") //second minute hour day month year, * = any, */5 = every 5
     public void deleteOldVouchers(){
-        LocalDate now = new LocalDate();
-        List<LoginCookie> expiredCookies = loginCookieBaseDAO.findExpiredBefore(now);
-        LOG.info("Deleting "+expiredCookies.size()+" login cookies expired before "+now);
-        for (LoginCookie cookie: expiredCookies){
-            loginCookieBaseDAO.deleteById(cookie.getId());
+        try {
+            LocalDate now = new LocalDate();
+            List<LoginCookie> expiredCookies = loginCookieBaseDAO.findExpiredBefore(now);
+            LOG.info("Deleting "+expiredCookies.size()+" login cookies expired before "+now);
+            for (LoginCookie cookie: expiredCookies){
+                loginCookieBaseDAO.deleteById(cookie.getId());
+            }
+        } catch (Throwable t){
+            errorReporter.notify(t);
         }
     }
 }

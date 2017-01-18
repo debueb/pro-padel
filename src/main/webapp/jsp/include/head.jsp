@@ -52,6 +52,7 @@
         <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet" title="project_css">
 
         <c:set var="compressJS" value="${compress.js}"/>
+        <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js" data-apikey="c3a3e8e773db9d46f2d51d905ead0e83"></script>
         <c:choose>
             <c:when test="${compressJS and empty param.debug}">
                 <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>

@@ -148,7 +148,7 @@ public class ProOperatorsController extends BaseController implements ServletCon
             return new ModelAndView("redirect:/pro/operators/newaccount/"+customer.getId());
         } catch (Exception e){
             LOG.error(e.getMessage(), e);
-            sendErrorMail(request, e);
+            errorReporter.notify(e);
             bindingResult.addError(new ObjectError("id", e.getMessage()));
             return new ModelAndView("pro/newaccount", "Model", customerAccount);
         }

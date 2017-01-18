@@ -5,25 +5,21 @@
  */
 package de.appsolve.padelcampus.controller;
 
-import com.google.gson.Gson;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.ContactDAOI;
 import de.appsolve.padelcampus.db.model.Contact;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
+import de.appsolve.padelcampus.reporting.ErrorReporter;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -43,8 +39,6 @@ public abstract class BaseController {
     
     private static final Logger LOG = Logger.getLogger(BaseController.class);
     
-    private static final Pattern IGNORED_USER_AGENT_PATTERN = Pattern.compile(".*(tinfoilsecurity|Googlebot|bingbot|AhrefsBot).*");
-    
     @Autowired
     Validator validator;
     
@@ -60,10 +54,13 @@ public abstract class BaseController {
     @Autowired
     Environment environment;
     
+    @Autowired
+    protected ErrorReporter errorReporter;
+    
     @ExceptionHandler(value=Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView handleException(HttpServletRequest req, Exception ex){
-        sendErrorMail(req, ex);
+        errorReporter.notify(ex);
         LOG.error(ex.getMessage(), ex);
         return new ModelAndView("error/500", "Exception", ex);
     }
@@ -119,63 +116,5 @@ public abstract class BaseController {
         Contact contact = new Contact();
         contact.setEmailAddress(environment.getProperty("DEFAULT_EMAIL_ADDRESS"));
         return contact;
-    }
-    
-    protected void sendErrorMail(HttpServletRequest request, Exception ex) {
-        boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
-        if (!isDebug){
-            if (ex.getCause() == null || !ex.getCause().getClass().getSimpleName().equals("ClientAbortException")){
-                StringBuilder body = new StringBuilder();
-                body.append("METHOD URL:\n");
-                body.append(request.getMethod());
-                body.append(" ");
-                body.append(request.getRequestURL());
-                body.append("\n\nREQUEST HEADERS\n");
-                Enumeration<String> headerNames = request.getHeaderNames();
-                if (headerNames != null){
-                    while (headerNames.hasMoreElements()){
-                        String attr = headerNames.nextElement();
-                        if (!StringUtils.isEmpty(attr) && attr.equalsIgnoreCase(HttpHeaders.USER_AGENT)){
-                            String ua = request.getHeader(attr);
-                            if (!StringUtils.isEmpty(ua) && IGNORED_USER_AGENT_PATTERN.matcher(ua).matches()){
-                                LOG.error("Exception caused by bot "+ua);
-                                LOG.error(ex.getMessage(), ex);
-                                return;
-                            }
-                        }
-                        body.append(attr);
-                        body.append("=");
-                        body.append(request.getHeader(attr));
-                        body.append("\n");
-                    }
-                }
-                body.append("\n\nREQUEST PARAMETERS\n");
-                body.append(new Gson().toJson(request.getParameterMap()));
-                body.append("\n\nSESSION ATTRIBUTES\n");
-                Enumeration<String> attributeNames = request.getSession().getAttributeNames();
-                if (attributeNames != null){
-                    while (attributeNames.hasMoreElements()){
-                        String attr = attributeNames.nextElement();
-                        body.append(attr);
-                        body.append("=");
-                        body.append(request.getSession().getAttribute(attr));
-                        body.append("\n");
-                    }
-                }
-                body.append("\n\nEXCEPTION MESSAGE\n");
-                body.append(ex.getMessage());
-                body.append("\n\nEXCEPTION STACKTRACE\n");
-                body.append(ExceptionUtils.getStackTrace(ex));
-                Mail mail = new Mail();
-                mail.addRecipient(getDefaultContact());
-                mail.setSubject("pro padel error - "+ex.toString());
-                mail.setBody(body.toString());
-                try {
-                    mailUtils.send(mail, request);
-                } catch (MailException | IOException e){
-                    LOG.error(e.getMessage(), e);
-                }
-            }
-        }
     }
 }

@@ -311,6 +311,11 @@
             <version>1.4.193</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.bugsnag</groupId>
+            <artifactId>bugsnag</artifactId>
+            <version>3.0.2</version>
+        </dependency>
     </dependencies>
 
     <build>

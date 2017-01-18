@@ -5,17 +5,23 @@
  */
 package de.appsolve.padelcampus;
 
+import com.bugsnag.Bugsnag;
+import com.bugsnag.Report;
+import com.bugsnag.callbacks.Callback;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.appsolve.padelcampus.constants.Constants;
+import de.appsolve.padelcampus.data.CustomerI;
+import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.external.cloudflare.CloudFlareApiRequestInterceptor;
 import de.appsolve.padelcampus.external.openshift.OpenshiftApiRequestInterceptor;
 import de.appsolve.padelcampus.listener.ContextInitializationListener;
 import de.appsolve.padelcampus.resolver.PutAwareCommonsMultipartResolver;
 import de.appsolve.padelcampus.spring.SubDomainLocaleResolver;
+import de.appsolve.padelcampus.utils.SessionUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -40,6 +46,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
@@ -64,6 +72,9 @@ public class AppConfig extends WebMvcConfigurerAdapter{
     
     @Autowired
     Environment env;
+    
+    @Autowired
+    SessionUtil sessionUtil;
     
     @Bean
     public MessageSource messageSource(){
@@ -192,6 +203,31 @@ public class AppConfig extends WebMvcConfigurerAdapter{
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.setValidationMessageSource(validationMessageSource());
         return validator;
+    }
+    
+    @Bean
+    public Bugsnag bugsnag() {
+        Bugsnag bugsnag = new Bugsnag(env.getProperty("BUGSNAG_API_KEY"));
+        bugsnag.addCallback(new Callback() {
+            @Override
+            public void beforeNotify(Report report) {
+                ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+                if (attr != null && attr.getRequest() != null){
+                    Player user = sessionUtil.getUser(attr.getRequest());
+                    if (user != null){
+                        report.setUserName(user.toString());
+                        report.setUserEmail(user.getEmail());
+                        report.setUserId(user.getUUID());
+                    }
+                    CustomerI customer = sessionUtil.getCustomer(attr.getRequest());
+                    if (customer != null){
+                        report.setAppInfo("customer", customer.getName());
+                    }
+                }
+            }
+        });
+        
+        return bugsnag;
     }
     
     @Override
