@@ -6,10 +6,9 @@
 package de.appsolve.padelcampus.reporting;
 
 import com.bugsnag.Bugsnag;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
+import jersey.repackaged.com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -25,7 +24,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class ErrorReporter {
     
     private static final Pattern IGNORED_USER_AGENT_PATTERN         = Pattern.compile(".*(tinfoilsecurity|Googlebot|bingbot|AhrefsBot).*");
-    private static final Set<String> IGNORED_EXCEPTION_CLASS_NAMES  = new HashSet<String>(Arrays.asList("ClientAbortException"));
+    private static final Set<String> IGNORED_EXCEPTION_CLASS_NAMES  = Sets.newHashSet("ClientAbortException");
     
     @Autowired
     Bugsnag bugsnag;
