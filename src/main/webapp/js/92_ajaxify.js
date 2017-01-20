@@ -163,7 +163,10 @@
                     $dataContent.find('.document-script[data-id="ga"]').detach();
 
                     // Fetch the scripts
-                    $scripts = $dataContent.find('.document-script');
+                    $scripts = $dataContent.find('.document-script').filter(function(){
+                        let type = $(this).attr('type');
+                        return !type || type === 'text/javascript';
+                    });
                     if ($scripts.length) {
                         $scripts.detach();
                     }
