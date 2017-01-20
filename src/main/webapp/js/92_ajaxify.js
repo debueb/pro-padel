@@ -226,7 +226,12 @@
 
                     // Complete the change
                     if (!!stateData.anchorId){
-                        $(window).scrollTop($(stateData.anchorId).offset().top - $('.navbar').height());
+                        var topPosition = 0,
+                            offset = $(stateData.anchorId).offset();
+                        if (offset){
+                            topPosition = offset.top - $('.navbar').height();
+                        }
+                        $(window).scrollTop(topPosition);
                     } else if (!replaceElement){
                         $(window).scrollTop(0);
                     }
