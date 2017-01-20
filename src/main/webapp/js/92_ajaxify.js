@@ -164,7 +164,7 @@
 
                     // Fetch the scripts
                     $scripts = $dataContent.find('.document-script').filter(function(){
-                        let type = $(this).attr('type');
+                        var type = $(this).attr('type');
                         return !type || type === 'text/javascript';
                     });
                     if ($scripts.length) {
