@@ -172,13 +172,13 @@
                         $('.slick-next').on('click tap', function(){
                             if (nextEnabled){
                                 nextEnabled = false;
-                                $('input[name="date"]').val('${NextMonday}');
+                                $('input[name="date"]').val('${NextMonday}').trigger('change');
                             }
                         });
                         $('.slick-prev').on('click tap', function(){
                             if (prevEnabled){
                                 prevEnabled = false;
-                                $('input[name="date"]').val('${PrevSunday}');
+                                $('input[name="date"]').val('${PrevSunday}').trigger('change');
                             }
                         });
                     });

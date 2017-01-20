@@ -65,23 +65,9 @@ app.main = {};
     
     self.enableFormAutoSubmit = function(){
         $('.auto-submit').livequery(function(){
-            //change is not fired on hidden input elements, therefore we use MutationObserver
-            if ($(this).attr('type') === 'hidden'){
-                var changeObserver = new MutationObserver(function(mutations) {
-                    for (var i=0; i<mutations.length; i++){
-                        if(mutations[i].attributeName === "value") {
-                            $(mutations[i].target).trigger("change");
-                            break;
-                        }
-                    }
-                });
-                changeObserver.observe(this, {attributes: true});
-            }
-           
-           
-           $(this).on('change', function(){
-              $(this).closest('form').submit(); 
-           });
+            $(this).on('change', function(){
+                $(this).closest('form').submit(); 
+            });
         });
     };
     
@@ -103,15 +89,15 @@ app.main = {};
         };
 
         $('.datepicker-container').livequery(function () {
-            var datepicker = $(this).find('.datepicker'),
-                    altField = $(this).find('.datepicker-input'),
-                    datePickerIcon = $(this).find('.datepicker-icon'),
-                    textField = $(this).find('.datepicker-text'),
-                    textContainer = $(this).find('.datepicker-text-container'),
-                    maxDate = $(datepicker).attr('data-max-date'),
-                    allowPast = $(datepicker).attr('data-allow-past'),
-                    dayConfigs = $(datepicker).attr('data-day-config');
-
+            var datepicker      = $(this).find('.datepicker'),
+                altField        = $(this).find('.datepicker-input'),
+                datePickerIcon  = $(this).find('.datepicker-icon'),
+                textField       = $(this).find('.datepicker-text'),
+                textContainer   = $(this).find('.datepicker-text-container'),
+                maxDate         = $(datepicker).attr('data-max-date'),
+                allowPast       = $(datepicker).attr('data-allow-past'),
+                dayConfigs      = $(datepicker).attr('data-day-config');
+                
             if (!maxDate) {
                 //no maximum date by default
                 maxDate = null;
@@ -142,6 +128,11 @@ app.main = {};
                 onSelect: function (dateText) {
                     textField.text(dateText);
                     datepicker.slideUp();
+                    /* changes on hidden input fields do not fire automatically, 
+                     * MutationObserver does not work on old Androids */
+                    if (altField){
+                        $(altField).trigger('change');
+                    }
                 },
                 beforeShowDay: function (date) {
                     if (!!dayConfigs) {
