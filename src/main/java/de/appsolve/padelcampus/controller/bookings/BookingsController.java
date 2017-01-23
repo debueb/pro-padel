@@ -24,6 +24,7 @@ import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.dao.VoucherDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
+import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Facility;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
@@ -460,7 +461,9 @@ public class BookingsController extends BaseController {
         }
 
         //create a list of possible booking durations taking into account calendar configurations and confirmed bookings
-        OfferDurationPrice offerDurationPrice = bookingUtil.getOfferDurationPrice(selectedDate, selectedTime, offer);
+        List<CalendarConfig> configs = calendarConfigDAO.findFor(selectedDate);
+        List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(selectedDate);
+        OfferDurationPrice offerDurationPrice = bookingUtil.getOfferDurationPrice(configs, confirmedBookings, selectedDate, selectedTime, offer);
         
         //notify the user in case there are no durations bookable
         if (offerDurationPrice == null){

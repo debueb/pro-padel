@@ -64,7 +64,7 @@
                                             </span>
                                             <span class="game-schedule-minute">
                                                 <spf:select path="list[${status.index}].startTimeMinute" class="select-simple" data-container="body">
-                                                    <c:forEach var="minute" begin="0" end="55" step="5">
+                                                    <c:forEach var="minute" begin="0" end="30" step="30">
                                                         <fmt:formatNumber value="${minute}" minIntegerDigits="2" var="minute"/>
                                                         <spf:option value="${minute}"/>
                                                     </c:forEach>
