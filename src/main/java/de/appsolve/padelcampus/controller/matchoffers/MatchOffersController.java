@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.controller.matchoffers;
 
+import com.google.common.collect.Sets;
 import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.BOOKING_DEFAULT_VALID_FROM_HOUR;
 import de.appsolve.padelcampus.constants.ModuleType;
@@ -24,7 +25,6 @@ import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -162,7 +162,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
                     Mail mail = new Mail();
                     mail.setSubject(msg.get("NewMatchOfferMailSubject"));
                     mail.setBody(getNewMatchOfferMailBody(request, model));
-                    mail.setRecipients(interestedPlayers);
+                    mail.setRecipients(Sets.newHashSet(interestedPlayers));
                     mailUtils.send(mail, request);
                 }
             }
@@ -200,7 +200,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
 
         Mail existingParticipantsEmail = new Mail();
         existingParticipantsEmail.setFrom(user.getEmail());
-        existingParticipantsEmail.setRecipients(new ArrayList<>(offer.getPlayers()));
+        existingParticipantsEmail.setRecipients(offer.getPlayers());
         
         Mail newParticipantEmail = new Mail();
         newParticipantEmail.addRecipient(user);

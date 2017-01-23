@@ -19,7 +19,6 @@ import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.exceptions.MailException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -91,18 +90,5 @@ public class MailUtils {
     private String getHTML(String string) {
         string = string.replaceAll("(\r\n|\n)", "<br />");
         return string;
-    }
-
-    public static String getMailTo(Collection<? extends EmailContact> emailContacts) {
-        StringBuilder emails = new StringBuilder();
-        int i=0;
-        for (EmailContact p: emailContacts){
-            emails.append(p.getEmailAddress());
-            if (i<emailContacts.size()-1){
-                emails.append(",");
-            }
-            i++;
-        }
-        return emails.toString();
     }
 }

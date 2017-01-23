@@ -5,10 +5,13 @@
  */
 package de.appsolve.padelcampus.admin.controller;
 
-import de.appsolve.padelcampus.controller.BaseEntityControllerI;
 import de.appsolve.padelcampus.controller.BaseEntityController;
+import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.model.BaseEntityI;
+import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.utils.RequestUtil;
 import java.lang.reflect.ParameterizedType;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -107,5 +110,13 @@ public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEnt
             LOG.error(e);
         }
         return null;
+    }
+    
+    protected ModelAndView getMailView(Set<Player> players, HttpServletRequest request) {
+        Mail mail = new Mail();
+        mail.setRecipients(players);
+        mail.setSubject(msg.get("Subject"));
+        mail.setBody(msg.get("MailAllPlayersBody", new Object[]{RequestUtil.getBaseURL(request)+"/account/profile"}));
+        return new ModelAndView("admin/mail", "Model", mail);
     }
 }

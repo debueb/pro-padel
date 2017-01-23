@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.test;
 
+import com.google.common.collect.Sets;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.model.Contact;
@@ -36,7 +37,7 @@ public class TestMail extends TestBase {
         Contact contact = new Contact();
         contact.setEmailAddress("d.wisskirchen@gmail.com");
         contact.setEmailDisplayName("Dominik Wißkirchen");
-        mail.setRecipients(Arrays.asList(new EmailContact[]{contact}));
+        mail.setRecipients(Sets.newHashSet(new EmailContact[]{contact}));
         mail.setReplyTo("noreply@appsolve.de");
         mail.setSubject(TestMail.class.getSimpleName());
         mailUtils.send(mail, null);

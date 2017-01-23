@@ -36,7 +36,7 @@
                                     </c:forEach>
                                 </td>
                                 <td>${Team.community}</td>
-                                <td><a class="block text-center" href="mailto:${Team.mailTo}"><i class="fa fa-envelope"></i></a></td>
+                                <td><a class="block text-center ajaxify" href="/admin/teams/${Team.id}/mail"><i class="fa fa-envelope"></i></a></td>
                                 <td class="delete"><a href="/admin/teams/${Team.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
                             </tr>
                         </c:forEach>

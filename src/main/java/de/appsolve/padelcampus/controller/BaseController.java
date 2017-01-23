@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.controller;
 
+import com.google.common.collect.Sets;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.ContactDAOI;
 import de.appsolve.padelcampus.db.model.Contact;
@@ -15,7 +16,6 @@ import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +94,7 @@ public abstract class BaseController {
                 if (contacts.isEmpty()){
                     contacts.add(getDefaultContact());
                 }
-                mail.setRecipients(contacts);
+                mail.setRecipients(Sets.newHashSet(contacts));
             }
             mail.setSubject("[Feedback] "+mail.getSubject());
             mailUtils.send(mail, request);

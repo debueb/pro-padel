@@ -6,8 +6,9 @@
 package de.appsolve.padelcampus.data;
 
 import de.appsolve.padelcampus.annotations.EmailWithTld;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -29,7 +30,7 @@ public class Mail {
     @NotEmpty(message = "{NotEmpty.body}")
     private String body;
     
-    private List<EmailContact> recipients;
+    private Set<EmailContact> recipients;
     
     public String getFrom() {
         return from;
@@ -63,16 +64,16 @@ public class Mail {
         this.body = body;
     }
 
-    public List<EmailContact> getRecipients() {
-        return recipients == null ? new ArrayList<EmailContact>() : recipients;
+    public Set<EmailContact> getRecipients() {
+        return recipients == null ? new HashSet<EmailContact>() : recipients;
     }
 
-    public void setRecipients(List<? extends EmailContact> contacts) {
-        this.recipients = (List<EmailContact>) contacts;
+    public void setRecipients(Set<? extends EmailContact> contacts) {
+        this.recipients = (Set<EmailContact>) contacts;
     }
     
     public <T extends EmailContact> void addRecipient(T contact) {
-        List<EmailContact> contacts = getRecipients();
+        Set<EmailContact> contacts = getRecipients();
         contacts.add(contact);
         setRecipients(contacts);
     }

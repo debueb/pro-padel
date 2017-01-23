@@ -566,7 +566,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
         return redirectToIndex(request);
     }
     
-     @RequestMapping(method=GET, value="event/{eventId}/groupgamesend")
+    @RequestMapping(method=GET, value="event/{eventId}/groupgamesend")
     public ModelAndView getEventGroupGamesEnd(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findById(eventId);
         return getGroupGamesEndView(event);
@@ -639,6 +639,12 @@ public class AdminEventsController extends AdminBaseController<Event>{
         
         eventsUtil.createKnockoutGames(event, rankedParticipants);
         return redirectToDraws(event);
+    }
+    
+    @RequestMapping(method=GET, value="/{eventId}/mail")
+    public ModelAndView mailAll(HttpServletRequest request, @PathVariable("eventId") Long eventId){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(eventId);
+        return getMailView(event.getAllPlayers(), request);
     }
     
     @Override

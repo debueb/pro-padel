@@ -7,6 +7,7 @@ package de.appsolve.padelcampus.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Sets;
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Constants;
 import static de.appsolve.padelcampus.constants.Constants.CANCELLATION_POLICY_DEADLINE;
@@ -429,7 +430,7 @@ public class BookingUtil {
     }
     
     public void sendNewBookingNotification(HttpServletRequest request, Booking booking) throws MailException, IOException{
-        List<Contact> contactsToNotifyOnBooking = contactDAO.findAllForBookings();
+        Set<Contact> contactsToNotifyOnBooking = Sets.newHashSet(contactDAO.findAllForBookings());
         if (!contactsToNotifyOnBooking.isEmpty()){
             Mail mail = new Mail();
             mail.setSubject(msg.get("BookingSuccessfulMailSubjectAdmin", new Object[]{

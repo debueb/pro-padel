@@ -29,7 +29,9 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -56,15 +58,21 @@ public class AdminTeamsController extends AdminBaseController<Team> {
     @Autowired
     CommunityPropertyEditor communityPropertyEditor;
     
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Set.class, "players", playerCollectionEditor);
+        binder.registerCustomEditor(Community.class, communityPropertyEditor);
+    }
+    
     @Override
     public ModelAndView showIndex(HttpServletRequest request, @PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable, @RequestParam(required = false, name = "search") String search){
         return super.showIndex(request, pageable, search);
     }
     
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(Set.class, "players", playerCollectionEditor);
-        binder.registerCustomEditor(Community.class, communityPropertyEditor);
+    @RequestMapping(method=GET, value="/{teamId}/mail")
+    public ModelAndView mailAll(HttpServletRequest request, @PathVariable("teamId") Long teamId){
+        Team team = teamDAO.findByIdFetchWithPlayers(teamId);
+        return getMailView(team.getPlayers(), request);
     }
     
     @Override

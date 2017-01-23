@@ -24,6 +24,7 @@ public enum Privilege {
     ManageContact("/admin/contact.*"),
     ManageStaff("/admin/staff.*"),
     ManageFiles("/admin/files.*"),
+    SendMails("/admin/mail.*"),
     ViewReports("/admin/reports.*");
     
     private final Pattern pathPattern;

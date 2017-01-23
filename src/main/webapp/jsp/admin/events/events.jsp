@@ -37,7 +37,7 @@
                                     <td><a class="ajaxify" href="${url}"><fmt:message key="${Event.eventType}"/></a></td>
                                     <td class="text-center">${fn:length(Event.participants)}</td>
                                     <td class="text-center">${Event.maxNumberOfParticipants}</td>
-                                    <td><a class="block text-center" href="mailto:${Event.mailTo}"><i class="fa fa-envelope"></i></a></td>
+                                    <td><a class="ajaxify block text-center" href="/admin/events/${Event.id}/mail"><i class="fa fa-envelope"></i></a></td>
                                     <td class="delete"><a href="/admin/events/${Event.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
                                 </tr>
                             </c:forEach>

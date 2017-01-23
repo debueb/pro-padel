@@ -275,13 +275,13 @@ app.main = {};
     };
 
     self.enableSelectPicker = function () {
+        var options = {
+            iconBase: 'fa',
+            tickIcon: 'fa-check',
+            dropupAuto: false,
+            countSelectedText: '{0}'
+        };
         $('.select-simple, .select-multiple').livequery(function(){
-            var options = {
-                iconBase: 'fa',
-                tickIcon: 'fa-check',
-                dropupAuto: false,
-                countSelectedText: '{0}'
-            };
             if (!!$(this).attr('data-selected-text-format')){
                 options.selectedTextFormat = 'count > 2';
             }
@@ -289,10 +289,10 @@ app.main = {};
         });
         
         $('.select-ajax-search').livequery(function(){
+            var liveOptions = options;
+            liveOptions.liveSearch = true;
             var typeSource = $(this).attr('data-abs-param-type-source');
-            $(this).selectpicker({
-                liveSearch: true
-            });
+            $(this).selectpicker(liveOptions);
             if($(this).data('selectpicker')){
                 $(this).ajaxSelectPicker({
                     ajax: {

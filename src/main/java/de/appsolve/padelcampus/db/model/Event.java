@@ -11,7 +11,6 @@ import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
-import de.appsolve.padelcampus.utils.MailUtils;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -378,12 +377,6 @@ public class Event extends ComparableEntity{
             }
         }
         return players;
-    }
-    
-    @Transient
-    public String getMailTo(){
-        Set<Player> players = new TreeSet<>(getAllPlayers());
-        return MailUtils.getMailTo(players);
     }
     
     @Override
