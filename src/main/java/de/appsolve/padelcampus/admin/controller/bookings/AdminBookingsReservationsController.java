@@ -246,7 +246,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
             
             return new ModelAndView("redirect:/admin/bookings/reservations");
         } catch (Exception e){
-            LOG.error(e);
+            LOG.error(e, e);
             bindingResult.addError(new ObjectError("comment", e.getMessage()));
             return addView;
         }
