@@ -119,8 +119,13 @@ public class TestAdminReservation extends TestBase{
                 .andExpect(model().hasNoErrors())
                 .andExpect(redirectedUrl("/admin/bookings/reservations"));
         
+        List<Booking> bookings = bookingDAO.findAll();
+        Assert.notNull(bookings);
+        Assert.isTrue(bookings.size() == 2, "2 bookings should exist");
+        Booking firstBooking = bookings.get(0);
+        
         LOG.info("modifying the first reservation in conflict with the second reservation should fail");
-        mockMvc.perform(post("/admin/bookings/reservations/booking/1")
+        mockMvc.perform(post("/admin/bookings/reservations/booking/"+firstBooking.getId())
                 .session(session)
                 .param("startDate", getNextMonday().toString())
                 .param("startTimeHour", "10")
@@ -138,7 +143,7 @@ public class TestAdminReservation extends TestBase{
                 .andExpect(model().hasErrors());
         
         LOG.info("modifying the first reservation to a later time should work");
-        mockMvc.perform(post("/admin/bookings/reservations/booking/1")
+        mockMvc.perform(post("/admin/bookings/reservations/booking/"+firstBooking.getId())
                 .session(session)
                 .param("startDate", getNextMonday().toString())
                 .param("startTimeHour", "11")
@@ -156,7 +161,7 @@ public class TestAdminReservation extends TestBase{
                 .andExpect(redirectedUrl("/admin/bookings/reservations"));
         
         LOG.info("modifying the first reservation to another offer should work");
-        mockMvc.perform(post("/admin/bookings/reservations/booking/1")
+        mockMvc.perform(post("/admin/bookings/reservations/booking/"+firstBooking.getId())
                 .session(session)
                 .param("startDate", getNextMonday().toString())
                 .param("startTimeHour", "11")
@@ -174,7 +179,7 @@ public class TestAdminReservation extends TestBase{
                 .andExpect(redirectedUrl("/admin/bookings/reservations"));
         
         LOG.info("modifying the first reservation to another date should fail as there is no booking setting");
-        mockMvc.perform(post("/admin/bookings/reservations/booking/1")
+        mockMvc.perform(post("/admin/bookings/reservations/booking/"+firstBooking.getId())
                 .session(session)
                 .param("startDate", getNextMonday().plusDays(1).toString())
                 .param("startTimeHour", "11")
@@ -191,10 +196,10 @@ public class TestAdminReservation extends TestBase{
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors());
         
-        List<Booking> bookings = bookingDAO.findAll();
+        bookings = bookingDAO.findAll();
         Assert.notNull(bookings);
         Assert.isTrue(bookings.size() == 2, "2 bookings should exist");
-        Booking firstBooking = bookings.get(0);
+        firstBooking = bookings.get(0);
         Assert.isTrue(firstBooking.getBookingDate().equals(getNextMonday()), "start date should be monday");
         Assert.isTrue(firstBooking.getBookingTime().equals(new LocalTime(11, 30)), "start time should be 11:30");
         Assert.isTrue(firstBooking.getDuration().equals(60L), "duration should be 60 min");
