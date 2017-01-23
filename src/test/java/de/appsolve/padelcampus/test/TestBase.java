@@ -5,10 +5,12 @@
  */
 package de.appsolve.padelcampus.test;
 
+import com.google.common.collect.Sets;
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.Currency;
 import de.appsolve.padelcampus.constants.PaymentMethod;
+import de.appsolve.padelcampus.constants.Privilege;
 import de.appsolve.padelcampus.db.dao.AdminGroupDAOI;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
@@ -18,10 +20,12 @@ import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.dao.VoucherDAOI;
+import de.appsolve.padelcampus.db.model.AdminGroup;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Offer;
+import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Voucher;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.SessionUtil;
@@ -34,6 +38,7 @@ import java.util.TreeSet;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.runner.RunWith;
@@ -46,9 +51,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.web.filter.DelegatingFilterProxy;
 
 /**
  *
@@ -59,6 +69,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @ContextConfiguration(classes = TestConfig.class, loader = AnnotationConfigWebContextLoader.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class TestBase  {
+    
+    protected static final String ADMIN_EMAIL     = "admin@appsolve.de";
+    protected static final String ADMIN_PASSWORD  = "test";
+    
+    protected static final String USER_EMAIL     = "user@appsolve.de";
+    protected static final String USER_PASSWORD  = "test";
     
     protected MockMvc mockMvc;
     
@@ -179,6 +195,7 @@ public abstract class TestBase  {
             calendarConfigDAO.saveOrUpdate(calendarConfig);
             
             mockMvc =   webAppContextSetup(this.wac)
+                        .addFilter(new DelegatingFilterProxy("adminFilter", this.wac), "/admin/*")
                         .alwaysDo(print())
                         .build();
         }
@@ -198,5 +215,51 @@ public abstract class TestBase  {
             d = d.minusWeeks(1);
         }
         return d.withDayOfWeek(DateTimeConstants.MONDAY);
+    }
+    
+    protected void createAdminAccount() throws Exception{
+        LOG.info("Creating new account "+ADMIN_EMAIL);
+        mockMvc.perform(post("/login/register")
+                .session(session)
+                .param("firstName", "admin")
+                .param("lastName", "test")
+                .param("email", ADMIN_EMAIL)
+                .param("phone", "01739398758")
+                .param("password", ADMIN_PASSWORD))
+                .andExpect(status().isOk());
+        logout(); //registering a new account also logs the user in automatically
+        
+        LOG.info("Promoting account to admin");
+        AdminGroup adminGroup = new AdminGroup();
+        adminGroup.setName("admins");
+        adminGroup.setPrivileges(Sets.newHashSet(Privilege.values()));
+        Player admin = playerDAO.findByEmail(ADMIN_EMAIL);
+        adminGroup.setPlayers(new TreeSet<>(Arrays.asList(new Player[]{admin})));
+        adminGroupDAO.saveOrUpdate(adminGroup);
+    }
+    
+    protected void logout() throws Exception {
+        LOG.info("make sure user is not logged in");
+        mockMvc.perform(get("/logout")
+                .session(session))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+        
+        //logout invalidates the session. make sure to create a new one
+        session = new MockHttpSession(wac.getServletContext());
+    }
+
+    protected void login(String email, String password) throws Exception {
+        LOG.info("login");
+        mockMvc.perform(post("/login?redirect=/matchoffers/add")
+                .session(session)
+                .param("email", email)
+                .param("password", password))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/matchoffers/add"));
+        
+        Assert.assertNotNull(session);
+        Assert.assertNotNull(session.getAttribute(Constants.SESSION_USER));
+        Assert.assertNotNull(session.getAttribute(Constants.SESSION_PRIVILEGES));
     }
 }

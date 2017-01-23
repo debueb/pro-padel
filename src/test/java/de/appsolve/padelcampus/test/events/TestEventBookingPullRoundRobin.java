@@ -32,6 +32,9 @@ public class TestEventBookingPullRoundRobin extends TestEventBookingBase {
     
     @Test
     public void test01AddPullEvent() throws Exception {
+        createAdminAccount();
+        login(ADMIN_EMAIL, ADMIN_PASSWORD);
+        
         Player player1 = createPlayer(1);
         Player player2 = createPlayer(2);
         Player player3 = createPlayer(3);
