@@ -69,7 +69,7 @@ public class AdminFilter implements Filter {
                 return;
             }
             Set<Privilege> privileges = sessionUtil.getPrivileges(httpRequest);
-            String pathInfo = httpRequest.getServletPath();
+            String pathInfo = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
             for (Privilege privilege: privileges){
                 if (privilege.getPathPattern().matcher(pathInfo).matches()){
                     chain.doFilter(request, response);
