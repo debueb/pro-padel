@@ -235,6 +235,8 @@ public class AppConfig extends WebMvcConfigurerAdapter{
         registry.addResourceHandler("/images/**").addResourceLocations("/images/");
         registry.addResourceHandler("/templates/**").addResourceLocations("/templates/");
         registry.addResourceHandler("/filemanager/**").addResourceLocations("/filemanager/");
+        
+        registry.addResourceHandler("/app/**").addResourceLocations("classpath:/META-INF/resources/app/");
     }
     
     @Override

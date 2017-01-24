@@ -1,33 +1,23 @@
-/*
- * Main.js
- * project specific functionality
- */
-var app = app || {};
-app.main = {};
-
-(function () {
-
-    var self = this;
-
-    self.showShadow = function () {
+var project = {
+    showShadow: function () {
         $('#shadow').show();
-    };
+    },
 
-    self.hideShadow = function () {
+    hideShadow: function () {
         $('#shadow').hide();
-    };
+    },
 
-    self.showSpinner = function () {
-        self.showShadow();
+    showSpinner: function () {
+        this.showShadow();
         $('#ballWrapper').css('display', 'block');
-    };
+    },
 
-    self.hideSpinner = function () {
-        self.hideShadow();
+    hideSpinner: function () {
+        this.hideShadow();
         $('#ballWrapper').css('display', 'none');
-    };
+    },
 
-    self.enableBackButton = function () {
+    enableBackButton: function () {
         $('.btn-back').livequery(function(){
             //show btn-back in header
             if (("standalone" in window.navigator && window.navigator.standalone) || window.navigator.userAgent.indexOf('ProPadel') >= 0){
@@ -38,17 +28,19 @@ app.main = {};
                window.History.back();
             });
         });
-    };
+    },
 
-    self.enableForms = function () {
+    enableForms: function () {
+        var that = this;
         //prevent duplicate form submission
-        $('form').not('.ajaxify').livequery(function(){
+        $('form:not(".ajaxify")').livequery(function(){
             $(this).on('submit', function () {
+                
                 window.addEventListener("pagehide", function(){
-                   self.hideSpinner();
+                   that.hideSpinner();
                    $('form :submit').removeAttr("disabled");
                 });
-                self.showSpinner();
+                that.showSpinner();
                 $('form :submit').attr("disabled", "disabled");
             });
         });
@@ -61,17 +53,17 @@ app.main = {};
                 }
             });
         });
-    };
+    },
     
-    self.enableFormAutoSubmit = function(){
+    enableFormAutoSubmit: function(){
         $('.auto-submit').livequery(function(){
             $(this).on('change', function(){
                 $(this).closest('form').submit(); 
             });
         });
-    };
+    },
     
-    self.enableDatePicker = function () {
+    enableDatePicker: function () {
 
         var addLeadingZero = function(str){
            return ("0" + str).slice(-2);
@@ -172,19 +164,20 @@ app.main = {};
                 datepicker.hide();
             }
         });
-    };
+    },
 
-    self.enablePrivateDataLinks = function () {
+    enablePrivateDataLinks: function () {
+        var that = this;
         $('.private-data').livequery(function(){
             $(this).on('click tap', function () {
                 var prefix = $(this).attr('data-prefix');
                 var fake = $(this).attr('data-fake');
-                document.location.href = prefix + app.main.rot47(fake);
+                document.location.href = prefix + that.rot47(fake);
             });
         });
-    };
+    },
 
-    self.rot47 = function (s) {
+    rot47: function (s) {
         var x = [];
         for (var i = 0; i < s.length; i++) {
             var j = s.charCodeAt(i);
@@ -195,9 +188,9 @@ app.main = {};
             }
         }
         return x.join('');
-    };
+    },
 
-    self.enableSideMenu = function () {
+    enableSideMenu: function () {
         var isOpen = function () {
             return $('#site-canvas').hasClass('show-nav');
         };
@@ -258,23 +251,23 @@ app.main = {};
           clearTimeout(doit);
           doit = setTimeout(onResizeEnd, 100);
         };
-    };
+    },
 
-    self.enableAccordion = function () {
+    enableAccordion: function () {
         $('.accordion').livequery(function(){
             $(this).accordion({"heightStyle": "content"});
         });
-    };
+    },
 
-    self.enableBookingLoginSelection = function () {
+    enableBookingLoginSelection: function () {
         $('.btn-booking-submit').livequery(function(){
             $(this).on('tap click', function () {
                 $('#bookingType').val($(this).attr('data-booking-type'));
             });
         });
-    };
+    },
 
-    self.enableSelectPicker = function () {
+    enableSelectPicker: function () {
         var options = {
             iconBase: 'fa',
             tickIcon: 'fa-check',
@@ -314,9 +307,9 @@ app.main = {};
                 });
             }
         });
-    };
+    },
 
-    self.enablePlusMinusInputFields = function () {
+    enablePlusMinusInputFields: function () {
         $('.btn-plus-minus').livequery(function(){
             $(this).on('tap click', function (e) {
                 e.preventDefault();
@@ -370,9 +363,9 @@ app.main = {};
                 }
             });
         });
-    };
+    },
 
-    self.enableUpdateBooking = function () {
+    enableUpdateBooking: function () {
         var updatePrice = function(){
             var target = $('#booking-price'),
                 price = $(this).find('option:selected').attr('data-price');
@@ -385,15 +378,15 @@ app.main = {};
                 updatePrice.apply(this);
             });
         });
-    };
+    },
 
-    self.enablePayMill = function () {
-
+    enablePayMill: function () {
+        var that = this;
         var formIdentifier = '.paymill-form';
 
         function PaymillResponseHandler(error, result) {
-            self.hideSpinner();
-            self.hideShadow();
+            that.hideSpinner();
+            that.hideShadow();
             $(formIdentifier).removeAttr("disabled");
             $(formIdentifier).find('button').removeAttr("disabled");
             if (error) {
@@ -443,9 +436,9 @@ app.main = {};
 
             return false;
         });
-    };
+    },
     
-    self.enableRegexChecksOnInputs = function(){
+    enableRegexChecksOnInputs: function(){
         $('input[type="text"]').livequery(function(){
             var regex = new RegExp($(this).attr('data-valid-chars'));
             if (!!regex) {
@@ -458,9 +451,9 @@ app.main = {};
                 });
             }
         });
-    };
+    },
     
-    self.enableAdvancedProfile = function(){
+    enableAdvancedProfile: function(){
         $('.picture').livequery(function(){
             var $picture = $(this);
             $picture.on('click tap', function(){
@@ -480,10 +473,10 @@ app.main = {};
                 $(this).addClass('selected');
                 $(this).find('input[type="radio"]').prop("checked", true);
             });
-	});
-    };
+        });
+    },
     
-    self.enableSelectToggle = function () {
+    enableSelectToggle: function () {
         
         var showSelect = function(){
             //hide all select-toggle- elements
@@ -506,9 +499,9 @@ app.main = {};
                 showSelect.apply(this);
             });
         });
-    };
+    },
     
-    self.enableAutoSearch = function(){
+    enableAutoSearch: function(){
         $('form.search').livequery(function(){
             var timeout,
                 $form = $(this),
@@ -548,9 +541,9 @@ app.main = {};
                $form.submit();
            });
         });
-    };
+    },
     
-    self.enableTooltips = function(){
+    enableTooltips: function(){
         $('[data-toggle="tooltip"]').livequery(function(){
             $(this).webuiPopover({
                 animation: 'pop',
@@ -560,9 +553,9 @@ app.main = {};
         $(window).on('statechange', function(){
            $('[data-toggle="tooltip"]').webuiPopover('destroy'); 
         });
-    };
+    },
     
-    self.enableSubmodules = function(){
+    enableSubmodules: function(){
         $('a.menu-item.hasSubmodules').livequery(function(){
             $(this).on('click tap', function () {
                 var $a = $(this);
@@ -587,9 +580,9 @@ app.main = {};
         $(window).on('statechangecomplete', function(){
             $('.wrapper').removeClass('expanded');
         });
-    };
+    },
     
-    self.enableSlick = function(){
+    enableSlick: function(){
         $('.gallery-autoplay').livequery(function(){
             var $elem = $(this);
             $elem.on('init', function(event, slick){
@@ -608,31 +601,29 @@ app.main = {};
                 "lazyLoad": "progressive"
             });
         });
-    };
-    
-    return app;
-}).apply(app.main);
-
+    }
+};
 
 $(document).ready(function () {
-
-    app.main.enableBackButton();
-    app.main.enableForms();
-    app.main.enablePrivateDataLinks();
-    app.main.enableDatePicker();
-    app.main.enableFormAutoSubmit();
-    app.main.enableSideMenu();
-    app.main.enableAccordion();
-    app.main.enableBookingLoginSelection();
-    app.main.enableSelectPicker();
-    app.main.enablePlusMinusInputFields();
-    app.main.enableUpdateBooking();
-    app.main.enableRegexChecksOnInputs();
-    app.main.enablePayMill();
-    app.main.enableAdvancedProfile();
-    app.main.enableSelectToggle();
-    app.main.enableAutoSearch();
-    app.main.enableTooltips();
-    app.main.enableSubmodules();
-    app.main.enableSlick();
+    project.enableBackButton();
+    project.enableForms();
+    project.enablePrivateDataLinks();
+    project.enableDatePicker();
+    project.enableFormAutoSubmit();
+    project.enableSideMenu();
+    project.enableAccordion();
+    project.enableBookingLoginSelection();
+    project.enableSelectPicker();
+    project.enablePlusMinusInputFields();
+    project.enableUpdateBooking();
+    project.enableRegexChecksOnInputs();
+    project.enablePayMill();
+    project.enableAdvancedProfile();
+    project.enableSelectToggle();
+    project.enableAutoSearch();
+    project.enableTooltips();
+    project.enableSubmodules();
+    project.enableSlick();
 });
+
+module.exports = project;

@@ -54,3 +54,6 @@ src/main/resources/rebel.xml
 nb_jr_remoting.cfg
 
 test.sh
+
+node/
+node_modules/

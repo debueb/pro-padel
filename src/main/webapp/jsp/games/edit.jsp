@@ -13,7 +13,7 @@
                 <div class="panel-body">
                 <jsp:include page="/jsp/games/score-reporter.jsp"/>
                 <div class="alert alert-danger">${error}</div>
-                <form method="POST">
+                <form method="POST" class="ajaxify">
                     <table style="width: 100%;" class="table-editgame table-fixed">
                         <thead>
                         <th></th>
