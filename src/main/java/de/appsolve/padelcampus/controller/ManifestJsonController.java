@@ -58,8 +58,13 @@ public class ManifestJsonController {
         Set<ManifestIcon> icons = new HashSet<>();
         ManifestIcon icon = new ManifestIcon();
         icon.setSrc(customer.getTouchIconPath());
-        icon.setType(customer.getTouchIcon().getContentType());
-        icon.setSizes(customer.getTouchIcon().getWidth()+"x"+customer.getTouchIcon().getHeight());
+        if (customer.getTouchIcon() == null){
+            icon.setType("image/png");
+            icon.setSizes("192x192");
+        } else {
+            icon.setType(customer.getTouchIcon().getContentType());
+            icon.setSizes(customer.getTouchIcon().getWidth()+"x"+customer.getTouchIcon().getHeight());
+        } 
         icons.add(icon);
         manifest.setIcons(icons);
         return manifest;
