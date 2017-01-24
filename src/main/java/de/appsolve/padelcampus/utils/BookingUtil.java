@@ -473,10 +473,7 @@ public class BookingUtil {
         };
     }
     
-    public OfferDurationPrice getOfferDurationPrice(LocalDate selectedDate, LocalTime selectedTime, Offer selectedOffer) throws CalendarConfigException {
-        List<CalendarConfig> configs = calendarConfigDAO.findFor(selectedDate);
-        List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(selectedDate);
-        
+    public OfferDurationPrice getOfferDurationPrice(List<CalendarConfig> configs, List<Booking> confirmedBookings, LocalDate selectedDate, LocalTime selectedTime, Offer selectedOffer) throws CalendarConfigException {
         List<TimeSlot> timeSlotsForDate = getTimeSlotsForDate(selectedDate, configs, confirmedBookings, Boolean.TRUE, Boolean.TRUE);
         boolean validStartTime = false;
         for (TimeSlot timeSlot: timeSlotsForDate){

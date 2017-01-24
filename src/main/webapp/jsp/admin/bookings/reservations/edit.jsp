@@ -9,12 +9,12 @@
             <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
             <li><a class="ajaxify" href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
             <li><a class="ajaxify" href="/admin/bookings/reservations"><fmt:message key="BookingsAndReservations"/></a></li>
-            <li class="active"><fmt:message key="AddReservation"/></li>
+            <li class="active"><fmt:message key="EditBooking"/></li>
         </ol>
 
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4><fmt:message key="AddReservation"/></h4>
+                <h4><fmt:message key="EditBooking"/></h4>
             </div>
             <div class="panel-body">
 
@@ -22,6 +22,7 @@
                     <div class="alert alert-info"><fmt:message key="CourtReservationDesc"/></div>
                     <div class="alert alert-danger unit-2"><spf:errors path="*" cssClass="error" htmlEscape="false"/></div>
                     <spf:input path="id" type="hidden"/>
+                    <spf:input path="calendarWeekDays" type="hidden"/>
 
                     <fmt:message key="Comment" var="CommentPlaceholder"/>
                     <div class="relative unit-2">
@@ -31,20 +32,10 @@
 
                     <%-- Angebote --%>
                     <div class="relative">
-                        <spf:select path="offers" class="select-multiple form-control" data-style="form-center-element" data-container="body">
+                        <spf:select path="offers" multiple="false" itemValue="id" itemLabel="name" class="select-simple form-control" data-style="form-center-element" data-container="body">
                             <spf:options items="${Offers}" itemValue="id" itemLabel="name"/>
                         </spf:select>
-                        <span class="explanation-select"><fmt:message key="Offers"/></span>
-                    </div>
-
-                    <%-- Wochentage --%>
-                    <div class="relative">
-                        <spf:select path="calendarWeekDays" class="select-multiple form-control" data-style="form-center-element" multiple="true" data-container="body">
-                            <c:forEach items="${WeekDays}" var="WeekDay"><fmt:message var="WeekDayLabel" key="${WeekDay}"/>
-                                <spf:option value="${WeekDay}" label="${WeekDayLabel}"/>
-                            </c:forEach>
-                        </spf:select>
-                        <span class="explanation-select"><fmt:message key="WeekDays"/></span>
+                        <span class="explanation-select"><fmt:message key="Offer"/></span>
                     </div>
 
                     <%-- Start Datum --%>
@@ -55,17 +46,6 @@
                             <div class="datepicker-text"></div>
                         </div>
                         <spf:input type="hidden" path="startDate" class="datepicker-input form-control" />
-                        <div class="datepicker" data-show-on-init="false"></div>
-                    </div>
-
-                    <%-- End Datum --%>
-                    <div class="datepicker-container">
-                        <div class="datepicker-text-container form-center-element">
-                            <div class="datepicker-label"><fmt:message key="End"/></div>
-                            <span class="fa fa-calendar datepicker-icon"></span>
-                            <div class="datepicker-text"></div>
-                        </div>
-                        <spf:input type="hidden" path="endDate" class="datepicker-input form-control" />
                         <div class="datepicker" data-show-on-init="false"></div>
                     </div>
 
@@ -119,6 +99,8 @@
                     </span>
                     
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
+                    <a href="/admin/bookings/reservations/${Model.id}/delete" class="btn btn-danger btn-block ajaxify"><fmt:message key="Delete"/></a>
+                    <a class="btn btn-danger btn-block ajaxify" href="/admin/bookings/reservations/${Model.id}/deleteall"><fmt:message key="DeleteAll"/></a>
                     <a href="/admin/bookings/reservations" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="Cancel"/></a>
                 </spf:form>
             </div>

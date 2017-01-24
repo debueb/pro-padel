@@ -98,7 +98,7 @@
                     </span>
                     <span class="relative input-hour">
                         <spf:select path="startTimeMinute" class="select-simple form-right-element form-center-element" data-container="body">
-                            <c:forEach var="minute" begin="0" end="55" step="5">
+                            <c:forEach var="minute" begin="0" end="30" step="30">
                                 <fmt:formatNumber value="${minute}" minIntegerDigits="2" var="minute"/>
                                 <spf:option value="${minute}"/>
                             </c:forEach>

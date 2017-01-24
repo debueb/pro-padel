@@ -7,18 +7,12 @@ package de.appsolve.padelcampus.test.tournaments;
 
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
-import de.appsolve.padelcampus.constants.Privilege;
-import de.appsolve.padelcampus.db.model.AdminGroup;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.test.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.TreeSet;
-import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,42 +24,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class TestGroupKnockoutTournament extends TestBase {
     
-    
-    private static final String ADMIN_EMAIL     = "admin@appsolve.de";
-    private static final String ADMIN_PASSWORD  = "test";
     private static final Integer NUM_PLAYERS    = 10;
 
-    private static final Logger LOG = Logger.getLogger(TestGroupKnockoutTournament.class);
-    
     @Test
     public void test01CreateNewAccount() throws Exception {
         
-        LOG.info("Creating new account");
-        mockMvc.perform(post("/login/register")
-                .session(session)
-                .param("firstName", "admin")
-                .param("lastName", "test")
-                .param("email", ADMIN_EMAIL)
-                .param("phone", "01739398758")
-                .param("password", ADMIN_PASSWORD))
-                .andExpect(status().isOk());
+        createAdminAccount();
         
-     
-        LOG.info("Promoting account to admin");
-        AdminGroup adminGroup = new AdminGroup();
-        adminGroup.setName("admins");
-        adminGroup.setPrivileges(new HashSet<>(Arrays.asList(new Privilege[]{Privilege.AccessAdminInterface, Privilege.ManagePlayers, Privilege.ManageTeams})));
-        Player admin = playerDAO.findByEmail(ADMIN_EMAIL);
-        adminGroup.setPlayers(new TreeSet<>(Arrays.asList(new Player[]{admin})));
-        adminGroupDAO.saveOrUpdate(adminGroup);
+        login(ADMIN_EMAIL, ADMIN_PASSWORD);
         
-        LOG.info("login to admin account");
-        mockMvc.perform(post("/login")
-                .session(session)
-                .param("email", ADMIN_EMAIL)
-                .param("password", ADMIN_PASSWORD))
-                .andExpect(status().is3xxRedirection());
-    
         LOG.info("creating new players");
         for (int i=0; i<NUM_PLAYERS; i++){
              mockMvc.perform(post("/admin/players/add")
@@ -79,7 +46,8 @@ public class TestGroupKnockoutTournament extends TestBase {
         }
      
         LOG.info("creating new teams");
-        mockMvc.perform(get("/admin/teams/add"))
+        mockMvc.perform(get("/admin/teams/add")
+                .session(session))
                 .andExpect(status().isOk());
         
         for (int i=0; i<NUM_PLAYERS; i=i+2){

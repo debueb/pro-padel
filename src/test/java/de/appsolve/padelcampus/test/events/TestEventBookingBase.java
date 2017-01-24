@@ -12,7 +12,6 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.junit.FixMethodOrder;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -38,11 +37,6 @@ public abstract class TestEventBookingBase extends TestBase {
                 .param("password", player.getPassword()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/events/bookings/"+event.getId()+"/participate"));
-    }
-
-    protected void logout() throws Exception {
-        mockMvc.perform(get("/logout").session(session)).andExpect(status().is3xxRedirection());
-        session = new MockHttpSession(wac.getServletContext());
     }
 
     protected Player createPlayer(int i) {
