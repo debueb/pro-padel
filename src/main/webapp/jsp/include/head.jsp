@@ -49,6 +49,8 @@
         <link rel="apple-touch-icon" href="${sessionScope.customer.touchIconPath}">
         <link rel="icon" sizes="192x192" href="${sessionScope.customer.touchIconPath}">
         
+        <link rel="manifest" href="/manifest/manifest.json">
+        
         <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet" title="project_css">
 
         <c:set var="compressJS" value="${compress.js}"/>
