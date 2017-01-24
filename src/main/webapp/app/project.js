@@ -33,8 +33,9 @@ var project = {
     enableForms: function () {
         var that = this;
         //prevent duplicate form submission
-        $('form').not('.ajaxify').livequery(function(){
+        $('form:not(".ajaxify")').livequery(function(){
             $(this).on('submit', function () {
+                
                 window.addEventListener("pagehide", function(){
                    that.hideSpinner();
                    $('form :submit').removeAttr("disabled");
