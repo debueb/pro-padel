@@ -1,3 +1,16 @@
+cd $OPENSHIFT_TMP_DIR
+echo DOWNLOADING MAVEN 3.3.9
+curl -o apache-maven-3.3.9-bin.tar.gz http://mirror.netcologne.de/apache.org/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+tar -xvf apache-maven-3.3.9-bin.tar.gz
+chmod 755 $OPENSHIFT_TMP_DIR/apache-maven-3.3.9/bin/mvn
+echo OLD M2_HOME: $M2_HOME
+export M2_HOME_ORIG=$M2_HOME
+export M2_HOME=${OPENSHIFT_TMP_DIR}apache-maven-3.3.9/
+echo NEW M2_HOME: $M2_HOME
+export PATH=${M2_HOME}bin/:$PATH
+echo PATH: $PATH
+echo MAVEN VERSION: `mvn -v`
+
 echo "Starting maintenance web server."
 nohup python ${OPENSHIFT_DATA_DIR}/maintenance/maintenance.py > /tmp/nohup.out 2>&1&
 echo $! > ${OPENSHIFT_DATA_DIR}/maintenance/maintenance.pid
