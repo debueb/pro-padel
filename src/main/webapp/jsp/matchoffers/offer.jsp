@@ -35,7 +35,7 @@
                         <a class="btn btn-primary btn-block" href="/login/register?redirect=${url}"><fmt:message key="RegisterToParticipate"/></a>
                     </c:when>
                     <c:otherwise>
-                        <form method="POST" style="margin-bottom: 5px;">
+                        <form method="POST" style="margin-bottom: 5px;" class="ajaxify">
                             <c:choose>
                                 <c:when test="${fn:contains(Model.players, sessionScope.user)}">
                                     <input type="checkbox" name="cancel-participation" id="cancel-participation"/>

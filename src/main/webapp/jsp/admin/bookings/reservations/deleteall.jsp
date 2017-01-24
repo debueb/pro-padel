@@ -17,7 +17,7 @@
                 <c:forEach var="BookingToDelete" items="${BookingsToDelete}">
                     <div>${BookingToDelete}</div>
                 </c:forEach>
-                <form method="POST">
+                <form method="POST" class="ajaxify">
                     <a class="btn btn-primary btn-back unit ajaxify"><fmt:message key="Cancel"/></a>
                     <button class="btn btn-danger unit" style="margin-left: 10px;"><fmt:message key="Delete"/></button>
                 </form>

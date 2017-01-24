@@ -23,7 +23,7 @@
                     <c:when test="${empty RoundGameMap}">
                         <div class="alert alert-danger">${error}</div>
                         <div class="alert alert-info"><fmt:message key="DrawsDoNotExist"/></div>
-                        <form method="POST">
+                        <form method="POST" class="ajaxify">
                             <button class="btn btn-primary btn-block unit"><fmt:message key="CreateDraws"/></button>
                         </form>
                     </c:when>
