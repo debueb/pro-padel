@@ -53,6 +53,7 @@
         
         <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet" title="project_css">
 
+        <script src="/js/noconcat/installserviceworker.js"></script>
         <c:set var="compressJS" value="${compress.js}"/>
         <c:choose>
             <c:when test="${compressJS and empty param.debug}">

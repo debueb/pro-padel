@@ -81,7 +81,9 @@ public class RootController extends BaseController{
         switch (moduleTitle){
             case PATH_HOME:
             case "netbeans-tomcat-status-test":
-                return getHomePage(); 
+                return getHomePage();
+            case "serviceworker":
+                return new ModelAndView("forward:/js/noconcat/serviceworker.js");
             default:
                 return getModuleView(moduleTitle, pageable);
         }
