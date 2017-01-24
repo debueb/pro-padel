@@ -1,0 +1,20 @@
+{
+  "name": "propadel",
+  "version": "0.0.1-SNAPSHOT",
+  "description": "",
+  "main": "./src/main/webapp/app",
+  "private": true,
+  "scripts": {
+    "watch": "webpack --watch -d",
+    "build": "webpack -p"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "2.2.0",
+    "webpack-dev-server": "2.2.0"
+  },
+  "dependencies": {
+    "jquery": "2.2.4"
+  }
+}

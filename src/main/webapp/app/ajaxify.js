@@ -1,7 +1,9 @@
 // Ajaxify
 // v1.0.1 - 30 September, 2012
 // https://github.com/browserstate/ajaxify
-(function (window, undefined) {
+var project = require('./project');
+
+(function (window) {
 
     // Prepare our Variables
     var
@@ -144,7 +146,7 @@
                 }
             });
                     
-            app.main.showSpinner();
+            project.showSpinner();
            
             // Ajax Request the Traditional Page
             $.ajax({
@@ -252,7 +254,7 @@
                     return false;
                 },
                 complete: function(){
-                    app.main.hideSpinner();
+                    project.hideSpinner();
                 }
             }); // end ajax
 

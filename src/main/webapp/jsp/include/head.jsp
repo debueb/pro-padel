@@ -51,30 +51,7 @@
         
         <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet" title="project_css">
 
-        <c:set var="compressJS" value="${compress.js}"/>
-        <c:choose>
-            <c:when test="${compressJS and empty param.debug}">
-                <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js" data-apikey="c3a3e8e773db9d46f2d51d905ead0e83"></script>
-                <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-                <script>window.jQuery || document.write('<script src="/js/noconcat/10_jquery-2.2.4.min.js">\x3C/script>');</script>
-                <script src="/js/all.min.js"></script>
-                <script src="/js/noconcat/31_datepicker-de.js"></script>
-            </c:when>
-            <c:otherwise>
-                <script src="/js/noconcat/10_jquery-2.2.4.min.js"></script>
-                <script src="/js/20_bootstrap.min.js"></script>
-                <script src="/js/25_bootstrap-select.js"></script>
-                <script src="/js/26_ajax-bootstrap-select.js"></script>
-                <script src="/js/30_jquery-ui.min.js"></script>
-                <script src="/js/40_jquery.webui-popover.min.js"></script>
-                <script src="/js/noconcat/31_datepicker-de.js"></script>
-                <script src="/js/50_slick.min.js"></script>
-                <script src="/js/80_jquery.livequery.min.js"></script>
-                <script src="/js/90_project.js"></script>
-                <script src="/js/91_jquery.history.min.js"></script>
-                <script src="/js/92_ajaxify.js"></script>
-            </c:otherwise>
-        </c:choose>
+        <script src="/app/bundle.js"></script>
                 
         <c:if test="${not empty sessionScope.customer and not empty sessionScope.customer.googleTagManagerId}">
             <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
