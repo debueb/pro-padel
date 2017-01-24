@@ -166,11 +166,12 @@ var project = {
     },
 
     enablePrivateDataLinks: function () {
+        var that = this;
         $('.private-data').livequery(function(){
             $(this).on('click tap', function () {
                 var prefix = $(this).attr('data-prefix');
                 var fake = $(this).attr('data-fake');
-                document.location.href = prefix + project.rot47(fake);
+                document.location.href = prefix + that.rot47(fake);
             });
         });
     },
