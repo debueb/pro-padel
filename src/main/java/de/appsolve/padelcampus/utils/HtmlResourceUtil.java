@@ -5,10 +5,12 @@
  */
 package de.appsolve.padelcampus.utils;
 
+import de.appsolve.padelcampus.comparators.CssAttributeComparator;
 import de.appsolve.padelcampus.comparators.PathByFileNameComparator;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.data.CustomerI;
 import de.appsolve.padelcampus.db.dao.CssAttributeBaseDAOI;
+import de.appsolve.padelcampus.db.dao.CssAttributeDAOI;
 import de.appsolve.padelcampus.db.dao.CustomerDAOI;
 import de.appsolve.padelcampus.db.model.CssAttribute;
 import de.appsolve.padelcampus.db.model.Customer;
@@ -55,6 +57,9 @@ public class HtmlResourceUtil {
     
     @Autowired
     CustomerDAOI customerDAO;
+    
+    @Autowired
+    CssAttributeDAOI cssAttributeDAO;
     
     @Autowired
     CssAttributeBaseDAOI cssAttributeBaseDAO;
@@ -273,5 +278,25 @@ public class HtmlResourceUtil {
         att.setCssDefaultValue(cssDefaultValue);
         att.setCssValue(cssValue);
         return att;
+    }
+
+    public List<CssAttribute> getCssAttributes() {
+        List<CssAttribute> cssAttributes = cssAttributeDAO.findAll();
+        List<CssAttribute> defaultCssAttributes = getDefaultCssAttributes();
+        for (CssAttribute defaultAttribute: defaultCssAttributes){
+            boolean exists = false;
+            for (CssAttribute att: cssAttributes){
+                if (att.getName().equals(defaultAttribute.getName())){
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists){
+                cssAttributes.add(defaultAttribute);
+            }
+        }
+        
+        Collections.sort(cssAttributes, new CssAttributeComparator());
+        return cssAttributes;
     }
 }

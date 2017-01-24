@@ -65,7 +65,7 @@ public class AdminGeneralDesignController extends BaseController{
     
     @RequestMapping()
     public ModelAndView getIndex() {
-        return getIndexView(getCssAttributes());
+        return getIndexView(htmlResourceUtil.getCssAttributes());
     }
     
     @RequestMapping(method = POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -77,7 +77,7 @@ public class AdminGeneralDesignController extends BaseController{
             @RequestParam(value = "loaderOpacity", required = false, defaultValue = "false") Boolean loaderOpacity, 
             @RequestParam("companyLogo") MultipartFile companyLogo, 
             @RequestParam("touchIcon") MultipartFile touchIcon) throws Exception {
-        List<CssAttribute> atts = getCssAttributes();
+        List<CssAttribute> atts = htmlResourceUtil.getCssAttributes();
         for (CssAttribute att: atts){
             switch (att.getName()){
                 case "backgroundImage":
@@ -148,26 +148,6 @@ public class AdminGeneralDesignController extends BaseController{
     private ModelAndView getIndexView(List<CssAttribute> colors) {
         ModelAndView mav = new ModelAndView("admin/general/design/index", "Colors", colors);
         return mav;
-    }
-
-    private List<CssAttribute> getCssAttributes() {
-        List<CssAttribute> cssAttributes = cssAttributeDAO.findAll();
-        List<CssAttribute> defaultCssAttributes = htmlResourceUtil.getDefaultCssAttributes();
-        for (CssAttribute defaultAttribute: defaultCssAttributes){
-            boolean exists = false;
-            for (CssAttribute att: cssAttributes){
-                if (att.getName().equals(defaultAttribute.getName())){
-                    exists = true;
-                    break;
-                }
-            }
-            if (!exists){
-                cssAttributes.add(defaultAttribute);
-            }
-        }
-        
-        Collections.sort(cssAttributes, new CssAttributeComparator());
-        return cssAttributes;
     }
 
     private void deleteImage(Image image) {

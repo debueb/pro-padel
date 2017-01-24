@@ -49,8 +49,11 @@
         <link rel="apple-touch-icon" href="${sessionScope.customer.touchIconPath}">
         <link rel="icon" sizes="192x192" href="${sessionScope.customer.touchIconPath}">
         
+        <link rel="manifest" href="/manifest/manifest.json">
+        
         <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet" title="project_css">
 
+        <script src="/js/noconcat/installserviceworker.js"></script>
         <c:set var="compressJS" value="${compress.js}"/>
         <c:choose>
             <c:when test="${compressJS and empty param.debug}">
