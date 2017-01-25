@@ -138,12 +138,7 @@ public class BookingsPayPalController extends BookingsPaymentController{
     
     private APIContext getApiContext() throws PayPalRESTException{
         PayPalConfig config = payPalConfigDAO.findFirst();
-        Map<String, String> sdkConfig = new HashMap<>();
-        sdkConfig.put("service.EndPoint", config.getPayPalEndpoint().getUrl());
-        
-        String accessToken = new OAuthTokenCredential(config.getClientId(), config.getClientSecret(), sdkConfig).getAccessToken();
-        APIContext apiContext = new APIContext(accessToken);
-        apiContext.setConfigurationMap(sdkConfig);
+        APIContext apiContext = new APIContext(config.getClientId(), config.getClientSecret(), config.getPayPalEndpoint().getMode());
         return apiContext;
     }
 }
