@@ -105,7 +105,7 @@ public class AdminGeneralModulesController extends AdminBaseController<Module> {
     
     @Override
     public ModelAndView showIndex(HttpServletRequest request, Pageable pageable, @RequestParam(required = false, name = "search") String search){
-        Page<Module> all = new PageImpl(moduleDAO.findAllRootModules());
+        Page<Module> all = new PageImpl<>(moduleDAO.findAllRootModules());
         return getIndexView(all);
     }
     

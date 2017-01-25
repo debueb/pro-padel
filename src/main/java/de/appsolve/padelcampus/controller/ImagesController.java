@@ -68,7 +68,7 @@ public class ImagesController extends BaseController{
             return builder.body(byteArray);
         }
         LOG.warn(String.format("Unable to display image %s", sha256));
-        return new ResponseEntity(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     
     @ResponseBody

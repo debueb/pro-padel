@@ -19,8 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class BookingBaseDAO extends BaseEntityDAO<Booking> implements BookingBaseDAOI{
 
-   @Override
-   @SuppressWarnings("unchecked")
+    @Override
+    @SuppressWarnings("unchecked")
     public List<Booking> findUnpaidBlockingBookings() {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.isNotNull("blockingTime"));
@@ -39,6 +39,7 @@ public class BookingBaseDAO extends BaseEntityDAO<Booking> implements BookingBas
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Booking> findCurrentBookingsWithOfferOptions(LocalDate date, LocalTime time) {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.eq("bookingDate", date));

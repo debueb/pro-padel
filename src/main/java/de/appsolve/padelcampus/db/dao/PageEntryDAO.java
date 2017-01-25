@@ -38,7 +38,7 @@ public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEnt
         countCriteria.setProjection(Projections.rowCount());
         Long rowCount = (Long) countCriteria.uniqueResult();
         if (rowCount == 0L){
-            return new PageImpl(new ArrayList<>(), pageable, rowCount);
+            return new PageImpl<>(new ArrayList<PageEntry>(), pageable, rowCount);
         }
         
         Criteria criteria = getCriteria();
@@ -54,11 +54,12 @@ public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEnt
         c.add(Restrictions.eq("module", module));
         c.add(Restrictions.in("id", list));
         c.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        @SuppressWarnings("unchecked")
         List<PageEntry> pageEntries = c.list();
         sort(pageEntries);
         
         
-        Page<PageEntry> page = new PageImpl(pageEntries, pageable, rowCount);
+        Page<PageEntry> page = new PageImpl<>(pageEntries, pageable, rowCount);
         return page;
     }
 }

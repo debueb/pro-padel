@@ -92,6 +92,7 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public List<Player> findPlayersRegisteredForEmails() {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.isNotNull("passwordHash"));

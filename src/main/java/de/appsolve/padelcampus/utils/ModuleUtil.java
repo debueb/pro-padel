@@ -63,10 +63,11 @@ public class ModuleUtil {
     }
 
     private Collection<Module> getCustomerModules(HttpServletRequest request) {
+        @SuppressWarnings("unchecked")
         Map<String, List<Module>> customerModules = (Map<String, List<Module>>) request.getServletContext().getAttribute(Constants.APPLICATION_CUSTOMER_MODULES);
         CustomerI customer = sessionUtil.getCustomer(request);
         if (customer == null){
-            return Collections.EMPTY_LIST;
+            return Collections.<Module>emptyList();
         }
         return customerModules.get(customer.getName());
     }

@@ -68,6 +68,7 @@ public class Mail {
         return recipients == null ? new HashSet<EmailContact>() : recipients;
     }
 
+    @SuppressWarnings("unchecked")
     public void setRecipients(Set<? extends EmailContact> contacts) {
         this.recipients = (Set<EmailContact>) contacts;
     }

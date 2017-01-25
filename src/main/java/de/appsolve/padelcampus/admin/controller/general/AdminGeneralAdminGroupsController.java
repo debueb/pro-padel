@@ -94,7 +94,7 @@ public class AdminGeneralAdminGroupsController extends AdminBaseController<Admin
         if (result.hasErrors()){
             return getEditView(model);
         }
-        getDAO().saveOrUpdate(model);
+        adminGroupDAO.saveOrUpdate(model);
         return redirectToIndex(request);
     }
 
