@@ -199,23 +199,13 @@ var project = {
             if (isOpen()) {
                 $('#site-shadow').fadeOut(300);
                 // close side menu
-                if (navigator.userAgent.match(/iemobile/i)) {
-                    $('#site-canvas, #site-shadow, .footer').removeClass('show-nav');
-                    $('#site-menu').css('right', '');
-                } else {
-                    $('#site-canvas, #site-shadow, #site-menu, .footer').removeClass('show-nav');
-                }
+                $('#site-canvas, #site-shadow, #site-menu, .footer').removeClass('show-nav');
                 // reenable scrolling of content
                 $('#site-shadow').off('touchmove');
             } else {
                 $('#site-shadow').fadeIn(300);
                 // open side menu
-                if (navigator.userAgent.match(/iemobile/i)) {
-                    $('#site-canvas, #site-shadow, .footer').addClass('show-nav');
-                    $('#site-menu').css('right', '0px');
-                } else {
-                    $('#site-canvas, #site-shadow, #site-menu, .footer').addClass('show-nav');
-                }
+                $('#site-canvas, #site-shadow, #site-menu, .footer').addClass('show-nav');
                 // prevent scrolling of content when interacting with site menu
                 $('#site-shadow').on('touchmove', function(e) {e.preventDefault();});
             }
