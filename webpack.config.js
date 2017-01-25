@@ -17,5 +17,7 @@ module.exports = {
     output: {
         path: PATHS.build,
         filename: 'bundle.js'
-    }
+    },
+
+    devtool: "source-map"
 };
