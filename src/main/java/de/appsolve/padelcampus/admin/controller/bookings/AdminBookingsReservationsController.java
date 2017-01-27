@@ -255,6 +255,9 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     @RequestMapping(method = GET, value="booking/{bookingId}")
     public ModelAndView getEditBooking(@PathVariable("bookingId") Long bookingId){
         Booking booking = bookingDAO.findById(bookingId);
+        if (booking == null){
+            return new ModelAndView("admin/bookings/reservations/notfound");
+        }
         ReservationRequest request = getReservationRequestFromBooking(booking);
         return getEditView(request);
     }
