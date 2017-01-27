@@ -55,5 +55,12 @@
             ga('send', 'pageview');
         </script>
     </c:if>
+    <script type="text/javascript">
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/serviceworker.js');
+            });
+        }
+    </script>
     </body>
 </html>

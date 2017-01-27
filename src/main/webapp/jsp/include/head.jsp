@@ -53,7 +53,6 @@
         
         <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet" title="project_css">
 
-        <script src="/js/noconcat/installserviceworker.js"></script>
         <script src="/app/dist/bundle.js"></script>
                 
         <c:if test="${not empty sessionScope.customer and not empty sessionScope.customer.googleTagManagerId}">
