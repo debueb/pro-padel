@@ -68,7 +68,6 @@ public class RootController extends BaseController{
                     mav.addObject("Module", landingPageModule);
                     mav.addObject("PageEntries", rootEntries);
                     mav.addObject("skipNavbar", true);
-                    mav.addObject("skipFooter", true);
                     return mav;
                 }
             }
