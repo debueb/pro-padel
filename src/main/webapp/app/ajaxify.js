@@ -162,15 +162,16 @@ var project = require('./project');
                             contentHtml, $scripts;
 
                     //remove Google Analytics script
-                    $dataContent.find('.document-script[data-id="ga"]').detach();
+                    $dataContent.find('.document-script[data-ajaxify="false"]').detach();
 
                     // Fetch the scripts
-                    $scripts = $dataContent.find('.document-script').filter(function(){
-                        var type = $(this).attr('type');
-                        return !type || type === 'text/javascript';
-                    });
+                    $scripts = $dataContent.find('.document-script');
                     if ($scripts.length) {
                         $scripts.detach();
+                        $scripts = $scripts.filter(function(){
+                            var type = $(this).attr('type');
+                            return !type || type === 'text/javascript';
+                        });
                     }
                     
                     // Fetch the content
