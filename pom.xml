@@ -79,7 +79,7 @@
             <artifactId>flyway-core</artifactId>
             <version>4.0</version>
         </dependency>
-        <!-- support for resiging images via Java -->
+        <!-- support for resizing images via Java -->
         <dependency>
             <groupId>org.imgscalr</groupId>
             <artifactId>imgscalr-lib</artifactId>
