@@ -107,6 +107,11 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         
         //we also need the total number of rows
         Criteria rowCountCritieria = getCriteria();
+        if (criterions != null){
+            for (Criterion c: criterions) {
+                rowCountCritieria.add(c);
+            }
+        }
         rowCountCritieria.setProjection(Projections.rowCount());
         Long resultCount = (Long)rowCountCritieria.uniqueResult();
         if (resultCount == null){
@@ -306,7 +311,6 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         addOrderBy(criteria, pageable);
         criteria.setFirstResult(pageable.getPageNumber()*pageable.getPageSize());
         criteria.setMaxResults(pageable.getPageSize());
-        
         return criteria;
     }
 
