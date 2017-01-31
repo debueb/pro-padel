@@ -23,11 +23,6 @@
                     <div class="alert alert-danger"><spf:errors path="*" cssClass="error"/></div>
                     <spf:input path="id" type="hidden"/>
                     <jsp:include page="/jsp/include/player-input.jsp"/>
-                    <fmt:message key="ExpertsOnly"/>
-                    <div class="relative">
-                        <spf:input path="initialRanking" type="number" class="form-control"/>
-                        <div class="explanation"><fmt:message key="InitialEloRanking"/></div>
-                    </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
                 </spf:form>
             </div>

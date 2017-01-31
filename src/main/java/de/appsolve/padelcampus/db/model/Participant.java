@@ -54,7 +54,7 @@ public abstract class Participant extends ComparableEntity implements Participan
     }
     
     public Integer getInitialRanking(){
-        return initialRanking == null ? 1300 : initialRanking;
+        return 1300;
     }
     
     public BigDecimal getInitialRankingAsBigDecimal(){
