@@ -20,8 +20,8 @@ import de.appsolve.padelcampus.exceptions.MailException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -39,6 +39,8 @@ public class MailUtils {
     
     @Autowired
     Environment environment;
+    
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(".+@.+\\.[a-zA-Z]{2,}");
     
     public void send(Mail mail, HttpServletRequest request) throws MailException, IOException {
         
@@ -60,7 +62,7 @@ public class MailUtils {
 
             List<RecipientAttributes> recipientArray = new ArrayList<>();
             for (EmailContact contact: mail.getRecipients()) {
-                if (EmailValidator.getInstance(false, true).isValid(contact.getEmailAddress())){
+                if (EMAIL_PATTERN.matcher(contact.getEmailAddress()).matches()){
                     RecipientAttributes recipientAttribs = new RecipientAttributes();
                     recipientAttribs.setAddress(new AddressAttributes(contact.getEmailAddress()));
                     recipientArray.add(recipientAttribs);
