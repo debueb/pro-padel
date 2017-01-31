@@ -74,16 +74,6 @@ public class RankingController extends BaseController {
             default:
                 throw new NotImplementedException("unsupported category");
         }
-        if (rankings != null){
-            Iterator<Map.Entry<Participant, BigDecimal>> iterator = rankings.entrySet().iterator();
-            while (iterator.hasNext()){
-                Map.Entry<Participant, BigDecimal> entry = iterator.next();
-                Participant p = entry.getKey();
-                BigDecimal ranking = entry.getValue();
-                ranking = rankingUtil.rankingString(ranking);
-                rankings.put(p, ranking);
-            }
-        }
         if (participantUUID != null){
             Participant participant = participantDAO.findByUUID(participantUUID);
             mav.addObject("SelectedParticipant", participant);

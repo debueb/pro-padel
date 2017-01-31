@@ -25,6 +25,7 @@
                                 </thead>
                                 <tbody>
                                     <c:set var="req" value="${pageContext.request}" />
+                                    <fmt:parseNumber value="100"  var="hundred" />
                                     <c:forEach var="Ranking" items="${Rankings}" varStatus="status">
                                         <c:set var="Participant" value="${Ranking.key}"/>
                                         <c:set var="RowClass" value="${not empty SelectedParticipant and Participant eq SelectedParticipant ? 'selected-participant' : ''}"/>
@@ -34,7 +35,10 @@
                                         <tr>
                                             <td class="text-center ${RowClass}">${status.index+1}</td>
                                             <td class="${RowClass}"><a href="${hostPrefix}${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}" class="ajaxify">${Participant}</a></td>
-                                            <td class="text-center ${RowClass}"><fmt:formatNumber value="${Ranking.value}" minFractionDigits="2" maxFractionDigits="2"/></td>
+                                            <td class="text-center ${RowClass}">
+                                                <fmt:parseNumber value="${Ranking.value}" var="rankingValue" />
+                                                <fmt:formatNumber value="${rankingValue/hundred}" minFractionDigits="2" maxFractionDigits="2"/>
+                                            </td>
                                         </tr>
                                     </c:forEach>
                                 </tbody>
@@ -44,10 +48,7 @@
                 </c:choose>
             </div>
         </div>
-
-
         <jsp:include page="/jsp/ranking/include/links.jsp"/>
-
     </div>
 </div>
 

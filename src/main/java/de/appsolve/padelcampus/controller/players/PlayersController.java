@@ -125,9 +125,8 @@ public class PlayersController extends BaseController {
             throw new ResourceNotFoundException();
         }
         SortedMap<Participant, BigDecimal> ranking = rankingUtil.getRanking(player.getGender());
-        BigDecimal playerRanking = ranking.get(player);
         ModelAndView mav = new ModelAndView("players/player", "Player", player);
-        mav.addObject("RankingValue", rankingUtil.rankingString(playerRanking));
+        mav.addObject("RankingValue", ranking.get(player));
         return mav;
     }
 }

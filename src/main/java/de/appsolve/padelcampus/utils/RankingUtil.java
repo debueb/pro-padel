@@ -56,8 +56,6 @@ public class RankingUtil {
     private static final BigDecimal ELO_K_FACTOR = new BigDecimal("32");
 
     private static final BigDecimal ELO_MAGIC_NUMBER = new BigDecimal("400");
-    
-    private static final BigDecimal ONE_HUNDRED = new BigDecimal("100");
 
     private SortedMap<Participant, BigDecimal> rankingMap;
 
@@ -369,12 +367,5 @@ public class RankingUtil {
         date = date.minusDays(ELO_MAX_DAYS);
         List<Game> games = gameDAO.findAllYoungerThanForGenderWithPlayers(date, gender);
         return games;
-    }
-    
-    public BigDecimal rankingString(BigDecimal ranking){
-        if (ranking == null){
-            return null;
-        }
-        return ranking.divide(ONE_HUNDRED);
     }
 }
