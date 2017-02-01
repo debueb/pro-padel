@@ -53,6 +53,7 @@
         
         <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet" title="project_css">
 
+        <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js" data-apikey="c3a3e8e773db9d46f2d51d905ead0e83"></script>
         <script src="/app/dist/bundle.js"></script>
                 
         <c:if test="${not empty sessionScope.customer and not empty sessionScope.customer.googleTagManagerId}">
