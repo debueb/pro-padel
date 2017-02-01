@@ -8,7 +8,7 @@ This repository contains the source code for the padel club managment software b
 ## technologies used
 - [Maven](https://maven.apache.org/) - Java dependency managment and build process
 - [webpack](https://webpack.js.org) - Javascript minification and bundling
-- [Spring](https://spring.io/) - excellent Backend framework for 
+- [Spring](https://spring.io/) - excellent backend framework 
 - [Hibernate](http://hibernate.org/) - object relational mapper
 - [MySQL](https://www.mysql.com/)  - relational database
 - [sparkpost](http://sparkpost.com) - mail relay service
