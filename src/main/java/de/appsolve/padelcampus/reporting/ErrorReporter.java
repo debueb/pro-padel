@@ -32,16 +32,18 @@ public class ErrorReporter {
     public void notify(Throwable ex){
         boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
         if (!isDebug){
-            if (ex.getCause() == null || !IGNORED_EXCEPTION_CLASS_NAMES.contains(ex.getCause().getClass().getSimpleName())){
-                ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-                //log all errors when we don't have a request context, e.g. for scheduled tasks etc
-                if (attr == null || attr.getRequest() == null){
-                    bugsnag.notify(ex);
-                } else {
-                    //if we have a request context, ignore bot requests
-                    String userAgent = attr.getRequest().getHeader(HttpHeaders.USER_AGENT);
-                    if (!StringUtils.isEmpty(userAgent) && !IGNORED_USER_AGENT_PATTERN.matcher(userAgent).matches()){
+            if (ex != null && !IGNORED_EXCEPTION_CLASS_NAMES.contains(ex.getClass().getSimpleName())){
+                if (ex.getCause() == null || !IGNORED_EXCEPTION_CLASS_NAMES.contains(ex.getCause().getClass().getSimpleName())){
+                    ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+                    //log all errors when we don't have a request context, e.g. for scheduled tasks etc
+                    if (attr == null || attr.getRequest() == null){
                         bugsnag.notify(ex);
+                    } else {
+                        //if we have a request context, ignore bot requests
+                        String userAgent = attr.getRequest().getHeader(HttpHeaders.USER_AGENT);
+                        if (!StringUtils.isEmpty(userAgent) && !IGNORED_USER_AGENT_PATTERN.matcher(userAgent).matches()){
+                            bugsnag.notify(ex);
+                        }
                     }
                 }
             }
