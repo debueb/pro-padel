@@ -23,7 +23,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Component
 public class ErrorReporter {
     
-    private static final Pattern IGNORED_USER_AGENT_PATTERN         = Pattern.compile(".*(tinfoilsecurity|Googlebot|bingbot|AhrefsBot).*");
+    private static final Pattern IGNORED_USER_AGENT_PATTERN         = Pattern.compile(".*(tinfoilsecurity|Googlebot|bingbot|AhrefsBot|facebookexternalhit).*");
     private static final Set<String> IGNORED_EXCEPTION_CLASS_NAMES  = Sets.newHashSet("ClientAbortException");
     
     @Autowired
