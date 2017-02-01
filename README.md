@@ -50,7 +50,7 @@ export OPENSHIFT_PASSWORD=[OPENSHIFT ONLINE PASSWORD]
 ### keeping js up to date during development
 - install node
 - install npm
-- run `npm run watch` to have webpack watch, bundle, and map your javascript files after every edit
+- run `npm run watch` to have webpack create your bundle.js and bundle.map.js after editing any of the javascript source files
 
 ## deployment instructions
 - install node
