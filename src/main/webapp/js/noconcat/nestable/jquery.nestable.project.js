@@ -8,7 +8,6 @@ $(document).ready(function () {
     
     $('.dd').on('change', function(event) {
         var items = $('.dd').nestable('serialize');
-        app.main.showSpinner();
         $.ajax({
             url: window.location.pathname+'/updateposition',
             type: 'POST',
@@ -21,9 +20,6 @@ $(document).ready(function () {
                 console.log(textStatus);
                 console.log(errorThrown);
                 alert("Saving failed. Please reload page to see current state.");
-            },
-            complete: function(){
-                app.main.hideSpinner();
             }
         });
     });
