@@ -53,7 +53,7 @@ public class AdminReportsAllocationController extends BaseController{
     
     private ModelAndView getBookingsView(LocalDate date) throws JsonProcessingException {
         ModelAndView mav = new ModelAndView("admin/reports/allocations/index");
-        bookingUtil.addWeekView(date, facilityDAO.findAll(), mav, false);
+        bookingUtil.addWeekView(date, facilityDAO.findAll(), mav, false, false);
         return mav;
     }
 }

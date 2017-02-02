@@ -442,7 +442,7 @@ public class BookingsController extends BaseController {
         LocalDate selectedDate = DATE_HUMAN_READABLE.parseLocalDate(day);
         ModelAndView indexView = new ModelAndView("bookings/index");
         indexView.addObject("Module", moduleUtil.getCustomerModule(request, ModuleType.Bookings));
-        bookingUtil.addWeekView(selectedDate, facilities, indexView, true);       
+        bookingUtil.addWeekView(selectedDate, facilities, indexView, true, true);       
         return indexView;
     }
 

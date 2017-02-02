@@ -279,7 +279,7 @@ public class BookingUtil {
         return UUID.randomUUID().toString();
     }
 
-    public void addWeekView(LocalDate selectedDate, List<Facility> selectedFacilities, ModelAndView mav, Boolean preventOverlapping) throws JsonProcessingException {
+    public void addWeekView(LocalDate selectedDate, List<Facility> selectedFacilities, ModelAndView mav, Boolean onlyFutureTimeSlots, Boolean preventOverlapping) throws JsonProcessingException {
         //calculate date configuration for datepicker
         LocalDate today = new LocalDate(DEFAULT_TIMEZONE);
         LocalDate firstDay = today.dayOfMonth().withMinimumValue();
@@ -299,7 +299,7 @@ public class BookingUtil {
             if (!date.isBefore(new LocalDate())){
                 try {
                     //generate list of bookable time slots
-                    timeSlots.addAll(getTimeSlotsForDate(date, calendarConfigs, confirmedBookings, true, preventOverlapping));
+                    timeSlots.addAll(getTimeSlotsForDate(date, calendarConfigs, confirmedBookings, onlyFutureTimeSlots, preventOverlapping));
                 } catch (CalendarConfigException e){
                     //safe to ignore
                 }
