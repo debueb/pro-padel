@@ -1,3 +1,10 @@
+var destroyTinyMce = function(){
+    for (var i = tinymce.editors.length - 1 ; i > -1 ; i--) {
+        var ed_id = tinymce.editors[i].id;
+        tinyMCE.execCommand("mceRemoveEditor", true, ed_id);
+    }
+};
+
 var initTinyMce = function () {
     
     var cssLinks =  $('link[title="project_css"]').map(function(i, link) {
@@ -103,5 +110,6 @@ var initTinyMce = function () {
     });
 };
 
-$(window).on('statechangecomplete', initTinyMce());
+$(window).on('statechange', destroyTinyMce);
+$(window).on('statechangecomplete', initTinyMce);
 $(document).ready(initTinyMce()); 
