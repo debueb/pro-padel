@@ -7,7 +7,6 @@
 package de.appsolve.padelcampus.admin.controller.general;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
-import static de.appsolve.padelcampus.constants.Constants.PATH_HOME;
 import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.data.NestableItem;
 import de.appsolve.padelcampus.db.dao.EventGroupDAOI;
@@ -25,6 +24,7 @@ import de.appsolve.padelcampus.utils.ModuleUtil;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +41,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -138,6 +139,18 @@ public class AdminGeneralModulesController extends AdminBaseController<Module> {
             model.setShowOnHomepage(Boolean.FALSE);
             model.setShowInMenu(Boolean.FALSE);
             model.setShowInFooter(Boolean.FALSE);
+        }
+        if (model.getModuleType().equals(ModuleType.Events) && model.getEventGroups() != null){
+            List<Module> eventModules = moduleDAO.findByModuleType(ModuleType.Events);
+            eventModules.remove(model);
+            for (Module existingModule: eventModules){
+                if (existingModule.getEventGroups()!=null){
+                    if (!Collections.disjoint(existingModule.getEventGroups(), model.getEventGroups())){
+                        result.addError(new ObjectError("*", msg.get("EventGroupIsAlreadyAssociatedWith", new Object[]{existingModule.getTitle()})));
+                        break;
+                    }
+                }
+            }
         }
         checkTitleRequirements(model, result);
         if (result.hasErrors()){
