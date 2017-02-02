@@ -6,12 +6,14 @@
         <div class="page-header"></div>
 
         <div class="panel panel-info unit">
-            <div class="panel-heading"><h4><fmt:message key="BookCourt"/></h4></div>
+            <div class="panel-heading"><h4><fmt:message key="ConfirmBooking"/></h4></div>
             <div class="panel-body">
                 <spf:form method="POST" class="${Booking.paymentMethod == 'PayPal' ? '' : 'ajaxify'}" modelAttribute="Booking">
                     <div class="alert alert-danger">${error}</div>
+                    <c:if test="${empty error}">
+                        <div class="alert alert-danger"><fmt:message key="AcceptPolicyToConfirmBooking"/></div>
+                    </c:if>
                     <h4><fmt:message key="BookingData"/></h4>
-
                     <jsp:include page="include/booking-data.jsp"/>
 
                     <hr>
