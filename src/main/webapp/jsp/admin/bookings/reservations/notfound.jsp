@@ -9,12 +9,12 @@
             <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
             <li><a class="ajaxify" href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
             <li><a class="ajaxify" href="/admin/bookings/reservations"><fmt:message key="BookingsAndReservations"/></a></li>
-            <li class="active"><fmt:message key="EditBooking"/></li>
+            <li class="active"><fmt:message key="Booking"/></li>
         </ol>
 
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4><fmt:message key="EditBooking"/></h4>
+                <h4><fmt:message key="Booking"/></h4>
             </div>
             <div class="panel-body">
                 <div class="alert alert-danger"><fmt:message key="BookingDoesNotExist"/></div>
