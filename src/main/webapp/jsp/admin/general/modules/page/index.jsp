@@ -5,10 +5,10 @@
         <jsp:include page="/jsp/include/back.jsp"/>
         
         <ol class="unit-2 breadcrumb">
-            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a href="/admin/general"><fmt:message key="General"/></a></li>
-            <li><a href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
-            <li><a href="/admin/general/modules/edit/${Module.id}">${Module.title}</a></li>
+            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a class="ajaxify" href="/admin/general"><fmt:message key="General"/></a></li>
+            <li><a class="ajaxify" href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
+            <li><a class="ajaxify" href="/admin/general/modules/edit/${Module.id}">${Module.title}</a></li>
             <li class="active"><fmt:message key="Entries"/></li>
         </ol>
         

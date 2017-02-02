@@ -9,9 +9,9 @@
         <fmt:message var="EditModule" key="EditModule"/>
                 
         <ol class="unit-2 breadcrumb">
-            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a href="/admin/general"><fmt:message key="General"/></a></li>
-            <li><a href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
+            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a class="ajaxify" href="/admin/general"><fmt:message key="General"/></a></li>
+            <li><a class="ajaxify" href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
             <li class="active">${empty Model.id ? AddModule : EditModule}</li>
         </ol>
         

@@ -8,11 +8,11 @@
         <fmt:message var="EditEntry" key="EditEntry"/>
                 
         <ol class="unit-2 breadcrumb">
-            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a href="/admin/general"><fmt:message key="General"/></a></li>
-            <li><a href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
-            <li><a href="/admin/general/modules/edit/${Parent.id}">${Parent.title}</a></li>
-            <li><a href="/admin/general/modules/page/${Parent.id}"><fmt:message key="Entries"/></a></li>
+            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a class="ajaxify" href="/admin/general"><fmt:message key="General"/></a></li>
+            <li><a class="ajaxify" href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
+            <li><a class="ajaxify" href="/admin/general/modules/edit/${Parent.id}">${Parent.title}</a></li>
+            <li><a class="ajaxify" href="/admin/general/modules/page/${Parent.id}"><fmt:message key="Entries"/></a></li>
             <li class="active">${empty Model.id ? AddEntry : EditEntry}</li>
         </ol>
 
