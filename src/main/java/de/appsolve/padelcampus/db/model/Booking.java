@@ -132,6 +132,9 @@ public class Booking extends CustomerEntity{
     @Column
     private Boolean publicBooking;
     
+    @Column
+    private String paypalPaymentId;
+    
     public Player getPlayer() {
         return player;
     }
@@ -322,6 +325,14 @@ public class Booking extends CustomerEntity{
 
     public void setOfferOptions(Set<OfferOption> offerOptions) {
         this.offerOptions = offerOptions;
+    }
+
+    public String getPaypalPaymentId() {
+        return paypalPaymentId;
+    }
+
+    public void setPaypalPaymentId(String paypalPaymentId) {
+        this.paypalPaymentId = paypalPaymentId;
     }
 
     @Override

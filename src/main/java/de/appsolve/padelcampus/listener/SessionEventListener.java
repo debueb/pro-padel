@@ -5,9 +5,13 @@
  */
 package de.appsolve.padelcampus.listener;
 
+import com.paypal.api.payments.Payment;
+import com.paypal.base.rest.APIContext;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.db.dao.BookingBaseDAOI;
+import de.appsolve.padelcampus.db.dao.PayPalConfigBaseDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
+import de.appsolve.padelcampus.db.model.PayPalConfig;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.util.EnumSet;
 import java.util.List;
@@ -15,6 +19,7 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +34,13 @@ public class SessionEventListener implements HttpSessionListener{
     Logger LOG = Logger.getLogger(SessionEventListener.class);
     
     @Autowired
+    SessionUtil sessionUtil;
+    
+    @Autowired
     BookingBaseDAOI bookingBaseDAO;
     
     @Autowired
-    SessionUtil sessionUtil;
+    PayPalConfigBaseDAOI payPalConfigBaseDAO;
     
     private static final Set<PaymentMethod> PAYMENT_METHODS_THAT_DO_NOT_REQUIRE_PAYMENT = EnumSet.of(PaymentMethod.Cash, PaymentMethod.Reservation);
         
@@ -66,8 +74,25 @@ public class SessionEventListener implements HttpSessionListener{
         if (booking.getPaymentMethod() == null || (!PAYMENT_METHODS_THAT_DO_NOT_REQUIRE_PAYMENT.contains(booking.getPaymentMethod()) && !booking.getPaymentConfirmed())){
             LocalDateTime blockingTime = booking.getBlockingTime();
             if (blockingTime!=null && blockingTime.isBefore(maxAge)){
-                LOG.info("Cancelling booking [user="+booking.getPlayer().toString()+", date="+booking.getBookingDate()+", time="+booking.getBookingTime()+"] due to session timeout");
-                bookingBaseDAO.cancelBooking(booking);
+                if (booking.getPaymentMethod().equals(PaymentMethod.PayPal) && !StringUtils.isEmpty(booking.getPaypalPaymentId())){
+                    try {
+                        Payment payment = Payment.get(getApiContext(booking), booking.getPaypalPaymentId());
+                        if (payment.getState() == null || !payment.getState().equals("approved")){
+                            LOG.info("Cancelling paypal booking [UUID:"+booking.getUUID()+", user="+booking.getPlayer().toString()+", date="+booking.getBookingDate()+", time="+booking.getBookingTime()+", payment state="+payment.getState()+"] due to session timeout");
+                            bookingBaseDAO.cancelBooking(booking);
+                        } else {
+                            LOG.info("Fixing paypal booking [UUID:"+booking.getUUID()+", user="+booking.getPlayer().toString()+", date="+booking.getBookingDate()+", time="+booking.getBookingTime()+", PayPal Payment ID:"+booking.getPaypalPaymentId()+"] that is approved by paypal but is not confirmed as paid, most likely to failed redirect from paypal to our system after successful payment");
+                            booking.setConfirmed(Boolean.TRUE);
+                            booking.setPaymentConfirmed(Boolean.TRUE);
+                            bookingBaseDAO.saveOrUpdate(booking);
+                        }
+                    } catch (Exception e){
+                        LOG.error(e);
+                    }
+                } else {
+                    LOG.info("Cancelling booking [user="+booking.getPlayer().toString()+", date="+booking.getBookingDate()+", time="+booking.getBookingTime()+", paymentMethod="+booking.getPaymentMethod()+"] due to session timeout");
+                    bookingBaseDAO.cancelBooking(booking);
+                }
             }
         }
     }
@@ -76,5 +101,14 @@ public class SessionEventListener implements HttpSessionListener{
         if (sessionUtil == null){
             WebApplicationContextUtils.getWebApplicationContext(servletContext).getAutowireCapableBeanFactory().autowireBean(this);
         }
+    }
+    
+    private APIContext getApiContext(Booking booking) throws Exception{
+        PayPalConfig config = payPalConfigBaseDAO.findByCustomer(booking.getCustomer());
+        if (config == null){
+            throw new Exception("No PayPal config found");
+        }
+        APIContext apiContext = new APIContext(config.getClientId(), config.getClientSecret(), config.getPayPalEndpoint().getMode());
+        return apiContext;
     }
 }

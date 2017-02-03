@@ -90,6 +90,8 @@ public class BookingsPayPalController extends BookingsPaymentController{
         
         Payment createdPayment = payment.create(apiContext);
         LOG.info("Created PayPal payment with id = "+ createdPayment.getId() + " and status = "+ createdPayment.getState());
+        booking.setPaypalPaymentId(createdPayment.getId());
+        bookingDAO.saveOrUpdate(booking);
         
         //TODO check payment state
         Iterator<Links> links = createdPayment.getLinks().iterator();
@@ -122,8 +124,7 @@ public class BookingsPayPalController extends BookingsPaymentController{
             LOG.info("Approved PayPal payment with id = "+ payment.getId());
             booking.setPaymentConfirmed(true);
             bookingDAO.saveOrUpdate(booking);
-            LOG.info("Booking payment confirmed: "+booking.getPaymentConfirmed());
-            LOG.info("Booking payment confirmed: "+bookingDAO.findByUUID(UUID).getPaymentConfirmed());
+            
             return BookingsController.getRedirectToSuccessView(booking);
         } catch (Exception e){
             LOG.error("Error while executing paypal payment", e);
