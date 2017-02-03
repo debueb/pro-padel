@@ -91,7 +91,7 @@ public class TestEventBookingPullRoundRobin extends TestEventBookingBase {
         mockMvc.perform(get("/events/bookings/"+event.getId()+"/participate"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("include/loginrequired"))
-                .andExpect(model().attribute("redirectURL", "/events/bookings/1/participate"));
+                .andExpect(model().attribute("redirectURL", "/events/bookings/"+event.getId()+"/participate"));
         
         login(player1, event);
         participate(event);
