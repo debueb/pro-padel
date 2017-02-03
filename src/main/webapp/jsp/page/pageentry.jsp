@@ -2,7 +2,8 @@
 <div class="row pageentry relative">
     <c:if test="${not PageEntry.fullWidth}"><div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2 relative"></c:if>
     <c:if test="${fn:contains(sessionScope.privileges,'ManageGeneral')}">
-       <a class="ajaxify edit-page" href="/admin/general/modules/page/${Module.id}/edit/${PageEntry.id}"><i class="fa fa-edit"></i></a>
+        <%-- do not ajaxify edit link because tinymce breaks --%>
+       <a class="edit-page" href="/admin/general/modules/page/${Module.id}/edit/${PageEntry.id}"><i class="fa fa-edit"></i></a>
     </c:if>
     ${PageEntry.message}
     <c:if test="${not PageEntry.fullWidth}"></div></c:if>

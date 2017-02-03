@@ -29,7 +29,8 @@
             <div class="divider"></div>
             <div class="blog-body">
                 <c:if test="${fn:contains(sessionScope.privileges,'ManageGeneral')}">
-                    <a class="ajaxify edit-page" href="/admin/general/modules/page/${Module.id}/edit/${PageEntry.id}"><i class="fa fa-edit"></i></a>
+                    <%-- do not ajaxify edit link because tinymce breaks --%>
+                    <a class="edit-page" href="/admin/general/modules/page/${Module.id}/edit/${PageEntry.id}"><i class="fa fa-edit"></i></a>
                 </c:if>
                 ${PageEntry.message}
             </div>

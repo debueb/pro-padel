@@ -31,8 +31,9 @@
                             <c:set var="editUrl" value="/${moduleName}/${Module.id}/edit/${Model.id}"/>
                             <tr data-id="${Model.id}">
                                 <td class="sortable-handle"><i class="fa fa-arrows-v"></i></td>
-                                <td><a class="ajaxify" href="${editUrl}">${Model.title}</a></td>
-                                <td><a class="ajaxify" href="${editUrl}">${Model.lastModified}</a></td>
+                                <%-- do not ajaxify edit link because tinymce breaks --%>
+                                <td><a href="${editUrl}">${Model.title}</a></td>
+                                <td><a href="${editUrl}">${Model.lastModified}</a></td>
                                 <td class="delete"><a href="/${moduleName}/${Module.id}/${Model.id}/delete" class="fa fa-minus-circle ajaxify"></a></td>
                             </tr>
                         </c:forEach>
