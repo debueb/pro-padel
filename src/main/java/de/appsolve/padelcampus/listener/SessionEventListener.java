@@ -44,15 +44,13 @@ public class SessionEventListener implements HttpSessionListener{
     
     private static final Set<PaymentMethod> PAYMENT_METHODS_THAT_DO_NOT_REQUIRE_PAYMENT = EnumSet.of(PaymentMethod.Cash, PaymentMethod.Reservation);
         
- 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        LOG.info("session created: "+se.getSession().getId());
+        //empty
     }
-
+    
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
-        LOG.info("session destroyed: "+se.getSession().getId());
         initDependencies(se.getSession().getServletContext());
         LocalDateTime now = new LocalDateTime();
         Booking booking = sessionUtil.getBooking(se.getSession());
@@ -62,7 +60,6 @@ public class SessionEventListener implements HttpSessionListener{
         
         //also look for other blocking bookings that might no have been deleted
         LocalDateTime maxAge = now.minusSeconds(se.getSession().getMaxInactiveInterval());
-        LOG.info("Looking for unpaid blocking bookings before "+maxAge);
         List<Booking> findBlockedBookings = bookingBaseDAO.findUnpaidBlockingBookings();
         for (Booking blockingBooking : findBlockedBookings) {
             cancelBooking(blockingBooking, maxAge);
