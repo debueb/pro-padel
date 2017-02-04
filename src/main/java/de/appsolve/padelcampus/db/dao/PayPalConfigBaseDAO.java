@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class PayPalConfigBaseDAO extends BaseEntityDAO<PayPalConfig> implements PayPalConfigBaseDAOI{
 
     @Override
+    @SuppressWarnings("unchecked")
     public PayPalConfig findByCustomer(Customer customer) {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.eq("customer", customer));
