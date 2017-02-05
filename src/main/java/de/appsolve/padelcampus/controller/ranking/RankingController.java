@@ -16,8 +16,6 @@ import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import java.math.BigDecimal;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.SortedMap;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.NotImplementedException;
