@@ -227,6 +227,14 @@
                         </c:when>
                         
                          <c:when test="${Model.eventType eq 'FriendlyGames'}">
+                            <c:if test="${Model.showParticipants}">
+                                <jsp:include page="/jsp/include/list-group-item.jsp">
+                                    <jsp:param name="href" value="/events/event/${Model.id}/participants"/>
+                                    <jsp:param name="anchor" value="#after-info"/>
+                                    <jsp:param name="key" value="Participants"/>
+                                    <jsp:param name="icon" value="group"/>
+                                </jsp:include>
+                            </c:if>
                             <c:if test="${Model.showGames}">
                                 <jsp:include page="/jsp/include/list-group-item.jsp">
                                     <jsp:param name="href" value="/events/event/${Model.id}/pullgames"/>

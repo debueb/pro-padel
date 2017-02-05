@@ -462,7 +462,11 @@ public class AdminEventsController extends AdminBaseController<Event>{
     }
     
     @RequestMapping(value={"edit/{eventId}/addpullgame"}, method=POST)
-    public ModelAndView postAddPullGame(@PathVariable("eventId") Long eventId, @ModelAttribute("Model") AddPullGame addPullGame, BindingResult bindingResult){
+    public ModelAndView postAddPullGame(
+            @PathVariable("eventId") Long eventId,
+            @ModelAttribute("Model") AddPullGame addPullGame,
+            @RequestParam(value="redirectUrl", required=false) String redirectUrl,
+            BindingResult bindingResult){
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
         validator.validate(addPullGame, bindingResult);
         if (bindingResult.hasErrors()){
@@ -485,6 +489,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
         game.setEvent(event);
         game.setParticipants(teams);
         gameDAO.saveOrUpdate(game);
+        if (!StringUtils.isEmpty(redirectUrl)){
+            return new ModelAndView("redirect:/"+redirectUrl);
+        }
         return new ModelAndView("redirect:/events/event/"+event.getId()+"/pullgames");
     }
     
@@ -495,7 +502,11 @@ public class AdminEventsController extends AdminBaseController<Event>{
     }
     
     @RequestMapping(value={"edit/{eventId}/addfriendlygame"}, method=POST)
-    public ModelAndView postAddFriendlyGame(@PathVariable("eventId") Long eventId, @ModelAttribute("Model") AddPullGame addPullGame, BindingResult bindingResult){
+    public ModelAndView postAddFriendlyGame(
+            @PathVariable("eventId") Long eventId, 
+            @ModelAttribute("Model") AddPullGame addPullGame, 
+            @RequestParam(value="redirectUrl", required=false) String redirectUrl,
+            BindingResult bindingResult){
         Event event = eventDAO.findByIdFetchWithParticipants(eventId);
         validator.validate(addPullGame, bindingResult);
         if (bindingResult.hasErrors()){
@@ -512,6 +523,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
         game.setEvent(event);
         game.setParticipants(teams);
         gameDAO.saveOrUpdate(game);
+        if (!StringUtils.isEmpty(redirectUrl)){
+            return new ModelAndView("redirect:/"+redirectUrl);
+        }
         return new ModelAndView("redirect:/events/event/"+event.getId()+"/pullgames");
     }
     
@@ -645,6 +659,29 @@ public class AdminEventsController extends AdminBaseController<Event>{
     public ModelAndView mailAll(HttpServletRequest request, @PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(eventId);
         return getMailView(event.getAllPlayers(), request);
+    }
+    
+    @RequestMapping(method=GET, value="/{eventId}/game/{gameId}/delete")
+    public ModelAndView getDeleteGameView(@PathVariable("eventId") Long eventId, @PathVariable("gameId") Long gameId){
+        Game game = gameDAO.findById(gameId);
+        return getDeleteGameView(game);
+    }
+    
+    @RequestMapping(method=POST, value="/{eventId}/game/{gameId}/delete")
+    public ModelAndView postDeleteGameView(HttpServletRequest request, @PathVariable("gameId") Long gameId, @RequestParam(value="redirectUrl", required=false) String redirectUrl){
+        try {
+            gameDAO.deleteById(gameId);
+        } catch (DataIntegrityViolationException e){
+            Game model = gameDAO.findById(gameId);
+            LOG.warn("Attempt to delete "+model+" failed due to "+e);
+            ModelAndView deleteView = getDeleteGameView(model);
+            deleteView.addObject("error", msg.get("CannotDeleteDueToRefrence", new Object[]{model.toString()}));
+            return deleteView;
+        }
+        if (!StringUtils.isEmpty(redirectUrl)){        
+            return new ModelAndView("redirect:/"+redirectUrl);
+        }
+        return redirectToIndex(request);
     }
     
     @Override
@@ -786,5 +823,11 @@ public class AdminEventsController extends AdminBaseController<Event>{
             team = teamDAO.saveOrUpdate(team);
         }
         return team;
+    }
+
+    private ModelAndView getDeleteGameView(Game game) {
+        ModelAndView mav = new ModelAndView("include/delete");
+        mav.addObject("Model", game);
+        return mav;
     }
 }

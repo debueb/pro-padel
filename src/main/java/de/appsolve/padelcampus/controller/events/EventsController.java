@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.controller.events;
 
+import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
@@ -96,6 +97,14 @@ public class EventsController extends BaseController{
     @RequestMapping("event/{eventId}/participants")
     public ModelAndView getEventParticipants(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        //for friendly games get the participants from the games
+        if (event.getEventType().equals(EventType.FriendlyGames)){
+            if (event.getGames() != null){
+                for (Game game: event.getGames()){
+                    event.getParticipants().addAll(game.getParticipants()); 
+                }
+            }
+        }
         ModelAndView mav = new ModelAndView("events/participants", "Model", event);
         return mav;
     }
