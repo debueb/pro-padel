@@ -36,6 +36,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -168,22 +169,33 @@ public class AdminGeneralModulesController extends AdminBaseController<Module> {
     @Override
     public ModelAndView postDelete(HttpServletRequest request, @PathVariable("id") Long id){
         Module module = moduleDAO.findById(id);
-        Module parent = moduleDAO.findParent(module);
-        if (parent != null){
-            //load again from DB because findParent() does not load all submodules
-            parent = moduleDAO.findById(parent.getId());
-            //causes IllegalArgumentException: Removing a detached instance Module
-            //parent.getSubModules().remove(module);
-            //same goes for: removeIf predicate and removing via iterator
+        try {
+            Module parent = moduleDAO.findParent(module);
+            List<PageEntry> modulePageEntries = pageEntryDAO.findByModule(module);
+            if (!modulePageEntries.isEmpty()){
+                pageEntryDAO.delete(modulePageEntries);
+            }
+            if (parent != null){
+                //load again from DB because findParent() does not load all submodules
+                parent = moduleDAO.findById(parent.getId());
+                //causes IllegalArgumentException: Removing a detached instance Module
+                //parent.getSubModules().remove(module);
+                //same goes for: removeIf predicate and removing via iterator
 
-            Set<Module> subModules = new TreeSet<>(parent.getSubModules());
-            subModules.remove(module);
-            parent.setSubModules(subModules);
-            moduleDAO.saveOrUpdate(parent);
+                Set<Module> subModules = new TreeSet<>(parent.getSubModules());
+                subModules.remove(module);
+                parent.setSubModules(subModules);
+                moduleDAO.saveOrUpdate(parent);
+            } 
+            moduleDAO.deleteById(id);
+            moduleUtil.reloadModules(request);
+        } catch (DataIntegrityViolationException e){
+            LOG.warn("Attempt to delete "+module+" failed due to "+e);
+            ModelAndView mav = getDeleteView(module);
+            mav.addObject("error", msg.get("CannotDeleteDueToRefrence", new Object[]{module.toString()}));
+            return mav;
         }
-        ModelAndView mav = super.postDelete(request, id);
-        moduleUtil.reloadModules(request);
-        return mav;
+        return redirectToIndex(request);
     }
     
     @RequestMapping(method=POST, value="/updateposition")

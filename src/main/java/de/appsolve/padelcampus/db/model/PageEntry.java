@@ -48,7 +48,7 @@ public class PageEntry extends SortableEntity{
     @Column
     private Boolean showContactForm;
     
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Module.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = Module.class, fetch = FetchType.EAGER)
     private Module module;
 
     public LocalDate getLastModified() {
