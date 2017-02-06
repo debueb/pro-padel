@@ -125,7 +125,7 @@ public class BookingsPayPalController extends BookingsPaymentController{
             booking.setPaymentConfirmed(true);
             bookingDAO.saveOrUpdate(booking);
             
-            return BookingsController.getRedirectToSuccessView(booking);
+            return new ModelAndView("forward:"+booking.getSuccessUrl());
         } catch (Exception e){
             LOG.error("Error while executing paypal payment", e);
             ModelAndView bookingConfirmView = BookingsController.getBookingConfirmView(booking);
