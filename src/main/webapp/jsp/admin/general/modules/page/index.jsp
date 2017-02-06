@@ -40,7 +40,8 @@
                     </tbody>
                 </table>
                 </div>
-                <a href="/admin/general/modules/page/${Module.id}/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="AddEntry"/></a>
+                <%-- do not ajaxify because of tinymce --%>
+                <a href="/admin/general/modules/page/${Module.id}/add" class="btn btn-primary btn-block unit"><fmt:message key="AddEntry"/></a>
             </div>
         </div>
     </div>
