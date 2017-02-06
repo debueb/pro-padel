@@ -16,16 +16,14 @@ import org.springframework.web.servlet.view.RedirectView;
 /**
  *
  * @author dominik
- * 
- * this class adds an additional header to http redirects
- * so that client side javascript knows how to update the url
- * 
- * since client side javascript does not return the header of the first request
- * we have to temporarily store the header in the session until the redirected view
- * is called
+ *
+ * this class adds an additional header to http redirects so that client side javascript knows how to update the url
+ *
+ * since client side javascript does not return the header of the first request we have to temporarily store the header
+ * in the session until the redirected view is called
  */
 public class RedirectInterceptor extends HandlerInterceptorAdapter {
-    
+
     private final static String REDIRECT_PREFIX = "redirect:";
     private final static String REDIRECT_HEADER = "RedirectURL";
 
@@ -35,15 +33,19 @@ public class RedirectInterceptor extends HandlerInterceptorAdapter {
             Object handler,
             ModelAndView modelAndView) throws SystemException {
         String redirectHeader = (String) request.getSession().getAttribute(REDIRECT_HEADER);
-        if (modelAndView!=null && ((modelAndView.getViewName() != null && modelAndView.getViewName().startsWith(REDIRECT_PREFIX)) || (modelAndView.getView() != null && modelAndView.getView() instanceof RedirectView))) {
-            String viewName = modelAndView.getViewName();
-            if (viewName.startsWith(REDIRECT_PREFIX)){
-                viewName = viewName.substring(REDIRECT_PREFIX.length());
-            }
-            request.getSession().setAttribute(REDIRECT_HEADER, viewName);
-        } else if (!StringUtils.isEmpty(redirectHeader)){
+        if (!StringUtils.isEmpty(redirectHeader)) {
             response.addHeader(REDIRECT_HEADER, redirectHeader);
             request.getSession().removeAttribute(REDIRECT_HEADER);
+        } else if (modelAndView != null){
+            String viewName = null;
+            if (modelAndView.getViewName() != null && modelAndView.getViewName().startsWith(REDIRECT_PREFIX)) {
+                viewName = modelAndView.getViewName().substring(REDIRECT_PREFIX.length());
+            } else if (modelAndView.getView() != null && modelAndView.getView() instanceof RedirectView) {
+                viewName = modelAndView.getViewName();
+            }
+            if (!StringUtils.isEmpty(viewName)) {
+                request.getSession().setAttribute(REDIRECT_HEADER, viewName);
+            }
         }
     }
 }
