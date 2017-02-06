@@ -153,7 +153,7 @@ var project = require('./project');
                 url: url,
                 type: stateData.method,
                 data: stateData.payload,
-                success: function (responseData) {
+                success: function (responseData, status, xhr) {
                     // Prepare
                     var
                             $data = $(documentHtml(responseData)),
@@ -245,6 +245,12 @@ var project = require('./project');
                     // Inform Google Analytics of the change
                     if (typeof window._gaq !== 'undefined') {
                         window._gaq.push(['_trackPageview', relativeUrl]);
+                    }
+                    
+                    //Update the URL if it was a redirect
+                    var redirectURL = xhr.getResponseHeader("RedirectURL");
+                    if (!!redirectURL){
+                        History.replaceState({}, document.title, redirectURL);
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
