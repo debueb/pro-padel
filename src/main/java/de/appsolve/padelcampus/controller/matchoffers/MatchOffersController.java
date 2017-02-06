@@ -29,8 +29,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.jadira.usertype.spi.utils.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -367,7 +367,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
         params[0] = model.getOwner();
         params[1] = model.getStartDate().toString(FormatUtils.DATE_HUMAN_READABLE);
         params[2] = model.getStartTime().toString(FormatUtils.TIME_HUMAN_READABLE);
-        params[3] = model.getPlayers();
+        params[3] = StringUtils.join(model.getPlayers(), ", ");
         params[4] = baseURL+"/matchoffers/"+model.getId();
         params[5] = baseURL+"/account/profile";
         params[6] = baseURL;
