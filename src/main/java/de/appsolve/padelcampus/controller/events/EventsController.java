@@ -17,6 +17,7 @@ import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.Participant;
+import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import de.appsolve.padelcampus.utils.EventsUtil;
@@ -27,6 +28,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -96,16 +98,28 @@ public class EventsController extends BaseController{
     
     @RequestMapping("event/{eventId}/participants")
     public ModelAndView getEventParticipants(@PathVariable("eventId") Long eventId){
-        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(eventId);
         //for friendly games get the participants from the games
         if (event.getEventType().equals(EventType.FriendlyGames)){
-            if (event.getGames() != null){
-                for (Game game: event.getGames()){
+            Event eventWithGames = eventDAO.findByIdFetchWithParticipantsAndGamesAndGameParticipantsAndGamePlayers(eventId);
+            if (eventWithGames.getGames() != null){
+                for (Game game: eventWithGames.getGames()){
                     event.getParticipants().addAll(game.getParticipants()); 
                 }
             }
         }
-        ModelAndView mav = new ModelAndView("events/participants", "Model", event);
+        SortedMap<Participant, BigDecimal> rankingMap = new TreeMap<>();
+        if (!event.getParticipants().isEmpty()){
+            Participant participant = event.getParticipants().iterator().next();
+            if (participant instanceof Player){
+                rankingMap = rankingUtil.getPlayerRanking(event.getPlayers());
+            } else {
+                rankingMap = rankingUtil.getTeamRanking(event.getTeams());
+            }
+        }
+        ModelAndView mav = new ModelAndView("events/participants");
+        mav.addObject("Model", event);
+        mav.addObject("RankingMap", SortUtil.sortMap(rankingMap));
         return mav;
     }
     

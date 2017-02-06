@@ -112,7 +112,7 @@ public class RankingUtil {
         return getRanking(games);
     }
     
-    public SortedMap<Participant, BigDecimal> getRanking(Gender category, Collection<Player> participants) {
+    public SortedMap<Participant, BigDecimal> getPlayerRanking(Gender category, Collection<Player> participants) {
         SortedMap<Participant, BigDecimal> ranking = getRanking(category);
         ranking.keySet().retainAll(participants);
         //add all participants without score
@@ -157,8 +157,45 @@ public class RankingUtil {
             entry.setValue(value);
         }
 
-        SortedMap<Participant, BigDecimal> sortedMap = SortUtil.sortMap(rankingMap);
-        return sortedMap;
+        return rankingMap;
+    }
+    
+    public SortedMap<Participant, BigDecimal> getPlayerRanking(Collection<Player> players){
+        Set<Player> malePlayers = new HashSet<>();
+        Set<Player> femalePlayers = new HashSet<>();
+        for (Player player: players){
+            if (player.getGender().equals(Gender.male)){
+                malePlayers.add(player);
+            } else {
+                femalePlayers.add(player);
+            }
+        }
+        SortedMap<Participant, BigDecimal> ranking = getPlayerRanking(Gender.male, malePlayers);
+        ranking.putAll(getPlayerRanking(Gender.female, femalePlayers));
+        return ranking;
+    }
+    
+    public SortedMap<Participant, BigDecimal> getTeamRanking(Collection<Team> teams){
+        Set<Team> maleTeams = new HashSet<>();
+        Set<Team> femaleTeams = new HashSet<>();
+        Set<Team> mixedTeams = new HashSet<>();
+        for (Team team: teams){
+            Set<Gender> teamGender = new HashSet<>();
+            for (Player player: team.getPlayers()){
+                teamGender.add(player.getGender());
+            }
+            if (teamGender.size() > 1){
+                mixedTeams.add(team);
+            } else if (teamGender.iterator().next().equals(Gender.male)){
+                maleTeams.add(team);
+            } else {
+                femaleTeams.add(team);
+            }
+        }
+        SortedMap<Participant, BigDecimal> ranking = getTeamRanking(Gender.male, maleTeams);
+        ranking.putAll(getTeamRanking(Gender.female, femaleTeams));
+        ranking.putAll(getTeamRanking(Gender.mixed, mixedTeams));
+        return ranking;
     }
 
     private void updateRanking(Game game, Team team1, Team team2) {
@@ -325,16 +362,6 @@ public class RankingUtil {
         return entry;
     }
 
-    private Map<Integer, Integer> getSetMapForParticipant(Game game, Participant participant, Collection<GameSet> gameSets) {
-        Map<Integer, Integer> setMap = new HashMap<>();
-        for (GameSet set : gameSets) {
-            if (set.getGame().equals(game) && set.getParticipant().equals(participant)) {
-                setMap.put(set.getSetNumber(), set.getSetGames());
-            }
-        }
-        return setMap;
-    }
-
     public List<ScoreEntry> getScores(Collection<Participant> participants, Collection<Game> eventGames) {
         List<ScoreEntry> scoreEntries = new ArrayList<>();
         for (Participant p : participants) {
@@ -344,12 +371,12 @@ public class RankingUtil {
         return scoreEntries;
     }
     
-    public SortedMap<Participant, BigDecimal>  getRankedParticipants(Event model) {
+    public SortedMap<Participant, BigDecimal> getRankedParticipants(Event model) {
         SortedMap<Participant, BigDecimal> ranking = new TreeMap<>();
         if (!model.getParticipants().isEmpty()){
             Participant firstParticipant = model.getParticipants().iterator().next();
             if (firstParticipant instanceof Player){
-                ranking = getRanking(model.getGender(), model.getPlayers());
+                ranking = getPlayerRanking(model.getGender(), model.getPlayers());
             } else if (firstParticipant instanceof Team){
                 List<Team> teams = new ArrayList<>();
                 for (Participant p: model.getParticipants()){
@@ -359,9 +386,19 @@ public class RankingUtil {
                 ranking = getTeamRanking(model.getGender(), teams);
             }
         }
-        return ranking;
+        return SortUtil.sortMap(ranking);
     }
-
+    
+    private Map<Integer, Integer> getSetMapForParticipant(Game game, Participant participant, Collection<GameSet> gameSets) {
+        Map<Integer, Integer> setMap = new HashMap<>();
+        for (GameSet set : gameSets) {
+            if (set.getGame().equals(game) && set.getParticipant().equals(participant)) {
+                setMap.put(set.getSetNumber(), set.getSetGames());
+            }
+        }
+        return setMap;
+    }
+    
     private List<Game> getGamesInLastYear(Gender gender) {
         LocalDate date = LocalDate.now();
         date = date.minusDays(ELO_MAX_DAYS);

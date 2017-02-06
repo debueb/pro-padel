@@ -11,7 +11,9 @@
             </div>
             <div class="panel-body">
                 <div class="list-group">
-                    <c:forEach var="Player" items="${Players}">
+                    <c:forEach var="RankingMapEntry" items="${RankingMap}">
+                        <c:set var="Player" value="${RankingMapEntry.key}"/>
+                        <c:set var="Ranking" value="${RankingMapEntry.value}"/>
                         <a href="/players/player/${Player.UUID}" class="list-group-item ajaxify">
                             <div class="list-item-text">${Player}</div>
                             <div class="list-group-item-icon">
@@ -23,6 +25,7 @@
                                         <img src="/images/image/${Player.profileImage.sha256}"/>
                                     </c:otherwise>
                                 </c:choose>
+                                <span class="player-ranking">${Ranking}</span>
                             </div>
                         </a>
                     </c:forEach>

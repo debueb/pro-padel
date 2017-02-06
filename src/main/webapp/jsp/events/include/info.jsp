@@ -103,12 +103,6 @@
                                     <jsp:param name="key" value="Players"/>
                                     <jsp:param name="icon" value="user"/>
                                 </jsp:include>
-                                <jsp:include page="/jsp/include/list-group-item.jsp">
-                                    <jsp:param name="href" value="/teams/event/${Model.id}"/>
-                                    <jsp:param name="anchor" value="#after-info"/>
-                                    <jsp:param name="key" value="Teams"/>
-                                    <jsp:param name="icon" value="group"/>
-                                </jsp:include>
                             </c:if>
                             <c:if test="${Model.showGames}">
                                 <jsp:include page="/jsp/include/list-group-item.jsp">

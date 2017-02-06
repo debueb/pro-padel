@@ -15,6 +15,7 @@ import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
+import de.appsolve.padelcampus.utils.SortUtil;
 import java.math.BigDecimal;
 import java.util.SortedMap;
 import javax.servlet.http.HttpServletRequest;
@@ -76,7 +77,7 @@ public class RankingController extends BaseController {
             Participant participant = participantDAO.findByUUID(participantUUID);
             mav.addObject("SelectedParticipant", participant);
         }
-        mav.addObject("Rankings", rankings);
+        mav.addObject("Rankings", SortUtil.sortMap(rankings));
         mav.addObject("path", getPath());
         return mav;
     }

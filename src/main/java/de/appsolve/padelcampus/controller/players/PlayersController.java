@@ -13,7 +13,6 @@ import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Participant;
-import de.appsolve.padelcampus.db.model.ParticipantI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
@@ -21,6 +20,7 @@ import de.appsolve.padelcampus.utils.PlayerUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
+import de.appsolve.padelcampus.utils.SortUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
@@ -113,8 +113,10 @@ public class PlayersController extends BaseController {
         return getPlayersView(event, new ArrayList<>(participants), msg.get("PlayersIn", new Object[]{event.getName()}));
     }
 
-    private ModelAndView getPlayersView(Event event, List<? extends ParticipantI> players, String title){
-        ModelAndView mav = new ModelAndView("players/players", "Players", players);
+    private ModelAndView getPlayersView(Event event, List<Player> players, String title){
+        SortedMap<Participant, BigDecimal> ranking = rankingUtil.getPlayerRanking(players);
+        ModelAndView mav = new ModelAndView("players/players");
+        mav.addObject("RankingMap", SortUtil.sortMap(ranking));
         mav.addObject("title", title);
         mav.addObject("Model", event);
         return mav;
