@@ -2,6 +2,7 @@
 <jsp:include page="/jsp/include/head.jsp"/>
 <script src="${contextPath}/js/noconcat/tournament.js"></script>
 
+<div class="page-header"></div>
 
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
