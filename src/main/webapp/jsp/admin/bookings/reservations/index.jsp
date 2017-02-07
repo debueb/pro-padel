@@ -8,8 +8,8 @@
         <div class="page-header"></div>
         
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
             <li class="active"><fmt:message key="BookingsAndReservations"/></li>
         </ol>
 
@@ -39,17 +39,17 @@
                             <c:forEach items="${Bookings}" var="Booking">
                                 <c:set var="url" value="/admin/bookings/reservations/booking/${Booking.id}"/>
                                 <tr>
-                                    <td><a class="ajaxify" href="${url}"><joda:format value="${Booking.bookingDate}" pattern="yyyy-MM-dd"/></a></td>
-                                    <td><a class="ajaxify" href="${url}"><joda:format value="${Booking.bookingDate}" pattern="EE"/></a></td>
-                                    <td><a class="ajaxify" href="${url}"><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></a></td>
-                                    <td><a class="ajaxify" href="${url}"><joda:format value="${Booking.blockingTime}" pattern="yyyy-MM-dd"/></a></td>
-                                    <td><a class="ajaxify" href="${url}">${Booking.name}</a></td>
-                                    <td><a class="ajaxify" href="/admin/players/edit/${Booking.player.id}">${Booking.player}</a></td>
-                                    <td><a class="ajaxify" href="${url}">${Booking.comment}</a></td>
-                                    <td><a class="ajaxify" href="${url}"><fmt:message key="${Booking.paymentMethod}"/></a></td>
-                                    <td data-sort="${Booking.paymentConfirmed}"><a class="ajaxify" href="${url}"><i class="fa fa-${Booking.paymentConfirmed ? 'check' : 'close'}"></i></a></td>
-                                    <td><a class="ajaxify" href="/invoices/booking/${Booking.UUID}"><i class="fa fa-file-text"></i></a></td>
-                                    <td><a class="ajaxify" href="${url}">${Booking.amount} ${Booking.currency.symbol}</a></td>
+                                    <td><a href="${url}"><joda:format value="${Booking.bookingDate}" pattern="yyyy-MM-dd"/></a></td>
+                                    <td><a href="${url}"><joda:format value="${Booking.bookingDate}" pattern="EE"/></a></td>
+                                    <td><a href="${url}"><joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></a></td>
+                                    <td><a href="${url}"><joda:format value="${Booking.blockingTime}" pattern="yyyy-MM-dd"/></a></td>
+                                    <td><a href="${url}">${Booking.name}</a></td>
+                                    <td><a href="/admin/players/edit/${Booking.player.id}">${Booking.player}</a></td>
+                                    <td><a href="${url}">${Booking.comment}</a></td>
+                                    <td><a href="${url}"><fmt:message key="${Booking.paymentMethod}"/></a></td>
+                                    <td data-sort="${Booking.paymentConfirmed}"><a href="${url}"><i class="fa fa-${Booking.paymentConfirmed ? 'check' : 'close'}"></i></a></td>
+                                    <td><a href="/invoices/booking/${Booking.UUID}"><i class="fa fa-file-text"></i></a></td>
+                                    <td><a href="${url}">${Booking.amount} ${Booking.currency.symbol}</a></td>
                                 </tr>
                             </c:forEach>
                         </tbody>
@@ -61,10 +61,10 @@
                     </fmt:message>
                 </div>
                 <div class="unit-2">
-                    <a class="btn btn-primary btn-block ajaxify" href="/admin/bookings/reservations/add"><fmt:message key="AddReservation"/></a>
+                    <a class="btn btn-primary btn-block" href="/admin/bookings/reservations/add"><fmt:message key="AddReservation"/></a>
                 </div>
                 <div class="unit">
-                    <a class="btn btn-primary btn-block ajaxify" href="/admin/bookings/reservations/print/${DateRange.startDate}/${DateRange.endDate}"><fmt:message key="PrintAll"/></a>
+                    <a class="btn btn-primary btn-block" href="/admin/bookings/reservations/print/${DateRange.startDate}/${DateRange.endDate}"><fmt:message key="PrintAll"/></a>
                 </div>
             </div>
         </div>

@@ -21,8 +21,8 @@
                             <fmt:message key="LogInToContact"><fmt:param value="${Player}"/></fmt:message>
                         </div>
                         <c:url value="/players/player/${Player.UUID}" var="playerURL"/>
-                        <a class="btn btn-primary btn-block unit-2 ajaxify" href="/login?redirect=${playerURL}"><fmt:message key="Login"/></a>
-                        <a class="btn btn-primary btn-block ajaxify" href="/login/register?redirect=${playerURL}"><fmt:message key="Register"/></a>
+                        <a class="btn btn-primary btn-block unit-2" href="/login?redirect=${playerURL}"><fmt:message key="Login"/></a>
+                        <a class="btn btn-primary btn-block" href="/login/register?redirect=${playerURL}"><fmt:message key="Register"/></a>
                     </c:when>
                     <c:when test="${not sessionScope.user.verified and not AccountVerificationLinkSent}">
                         <div class="alert alert-info unit-2">
@@ -40,12 +40,12 @@
                     <c:otherwise>
                         <div class="list-group unit-2">
                             <c:if test="${not empty RankingValue}">
-                                <a href="/ranking/${Player.gender}/individual/${Player.UUID}" class="list-group-item ajaxify">
+                                <a href="/ranking/${Player.gender}/individual/${Player.UUID}" class="list-group-item">
                                     <div class="list-item-text"><fmt:message key="Ranking"/></div>
                                     <div class="list-group-item-icon">${RankingValue}</div>
                                 </a>
                             </c:if>
-                            <a href="/teams/player/${Player.UUID}" class="list-group-item ajaxify">
+                            <a href="/teams/player/${Player.UUID}" class="list-group-item">
                                 <div class="list-item-text"><fmt:message key="TeamsWith"><fmt:param>${Player}</fmt:param></fmt:message></div>
                                 <div class="list-group-item-icon"><div class="fa fa-group"></div></div>
                             </a>

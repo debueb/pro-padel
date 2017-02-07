@@ -6,7 +6,7 @@
         <div class="page-header"></div>
 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
             <li class="active"><fmt:message key="Players"/></li>
         </ol>
 
@@ -32,22 +32,22 @@
                             <c:forEach var="Player" items="${Page.content}">
                                 <c:set var="editUrl" value="/admin/players/edit/${Player.id}"/>
                                 <tr>
-                                    <td><a class="block ajaxify" href="${editUrl}">${Player.firstName}</a></td>
-                                    <td><a class="block ajaxify" href="${editUrl}">${Player.lastName}</a></td>
-                                    <td><a class="block ajaxify" href="${editUrl}">${Player.phone}</a></td>
-                                    <td><a class="block ajaxify" href="/admin/players/mail/${Player.UUID}">${Player.email}</a></td>
-                                    <td><a type="btn btn-primary" class="fa ajaxify block text-center ${empty Player.passwordHash ? 'fa-close' : 'fa-check'}" href="${editUrl}"></a></td>
-                                    <td><a type="btn btn-primary" class="fa ajaxify block text-center ${empty Player.allowEmailContact ? 'fa-close' : Player.allowEmailContact ? 'fa-check' : 'fa-close'}" href="${editUrl}"></a></td>
-                                    <td><a class="block text-center ajaxify" href="/admin/players/mail/${Player.UUID}"><i class="fa fa-envelope"></i></a></td>
-                                    <td class="delete"><a href="/admin/players/${Player.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
+                                    <td><a class="block" href="${editUrl}">${Player.firstName}</a></td>
+                                    <td><a class="block" href="${editUrl}">${Player.lastName}</a></td>
+                                    <td><a class="block" href="${editUrl}">${Player.phone}</a></td>
+                                    <td><a class="block" href="/admin/players/mail/${Player.UUID}">${Player.email}</a></td>
+                                    <td><a type="btn btn-primary" class="fa block text-center ${empty Player.passwordHash ? 'fa-close' : 'fa-check'}" href="${editUrl}"></a></td>
+                                    <td><a type="btn btn-primary" class="fa block text-center ${empty Player.allowEmailContact ? 'fa-close' : Player.allowEmailContact ? 'fa-check' : 'fa-close'}" href="${editUrl}"></a></td>
+                                    <td><a class="block text-center" href="/admin/players/mail/${Player.UUID}"><i class="fa fa-envelope"></i></a></td>
+                                    <td class="delete"><a href="/admin/players/${Player.id}/delete" type="btn btn-primary" class="fa fa-minus-circle"></a></td>
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
                 </div>
                 <jsp:include page="/jsp/admin/include/pagination.jsp"/>
-                <a href="/admin/players/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewPlayer"/></a>
-                <a href="/admin/players/mailall" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="MailAllPlayers"/></a>
+                <a href="/admin/players/add" class="btn btn-primary btn-block unit"><fmt:message key="NewPlayer"/></a>
+                <a href="/admin/players/mailall" class="btn btn-primary btn-block unit"><fmt:message key="MailAllPlayers"/></a>
             </div>
         </div>
     </div>

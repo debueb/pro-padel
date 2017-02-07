@@ -8,7 +8,7 @@
         <div class="page-header"></div>
 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
             <li class="active"><fmt:message key="Events"/></li>
         </ol>
 
@@ -29,7 +29,7 @@
                         <jsp:param name="icon" value="eye-slash"/>
                     </jsp:include>
                 </div>
-                <a href="${contextPath}/admin/events/add" class="btn btn-primary btn-block ajaxify unit-2"><fmt:message key="NewEvent"/></a>
+                <a href="${contextPath}/admin/events/add" class="btn btn-primary btn-block unit-2"><fmt:message key="NewEvent"/></a>
             </div>
         </div>  
     </div>

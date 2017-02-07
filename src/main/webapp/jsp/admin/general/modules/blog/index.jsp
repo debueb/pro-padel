@@ -5,10 +5,10 @@
         <jsp:include page="/jsp/include/back.jsp"/>
         
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/general"><fmt:message key="General"/></a></li>
-            <li><a class="ajaxify" href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
-            <li><a class="ajaxify" href="/admin/general/modules/edit/${Module.id}">${Module.title}</a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/general"><fmt:message key="General"/></a></li>
+            <li><a href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
+            <li><a class="no-ajaxify" href="/admin/general/modules/edit/${Module.id}">${Module.title}</a></li>
             <li class="active"><fmt:message key="BlogEntries"/></li>
         </ol>
         
@@ -32,16 +32,16 @@
                             <tr data-id="${Model.id}">
                                 <td class="sortable-handle"><i class="fa fa-arrows-v"></i></td>
                                 <%-- do not ajaxify edit link because tinymce breaks --%>
-                                <td><a href="${editUrl}">${Model.title}</a></td>
-                                <td><a href="${editUrl}">${Model.lastModified}</a></td>
-                                <td class="delete"><a href="/${moduleName}/${Module.id}/${Model.id}/delete" class="fa fa-minus-circle ajaxify"></a></td>
+                                <td><a class="no-ajaxify" href="${editUrl}">${Model.title}</a></td>
+                                <td><a class="no-ajaxify" href="${editUrl}">${Model.lastModified}</a></td>
+                                <td class="delete"><a href="/${moduleName}/${Module.id}/${Model.id}/delete" class="fa fa-minus-circle"></a></td>
                             </tr>
                         </c:forEach>
                     </tbody>
                 </table>
                 </div>
                 <%-- do not ajaxify because of tinymce --%>
-                <a href="/${moduleName}/${Module.id}/add" class="btn btn-primary btn-block unit"><fmt:message key="AddBlogEntry"/></a>
+                <a class="no-ajaxify btn btn-primary btn-block unit" href="/${moduleName}/${Module.id}/add"><fmt:message key="AddBlogEntry"/></a>
             </div>
         </div>
     </div>

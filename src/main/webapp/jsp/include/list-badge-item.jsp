@@ -1,5 +1,5 @@
 <%@include file="/jsp/include/include.jsp"%>
-<a href="${param.url}" class="list-group-item ajaxify">
+<a href="${param.url}" class="list-group-item">
     <div class="list-item-text">
         <div class="text">${param.msg}</div>
         <div class="badge-container">

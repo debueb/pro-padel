@@ -6,9 +6,9 @@
         <div class="page-header"></div>
         
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
-            <li><a class="ajaxify" href="/admin/bookings/settings"><fmt:message key="BookingSettings"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
+            <li><a href="/admin/bookings/settings"><fmt:message key="BookingSettings"/></a></li>
             <li class="active"><fmt:message key="BookingSettings"/></li>
         </ol>
 

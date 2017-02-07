@@ -16,7 +16,7 @@
             <div class="panel-body">
                 <div class="list-group">
                     <c:forEach var="Game" items="${Games}">
-                        <a href="/games/game/${Game.id}" class="list-group-item ajaxify">
+                        <a href="/games/game/${Game.id}" class="list-group-item">
                             <c:set var="Game" value="${Game}" scope="request"/>
                             <jsp:include page="/jsp/games/game-result.jsp"/>  
                         </a>
@@ -25,7 +25,7 @@
 
                 <c:if test="${not empty Event}">
                     <div class="unit list-group">
-                        <a href="/scores/event/${Event.id}" class="list-group-item ajaxify">
+                        <a href="/scores/event/${Event.id}" class="list-group-item">
                             <div class="list-item-text"><fmt:message key="ResultsIn"><fmt:param value="${Event.name}"/></fmt:message></div>
                             </a>
                         </div>

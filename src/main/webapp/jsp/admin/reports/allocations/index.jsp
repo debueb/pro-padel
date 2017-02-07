@@ -5,8 +5,8 @@
         <div class="page-header"></div>
         
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/reports"><fmt:message key="Reports"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/reports"><fmt:message key="Reports"/></a></li>
             <li class="active"><fmt:message key="Allocations"/></li>
         </ol>
 
@@ -16,7 +16,7 @@
             <div class="panel-heading"><h4><fmt:message key="Allocations"/></h4></div>
             <div class="panel-body">
 
-                <form method="GET" class="ajaxify" action="">
+                <form method="GET" action="">
                     <div class="datepicker-container ">
                         <div class="datepicker-text-container ${empty RangeMap or empty Facilities ? '' : 'form-top-element'}">
                             <div class="datepicker-label"><fmt:message key="Date"/></div>
@@ -103,7 +103,7 @@
                                                                         <c:if test="${Booking.offer eq Offer}">
                                                                             <c:choose>
                                                                                 <c:when test="${TimeSlot.startTime ge Booking.bookingTime}">
-                                                                                    <a class="ajaxify booking-gallery-allocation" style="background-color: ${Offer.hexColor};" href="/admin/bookings/reservations/booking/${Booking.id}">
+                                                                                    <a class="booking-gallery-allocation" style="background-color: ${Offer.hexColor};" href="/admin/bookings/reservations/booking/${Booking.id}">
                                                                                         ${empty Booking.comment ? Booking.player : Booking.comment}
                                                                                     </a>
                                                                                     <c:set var="timeSlotFilled" value="true"/>

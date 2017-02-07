@@ -12,9 +12,9 @@
                 <div class="alert alert-info unit">
                     <fmt:message key="LoginRequiredForThisFeature"/>
                 </div>
-                <a class="btn btn-primary btn-block ajaxify unit" href="/login?redirect=${redirectURL}"><fmt:message key="Login"/></a>
-                <a class="btn btn-primary btn-block ajaxify" href="/login/register?redirect=${redirectURL}"><fmt:message key="Register"/></a>
-                <a class="btn btn-primary btn-block ajaxify btn-back"><fmt:message key="Cancel"/></a>
+                <a class="btn btn-primary btn-block unit" href="/login?redirect=${redirectURL}"><fmt:message key="Login"/></a>
+                <a class="btn btn-primary btn-block" href="/login/register?redirect=${redirectURL}"><fmt:message key="Register"/></a>
+                <a class="btn btn-primary btn-block btn-back"><fmt:message key="Cancel"/></a>
             </div>
         </div>
     </div>

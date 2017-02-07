@@ -7,9 +7,9 @@
         <div class="page-header"></div>
 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/events"><fmt:message key="Events"/></a></li>
-            <li><a class="ajaxify" href="/admin/events/edit/${Event.id}">${Event.name}</a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/events"><fmt:message key="Events"/></a></li>
+            <li><a href="/admin/events/edit/${Event.id}">${Event.name}</a></li>
             <li class="active"><fmt:message key="GameSchedule"/></li>
         </ol>
 
@@ -68,7 +68,7 @@
                         </c:otherwise>
                     </c:choose>
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
-                    <a href="/admin/events" class="ajaxify btn btn-primary btn-block unit-2"><fmt:message key="Skip"/></a>
+                    <a href="/admin/events" class="btn btn-primary btn-block unit-2"><fmt:message key="Skip"/></a>
                 </div>
             </spf:form>
         </div>

@@ -1,6 +1,6 @@
 <%@include file="/jsp/include/include.jsp"%>
 <c:if test="${CustomerModule.showInMenu}">
-    <a href="${CustomerModule.url}" class="menu-item ${empty CustomerModule.subModules ? 'ajaxify' : 'hasSubmodules'}" ${CustomerModule.moduleType == "Link" ? 'target="blank"' : ''} id="Module-${CustomerModule.id}" alt="${CustomerModule.title}">${CustomerModule.title}
+    <a href="${CustomerModule.url}" class="menu-item ${empty CustomerModule.subModules ? '' : 'no-ajaxify hasSubmodules'}" ${CustomerModule.moduleType == "Link" ? 'target="blank"' : ''} id="Module-${CustomerModule.id}" alt="${CustomerModule.title}">${CustomerModule.title}
     </a>
     <c:if test="${not empty CustomerModule.subModules}">
         <span class="subModules Module-${CustomerModule.id}-subModules">

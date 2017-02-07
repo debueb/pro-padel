@@ -51,7 +51,7 @@
                                                                         <c:set var="Game" value="${GameResultMapEntry.key}"/>
                                                                         <c:set var="Result" value="${GameResultMapEntry.value}"/>
                                                                         <c:if test="${fn:contains(Game.participants, Participant) and fn:contains(Game.participants, Opponent)}">
-                                                                            <a href="/games/game/${Game.id}/edit?redirectUrl=events/event/${Model.id}/communitygames" class="ajaxify">
+                                                                            <a href="/games/game/${Game.id}/edit?redirectUrl=events/event/${Model.id}/communitygames">
                                                                                 <c:choose>
                                                                                     <c:when test="${not empty Result}">
                                                                                         ${Result}

@@ -1,10 +1,4 @@
 <%@include file="/jsp/include/include.jsp"%>
-<%-- only admin users should need to download admin functionality
-     we check the URL and wether the request was done via AJAX
-     if so, we add the <script> dependencies before the closing
-     wrapper div, as only <script> tags within this container
-     are evaluated by the ajaxify script
---%>
             </div><!-- wrapper -->
         </div>
     </div>
@@ -15,7 +9,7 @@
             <c:set var="first" value="true"/>
             <c:forEach var="CustomerModule" items="${customerModules[sessionScope.customer.name]}">
                 <c:if test="${CustomerModule.showInFooter}">
-                    <c:if test="${not first}"> | </c:if><a href="${CustomerModule.url}" ${CustomerModule.moduleType == 'Link' ? 'target="blank"' : 'class="ajaxify"'}>${CustomerModule.title}</a>
+                    <c:if test="${not first}"> | </c:if><a href="${CustomerModule.url}" ${CustomerModule.moduleType == 'Link' ? 'target="blank"' : ''}>${CustomerModule.title}</a>
                     <c:set var="first" value="false"/>
                 </c:if>
             </c:forEach>
@@ -27,7 +21,7 @@
                     <c:if test="${lang ne sessionLang}">
                         <c:set var="subdomain" value="${sessionScope.customer.defaultLanguage eq lang ? '' : lang}"/>
                         <c:set var="r" value="${pageContext.request}"/>
-                        <a href="${r.scheme}://${subdomain}${empty subdomain ? '' : '.'}${sessionScope.customer.domainName}${r.serverPort == '8080' ? ':8080' : ''}${r.contextPath}/home" class="ajaxify"><span class="flag-icon flag-icon-${lang}"></span></a>
+                        <a href="${r.scheme}://${subdomain}${empty subdomain ? '' : '.'}${sessionScope.customer.domainName}${r.serverPort == '8080' ? ':8080' : ''}${r.contextPath}/home"><span class="flag-icon flag-icon-${lang}"></span></a>
                     </c:if>
                 </c:forEach>
                 powered by <a href="https://pro-padel.de">pro-padel.de</a>

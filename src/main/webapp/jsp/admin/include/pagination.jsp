@@ -11,7 +11,7 @@
         </div>
         <ul class="pagination">
             <c:forEach begin="0" end="${Page.totalElements-1}" step="${Page.size}" var="count" varStatus="status">
-                <li class="${Page.number == status.count-1 ? 'active' : ''}"><a class="ajaxify" href="?page=${status.count-1}">${status.count}</a></li>
+                <li class="${Page.number == status.count-1 ? 'active' : ''}"><a href="?page=${status.count-1}">${status.count}</a></li>
                 </c:forEach>
         </ul>
     </nav>

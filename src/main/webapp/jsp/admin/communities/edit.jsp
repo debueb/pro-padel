@@ -8,8 +8,8 @@
         <div class="page-header"></div>
 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/communities"><fmt:message key="Communities"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/communities"><fmt:message key="Communities"/></a></li>
             <li class="active"><fmt:message key="Community"/></li>
         </ol>
 

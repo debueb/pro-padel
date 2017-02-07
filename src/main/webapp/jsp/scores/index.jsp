@@ -21,7 +21,7 @@
             <c:otherwise>
                 <div class="list-group">
                     <c:forEach var="Event" items="${Events}">
-                        <a href="/scores/event/${Event.id}" class="list-group-item ajaxify">
+                        <a href="/scores/event/${Event.id}" class="list-group-item">
                             <div class="list-item-text"><fmt:message key="ScoresOfEvent"><fmt:param>${Event.name}</fmt:param></fmt:message></div>
                                 </a>
                     </c:forEach>

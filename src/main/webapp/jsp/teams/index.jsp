@@ -14,11 +14,11 @@
 
 
         <div class="list-group">
-            <a href="/teams/all" class="list-group-item ajaxify">
+            <a href="/teams/all" class="list-group-item">
                 <div class="list-item-text"><fmt:message key="AllTeams"/></div>
             </a>
             <c:forEach var="Event" items="${Events}">
-                <a href="/teams/event/${Event.id}" class="list-group-item ajaxify">
+                <a href="/teams/event/${Event.id}" class="list-group-item">
                     <div class="list-item-text"><fmt:message key="TeamsIn"><fmt:param>${Event.name}</fmt:param></fmt:message></div>
                         </a>
             </c:forEach>

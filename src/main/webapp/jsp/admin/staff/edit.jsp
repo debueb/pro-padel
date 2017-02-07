@@ -9,8 +9,8 @@
 
         <fmt:message key="${empty Model.id ? 'NewStaffMember' : 'EditStaffMember'}" var="Title"/>
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/staff"><fmt:message key="StaffMembers"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/staff"><fmt:message key="StaffMembers"/></a></li>
             <li class="active">${Title}</li>
         </ol>
 

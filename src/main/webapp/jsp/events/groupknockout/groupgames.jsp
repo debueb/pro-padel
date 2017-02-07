@@ -24,7 +24,7 @@
         </c:forEach>
         
         <c:if test="${empty RoundGameMap}">
-            <a class="btn btn-primary btn-block unit ajaxify" href="/admin/events/event/${Model.id}/groupgamesend"><fmt:message key="EndGroupGames"/></a>
+            <a class="btn btn-primary btn-block unit" href="/admin/events/event/${Model.id}/groupgamesend"><fmt:message key="EndGroupGames"/></a>
         </c:if>
     </div>
 </div>

@@ -21,20 +21,20 @@
                         <tbody>
                             <c:forEach var="Model" items="${Models}">
                                 <tr>
-                                    <td><a class="ajaxify" href="/admin/customers/edit/${Model.id}">${Model.name}</a></td>
+                                    <td><a href="/admin/customers/edit/${Model.id}">${Model.name}</a></td>
                                     <td>
                                         <c:forEach var="DomainName" items="${Model.domainNames}" varStatus="status">
-                                            <a class="ajaxify" href="/admin/customers/edit/${Model.id}">${DomainName}</a>${status.last ? "" : ", "}
+                                            <a href="/admin/customers/edit/${Model.id}">${DomainName}</a>${status.last ? "" : ", "}
                                         </c:forEach>
                                     </td>
-                                    <td><a class="ajaxify" href="/admin/customers/edit/${Model.id}">${Model.googleAnalyticsTrackingId}</a></td>
-                                    <td class="delete"><a href="/admin/customers/${Model.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
+                                    <td><a href="/admin/customers/edit/${Model.id}">${Model.googleAnalyticsTrackingId}</a></td>
+                                    <td class="delete"><a href="/admin/customers/${Model.id}/delete" type="btn btn-primary" class="fa fa-minus-circle"></a></td>
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
                 </div>
-                <a href="/admin/customers/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewCustomer"/></a>
+                <a href="/admin/customers/add" class="btn btn-primary btn-block unit"><fmt:message key="NewCustomer"/></a>
             </div>
         </div>
     </div>

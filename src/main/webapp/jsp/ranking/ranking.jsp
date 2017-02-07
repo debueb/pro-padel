@@ -33,7 +33,7 @@
                                         </c:if>
                                         <tr>
                                             <td class="text-center ${RowClass}">${status.index+1}</td>
-                                            <td class="${RowClass}"><a href="${hostPrefix}${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}" class="ajaxify">${Participant}</a></td>
+                                            <td class="${RowClass}"><a href="${hostPrefix}${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}">${Participant}</a></td>
                                             <td class="text-center ${RowClass}">${Ranking.value}</td>
                                         </tr>
                                     </c:forEach>

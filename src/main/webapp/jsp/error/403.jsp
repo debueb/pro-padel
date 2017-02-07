@@ -7,7 +7,7 @@
             <div class="jumbotron">
                 <h1><fmt:message key="Oooops"/></h1>
                 <p><fmt:message key="InsufficientPrivileges"/></p>
-                <p><a class="btn btn-primary btn-lg ajaxify" href="/"><fmt:message key="Home"/></a>&nbsp;<a class="btn btn-primary btn-lg ajaxify" href="/contact"><fmt:message key="Contact"/></a></p>
+                <p><a class="btn btn-primary btn-lg" href="/"><fmt:message key="Home"/></a>&nbsp;<a class="btn btn-primary btn-lg" href="/contact"><fmt:message key="Contact"/></a></p>
             </div>
         </div>
     </div>

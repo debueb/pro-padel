@@ -40,11 +40,18 @@ var project = require('./project');
             
             return $.trim(result);
         };
+        
+        var isInternalURL = function(url){
+            var localDomain = new RegExp('^http[s]?:\/\/'+document.location.hostname, 'g');
+            if (url && url.match(localDomain)){
+                return true;
+            }
+            return false;
+        };
 
         // Ajaxify Helper
         $.fn.ajaxify = function () {
             // Prepare
-            
             var getContent = function(){
                 var content;
                 contentSelector = $(this).attr('data-content') || defaultContentSelector;
@@ -71,8 +78,7 @@ var project = require('./project');
             
             // Ajaxify
             var $this = $(this);
-            //$this.find('a.ajaxify').off().on('click', function (event) { //this does not trigger correctly
-            $this.find('a.ajaxify').click(function (event) {
+            $this.find('a').click(function (event) {
                 if (!window.navigator.onLine){
                     $('#shadow').show();
                     $('#offline-msg').show();
@@ -81,9 +87,14 @@ var project = require('./project');
                 
                 // Prepare
                 var $this       = $(this),
-                    url         = $this.attr('href'),
+                    url         = this.href,
                     title       = $this.attr('title') || null,
                     anchorId    = $(this).attr('data-anchor');
+                    
+                //only ajaxify internal links
+                if (!isInternalURL(url) || $this.hasClass('no-ajaxify')){
+                    return true;
+                }
                 
                 $content = getContent.apply(this);
                     
@@ -98,17 +109,29 @@ var project = require('./project');
                 return false;
             });
             
-            $this.find('form.ajaxify').off().on('submit', function (event) {
+            $this.find('form').off().on('submit', function (event) {
                 if (!window.navigator.onLine){
                     $('#shadow').show();
                     $('#offline-msg').show();
                     return false;
                 }
-
-                var payload     = $(this).serialize(),
-                    method      = $(this).attr('method'),
-                    url         = $(this).attr('action') || "",
-                    anchorId    = $(this).attr('data-anchor');
+                
+                if (window.tinymce){
+                    window.tinymce.triggerSave();
+                }
+                
+                var $this       = $(this),
+                    //using location.origin + location.pathname instead of location.href, as location.href may GET contains parameters
+                    //which interfere with the GET parameters that we set below
+                    url         = $(this).prop('action') || document.location.origin + document.location.pathname;
+                    payload     = $this.serialize(),
+                    method      = $this.attr('method'),
+                    anchorId    = $this.attr('data-anchor');
+                
+                //only ajaxify internal links
+                if (!isInternalURL(url) || $this.hasClass('no-ajaxify')){
+                    return true;
+                }
                 
                 $content = getContent.apply(this);
                 

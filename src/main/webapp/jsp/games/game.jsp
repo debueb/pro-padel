@@ -14,23 +14,23 @@
                 <jsp:include page="/jsp/games/game-result.jsp"/>
                 <jsp:include page="/jsp/games/score-reporter.jsp"/>
                 <div class="list-group unit">
-                    <a href="/games/game/${Game.id}/edit" class="list-group-item ajaxify" >
+                    <a href="/games/game/${Game.id}/edit" class="list-group-item" >
                         <div class="list-item-text"><fmt:message key="EditResult"/></div>
                     </a>
                     <c:forEach var="Team" items="${Game.participants}">
-                        <a class="list-group-item ajaxify" href="/teams/team/${Team.UUID}">
+                        <a class="list-group-item" href="/teams/team/${Team.UUID}">
                             <div class="list-item-text"><fmt:message key="AllInfosAbout"><fmt:param value="${Team}"/></fmt:message></div>
                         </a>
                     </c:forEach>
                     <c:forEach var="Participant" items="${Game.participants}">
-                        <a class="list-group-item ajaxify" href="/games/team/${Participant.UUID}/event/${Game.event.id}">
+                        <a class="list-group-item" href="/games/team/${Participant.UUID}/event/${Game.event.id}">
                             <div class="list-item-text"><fmt:message key="AllGamesWithTeamInEvent"><fmt:param value="${Participant}"/><fmt:param value="${Game.event.name}"/></fmt:message></div>
                         </a>
                     </c:forEach>
-                    <a class="list-group-item ajaxify" href="/games/event/${Game.event.id}/all">
+                    <a class="list-group-item" href="/games/event/${Game.event.id}/all">
                         <div class="list-item-text"><fmt:message key="AllGamesIn"><fmt:param value="${Game.event.name}"/></fmt:message></div>
                     </a>
-                    <a class="list-group-item ajaxify" href="/scores/event/${Game.event.id}">
+                    <a class="list-group-item" href="/scores/event/${Game.event.id}">
                         <div class="list-item-text"><fmt:message key="ScoresOfEvent"><fmt:param value="${Game.event.name}"/></fmt:message></div>
                     </a>
                 </div>

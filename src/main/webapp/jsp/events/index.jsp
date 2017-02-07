@@ -13,7 +13,7 @@
         
         <div class="list-group">
             <c:forEach var="Event" items="${Models}">
-                <a href="/events/event/${Event.id}" class="list-group-item ajaxify">
+                <a href="/events/event/${Event.id}" class="list-group-item">
                     <div class="list-item-text">
                         ${Event.name}
                     </div>

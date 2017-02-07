@@ -35,7 +35,7 @@
                         <a class="btn btn-primary btn-block" href="/login/register?redirect=${url}"><fmt:message key="RegisterToParticipate"/></a>
                     </c:when>
                     <c:otherwise>
-                        <form method="POST" style="margin-bottom: 5px;" class="ajaxify">
+                        <form method="POST" style="margin-bottom: 5px;">
                             <c:choose>
                                 <c:when test="${fn:contains(Model.players, sessionScope.user)}">
                                     <input type="checkbox" name="cancel-participation" id="cancel-participation"/>
@@ -54,7 +54,7 @@
                     </c:otherwise>
                 </c:choose>
                 </div>
-                <a class="btn btn-primary btn-block ajaxify unit" href="/matchoffers"><fmt:message key="OtherMatchOffers"/></a>
+                <a class="btn btn-primary btn-block unit" href="/matchoffers"><fmt:message key="OtherMatchOffers"/></a>
             </div>
         </div>
     </div>

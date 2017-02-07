@@ -20,7 +20,7 @@
                                 </c:otherwise>
                             </c:choose>
                             </a>
-                            <div><a href="/players/player/${PageEntry.author.UUID}" class="ajaxify">${PageEntry.author}</a></div>
+                            <div><a href="/players/player/${PageEntry.author.UUID}">${PageEntry.author}</a></div>
                             <div>${PageEntry.lastModified}</div>    
                         </div>
                     </div>
@@ -30,7 +30,7 @@
             <div class="blog-body">
                 <c:if test="${fn:contains(sessionScope.privileges,'ManageGeneral')}">
                     <%-- do not ajaxify edit link because tinymce breaks --%>
-                    <a class="edit-page" href="/admin/general/modules/page/${Module.id}/edit/${PageEntry.id}"><i class="fa fa-edit"></i></a>
+                    <a class="no-ajaxify edit-page" href="/admin/general/modules/page/${Module.id}/edit/${PageEntry.id}"><i class="fa fa-edit"></i></a>
                 </c:if>
                 ${PageEntry.message}
             </div>

@@ -10,8 +10,8 @@
         <fmt:message var="Title" key="${empty Model.name ? 'NewTeam' : 'EditTeam'}"/>
 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/teams"><fmt:message key="Teams"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/teams"><fmt:message key="Teams"/></a></li>
             <li class="active">${Title}</li>
         </ol>
 

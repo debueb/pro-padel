@@ -9,9 +9,9 @@
         <fmt:message var="EditModule" key="EditModule"/>
                 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/general"><fmt:message key="General"/></a></li>
-            <li><a class="ajaxify" href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/general"><fmt:message key="General"/></a></li>
+            <li><a href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
             <li class="active">${empty Model.id ? AddModule : EditModule}</li>
         </ol>
         
@@ -113,15 +113,15 @@
                     </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
                     <c:if test="${Model.moduleType == 'Page' || Model.moduleType == 'HomePage' || Model.moduleType == 'LandingPage'}">
-                        <a class="btn btn-primary btn-block ajaxify" href="/admin/general/modules/page/${Model.id}"><fmt:message key="ManageEntries"/></a>
+                        <a class="btn btn-primary btn-block" href="/admin/general/modules/page/${Model.id}"><fmt:message key="ManageEntries"/></a>
                     </c:if>
                     <c:if test="${Model.moduleType == 'Blog'}">
-                        <a class="btn btn-primary btn-block ajaxify" href="/admin/general/modules/blog/${Model.id}"><fmt:message key="ManageBlogEntries"/></a>
+                        <a class="btn btn-primary btn-block" href="/admin/general/modules/blog/${Model.id}"><fmt:message key="ManageBlogEntries"/></a>
                     </c:if>
                     <c:if test="${not empty Model.id}">
-                        <a href="/admin/general/modules/${Model.id}/delete" class="btn btn-danger btn-block unit-2 ajaxify"><fmt:message key="Delete"/></a>
+                        <a href="/admin/general/modules/${Model.id}/delete" class="btn btn-danger btn-block unit-2"><fmt:message key="Delete"/></a>
                     </c:if>
-                    <a class="btn btn-primary btn-block btn-back unit-2 ajaxify"><fmt:message key="Cancel"/></a>
+                    <a class="btn btn-primary btn-block btn-back unit-2"><fmt:message key="Cancel"/></a>
 
                 </spf:form>
             </div>

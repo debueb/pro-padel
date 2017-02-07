@@ -12,10 +12,10 @@
                 <c:choose>
                     <c:when test="${not empty error}">
                         <div class="alert alert-danger">${error}</div>
-                        <a class="btn btn-primary btn-block ajaxify" href="/bookings"><fmt:message key="TryAgain"/></a>
+                        <a class="btn btn-primary btn-block" href="/bookings"><fmt:message key="TryAgain"/></a>
                     </c:when>
                     <c:otherwise>
-                        <spf:form method="POST" class="ajaxify" modelAttribute="Booking">
+                        <spf:form method="POST" modelAttribute="Booking">
                             <spf:input type="hidden" path="bookingType"/>
                             <spf:input type="hidden" path="publicBooking" value="true"/>
                             
@@ -107,7 +107,7 @@
                                     </c:when>
                                     <c:otherwise>
                                         <button class="btn btn-primary btn-block unit btn-booking-submit" data-booking-type="loggedIn"><fmt:message key="Book"/></button>
-                                        <a class="btn btn-primary btn-block unit ajaxify" href="/bookings"><fmt:message key="Cancel"/></a>
+                                        <a class="btn btn-primary btn-block unit" href="/bookings"><fmt:message key="Cancel"/></a>
                                     </c:otherwise>
                                 </c:choose>
 

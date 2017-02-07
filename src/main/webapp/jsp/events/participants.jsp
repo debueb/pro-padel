@@ -18,7 +18,7 @@
                     <c:forEach var="RankingMapEntry" items="${RankingMap}">
                         <c:set var="Participant" value="${RankingMapEntry.key}"/>
                         <c:set var="Ranking" value="${RankingMapEntry.value}"/>
-                        <a href="${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}" class="list-group-item ajaxify">
+                        <a href="${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}" class="list-group-item">
                             <div class="list-item-text">${Participant}</div>
                             <div class="list-group-item-icon">
                                 <c:choose>

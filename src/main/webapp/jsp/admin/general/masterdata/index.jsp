@@ -6,8 +6,8 @@
         <div class="page-header"></div>
         
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify"href="/admin/general"><fmt:message key="General"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><ahref="/admin/general"><fmt:message key="General"/></a></li>
             <li class="active"><fmt:message key="MasterData"/></li>
         </ol>
 
@@ -25,15 +25,15 @@
                         <tbody>
                             <c:forEach var="Model" items="${Models}">
                                 <tr>
-                                    <td><a class="ajaxify" href="/${moduleName}/edit/${Model.id}">${Model.companyName}</a></td>
-                                    <td class="delete"><a href="/${moduleName}/${Model.id}/delete" class="fa fa-minus-circle ajaxify"></a></td>
+                                    <td><a href="/${moduleName}/edit/${Model.id}">${Model.companyName}</a></td>
+                                    <td class="delete"><a href="/${moduleName}/${Model.id}/delete" class="fa fa-minus-circle"></a></td>
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
                 </div>
                 <c:if test="${empty Models}">
-                    <a href="/${moduleName}/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="Add"/></a>
+                    <a href="/${moduleName}/add" class="btn btn-primary btn-block unit"><fmt:message key="Add"/></a>
                 </c:if>
             </div>
         </div>

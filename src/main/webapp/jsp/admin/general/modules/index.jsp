@@ -6,8 +6,8 @@
         <div class="page-header"></div>
 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/general"><fmt:message key="General"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/general"><fmt:message key="General"/></a></li>
             <li class="active"><fmt:message key="Modules"/></li>
         </ol>
         
@@ -21,17 +21,21 @@
                         <c:forEach var="Model" items="${Models}">
                             <li class="dd-item" data-id="${Model.id}">
                                 <div class="dd-handle dd3-handle"></div>
-                                <a class="ajaxify" href="/admin/general/modules/edit/${Model.id}">
-                                    <div class="dd3-content">${Model.title}<span class="float-right"><fmt:message key="${Model.moduleType}"/></span></div>
-                                </a>
+                                <div class="dd3-content dd-nodrag">
+                                    <a class="no-ajaxify block" href="/admin/general/modules/edit/${Model.id}">
+                                        ${Model.title}<span class="float-right"><fmt:message key="${Model.moduleType}"/></span>
+                                    </a>
+                                </div>
                                 <c:if test="${not empty Model.subModules}">
                                     <ol class="dd-list">
                                         <c:forEach var="SubModule" items="${Model.subModules}">
                                             <li class="dd-item" data-id="${SubModule.id}">
                                                 <div class="dd-handle dd3-handle"></div>
-                                                <a class="ajaxify" href="/admin/general/modules/edit/${SubModule.id}">
-                                                    <div class="dd3-content">${SubModule.title}<span class="float-right"><fmt:message key="${SubModule.moduleType}"/></span></div>
-                                                </a>
+                                                <div class="dd3-content dd-nodrag">
+                                                    <a class="no-ajaxify block" href="/admin/general/modules/edit/${SubModule.id}">
+                                                        ${SubModule.title}<span class="float-right"><fmt:message key="${SubModule.moduleType}"/></span>
+                                                    </a>
+                                                </div>
                                             </li>
                                         </c:forEach>
                                     </ol>
@@ -42,7 +46,7 @@
                 </div>
                 <div class="clearfix"></div>
                 
-                <a href="/admin/general/modules/add" class="btn btn-primary btn-block unit-2 ajaxify"><fmt:message key="Add"/></a>
+                <a href="/admin/general/modules/add" class="btn btn-primary btn-block unit-2"><fmt:message key="Add"/></a>
             </div>
         </div>
     </div>

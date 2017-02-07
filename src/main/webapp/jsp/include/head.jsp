@@ -80,7 +80,7 @@
                                 <c:if test="${not isHomepage}">
                                     <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a>
                                 </c:if>
-                                <a class="navbar-icon navbar-hover home-icon ajaxify" href="/home"><span class="fa fa-lg fa-home"></span></a>
+                                <a class="navbar-icon navbar-hover home-icon" href="/home"><span class="fa fa-lg fa-home"></span></a>
                             </c:when>
                             <c:otherwise>
                                 <span class="navbar-logo">
@@ -88,7 +88,7 @@
                                         <a class="navbar-icon back-icon btn-back"><span class="fa fa-lg fa-arrow-circle-left"></span></a>
                                     </c:if>
                                     <c:set var="logo" value="${sessionScope.customer.companyLogo}"/>
-                                    <a class="customerLogo ajaxify" href="/home"
+                                    <a class="customerLogo" href="/home"
                                        style="width: ${logo.width/2}px; background-size: ${logo.width/2}px ${logo.height/2}px; background-image: url('${sessionScope.customer.companyLogoPath}')">
                                     </a>
                                 </span>

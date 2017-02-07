@@ -6,7 +6,7 @@
         <div class="page-header"></div>
 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
             <li class="active"><fmt:message key="ContactSettings"/></li>
         </ol>
 
@@ -29,18 +29,18 @@
                             <c:forEach var="Contact" items="${Models}">
                                 <c:set var="url" value="/admin/contact/edit/${Contact.id}"/>
                                 <tr>
-                                    <td><a class="ajaxify" href="${url}">${Contact.emailDisplayName}</a></td>
-                                    <td><a class="ajaxify" href="${url}">${Contact.emailAddress}</a></td>
-                                    <td class="text-center"><a class="ajaxify" href="${url}"><i class="fa fa-${Contact.notifyOnContactForm ? 'check' : 'remove'}"/></a></td>
-                                    <td class="text-center"><a class="ajaxify" href="${url}"><i class="fa fa-${Contact.notifyOnBooking ? 'check' : 'remove'}"/></a></td>
-                                    <td class="text-center"><a class="ajaxify" href="${url}"><i class="fa fa-${Contact.notifyOnBookingCancellation ? 'check' : 'remove'}"/></a></td>
-                                    <td class="delete"><a href="/admin/contact/${Contact.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
+                                    <td><a href="${url}">${Contact.emailDisplayName}</a></td>
+                                    <td><a href="${url}">${Contact.emailAddress}</a></td>
+                                    <td class="text-center"><a href="${url}"><i class="fa fa-${Contact.notifyOnContactForm ? 'check' : 'remove'}"/></a></td>
+                                    <td class="text-center"><a href="${url}"><i class="fa fa-${Contact.notifyOnBooking ? 'check' : 'remove'}"/></a></td>
+                                    <td class="text-center"><a href="${url}"><i class="fa fa-${Contact.notifyOnBookingCancellation ? 'check' : 'remove'}"/></a></td>
+                                    <td class="delete"><a href="/admin/contact/${Contact.id}/delete" type="btn btn-primary" class="fa fa-minus-circle"></a></td>
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
                 </div>
-                <a href="/admin/contact/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewContact"/></a>
+                <a href="/admin/contact/add" class="btn btn-primary btn-block unit"><fmt:message key="NewContact"/></a>
             </div>
         </div>
     </div>

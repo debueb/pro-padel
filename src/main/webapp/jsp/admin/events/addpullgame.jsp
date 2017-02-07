@@ -8,9 +8,9 @@
         <div class="page-header"></div>
 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/events"><fmt:message key="Events"/></a></li>
-            <li><a class="ajaxify" href="/admin/events/edit/${Event.id}">${Event.name}</a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/events"><fmt:message key="Events"/></a></li>
+            <li><a href="/admin/events/edit/${Event.id}">${Event.name}</a></li>
             <li class="active"><fmt:message key="AddGame"/></li>
         </ol>
 
@@ -19,7 +19,7 @@
                 <h4>${Event}: <fmt:message key="AddGame"/></h4>
             </div>
             <div class="panel-body">
-                <spf:form method="POST" class="ajaxify" modelAttribute="Model">
+                <spf:form method="POST" modelAttribute="Model">
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
                     <table class="table-full-width table-fixed">
                         <thead>

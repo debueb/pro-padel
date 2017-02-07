@@ -6,9 +6,9 @@
         <div class="page-header"></div>
         
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
-            <li><a class="ajaxify" href="/admin/bookings/reservations"><fmt:message key="BookingsAndReservations"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
+            <li><a href="/admin/bookings/reservations"><fmt:message key="BookingsAndReservations"/></a></li>
             <li class="active"><fmt:message key="EditBooking"/></li>
         </ol>
 
@@ -18,7 +18,7 @@
             </div>
             <div class="panel-body">
 
-                <spf:form method="POST" class="ajaxify" modelAttribute="Model">
+                <spf:form method="POST" modelAttribute="Model">
                     <div class="alert alert-info"><fmt:message key="CourtReservationDesc"/></div>
                     <div class="alert alert-danger unit-2"><spf:errors path="*" cssClass="error" htmlEscape="false"/></div>
                     <spf:input path="id" type="hidden"/>
@@ -99,9 +99,9 @@
                     </span>
                     
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
-                    <a href="/admin/bookings/reservations/${Model.id}/delete" class="btn btn-danger btn-block ajaxify"><fmt:message key="Delete"/></a>
-                    <a class="btn btn-danger btn-block ajaxify" href="/admin/bookings/reservations/${Model.id}/deleteall"><fmt:message key="DeleteAll"/></a>
-                    <a href="/admin/bookings/reservations" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="Cancel"/></a>
+                    <a href="/admin/bookings/reservations/${Model.id}/delete" class="btn btn-danger btn-block"><fmt:message key="Delete"/></a>
+                    <a class="btn btn-danger btn-block" href="/admin/bookings/reservations/${Model.id}/deleteall"><fmt:message key="DeleteAll"/></a>
+                    <a href="/admin/bookings/reservations" class="btn btn-primary btn-block unit"><fmt:message key="Cancel"/></a>
                 </spf:form>
             </div>
         </div>

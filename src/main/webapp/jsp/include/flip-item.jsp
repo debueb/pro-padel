@@ -3,13 +3,13 @@
     <div class="flip-container">
         <div class="flipper">
             <div class="front">
-                <a href="${param.url}" class="ajaxify">
+                <a href="${param.url}">
                     <span class="title">${param.title}</span>
                     <span class="icon fa fa-${param.iconName}"></span>
                 </a>
             </div>
             <div class="back">
-                <a href="${param.url}" class="ajaxify">
+                <a href="${param.url}">
                     <span class="title">
                         <c:choose>
                             <c:when test="${empty param.desc}">

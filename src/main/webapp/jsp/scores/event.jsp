@@ -24,7 +24,7 @@
                                 <c:set var="UrlParticipant" value="${ScoreEntry.participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${ScoreEntry.participant.UUID}"/>
                                 <tr>
                                     <td class="text-center">${status.index+1}</td>
-                                    <td><a href="${UrlParticipant}" class="ajaxify">${ScoreEntry.participant}</a></td>
+                                    <td><a href="${UrlParticipant}">${ScoreEntry.participant}</a></td>
                                     <td class="text-center">${ScoreEntry.totalPoints}</td>
                                     <td class="text-center">${ScoreEntry.matchesWon}:${ScoreEntry.matchesPlayed-ScoreEntry.matchesWon}</td>
                                     <td class="text-center">${ScoreEntry.setsWon}:${ScoreEntry.setsPlayed-ScoreEntry.setsWon}</td>

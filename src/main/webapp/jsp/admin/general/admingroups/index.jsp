@@ -6,8 +6,8 @@
         <div class="page-header"></div>
 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/general"><fmt:message key="General"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/general"><fmt:message key="General"/></a></li>
             <li class="active"><fmt:message key="AdminGroups"/></li>
         </ol>
         
@@ -26,19 +26,19 @@
                         <tbody>
                             <c:forEach var="AdminGroup" items="${Models}">
                                 <tr>
-                                    <td><a class="ajaxify" href="/admin/general/admingroups/edit/${AdminGroup.id}">${AdminGroup.name}</a></td>
+                                    <td><a href="/admin/general/admingroups/edit/${AdminGroup.id}">${AdminGroup.name}</a></td>
                                     <td>
                                         <c:forEach var="Player" items="${AdminGroup.players}" varStatus="status">
-                                            <a class="ajaxify" href="/admin/players/edit/${Player.id}">${Player}</a>${status.last ? "" : ", "}
+                                            <a href="/admin/players/edit/${Player.id}">${Player}</a>${status.last ? "" : ", "}
                                         </c:forEach>
                                     </td>
-                                    <td class="delete"><a href="/admin/general/admingroups/${AdminGroup.id}/delete" class="fa fa-minus-circle ajaxify"></a></td>
+                                    <td class="delete"><a href="/admin/general/admingroups/${AdminGroup.id}/delete" class="fa fa-minus-circle"></a></td>
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
                 </div>
-                <a href="/admin/general/admingroups/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewAdminGroup"/></a>
+                <a href="/admin/general/admingroups/add" class="btn btn-primary btn-block unit"><fmt:message key="NewAdminGroup"/></a>
             </div>
         </div>
     </div>

@@ -6,9 +6,9 @@
         <div class="page-header"></div>
         
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
-            <li><a class="ajaxify" href="/admin/bookings/voucher"><fmt:message key="Vouchers"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
+            <li><a href="/admin/bookings/voucher"><fmt:message key="Vouchers"/></a></li>
             <li class="active"><fmt:message key="Voucher"/></li>
         </ol>
 
@@ -120,7 +120,7 @@
                                 <a href="/admin/bookings/voucher/add" class="btn btn-primary btn-block unit"><fmt:message key="GenerateMore"/></a>
                             </c:otherwise>
                         </c:choose>
-                        <a href="/admin/bookings/voucher" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="ToOverview"/></a>
+                        <a href="/admin/bookings/voucher" class="btn btn-primary btn-block unit"><fmt:message key="ToOverview"/></a>
                     </div>
 
                 </spf:form>

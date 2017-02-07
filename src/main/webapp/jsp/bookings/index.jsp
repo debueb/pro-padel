@@ -11,7 +11,7 @@
             <div class="panel-heading"><h4><fmt:message key="Date"/></h4></div>
             <div class="panel-body">
 
-                <form method="GET" class="ajaxify" action="${contextPath}/bookings" data-anchor="#date" id="date">
+                <form method="GET" action="${contextPath}/bookings" data-anchor="#date" id="date">
                     <div class="datepicker-container ">
                         <div class="datepicker-text-container ${empty RangeMap or empty Facilities ? '' : 'form-top-element'}">
                             <div class="datepicker-label"><fmt:message key="Date"/></div>
@@ -92,7 +92,7 @@
                                                                 <c:when test="${fn:contains(TimeSlot.availableOffers, Offer)}">
                                                                     <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
                                                                     <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
-                                                                    <a class="ajaxify booking-gallery-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${Offer.hexColor};">
+                                                                    <a class="booking-gallery-offer" href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${Offer.hexColor};">
                                                                         ${TimeSlot.pricePerMinDuration}
                                                                     </a>
                                                                 </c:when>

@@ -6,7 +6,7 @@
         <div class="page-header"></div>
         
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
             <li class="active"><fmt:message key="EventGroups"/></li>
         </ol>
 
@@ -26,8 +26,8 @@
                     <tbody>
                         <c:forEach var="Model" items="${Page.content}">
                             <tr>
-                                <td><a class="ajaxify" href="/${moduleName}/edit/${Model.id}">${Model.name}</a></td>
-                                <td class="delete"><a href="/${moduleName}/${Model.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
+                                <td><a href="/${moduleName}/edit/${Model.id}">${Model.name}</a></td>
+                                <td class="delete"><a href="/${moduleName}/${Model.id}/delete" type="btn btn-primary" class="fa fa-minus-circle"></a></td>
                             </tr>
                         </c:forEach>
                     </tbody>
@@ -35,7 +35,7 @@
                     
                 <jsp:include page="/jsp/admin/include/pagination.jsp"/>
                 
-                <a href="/${moduleName}/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="AddEventGroup"/></a>
+                <a href="/${moduleName}/add" class="btn btn-primary btn-block unit"><fmt:message key="AddEventGroup"/></a>
             </div>
         </div>
 

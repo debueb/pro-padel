@@ -14,7 +14,7 @@
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
                     <spf:input path="id" type="hidden"/>
                     <jsp:include page="/jsp/include/player-input.jsp"><jsp:param name="showPassword" value="true"/></jsp:include>
-                    <input type="checkbox" name="stay-logged-in" id="stay-logged-in" checked/><label class="checkbox" for="stay-logged-in"><fmt:message key="StayLoggedIn"/></label>
+                    <input type="checkbox" name="stay-logged-in" id="stay-logged-in" checked="checked"/><label class="checkbox" for="stay-logged-in"><fmt:message key="StayLoggedIn"/></label>
                     <button class="btn btn-primary btn-block" type="submit"><fmt:message key="Register"/></button>
                 </spf:form>
             </div>

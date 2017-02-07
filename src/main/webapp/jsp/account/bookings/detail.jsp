@@ -22,7 +22,7 @@
                                 <div class="alert alert-warning text-center"><fmt:message key="BookingCannotBeCancelled"/></div>
                             </c:when>
                             <c:otherwise>
-                                <a class="btn btn-primary btn-block unit ajaxify" href="/bookings/booking/${Booking.UUID}/cancel"><fmt:message key="CancelBooking2"/></a>
+                                <a class="btn btn-primary btn-block unit" href="/bookings/booking/${Booking.UUID}/cancel"><fmt:message key="CancelBooking2"/></a>
                             </c:otherwise>
                         </c:choose>
                 </spf:form>

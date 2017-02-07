@@ -11,7 +11,7 @@
                 <h4>${Event}</h4>
             </div>
             <div class="panel-body">
-                <form method="POST" class="ajaxify" role="form" modelAttribute="Model">
+                <form method="POST" role="form" modelAttribute="Model">
                     <input type="hidden" name="id" value="${Model.id}"/>
 
                     <c:if test="${fn:length(Model.participantList) ge 1}">

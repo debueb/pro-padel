@@ -6,8 +6,8 @@
         <div class="page-header"></div>
 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/events"><fmt:message key="Events"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/events"><fmt:message key="Events"/></a></li>
             <li class="active"><fmt:message key="${status}Events"/></li>
         </ol>
 
@@ -32,20 +32,20 @@
                             <c:forEach var="Event" items="${Page.content}">
                                 <c:set var="url" value="/admin/events/edit/${Event.id}"/>
                                 <tr>
-                                    <td><a class="ajaxify" href="${url}">${Event.name}</a></td>
-                                    <td><a class="ajaxify" href="${url}"><joda:format value="${Event.startDate}" pattern="yyyy-MM-dd"/></a></td>
-                                    <td><a class="ajaxify" href="${url}"><fmt:message key="${Event.eventType}"/></a></td>
+                                    <td><a href="${url}">${Event.name}</a></td>
+                                    <td><a href="${url}"><joda:format value="${Event.startDate}" pattern="yyyy-MM-dd"/></a></td>
+                                    <td><a href="${url}"><fmt:message key="${Event.eventType}"/></a></td>
                                     <td class="text-center">${fn:length(Event.participants)}</td>
                                     <td class="text-center">${Event.maxNumberOfParticipants}</td>
-                                    <td><a class="ajaxify block text-center" href="/admin/events/${Event.id}/mail"><i class="fa fa-envelope"></i></a></td>
-                                    <td class="delete"><a href="/admin/events/${Event.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
+                                    <td><a class="block text-center" href="/admin/events/${Event.id}/mail"><i class="fa fa-envelope"></i></a></td>
+                                    <td class="delete"><a href="/admin/events/${Event.id}/delete" type="btn btn-primary" class="fa fa-minus-circle"></a></td>
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
                 </div>
                 <jsp:include page="/jsp/admin/include/pagination.jsp"/>
-                <a href="/admin/events/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewEvent"/></a>
+                <a href="/admin/events/add" class="btn btn-primary btn-block unit"><fmt:message key="NewEvent"/></a>
             </div>
         </div>
     </div>

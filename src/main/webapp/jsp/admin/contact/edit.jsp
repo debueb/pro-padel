@@ -6,8 +6,8 @@
         <div class="page-header"></div>
 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/contact"><fmt:message key="ContactSettings"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/contact"><fmt:message key="ContactSettings"/></a></li>
             <li class="active"><fmt:message key="Contact"/></li>
         </ol>
 

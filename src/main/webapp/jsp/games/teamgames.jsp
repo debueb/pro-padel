@@ -38,7 +38,7 @@
                                                 </c:if>
                                             </c:forEach>
                                             <td class="vertical-align-middle">
-                                                <a href="/games/game/${Game.id}/edit?redirectUrl=games/event/${Model.id}" class="ajaxify">
+                                                <a href="/games/game/${Game.id}/edit?redirectUrl=games/event/${Model.id}">
                                                 <c:choose>
                                                     <c:when test="${not empty Result}">
                                                         ${Result}

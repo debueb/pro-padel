@@ -13,7 +13,7 @@
                 <h4><fmt:message key="LoginSignup"/></h4>
             </div>
             <div class="panel-body">
-                <spf:form class="ajaxify" modelAttribute="Model" method="POST">
+                <spf:form modelAttribute="Model" method="POST">
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
                     <fmt:message key="EmailAddress" var="EmailAddress"/>
                     <fmt:message key="Password" var="Password"/>

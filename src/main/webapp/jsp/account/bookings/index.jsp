@@ -16,7 +16,7 @@
                     <c:when test="${not empty Bookings}">
                         <div class="list-group">
                             <c:forEach items="${Bookings}" var="Booking">
-                                <a href="/account/bookings/booking/${Booking.UUID}" class="list-group-item ajaxify">
+                                <a href="/account/bookings/booking/${Booking.UUID}" class="list-group-item">
                                     <div class="list-item-text">${Booking.name} - <joda:format value="${Booking.bookingDate}" pattern="EE, dd.MM.YYYY"/> - <joda:format value="${Booking.bookingTime}" pattern="HH:mm"/>-<joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/></div>
                                 </a>
                             </c:forEach>

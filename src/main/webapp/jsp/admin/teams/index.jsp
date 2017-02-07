@@ -6,7 +6,7 @@
         <div class="page-header"></div>
 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
             <li class="active"><fmt:message key="Teams"/></li>
         </ol>
 
@@ -29,15 +29,15 @@
                     <tbody>
                         <c:forEach var="Team" items="${Page.content}">
                             <tr>
-                                <td><a class="ajaxify" href="/admin/teams/edit/${Team.id}">${Team.name}</a></td>
+                                <td><a href="/admin/teams/edit/${Team.id}">${Team.name}</a></td>
                                 <td>
                                     <c:forEach var="Player" items="${Team.players}" varStatus="status">
-                                        <a class="ajaxify" href="/admin/players/edit/${Player.id}">${Player}</a>${status.last ? "" : ", "}
+                                        <a href="/admin/players/edit/${Player.id}">${Player}</a>${status.last ? "" : ", "}
                                     </c:forEach>
                                 </td>
                                 <td>${Team.community}</td>
-                                <td><a class="block text-center ajaxify" href="/admin/teams/${Team.id}/mail"><i class="fa fa-envelope"></i></a></td>
-                                <td class="delete"><a href="/admin/teams/${Team.id}/delete" type="btn btn-primary" class="fa fa-minus-circle ajaxify"></a></td>
+                                <td><a class="block text-center" href="/admin/teams/${Team.id}/mail"><i class="fa fa-envelope"></i></a></td>
+                                <td class="delete"><a href="/admin/teams/${Team.id}/delete" type="btn btn-primary" class="fa fa-minus-circle"></a></td>
                             </tr>
                         </c:forEach>
                     </tbody>
@@ -45,7 +45,7 @@
 
                 <jsp:include page="/jsp/admin/include/pagination.jsp"/>
 
-                <a href="/admin/teams/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="NewTeam"/></a>
+                <a href="/admin/teams/add" class="btn btn-primary btn-block unit"><fmt:message key="NewTeam"/></a>
             </div>
         </div>
 

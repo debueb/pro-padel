@@ -27,7 +27,7 @@
                                         <c:set var="Result" value="${GameResultMapEntry.value}"/>
                                         <c:choose>
                                             <c:when test="${fn:contains(Game.participants, Participant) and fn:contains(Game.participants, Opponent)}">
-                                                <a href="/games/game/${Game.id}/edit?redirectUrl=${redirectUrl}" class="ajaxify">
+                                                <a href="/games/game/${Game.id}/edit?redirectUrl=${redirectUrl}">
                                                     <c:choose>
                                                         <c:when test="${not empty Result}">
                                                             ${Result}

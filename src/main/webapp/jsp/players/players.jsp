@@ -14,7 +14,7 @@
                     <c:forEach var="RankingMapEntry" items="${RankingMap}">
                         <c:set var="Player" value="${RankingMapEntry.key}"/>
                         <c:set var="Ranking" value="${RankingMapEntry.value}"/>
-                        <a href="/players/player/${Player.UUID}" class="list-group-item ajaxify">
+                        <a href="/players/player/${Player.UUID}" class="list-group-item">
                             <div class="list-item-text">${Player}</div>
                             <div class="list-group-item-icon">
                                 <c:choose>

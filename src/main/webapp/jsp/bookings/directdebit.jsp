@@ -24,7 +24,7 @@
                     <input class="bic form-control form-bottom-element" type="text" placeholder="${placeholder}"/>
 
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Book"/></button>
-                    <a class="btn btn-primary btn-block unit ajaxify" href="${Booking.abortUrl}"><fmt:message key="Cancel"/></a>
+                    <a class="btn btn-primary btn-block unit" href="${Booking.abortUrl}"><fmt:message key="Cancel"/></a>
                 </form>
             </div>
         </div>

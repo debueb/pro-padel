@@ -23,7 +23,7 @@
                             <td class="vertical-align-middle">
                                 <c:choose>
                                     <c:when test="${not empty Game.startDate and not empty Game.startTime}">
-                                        <a href="/games/game/${Game.id}/edit?redirectUrl=${redirectUrl}" class="ajaxify"><joda:format value="${Game.startDate}" pattern="dd. MMM" /> <joda:format value="${Game.startTime}" pattern="HH:mm" /> <fmt:message key="oClock"/></a>
+                                        <a href="/games/game/${Game.id}/edit?redirectUrl=${redirectUrl}"><joda:format value="${Game.startDate}" pattern="dd. MMM" /> <joda:format value="${Game.startTime}" pattern="HH:mm" /> <fmt:message key="oClock"/></a>
                                     </c:when>
                                     <c:otherwise>
                                         <a href="/admin/events/edit/${Model.id}/gameschedule"><fmt:message key="AddGameDate"/></a>
@@ -32,14 +32,14 @@
                                     |
                                 <c:choose>
                                     <c:when test="${empty Result}">
-                                        <a href="/games/game/${Game.id}/edit?redirectUrl=${redirectUrl}" class="ajaxify"><fmt:message key="AddGameResult"/></a>
+                                        <a href="/games/game/${Game.id}/edit?redirectUrl=${redirectUrl}"><fmt:message key="AddGameResult"/></a>
                                     </c:when>
                                     <c:otherwise>
-                                        <a href="/games/game/${Game.id}/edit?redirectUrl=${redirectUrl}" class="ajaxify">${Result}</a>
+                                        <a href="/games/game/${Game.id}/edit?redirectUrl=${redirectUrl}">${Result}</a>
                                     </c:otherwise>
                                 </c:choose>
                                     |
-                                    <a href="/admin/events/${Model.id}/game/${Game.id}/delete?redirectUrl=${redirectUrl}" class="ajaxify"><fmt:message key="Delete"/></a>
+                                    <a href="/admin/events/${Model.id}/game/${Game.id}/delete?redirectUrl=${redirectUrl}"><fmt:message key="Delete"/></a>
                             </td>
                         </tr>
                     </c:forEach>
@@ -48,10 +48,10 @@
                 <div style="padding: 10px;">
                     <c:choose>
                         <c:when test="${Model.eventType eq 'PullRoundRobin'}">
-                            <a href="/admin/events/edit/${Model.id}/addpullgame?redirectUrl=${redirectUrl}" class="btn btn-primary btn-block ajaxify unit-2"><fmt:message key="AddGame"/></a>
+                            <a href="/admin/events/edit/${Model.id}/addpullgame?redirectUrl=${redirectUrl}" class="btn btn-primary btn-block unit-2"><fmt:message key="AddGame"/></a>
                         </c:when>
                         <c:when test="${Model.eventType eq 'FriendlyGames'}">
-                            <a href="/admin/events/edit/${Model.id}/addfriendlygame?redirectUrl=${redirectUrl}" class="btn btn-primary btn-block ajaxify unit-2"><fmt:message key="AddGame"/></a>
+                            <a href="/admin/events/edit/${Model.id}/addfriendlygame?redirectUrl=${redirectUrl}" class="btn btn-primary btn-block unit-2"><fmt:message key="AddGame"/></a>
                         </c:when>
                     </c:choose>
                     

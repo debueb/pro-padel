@@ -17,7 +17,7 @@
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="Participant" items="${Teams}">
-                                <a href="/teams/team/${Participant.UUID}" class="list-group-item ajaxify">
+                                <a href="/teams/team/${Participant.UUID}" class="list-group-item">
                                     <div class="list-item-text">${Participant}</div>
                                 </a>
                             </c:forEach>

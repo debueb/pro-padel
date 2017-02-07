@@ -6,8 +6,8 @@
         <div class="page-header"></div>
         
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/bookings"><fmt:message key="Bookings"/></a></li>
             <li class="active"><fmt:message key="BookingSettings"/></li>
         </ol>
 
@@ -38,27 +38,27 @@
                                 <tr>
                                     <c:set var="urlEdit" value="/admin/bookings/settings/edit/${Model.id}"/>
                                     <td>
-                                        <a class="ajaxify" href="${urlEdit}">
+                                        <a href="${urlEdit}">
                                             <c:forEach var="WeekDay" items="${Model.calendarWeekDays}" varStatus="status">
                                                 <fmt:message key="${WeekDay}"/><c:if test="${not status.last}">, </c:if>
                                             </c:forEach>
                                         </a>
                                     </td>
-                                    <td><a class="ajaxify" href="${urlEdit}"><joda:format value="${Model.startDate}" pattern="yyyy-MM-dd" /></a></td>
-                                    <td><a class="ajaxify" href="${urlEdit}"><joda:format value="${Model.endDate}" pattern="yyyy-MM-dd" /></a></td>
-                                    <td><a class="ajaxify" href="${urlEdit}"><fmt:formatNumber value="${Model.startTimeHour}" minIntegerDigits="2"/>:<fmt:formatNumber value="${Model.startTimeMinute}" minIntegerDigits="2"/></a></td>
-                                    <td><a class="ajaxify" href="${urlEdit}"><fmt:formatNumber value="${Model.endTimeHour}" minIntegerDigits="2"/>:<fmt:formatNumber value="${Model.endTimeMinute}" minIntegerDigits="2"/></a></td>
-                                    <td><a class="ajaxify" href="${urlEdit}">${Model.offers}</a></td>
-                                    <td><a class="ajaxify" href="${urlEdit}">${Model.minDuration}</a></td>
-                                    <td><a class="ajaxify" href="${urlEdit}">${Model.minInterval}</a></td>
-                                    <td><a class="ajaxify" href="${urlEdit}">${Model.basePrice}</td>
-                                    <td><a class="ajaxify fa fa-minus-circle" href="/admin/bookings/settings/${Model.id}/delete"></a></td>
+                                    <td><a href="${urlEdit}"><joda:format value="${Model.startDate}" pattern="yyyy-MM-dd" /></a></td>
+                                    <td><a href="${urlEdit}"><joda:format value="${Model.endDate}" pattern="yyyy-MM-dd" /></a></td>
+                                    <td><a href="${urlEdit}"><fmt:formatNumber value="${Model.startTimeHour}" minIntegerDigits="2"/>:<fmt:formatNumber value="${Model.startTimeMinute}" minIntegerDigits="2"/></a></td>
+                                    <td><a href="${urlEdit}"><fmt:formatNumber value="${Model.endTimeHour}" minIntegerDigits="2"/>:<fmt:formatNumber value="${Model.endTimeMinute}" minIntegerDigits="2"/></a></td>
+                                    <td><a href="${urlEdit}">${Model.offers}</a></td>
+                                    <td><a href="${urlEdit}">${Model.minDuration}</a></td>
+                                    <td><a href="${urlEdit}">${Model.minInterval}</a></td>
+                                    <td><a href="${urlEdit}">${Model.basePrice}</td>
+                                    <td><a class="fa fa-minus-circle" href="/admin/bookings/settings/${Model.id}/delete"></a></td>
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
                 </div>
-                <a href="/admin/bookings/settings/add" class="btn btn-primary btn-block unit ajaxify"><fmt:message key="AddCalendarConfig"/></a>
+                <a href="/admin/bookings/settings/add" class="btn btn-primary btn-block unit"><fmt:message key="AddCalendarConfig"/></a>
             </div>
         </div>
     </div>

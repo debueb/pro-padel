@@ -20,7 +20,7 @@
                 <c:forEach var="Game" items="${RoundGameMapEntry.value}">
 
                     <article class="game">
-                        <c:if test="${fn:length(Game.participants) == 2}"><a class="ajaxify" href="${contextPath}/games/game/${Game.id}/edit?redirectUrl=events/event/${Model.id}${Model.eventType == 'GroupKnockout' ? '/knockoutgames' : ''}"></c:if>
+                        <c:if test="${fn:length(Game.participants) == 2}"><a href="${contextPath}/games/game/${Game.id}/edit?redirectUrl=events/event/${Model.id}${Model.eventType == 'GroupKnockout' ? '/knockoutgames' : ''}"></c:if>
                             <c:forEach var="Participant" items="${Game.participants}">
                                 <div class="team team-${Participant.id}" data-team="${Participant.id}">
                                     <span class="team-name">${Participant}</span>

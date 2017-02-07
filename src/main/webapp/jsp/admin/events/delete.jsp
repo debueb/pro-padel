@@ -6,9 +6,9 @@
         <div class="page-header"></div>
 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/events"><fmt:message key="Events"/></a></li>
-            <li><a class="ajaxify" href="/admin/events/edit/${Model.id}">${Model.name}</a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/events"><fmt:message key="Events"/></a></li>
+            <li><a href="/admin/events/edit/${Model.id}">${Model.name}</a></li>
             <li class="active"><fmt:message key="DeleteWarning"/></li>
         </ol>
 
@@ -23,8 +23,8 @@
 
                     <h4><fmt:message key="ThisWillDeleteAllGamesAsWell"/></h4>
 
-                <form method="POST" class="ajaxify">
-                    <a class="btn btn-primary btn-back unit ajaxify"><fmt:message key="Cancel"/></a>
+                <form method="POST">
+                    <a class="btn btn-primary btn-back unit"><fmt:message key="Cancel"/></a>
                     <button class="btn btn-danger unit" style="margin-left: 10px;"><fmt:message key="Delete"/></button>
                 </form>
             </div>

@@ -8,9 +8,9 @@
         <div class="page-header"></div>
 
         <ol class="unit-2 breadcrumb">
-            <li><a class="ajaxify" href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a class="ajaxify" href="/admin/events"><fmt:message key="Events"/></a></li>
-            <li><a class="ajaxify" href="/admin/events/edit/${Model.id}">${Model.name}</a></li>
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/events"><fmt:message key="Events"/></a></li>
+            <li><a href="/admin/events/edit/${Model.id}">${Model.name}</a></li>
             <li class="active"><fmt:message key="Draws"/></li>
         </ol>
 
@@ -23,7 +23,7 @@
                     <c:when test="${empty RoundGameMap}">
                         <div class="alert alert-danger">${error}</div>
                         <div class="alert alert-info"><fmt:message key="DrawsDoNotExist"/></div>
-                        <form method="POST" class="ajaxify">
+                        <form method="POST">
                             <button class="btn btn-primary btn-block unit"><fmt:message key="CreateDraws"/></button>
                         </form>
                     </c:when>
@@ -44,7 +44,7 @@
                     <c:forEach var="Game" items="${RoundGameMapEntry.value}">
 
                         <article class="game">
-                            <c:if test="${RoundGameMapEntry.key == 0}"><a class="ajaxify" href="${contextPath}/admin/events/edit/${Model.id}/draws/game/${Game.id}"></c:if>
+                            <c:if test="${RoundGameMapEntry.key == 0}"><a href="${contextPath}/admin/events/edit/${Model.id}/draws/game/${Game.id}"></c:if>
                                 <c:forEach var="Participant" items="${Game.participants}">
                                     <div class="team" data-team="${Participant.id}">
 
