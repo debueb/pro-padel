@@ -3,8 +3,6 @@ var destroyTinyMce = function(){
         var ed_id = tinymce.editors[i].id;
         tinymce.execCommand("mceRemoveEditor", true, ed_id);
     }
-    delete tinymce;
-    delete tinyMCE;
 };
 
 var initTinyMce = function () {
