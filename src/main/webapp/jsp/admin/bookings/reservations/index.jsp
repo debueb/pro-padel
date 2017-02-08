@@ -48,7 +48,7 @@
                                     <td><a class="ajaxify" href="${url}">${Booking.comment}</a></td>
                                     <td><a class="ajaxify" href="${url}"><fmt:message key="${Booking.paymentMethod}"/></a></td>
                                     <td data-sort="${Booking.paymentConfirmed}"><a class="ajaxify" href="${url}"><i class="fa fa-${Booking.paymentConfirmed ? 'check' : 'close'}"></i></a></td>
-                                    <td><a class="ajaxify" href="/invoices/booking/${Booking.UUID}"><i class="fa fa-file-text"></i></a></td>
+                                    <td><a href="/invoices/booking/${Booking.UUID}"><i class="fa fa-file-text"></i></a></td>
                                     <td><a class="ajaxify" href="${url}">${Booking.amount} ${Booking.currency.symbol}</a></td>
                                 </tr>
                             </c:forEach>
