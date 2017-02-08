@@ -129,6 +129,9 @@ public class Event extends ComparableEntity{
     
     @Column
     private Boolean showScores;
+    
+    @Column(length = 8000)
+    private String confirmationMailRemark;
 
     public String getName() {
         return name;
@@ -344,7 +347,14 @@ public class Event extends ComparableEntity{
     public void setShowScores(Boolean showScores) {
         this.showScores = showScores;
     }
-    
+
+    public String getConfirmationMailRemark() {
+        return confirmationMailRemark;
+    }
+
+    public void setConfirmationMailRemark(String confirmationMailRemark) {
+        this.confirmationMailRemark = confirmationMailRemark;
+    }
     
     public Set<Team> getTeams(){
         Set<Team> teams = new TreeSet<>();
