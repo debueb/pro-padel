@@ -56,6 +56,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -414,7 +415,7 @@ public class BookingUtil {
     
     public void sendEventBookingConfirmation(HttpServletRequest request, Booking booking) throws MailException, IOException {
         Mail mail = new Mail();
-        mail.setSubject(msg.get("BookingSuccessfulMailSubject"));
+        mail.setSubject(msg.get("EventBookingSuccessfulMailSubject"));
         mail.setBody(msg.get("BookingEventSuccessfulMailBody", new Object[]{
             booking.getPlayer().toString(),
             FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()),
@@ -423,6 +424,7 @@ public class BookingUtil {
             msg.get(booking.getPaymentMethod().toString()),
             booking.getAmount(),
             booking.getCurrency(),
+            (StringUtils.isEmpty(booking.getEvent().getConfirmationMailRemark()) ? msg.get("None") : booking.getEvent().getConfirmationMailRemark()),
             RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
             RequestUtil.getBaseURL(request)}));
         mail.addRecipient(booking.getPlayer());

@@ -161,6 +161,10 @@ var project = require('./project');
                 stateData = State.data,
                 url = State.url,
                 relativeUrl = url.replace(rootUrl, '');
+                
+            if (stateData.replaceState){
+                return;
+            }
               
             //close any open select pickers that are absolutely attatched to the body
             $('.select-simple, .select-multiple, .select-ajax-search').selectpicker().each(function(){
@@ -273,7 +277,7 @@ var project = require('./project');
                     //Update the URL if it was a redirect
                     var redirectURL = xhr.getResponseHeader("RedirectURL");
                     if (!!redirectURL){
-                        History.replaceState({}, document.title, redirectURL);
+                        History.replaceState({replaceState: true}, document.title, redirectURL);
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {

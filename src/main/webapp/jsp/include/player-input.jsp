@@ -33,5 +33,7 @@
         <div class="explanation">${Password}</div>
     </div>
 </c:if>
-<spf:checkbox path="allowEmailContact"/><label class="checkbox" for="allowEmailContact1"><fmt:message key="AllowEmailContact"/></label>
+<div>
+    <spf:checkbox path="allowEmailContact"/><label class="checkbox" for="allowEmailContact1"><fmt:message key="AllowEmailContact"/></label>
+</div>
                     

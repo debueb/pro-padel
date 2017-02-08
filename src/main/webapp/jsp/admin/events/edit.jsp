@@ -164,8 +164,13 @@
 
                         <%-- Price --%>
                         <div class="relative"> 
-                            <spf:input path="price" type="text" class="form-control form-center-element text-center" placeholder="20.00" data-valid-chars="[0-9\.]"/>
+                            <spf:input path="price" type="text" class="form-control form-center-element" placeholder="20.00" data-valid-chars="[0-9\.]"/>
                             <span class="explanation"><fmt:message key="PricePerBooking"/></span>
+                        </div>
+                        
+                        <div class="relative"> 
+                            <spf:input path="confirmationMailRemark" type="text" class="form-control form-center-element" placeholder=""/>
+                            <span class="explanation"><fmt:message key="ConfirmationMailRemark"/></span>
                         </div>
                     </div>
                     <spf:input type="hidden" path="currency" value="EUR"/>
@@ -182,7 +187,6 @@
                     </div>
 
                     <div class="relative">
-
                         <spf:input path="numberOfGamesPerSet" type="number" class="form-control form-center-element"/>
                         <div class="explanation-select"><fmt:message key="MaxNumberOfGamesPerSet"/></div>
                     </div>
