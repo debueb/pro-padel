@@ -24,7 +24,7 @@
                             <div class="datepicker-text"></div>
                         </div>
                         <input type="hidden" name="date" class="datepicker-input auto-submit" class="form-control" value="${Day}"/>
-                        <div class="datepicker" data-show-on-init="false" data-redirect-on-select="/admin/bookings/allocations/?date={date}" data-day-config='${dayConfigs}' data-max-date='${maxDate}'></div>
+                        <div class="datepicker" data-show-on-init="false" data-redirect-on-select="/admin/bookings/allocations/?date={date}" data-day-config='${dayConfigs}' data-max-date='${maxDate}' data-allow-past="true"></div>
                     </div>
                     <c:if test="${not empty RangeMap}">
                         <c:if test="${not empty Facilities}">

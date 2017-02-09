@@ -297,7 +297,7 @@ public class BookingUtil {
         for (int i=1; i<=CalendarWeekDay.values().length; i++){
             LocalDate date = selectedDate.withDayOfWeek(i);
             weekDays.add(date);
-            if (!date.isBefore(new LocalDate())){
+            if (!onlyFutureTimeSlots || !date.isBefore(today)){
                 try {
                     //generate list of bookable time slots
                     timeSlots.addAll(getTimeSlotsForDate(date, calendarConfigs, confirmedBookings, onlyFutureTimeSlots, preventOverlapping));
