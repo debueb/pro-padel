@@ -97,7 +97,7 @@ public class Event extends ComparableEntity{
     @Column
     private String location;
     
-    @Column(length=8000)
+    @Column(columnDefinition = "text")
     private String description;
     
     @ManyToOne(fetch = FetchType.EAGER)

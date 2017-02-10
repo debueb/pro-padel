@@ -49,6 +49,7 @@ public class LoginUtil {
             Cookie cookie = new Cookie(COOKIE_LOGIN_TOKEN, cookieUUID.toString()+":"+cookieValue.toString());
             cookie.setDomain(request.getServerName());
             cookie.setMaxAge(ONE_YEAR_SECONDS);
+            cookie.setPath("/");
             response.addCookie(cookie);
         }
     }
@@ -69,9 +70,13 @@ public class LoginUtil {
             }
         }
         deleteCookie(request, response, null);
+        deleteCookie(request, response, "/");
         deleteCookie(request, response, "/page");
         deleteCookie(request, response, "/admin");
         deleteCookie(request, response, "/login");
+        deleteCookie(request, response, "/admin/events");
+        deleteCookie(request, response, "/admin/events/edit");
+        deleteCookie(request, response, "/events/event");
         Cookie cookie = new Cookie(COOKIE_LOGIN_TOKEN, null);
         cookie.setDomain(request.getServerName());
         cookie.setMaxAge(0);
