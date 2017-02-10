@@ -22,7 +22,7 @@ var initTinyMce = function () {
           'advlist autolink lists link image charmap print preview hr anchor pagebreak',
           'searchreplace wordcount visualblocks visualchars code fullscreen',
           'insertdatetime media nonbreaking save table contextmenu directionality',
-          'template paste textcolor colorpicker textpattern imagetools'
+          'template paste textcolor colorpicker textpattern imagetools codemirror'
         ],
         imagetools_toolbar: "rotateleft rotateright | flipv fliph | imageoptions",
         menu: {
@@ -106,6 +106,12 @@ var initTinyMce = function () {
                     }
                 }
             });
+        },
+        //configure syntax highlighting for source code view
+        codemirror: {
+            fullscreen: true,
+            path: 'codemirror-5.23.0/',
+            indentOnInit: true
         }
     });
 };
