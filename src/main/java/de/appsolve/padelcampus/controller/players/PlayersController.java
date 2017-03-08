@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 import java.util.SortedMap;
 import javax.servlet.http.HttpServletRequest;
@@ -110,10 +110,10 @@ public class PlayersController extends BaseController {
     public ModelAndView getByEvent(@PathVariable("id") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(eventId);
         Set<Player> participants = event.getAllPlayers();
-        return getPlayersView(event, new ArrayList<>(participants), msg.get("PlayersIn", new Object[]{event.getName()}));
+        return getPlayersView(event, participants, msg.get("PlayersIn", new Object[]{participants.size(), event.getName()}));
     }
 
-    private ModelAndView getPlayersView(Event event, List<Player> players, String title){
+    private ModelAndView getPlayersView(Event event, Collection<Player> players, String title){
         SortedMap<Participant, BigDecimal> ranking = rankingUtil.getPlayerRanking(players);
         ModelAndView mav = new ModelAndView("players/players");
         mav.addObject("RankingMap", SortUtil.sortMap(ranking));
