@@ -80,6 +80,7 @@ public class EventsController extends BaseController{
                 iterator.remove();
             }
         }
+        Collections.sort(events);
         ModelAndView mav = new ModelAndView("events/index", "Models", events);
         mav.addObject("Module", module);
         return mav;
