@@ -16,6 +16,7 @@ import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,6 +61,9 @@ public class ScoresController extends BaseController{
     @RequestMapping("/event/{eventId}")
     public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipants(eventId);
+        if (event == null){
+            throw new ResourceNotFoundException();
+        }
         List<Game> eventGames = gameDAO.findByEventWithPlayers(event);
         List<ScoreEntry> scoreEntries;
         switch (event.getEventType()){
