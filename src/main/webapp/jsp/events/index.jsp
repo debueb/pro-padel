@@ -5,21 +5,58 @@
         <div class="page-header"></div>
         <jsp:include page="/jsp/include/module-description.jsp"/>
      
-        <c:if test="${empty Models}">
-            <div class="alert alert-info">
-                <fmt:message key="NoActiveEvents"/>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4><fmt:message key="CurrentEvents"/></h4>
             </div>
-        </c:if>
-        
-        <div class="list-group">
-            <c:forEach var="Event" items="${Models}">
-                <a href="/events/event/${Event.id}" class="list-group-item">
-                    <div class="list-item-text">
-                        ${Event.name}
-                    </div>
-                    <div class="text-right"><joda:format value="${Event.startDate}" pattern="EE, dd. MMMM yyyy"/></div>
-                </a>
-            </c:forEach>
+            <div class="panel-body">
+                <c:choose>
+                    <c:when test="${empty CurrentEvents}">
+                        <div class="alert alert-info">
+                            <fmt:message key="NoCurrentEvents"/>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="list-group">
+                            <c:forEach var="Event" items="${CurrentEvents}">
+                                <a href="/events/event/${Event.id}" class="list-group-item">
+                                    <div class="list-item-text">
+                                        ${Event.name}
+                                    </div>
+                                    <div class="text-right"><joda:format value="${Event.startDate}" pattern="EE, dd. MMM. yyyy"/></div>
+                                </a>
+                            </c:forEach>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+            
+        <div class="panel panel-info unit">
+            <div class="panel-heading">
+                <h4><fmt:message key="PastEvents"/></h4>
+            </div>
+            <div class="panel-body">
+                <c:choose>
+                    <c:when test="${empty PastEvents}">
+                        <div class="alert alert-info">
+                            <fmt:message key="NoPastEvents"/>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="list-group">
+                            <c:forEach var="Event" items="${PastEvents}">
+                                <a href="/events/event/${Event.id}" class="list-group-item">
+                                    <div class="list-item-text">
+                                        ${Event.name}
+                                    </div>
+                                    <div class="text-right"><joda:format value="${Event.startDate}" pattern="EE, dd. MMM. yyyy"/></div>
+                                </a>
+                            </c:forEach>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
         </div>
     </div>
 </div>

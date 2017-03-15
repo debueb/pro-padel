@@ -36,6 +36,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -73,15 +74,23 @@ public class EventsController extends BaseController{
             throw new ResourceNotFoundException();
         }
         List<Event> events = eventDAO.findAllActive();
+        Collections.sort(events);
+        List<Event> activeEvents = new ArrayList<>();
+        List<Event> inactiveEvents = new ArrayList<>();
         Iterator<Event> iterator = events.iterator();
         while (iterator.hasNext()){
             Event event = iterator.next();
             if (event.getEventGroup() == null || !module.getEventGroups().contains(event.getEventGroup())){
                 iterator.remove();
+            } else if (event.getEndDate().isAfter(new LocalDate())){
+                activeEvents.add(event);
+            } else {
+                inactiveEvents.add(event);
             }
         }
-        Collections.sort(events);
-        ModelAndView mav = new ModelAndView("events/index", "Models", events);
+        ModelAndView mav = new ModelAndView("events/index");
+        mav.addObject("CurrentEvents", activeEvents);
+        mav.addObject("PastEvents", inactiveEvents);
         mav.addObject("Module", module);
         return mav;
     }
