@@ -53,19 +53,23 @@ public class ImagesController extends BaseController{
     ImageBaseDAOI imageBaseDAO;
     
     @RequestMapping(value="image/{sha256}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> showImage(@PathVariable("sha256") String sha256, HttpServletResponse response) throws IOException{
+    public ResponseEntity<byte[]> showImage(@PathVariable("sha256") String sha256, HttpServletResponse response){
         Image image = imageBaseDAO.findBySha256(sha256);
         if (image!=null){
-            byte[] byteArray = fileUtil.getByteArray(image.getFilePath());
-            ResponseEntity.BodyBuilder builder = ResponseEntity
-                    .ok()
-                    .cacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
-                    .contentLength(byteArray.length);
-                    
-            if (!StringUtils.isEmpty(image.getContentType())){
-                builder = builder.header("Content-Type", image.getContentType());
+            try {
+                byte[] byteArray = fileUtil.getByteArray(image.getFilePath());
+                ResponseEntity.BodyBuilder builder = ResponseEntity
+                        .ok()
+                        .cacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
+                        .contentLength(byteArray.length);
+
+                if (!StringUtils.isEmpty(image.getContentType())){
+                    builder = builder.header("Content-Type", image.getContentType());
+                }
+                return builder.body(byteArray);
+            } catch (IOException e){
+                LOG.warn(e);
             }
-            return builder.body(byteArray);
         }
         LOG.warn(String.format("Unable to display image %s", sha256));
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
