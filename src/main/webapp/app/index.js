@@ -10,3 +10,4 @@ require('./jquery.livequery');
 require('./project');
 require('./jquery.history.min');
 require('./ajaxify');
+require('./dayscheduler');

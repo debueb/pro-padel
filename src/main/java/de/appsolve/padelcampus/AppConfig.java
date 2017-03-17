@@ -9,6 +9,7 @@ import com.bugsnag.Bugsnag;
 import com.bugsnag.Report;
 import com.bugsnag.callbacks.Callback;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.data.CustomerI;
 import de.appsolve.padelcampus.db.model.Player;
@@ -140,7 +141,10 @@ public class AppConfig extends WebMvcConfigurerAdapter{
     
     @Bean
     public ObjectMapper objectMapper(){
-        return new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JodaModule());
+        //mapper.configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS , false);
+        return mapper;
     }
     
     @Bean

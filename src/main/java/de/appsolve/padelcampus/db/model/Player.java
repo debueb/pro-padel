@@ -26,6 +26,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
@@ -123,6 +124,9 @@ public class Player extends Participant implements EmailContact, Validatable{
     @Column
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<DaySchedule> daySchedules;
     
     public String getFirstName() {
         return firstName;
@@ -281,6 +285,14 @@ public class Player extends Participant implements EmailContact, Validatable{
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public Set<DaySchedule> getDaySchedules() {
+        return daySchedules;
+    }
+
+    public void setDaySchedules(Set<DaySchedule> daySchedules) {
+        this.daySchedules = daySchedules;
     }
 
     @Override

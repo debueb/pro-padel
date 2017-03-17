@@ -19,7 +19,7 @@
             </div>
             <div class="panel-body">
 
-                <form method="POST" class="form-signin" enctype="multipart/form-data">
+                <form method="POST" class="form-signin no-ajaxify" enctype="multipart/form-data">
                     <c:forEach var="Attribute" items="${Colors}">
                         <c:choose>
                             <c:when test="${fn:endsWith(Attribute.name, 'Color')}">

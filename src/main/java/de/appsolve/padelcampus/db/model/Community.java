@@ -7,7 +7,6 @@
 package de.appsolve.padelcampus.db.model;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -17,7 +16,6 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author dominik
  */
 @Entity
-@DiscriminatorValue("Team")
 public class Community extends ComparableEntity{
     
     @Transient

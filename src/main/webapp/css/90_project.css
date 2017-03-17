@@ -2021,5 +2021,42 @@ a.menu-item.active {
   display: inline-block;
   text-align: right;
 }
+/*dayscheduler start*/
+.schedule-table {
+  table-layout: fixed;
+  width: 100%;
+  border-spacing: 2px;
+  border-collapse: separate;
+}
+.schedule-table th {
+  text-align: center;
+}
+.schedule-rows td {
+  margin: 3px;
+  padding: 3px;
+  background-color: #a51717;
+  cursor: pointer;
+}
+.schedule-rows td:first-child {
+  background-color: transparent;
+  text-align: right;
+  position: relative;
+}
+.schedule-rows td[data-selected],
+.schedule-rows td[data-selecting] {
+  background-color: #339840;
+}
+.schedule-rows td[data-disabled] {
+  opacity: 0.55;
+}
+.schedule-unavailable {
+  background-color: #a51717;
+  color: #fff;
+}
+.schedule-available {
+  background-color: #339840;
+  color: #fff;
+}
+/*dayscheuler end*/
 /*DO NOT REMOVE THE FOLLOWING LINE. WILL BE REPLACED BY CUSTOMER SPECIFIC CSS*/
 /*customCss*/

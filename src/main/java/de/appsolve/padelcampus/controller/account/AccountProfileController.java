@@ -6,30 +6,37 @@
 package de.appsolve.padelcampus.controller.account;
 
 import com.drew.imaging.ImageProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import static de.appsolve.padelcampus.constants.Constants.DATA_DIR_PROFILE_PICTURES;
 import static de.appsolve.padelcampus.constants.Constants.PROFILE_PICTURE_HEIGHT;
 import static de.appsolve.padelcampus.constants.Constants.PROFILE_PICTURE_WIDTH;
 import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
+import de.appsolve.padelcampus.db.model.DaySchedule;
 import de.appsolve.padelcampus.db.model.Image;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import de.appsolve.padelcampus.utils.imaging.ImageUtilI;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -53,16 +60,47 @@ public class AccountProfileController extends BaseController {
     @Autowired
     @Qualifier("TinifyImageUtil")
     ImageUtilI imageUtil;
+    
+    @Autowired
+    ObjectMapper objectMapper;
+    
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Set.class, "daySchedules", new CustomCollectionEditor(Set.class) {
+            @Override
+            protected Object convertElement(Object element) {
+                if (element instanceof String){
+                    try {
+                        return objectMapper.readValue((String)element, new TypeReference<Set<DaySchedule>>(){});
+                    } catch (IOException ex) {
+                        LOG.error(ex);
+                    }
+                }
+                return null;
+            }
+        });
+    }
 
-    @RequestMapping()
+    @RequestMapping(method = GET)
     public ModelAndView getIndex(HttpServletRequest request) {
         Player user = sessionUtil.getUser(request);
         if (user == null){
             return getLoginRequiredView(request, msg.get("Profile"));
         }
+        user = playerDAO.findByUUIDFetchEagerly(user.getUUID(), "daySchedules");
         return getIndexView(user);
     }
 
+    /*
+    TODO: use mixed-multipart
+    http://stackoverflow.com/questions/21329426/spring-mvc-multipart-request-with-json
+    
+    e.g. 
+    @RequestPart("Model") @Valid Player player,
+    BindingResult bindingResult
+    @RequestPart("file") MultipartFile file
+    
+    */
     @RequestMapping(method = POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ModelAndView postIndex(@ModelAttribute("Model") @Valid Player player, BindingResult bindingResult, HttpServletRequest request) {
         ModelAndView profileView = getIndexView(player);
@@ -86,6 +124,7 @@ public class AccountProfileController extends BaseController {
             persistedPlayer.setEnableMatchNotifications(player.getEnableMatchNotifications());
             persistedPlayer.setNotificationSkillLevels(player.getNotificationSkillLevels());
             persistedPlayer.setAllowEmailContact(player.getAllowEmailContact());
+            persistedPlayer.setDaySchedules(player.getDaySchedules());
 
             //resize Image
             try {
@@ -117,7 +156,7 @@ public class AccountProfileController extends BaseController {
         }
         String redirectPath = sessionUtil.getProfileRedirectPath(request);
         if (redirectPath==null){
-            redirectPath = "/";
+            redirectPath = "/home";
         } else {
             sessionUtil.setProfileRedirectPath(request, null);
         }
