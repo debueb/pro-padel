@@ -108,7 +108,12 @@ public class AccountProfileController extends BaseController {
             persistedPlayer.setEnableMatchNotifications(player.getEnableMatchNotifications());
             persistedPlayer.setNotificationSkillLevels(player.getNotificationSkillLevels());
             persistedPlayer.setAllowEmailContact(player.getAllowEmailContact());
-            persistedPlayer.setDaySchedules(player.getDaySchedules());
+            if (persistedPlayer.getDaySchedules() != null){
+                persistedPlayer.getDaySchedules().clear();
+                persistedPlayer.getDaySchedules().addAll(player.getDaySchedules());
+            } else {
+                persistedPlayer.setDaySchedules(player.getDaySchedules());
+            }
 
             //resize Image
             try {

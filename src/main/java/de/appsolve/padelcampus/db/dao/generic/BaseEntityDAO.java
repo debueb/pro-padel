@@ -191,6 +191,7 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
 
     @Override
     public T saveOrUpdate(T entity) {
+        entity = entityManager.merge(entity);
         Session session = entityManager.unwrap(Session.class);
         session.saveOrUpdate(entity);
         return entity;
