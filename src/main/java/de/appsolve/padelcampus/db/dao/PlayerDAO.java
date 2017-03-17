@@ -1,8 +1,10 @@
 package de.appsolve.padelcampus.db.dao;
 
 import de.appsolve.padelcampus.db.dao.generic.SortedBaseDAO;
+import de.appsolve.padelcampus.db.model.DaySchedule;
 import de.appsolve.padelcampus.db.model.MatchOffer;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.db.model.ScheduleSlot;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -13,6 +15,7 @@ import java.util.UUID;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -83,14 +86,41 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
         criteria.add(Restrictions.isNotNull("enableMatchNotifications"));
         criteria.add(Restrictions.eq("enableMatchNotifications", true));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        //eager fetch list of times for which user is available
+        criteria.setFetchMode("daySchedules", FetchMode.JOIN);
         @SuppressWarnings("unchecked")
         List<Player> interestedPlayers = (List<Player>) criteria.list();
         Iterator<Player> iterator = interestedPlayers.iterator();
-        //remove all players that are not interested in the skill levels associated with the match offer
         while (iterator.hasNext()){
             Player player = iterator.next();
+            //remove all players that are not interested in the skill levels associated with the match offer
             if (Collections.disjoint(player.getNotificationSkillLevels(), offer.getSkillLevels())){
                 iterator.remove();
+            } else {
+                //remove all players that are not interested in day and time of the offer, if they have set their schedule
+                if (player.getDaySchedules() != null){
+                    boolean timeMatches = false;
+                    for (DaySchedule daySchedule: player.getDaySchedules()){
+                        int dayOfWeek = daySchedule.getWeekDay().intValue()+1;          //0-based, 0=Monday
+                        int dayOfWeekOffer = offer.getStartDate().dayOfWeek().get();    //1-based, 1=Monday
+                        if (dayOfWeek == dayOfWeekOffer){
+                            if (daySchedule.getScheduleSlots() != null){
+                                for (ScheduleSlot slot: daySchedule.getScheduleSlots()){
+                                    if (offer.getStartTime().compareTo(slot.getStartTime()) >= 0 && offer.getEndTime().compareTo(slot.getEndTime()) <=0){
+                                        timeMatches = true;
+                                        break;
+                                    }
+                                }
+                                if (timeMatches){
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (!timeMatches){
+                        iterator.remove();
+                    }
+                }
             }
         }
         return interestedPlayers;
