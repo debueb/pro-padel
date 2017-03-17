@@ -140,7 +140,7 @@ public class AccountProfileController extends BaseController {
                 bindingResult.addError(new ObjectError("pictureMultipartFile", msg.get("ErrorWhileResizingImage")));
                 return profileView;
             }
-            persistedPlayer = playerDAO.saveOrUpdate(persistedPlayer);
+            persistedPlayer = playerDAO.saveOrUpdateWithMerge(persistedPlayer);
             sessionUtil.setUser(request, persistedPlayer);
         }
         String redirectPath = sessionUtil.getProfileRedirectPath(request);

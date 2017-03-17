@@ -42,6 +42,8 @@ public interface BaseEntityDAOI<T extends BaseEntityI> {
 
    T saveOrUpdate(T entity);
 
+   T saveOrUpdateWithMerge(T entity);
+   
    void delete(T entity);
 
    void deleteById(Long id);
