@@ -23,7 +23,7 @@ public class ScheduleSlot extends ComparableEntity{
     
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalTime")
-    @JsonFormat(pattern = "HH:mm")
+    @JsonFormat(shape = STRING, pattern = "HH:mm")
     private LocalTime startTime;
     
     @Column
