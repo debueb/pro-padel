@@ -122,7 +122,7 @@ public class AccountProfileController extends BaseController {
                         if (profileFile.exists()){
                             boolean deleteSuccess = profileFile.delete();
                             if (!deleteSuccess){
-                                LOG.warn("Unale to delete file "+profileFile.getAbsolutePath());
+                                LOG.warn("Unable to delete file "+profileFile.getAbsolutePath());
                             }
                         }
                     }
@@ -131,11 +131,11 @@ public class AccountProfileController extends BaseController {
                     persistedPlayer.setProfileImage(image);
                 }
             } catch (IOException | ImageProcessingException e) {
-                LOG.warn("Error while resiging image: " + e.getMessage());
+                LOG.warn("Error while resizing image: " + e.getMessage());
                 bindingResult.addError(new ObjectError("pictureMultipartFile", msg.get("ErrorWhileResizingImage")));
                 return profileView;
             }
-            playerDAO.saveOrUpdate(persistedPlayer);
+            persistedPlayer = playerDAO.saveOrUpdate(persistedPlayer);
             sessionUtil.setUser(request, persistedPlayer);
         }
         String redirectPath = sessionUtil.getProfileRedirectPath(request);
