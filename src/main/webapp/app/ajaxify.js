@@ -4,17 +4,15 @@
 var project = require('./project');
 
 (function (window) {
+    
+    if (!window.history){
+        return;
+    }
 
     // Prepare our Variables
-    var
-        History = window.History,
-        $ = window.jQuery,
-        document = window.document;
-
-    // Check to see if History.js is enabled for our Browser
-    if (!History.enabled) {
-        return false;
-    }
+    var $ = window.jQuery,
+        document = window.document,
+        payload = undefined;
 
     // Wait for Document
     $(function () {
@@ -26,8 +24,7 @@ var project = require('./project');
             $body = $(document.body),
             completedEventName = 'statechangecomplete',
             /* Application Generic Variables */
-            $window = $(window),
-            rootUrl = History.getRootUrl();
+            $window = $(window);
             
         
         // HTML Helper
@@ -104,8 +101,9 @@ var project = require('./project');
                 }
 
                 // Ajaxify this link
-                History.pushState({payload: null, method: 'GET', anchorId: anchorId}, title, url);
+                history.pushState({method: 'GET', url: url, anchorId: anchorId}, title, url);
                 event.preventDefault();
+                $window.trigger('statechange');
                 return false;
             });
             
@@ -123,11 +121,14 @@ var project = require('./project');
                 var $this       = $(this),
                     //using location.origin + location.pathname instead of location.href, as location.href may GET contains parameters
                     //which interfere with the GET parameters that we set below
-                    url         = $(this).prop('action') || document.location.origin + document.location.pathname;
-                    payload     = $this.serialize(),
+                    url         = $(this).prop('action') || document.location.origin + document.location.pathname,
                     method      = $this.attr('method'),
+                    contentType = $this.attr('enctype') || undefined,
                     anchorId    = $this.attr('data-anchor');
                 
+                //storing payload in closure variable as FormData cannot be passed to pushState
+                payload     = (contentType === 'multipart/form-data') ? new FormData($this[0]): $this.serialize();
+                    
                 //only ajaxify internal links
                 if (!isInternalURL(url) || $this.hasClass('no-ajaxify')){
                     return true;
@@ -142,8 +143,9 @@ var project = require('./project');
                     payload = null;
                 }
                 // Ajaxify this link
-                History.pushState({payload: payload, method: method, anchorId: anchorId}, null, url);
+                history.pushState({method: method, url: url, contentType: contentType, anchorId: anchorId}, null, url);
                 event.preventDefault();
+                $window.trigger('statechange');
                 return false;
             });
 
@@ -155,13 +157,9 @@ var project = require('./project');
         $body.ajaxify();
 
         // Hook into State Changes
-        $window.bind('statechange', function () {
+        $window.bind('statechange popstate', function () {
             // Prepare Variables
-            var State = History.getState(),
-                stateData = State.data,
-                url = State.url,
-                relativeUrl = url.replace(rootUrl, '');
-                
+            var stateData = history.state;
             if (stateData.replaceState){
                 return;
             }
@@ -177,16 +175,17 @@ var project = require('./project');
            
             // Ajax Request the Traditional Page
             $.ajax({
-                url: url,
-                type: stateData.method,
-                data: stateData.payload,
+                url:            stateData.url,
+                type:           stateData.method,
+                contentType:    (stateData.contentType === 'multipart/form-data') ? false : undefined,
+                processData:    (stateData.contentType === 'multipart/form-data') ? false : undefined,
+                data:           payload,
                 success: function (responseData, status, xhr) {
                     // Prepare
-                    var
-                            $data = $(documentHtml(responseData)),
-                            $dataBody = $data.find('.document-body:first'),
-                            $dataContent = $dataBody.find(contentSelector).filter(':first'),
-                            contentHtml, $scripts;
+                    var $data = $(documentHtml(responseData)),
+                        $dataBody = $data.find('.document-body:first'),
+                        $dataContent = $dataBody.find(contentSelector).filter(':first'),
+                        contentHtml, $scripts;
 
                     //remove Google Analytics script
                     $dataContent.find('.document-script[data-ajaxify="false"]').detach();
@@ -204,7 +203,7 @@ var project = require('./project');
                     // Fetch the content
                     contentHtml = $dataContent.html() || $data.html();
                     if (!contentHtml) {
-                        document.location.href = url;
+                        document.location.href = stateData.url;
                         return false;
                     }
 
@@ -277,7 +276,7 @@ var project = require('./project');
                     //Update the URL if it was a redirect
                     var redirectURL = xhr.getResponseHeader("RedirectURL");
                     if (!!redirectURL){
-                        History.replaceState({replaceState: true}, document.title, redirectURL);
+                        history.replaceState({replaceState: true}, document.title, redirectURL);
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -288,6 +287,7 @@ var project = require('./project');
                     return false;
                 },
                 complete: function(){
+                    payload = undefined;
                     project.hideSpinner();
                 }
             }); // end ajax
