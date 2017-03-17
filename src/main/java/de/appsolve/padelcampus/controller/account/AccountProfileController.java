@@ -117,7 +117,7 @@ public class AccountProfileController extends BaseController {
         }
         String redirectPath = sessionUtil.getProfileRedirectPath(request);
         if (redirectPath==null){
-            redirectPath = "/";
+            redirectPath = "/home";
         } else {
             sessionUtil.setProfileRedirectPath(request, null);
         }
