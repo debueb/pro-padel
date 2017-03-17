@@ -331,7 +331,7 @@
                     <webResources>
                         <resource>
                             <filtering>true</filtering>
-                            <!-- replace compressCSS/compressJS variables in head and footer -->
+                            <!-- replace variables in head and footer -->
                             <directory>src/main/webapp</directory>
                             <includes>
                                 <include>jsp/include/head.jsp</include>
@@ -391,6 +391,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
+                <profile.id>dev</profile.id>
                 <!-- reload messages on every request -->
                 <messagesReloadInterval>0</messagesReloadInterval>
                 
@@ -476,6 +477,7 @@
                 </plugins>
             </build>
             <properties>
+                <profile.id>openshift</profile.id>
                 <!-- cache static files for 1 day -->
                 <httpResponseCacheDuration>86400</httpResponseCacheDuration>
                 
