@@ -111,10 +111,6 @@ public class Player extends Participant implements EmailContact, Validatable{
     private Image profileImage;
     
     @Column
-    @Enumerated(EnumType.STRING)
-    private SkillLevel skillLevel;
-    
-    @Column
     private Boolean enableMatchNotifications;
     
     @ElementCollection(fetch = FetchType.EAGER)
@@ -230,14 +226,6 @@ public class Player extends Participant implements EmailContact, Validatable{
 
     public void setProfileImage(Image profileImage) {
         this.profileImage = profileImage;
-    }
-
-    public SkillLevel getSkillLevel() {
-        return skillLevel;
-    }
-
-    public void setSkillLevel(SkillLevel skillLevel) {
-        this.skillLevel = skillLevel;
     }
 
     public Boolean getEnableMatchNotifications() {

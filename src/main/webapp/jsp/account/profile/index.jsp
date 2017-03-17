@@ -35,24 +35,6 @@
                     <div class="clearfix"></div>
                 </div>
             </div>
-<!--            <div class="panel panel-info unit">
-                <div class="panel-heading">
-                    <h4><fmt:message key="MySkillLevel"/></h4>
-                </div>
-                <div class="panel-body">
-                    <div class="row form-group product-chooser">
-                        <c:forEach var="SkillLevel" items="${SkillLevels}">
-                            <div class="col-xs-12 col-sm-6 col-md-4">
-                                <div class="product-chooser-item ${Model.skillLevel == SkillLevel ? 'selected' : ''}">
-                                    <div class="title"><fmt:message key="${SkillLevel}"/></div>
-                                    <span class="description"><fmt:message key="${SkillLevel}-desc"/></span>
-                                    <spf:radiobutton checked="${Model.skillLevel == SkillLevel ? 'checked' : ''}" path="skillLevel" value="${SkillLevel}"/>
-                                </div>
-                            </div>
-                        </c:forEach>
-                    </div>
-                </div>
-            </div>-->
             <div class="panel panel-info unit">
                 <div class="panel-heading">
                     <h4><fmt:message key="NotificationSettings"/></h4>
