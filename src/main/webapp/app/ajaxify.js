@@ -283,7 +283,7 @@ var project = require('./project');
                     console.log(jqXHR);
                     console.log(textStatus);
                     console.log(errorThrown);
-                    document.location.href = url;
+                    document.location.href = stateData.url;
                     return false;
                 },
                 complete: function(){
