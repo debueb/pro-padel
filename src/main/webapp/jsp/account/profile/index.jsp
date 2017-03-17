@@ -101,7 +101,6 @@
                                     $('input[name="daySchedules"]').val(JSON.stringify(selectedSlots));
                                 });
                                 var schedule = JSON.parse($('input[name="daySchedules"]').val()) || [];
-                                console.log(schedule);
                                 $("#day-schedule").data('artsy.dayScheduleSelector').deserialize(schedule);
                             }
                         };
