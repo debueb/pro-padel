@@ -104,8 +104,10 @@
     this.$el.on('click', '.time-slot', function () {
       var day = $(this).data('day');
       if (!plugin.isSelecting()) {  // if we are not in selecting mode
-        if (isSlotSelected($(this))) { plugin.deselect($(this)); }
-        else {  // then start selecting
+        if (isSlotSelected($(this))) { 
+            plugin.deselect($(this));
+            plugin.$el.trigger('selected.artsy.dayScheduleSelector');
+        } else {  // then start selecting
           plugin.$selectingStart = $(this);
           $(this).attr('data-selecting', 'selecting');
           plugin.$el.find('.time-slot').attr('data-disabled', 'disabled');
