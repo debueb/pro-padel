@@ -8,5 +8,4 @@ require('./jquery.webui-popover.min');
 require('./slick.min');
 require('./jquery.livequery');
 require('./project');
-require('./jquery.history.min');
 require('./ajaxify');
