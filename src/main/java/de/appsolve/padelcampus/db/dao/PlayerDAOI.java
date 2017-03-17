@@ -22,6 +22,8 @@ public interface PlayerDAOI extends BaseEntityDAOI<Player>{
     public Player findByEmail(String email);
     
     public Player findByUUID(String UUID);
+    
+    public Player findByUUIDWithDaySchedules(String UUID);
 
     public Player findByPasswordResetUUID(String UUID);
     

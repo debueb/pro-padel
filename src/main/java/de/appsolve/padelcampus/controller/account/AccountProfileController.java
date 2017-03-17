@@ -72,7 +72,7 @@ public class AccountProfileController extends BaseController {
         if (user == null){
             return getLoginRequiredView(request, msg.get("Profile"));
         }
-        user = playerDAO.findByUUIDFetchEagerly(user.getUUID(), "daySchedules");
+        user = playerDAO.findByUUIDWithDaySchedules(user.getUUID());
         return getIndexView(user);
     }
 
@@ -92,14 +92,14 @@ public class AccountProfileController extends BaseController {
         if (bindingResult.hasErrors()) {
             return profileView;
         }
-        //make sure nobody changes another player's account
         Player user = sessionUtil.getUser(request);
         if (user == null){
             return new ModelAndView("include/loginrequired");
         }
+        //make sure nobody changes another player's account
         if (user.getId() != null && user.getId().equals(player.getId())) {
             //make sure not to overwrite any existing data
-            Player persistedPlayer = playerDAO.findById(player.getId());
+            Player persistedPlayer = playerDAO.findByUUIDWithDaySchedules(user.getUUID());
             persistedPlayer.setFirstName(player.getFirstName());
             persistedPlayer.setLastName(player.getLastName());
             persistedPlayer.setEmail(player.getEmail());

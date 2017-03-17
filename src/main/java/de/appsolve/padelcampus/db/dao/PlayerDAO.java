@@ -34,6 +34,11 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
     public Player findByUUID(String UUID) {
         return findByAttribute("UUID", UUID);
     }
+    
+    @Override
+    public Player findByUUIDWithDaySchedules(String UUID) {
+        return findByUUIDFetchEagerly(UUID, "daySchedules");
+    }
 
     @Override
     public Player findByPasswordResetUUID(String UUID) {
