@@ -55,7 +55,7 @@ public class TestMatchOffers extends TestBase {
         
         login(ADMIN_EMAIL, ADMIN_PASSWORD);
         
-        LOG.info("Creating a matchoffer should as logged in user should work");
+        LOG.info("Creating a matchoffer as logged in user should work");
         mockMvc.perform(post("/matchoffers/add")
                 .session(session)
                 .param("startDate", getNextMonday().toString())
