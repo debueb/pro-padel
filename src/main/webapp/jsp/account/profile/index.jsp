@@ -27,7 +27,19 @@
                     <div class="col-xs-12 text-center">
                         <figure class="picture text-center">
                             <c:set var="Player" value="${Model}" scope="request"/>
-                            <jsp:include page="/jsp/players/include/profile-image.jsp"/>
+                            <span class="polaroid">
+                                <c:choose>
+                                    <c:when test="${empty Player.profileImage}">
+                                        <span class="fa-stack fa-5x">
+                                            <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                                            <i class="fa fa-user-circle fa-stack-1x"></i>
+                                        </span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="/images/image/${Player.profileImage.sha256}"/>
+                                    </c:otherwise>
+                                </c:choose>
+                            </span>
                             <div class="unit picture-subtext"><fmt:message key="ClickImageToChange"/></div>
                         </figure>
                         <spf:input type="file" capture="camera" accept="image/*" path="profileImageMultipartFile" class="picture-input hidden"/>

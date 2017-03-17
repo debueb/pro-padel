@@ -453,15 +453,7 @@ var project = {
             $('.picture-input').on('change', function(){
                 var value = $(this).val();
                 var lastIndex = (value.lastIndexOf("\\") === -1) ? 0 : value.lastIndexOf("\\")+1;
-                $(this).prev().first('.picture').find('.picture-subtext').text(value.slice(lastIndex)); 
-            });
-        });
-        
-        $('div.product-chooser').not('.disabled').find('div.product-chooser-item').livequery(function(){
-            $(this).on('click tap', function(){
-                $(this).parent().parent().find('div.product-chooser-item').removeClass('selected');
-                $(this).addClass('selected');
-                $(this).find('input[type="radio"]').prop("checked", true);
+                $picture.find('.picture-subtext').text(value.slice(lastIndex)); 
             });
         });
     },
