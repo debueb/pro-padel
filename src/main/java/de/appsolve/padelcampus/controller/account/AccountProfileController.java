@@ -6,17 +6,15 @@
 package de.appsolve.padelcampus.controller.account;
 
 import com.drew.imaging.ImageProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import static de.appsolve.padelcampus.constants.Constants.DATA_DIR_PROFILE_PICTURES;
 import static de.appsolve.padelcampus.constants.Constants.PROFILE_PICTURE_HEIGHT;
 import static de.appsolve.padelcampus.constants.Constants.PROFILE_PICTURE_WIDTH;
 import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
-import de.appsolve.padelcampus.db.model.DaySchedule;
 import de.appsolve.padelcampus.db.model.Image;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.spring.DaySchedulePropertyEditor;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import de.appsolve.padelcampus.utils.imaging.ImageUtilI;
 import java.io.File;
@@ -27,7 +25,6 @@ import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -62,23 +59,11 @@ public class AccountProfileController extends BaseController {
     ImageUtilI imageUtil;
     
     @Autowired
-    ObjectMapper objectMapper;
+    DaySchedulePropertyEditor daySchedulePropertyEditor;
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(Set.class, "daySchedules", new CustomCollectionEditor(Set.class) {
-            @Override
-            protected Object convertElement(Object element) {
-                if (element instanceof String){
-                    try {
-                        return objectMapper.readValue((String)element, new TypeReference<Set<DaySchedule>>(){});
-                    } catch (IOException ex) {
-                        LOG.error(ex);
-                    }
-                }
-                return null;
-            }
-        });
+        binder.registerCustomEditor(Set.class, "daySchedules", daySchedulePropertyEditor);
     }
 
     @RequestMapping(method = GET)
