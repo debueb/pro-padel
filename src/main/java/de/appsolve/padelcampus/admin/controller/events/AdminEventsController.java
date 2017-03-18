@@ -205,6 +205,11 @@ public class AdminEventsController extends AdminBaseController<Event>{
             }
         }
         
+        //make sure end date is not before start date
+        if (model.getEndDate().isBefore(model.getStartDate())){
+            model.setEndDate(model.getStartDate());
+        }
+        
         //if participants can sign up online, make sure price and payment methods are set
         if (model.getAllowSignup()){
             if (model.getPaymentMethods() == null || model.getPaymentMethods().isEmpty()){
