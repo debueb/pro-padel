@@ -168,7 +168,7 @@ var project = require('./project');
         $window.bind('statechange popstate', function (event) {
             var stateData = event.state || event.originalEvent.state;
             // Prepare Variables
-            if (stateData.replaceState){
+            if (!stateData || stateData.replaceState){
                 return;
             }
               
