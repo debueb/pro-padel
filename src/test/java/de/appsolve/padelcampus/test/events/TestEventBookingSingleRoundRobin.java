@@ -54,6 +54,7 @@ public class TestEventBookingSingleRoundRobin extends TestEventBookingBase {
                 .param("startDate", nextMonday.toString())
                 .param("startTimeHour", "10")
                 .param("startTimeMinute", "00")
+                .param("endDate", nextMonday.toString())
                 .param("location", "Test location")
                 .param("numberOfSets", "3")
                 .param("numberOfGamesPerSet", "7")
