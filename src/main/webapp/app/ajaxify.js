@@ -72,6 +72,12 @@ var project = require('./project');
                 return false;
             });
             
+            var triggerStateChange = function(event, eventData){
+                var e = $.Event('statechange');
+                e.originalEvent = event;
+                e.originalEvent.state = eventData;
+                $window.trigger(e);  
+            };
             
             // Ajaxify
             var $this = $(this);
@@ -101,9 +107,10 @@ var project = require('./project');
                 }
 
                 // Ajaxify this link
-                history.pushState({method: 'GET', url: url, anchorId: anchorId}, title, url);
+                var eventData = {method: 'GET', url: url, anchorId: anchorId};
+                history.pushState(eventData, title, url);
+                triggerStateChange(event, eventData);
                 event.preventDefault();
-                $window.trigger('statechange');
                 return false;
             });
             
@@ -143,9 +150,10 @@ var project = require('./project');
                     payload = null;
                 }
                 // Ajaxify this link
-                history.pushState({method: method, url: url, contentType: contentType, anchorId: anchorId}, null, url);
+                var eventData = {method: method, url: url, contentType: contentType, anchorId: anchorId};
+                history.pushState(eventData, null, url);
+                triggerStateChange(event, eventData);
                 event.preventDefault();
-                $window.trigger('statechange');
                 return false;
             });
 
@@ -157,9 +165,9 @@ var project = require('./project');
         $body.ajaxify();
 
         // Hook into State Changes
-        $window.bind('statechange popstate', function () {
+        $window.bind('statechange popstate', function (event) {
+            var stateData = event.originalEvent.state;
             // Prepare Variables
-            var stateData = history.state;
             if (stateData.replaceState){
                 return;
             }
