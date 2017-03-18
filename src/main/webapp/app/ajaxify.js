@@ -75,7 +75,7 @@ var project = require('./project');
             var triggerStateChange = function(event, eventData){
                 var e = $.Event('statechange');
                 e.originalEvent = event;
-                e.originalEvent.state = eventData;
+                e.state = eventData;
                 $window.trigger(e);  
             };
             
@@ -166,7 +166,7 @@ var project = require('./project');
 
         // Hook into State Changes
         $window.bind('statechange popstate', function (event) {
-            var stateData = event.originalEvent.state;
+            var stateData = event.state || event.originalEvent.state;
             // Prepare Variables
             if (stateData.replaceState){
                 return;
