@@ -21,8 +21,8 @@ import org.springframework.http.client.ClientHttpResponse;
  */
 public class OpenshiftApiRequestInterceptor implements ClientHttpRequestInterceptor{
     
-    private String openshiftUsername = "d.wisskirchen@gmail.com";
-    private String openshiftPassword = "Gukn6$PanzQuve";
+    private String openshiftUsername;
+    private String openshiftPassword;
     
     public OpenshiftApiRequestInterceptor(String username, String password){
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)){
