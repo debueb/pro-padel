@@ -48,7 +48,7 @@
                 <div style="padding: 10px;">
                     <c:choose>
                         <c:when test="${Model.eventType eq 'PullRoundRobin'}">
-                            <a href="/admin/events/edit/${Model.id}/addpullgame?redirectUrl=${redirectUrl}" class="btn btn-primary btn-block unit-2"><fmt:message key="AddGame"/></a>
+                            <a href="/events/edit/${Model.id}/addpullgame?redirectUrl=${redirectUrl}" class="btn btn-primary btn-block unit-2"><fmt:message key="AddGame"/></a>
                         </c:when>
                         <c:when test="${Model.eventType eq 'FriendlyGames'}">
                             <a href="/admin/events/edit/${Model.id}/addfriendlygame?redirectUrl=${redirectUrl}" class="btn btn-primary btn-block unit-2"><fmt:message key="AddGame"/></a>

@@ -10,9 +10,12 @@ import de.appsolve.padelcampus.comparators.EventByStartDateComparator;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.controller.BaseController;
+import de.appsolve.padelcampus.data.AddPullGame;
 import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
+import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
+import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Community;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
@@ -30,6 +33,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -38,12 +42,19 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -61,6 +72,12 @@ public class EventsController extends BaseController{
     EventDAOI eventDAO;
     
     @Autowired
+    GameDAOI gameDAO;
+    
+    @Autowired
+    TeamDAOI teamDAO;
+    
+    @Autowired
     EventsUtil eventsUtil;
     
     @Autowired
@@ -68,6 +85,9 @@ public class EventsController extends BaseController{
     
     @Autowired
     RankingUtil rankingUtil;
+    
+    @Autowired
+    protected Validator validator;
     
     @RequestMapping("{moduleTitle}")
     public ModelAndView getEvent(@PathVariable("moduleTitle") String moduleTitle){
@@ -254,6 +274,46 @@ public class EventsController extends BaseController{
         return scoreView;
     }
     
+    @RequestMapping(value={"edit/{eventId}/addpullgame"}, method=GET)
+    public ModelAndView getAddPullGame(@PathVariable("eventId") Long eventId){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        return getAddPullGameView(event, new AddPullGame());
+    }
+    
+    @RequestMapping(value={"edit/{eventId}/addpullgame"}, method=POST)
+    public ModelAndView postAddPullGame(
+            @PathVariable("eventId") Long eventId,
+            @ModelAttribute("Model") AddPullGame addPullGame,
+            @RequestParam(value="redirectUrl", required=false) String redirectUrl,
+            BindingResult bindingResult){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        validator.validate(addPullGame, bindingResult);
+        if (bindingResult.hasErrors()){
+            return getAddPullGameView(event, addPullGame);
+        }
+        if (!Collections.disjoint(addPullGame.getTeam1(), addPullGame.getTeam2())){
+            bindingResult.addError(new ObjectError("id", msg.get("ChooseDistinctPlayers")));
+            return getAddPullGameView(event, addPullGame);
+        }
+        Set<Participant> teams = new HashSet<>();
+        teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam1()));
+        teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam2()));
+        for (Game game: event.getGames()){
+            if (game.getParticipants().containsAll(teams)){
+                bindingResult.addError(new ObjectError("id", msg.get("GameAlreadyExists")));
+                return getAddPullGameView(event, addPullGame);
+            }
+        }
+        Game game = new Game();
+        game.setEvent(event);
+        game.setParticipants(teams);
+        gameDAO.saveOrUpdate(game);
+        if (!StringUtils.isEmpty(redirectUrl)){
+            return new ModelAndView("redirect:/"+redirectUrl);
+        }
+        return new ModelAndView("redirect:/events/event/"+event.getId()+"/pullgames");
+    }
+    
     private ModelAndView getKnockoutView(Event event, SortedMap<Integer, List<Game>> roundGameMap) {
         ModelAndView mav = new ModelAndView("events/knockout/knockoutgames");
         mav.addObject("Model", event);
@@ -287,5 +347,12 @@ public class EventsController extends BaseController{
             }
         }
         return participantGameGameSetMap;
+    }
+    
+    private ModelAndView getAddPullGameView(Event event, AddPullGame game) {
+        ModelAndView mav = new ModelAndView("admin/events/addpullgame");
+        mav.addObject("Event", event);
+        mav.addObject("Model", game);
+        return mav;
     }
 }

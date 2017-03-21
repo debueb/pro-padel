@@ -31,4 +31,6 @@ public interface TeamDAOI extends BaseEntityDAOI<Team>{
     List<Team> findByPlayer(Player player);
     
     Page<Team> findAllFetchWithPlayers(Pageable pageable);
+    
+    Team findOrCreateTeam(Set<Player> players);
 }

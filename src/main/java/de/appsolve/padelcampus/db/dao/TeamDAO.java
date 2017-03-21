@@ -3,6 +3,7 @@ package de.appsolve.padelcampus.db.dao;
 import de.appsolve.padelcampus.db.dao.generic.SortedBaseDAO;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.utils.TeamUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -133,6 +134,18 @@ public class TeamDAO extends SortedBaseDAO<Team> implements TeamDAOI{
             team.getPlayers().size();
         }
         return teams;
+    }
+    
+    @Override
+    public Team findOrCreateTeam(Set<Player> players) {
+        Team team = findByPlayers(players);
+        if (team == null){
+            team = new Team();
+            team.setPlayers(players);
+            team.setName(TeamUtil.getTeamName(team));
+            team = saveOrUpdate(team);
+        }
+        return team;
     }
     
     @Override
