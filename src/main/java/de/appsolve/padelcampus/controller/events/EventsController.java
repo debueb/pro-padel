@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.controller.events;
 
+import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.ScoreEntry;
@@ -75,22 +76,22 @@ public class EventsController extends BaseController{
         }
         List<Event> events = eventDAO.findAllActive();
         Collections.sort(events);
-        List<Event> activeEvents = new ArrayList<>();
-        List<Event> inactiveEvents = new ArrayList<>();
+        List<Event> currentEvents = new ArrayList<>();
+        List<Event> pastEvents = new ArrayList<>();
         Iterator<Event> iterator = events.iterator();
         while (iterator.hasNext()){
             Event event = iterator.next();
             if (event.getEventGroup() == null || !module.getEventGroups().contains(event.getEventGroup())){
                 iterator.remove();
-            } else if (event.getEndDate().isAfter(new LocalDate())){
-                activeEvents.add(event);
+            } else if (event.getEndDate().isAfter(new LocalDate(Constants.DEFAULT_TIMEZONE))){
+                currentEvents.add(event);
             } else {
-                inactiveEvents.add(event);
+                pastEvents.add(event);
             }
         }
         ModelAndView mav = new ModelAndView("events/index");
-        mav.addObject("CurrentEvents", activeEvents);
-        mav.addObject("PastEvents", inactiveEvents);
+        mav.addObject("CurrentEvents", currentEvents);
+        mav.addObject("PastEvents", pastEvents);
         mav.addObject("Module", module);
         return mav;
     }
