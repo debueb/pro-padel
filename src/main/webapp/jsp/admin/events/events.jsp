@@ -22,6 +22,7 @@
                         <thead>
                         <th><fmt:message key="Name"/></th>
                         <th><fmt:message key="StartDate"/></th>
+                        <th><fmt:message key="EndDate"/></th>
                         <th><fmt:message key="EventType"/></th>
                         <th class="text-center"><fmt:message key="Participants"/></th>
                         <th class="text-center"><fmt:message key="MaxNumberOfParticipants"/></th>
@@ -34,6 +35,7 @@
                                 <tr>
                                     <td><a href="${url}">${Event.name}</a></td>
                                     <td><a href="${url}"><joda:format value="${Event.startDate}" pattern="yyyy-MM-dd"/></a></td>
+                                    <td><a href="${url}"><joda:format value="${Event.endDate}" pattern="yyyy-MM-dd"/></a></td>
                                     <td><a href="${url}"><fmt:message key="${Event.eventType}"/></a></td>
                                     <td class="text-center">${fn:length(Event.participants)}</td>
                                     <td class="text-center">${Event.maxNumberOfParticipants}</td>

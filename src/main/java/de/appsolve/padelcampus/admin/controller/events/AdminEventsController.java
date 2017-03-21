@@ -8,6 +8,7 @@ package de.appsolve.padelcampus.admin.controller.events;
 
 import de.appsolve.padelcampus.spring.CalendarConfigPropertyEditor;
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
+import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.PaymentMethod;
@@ -153,10 +154,11 @@ public class AdminEventsController extends AdminBaseController<Event>{
     @RequestMapping(method = GET, value = "/{status}")
     public ModelAndView showEvents(HttpServletRequest request, Pageable pageable, @RequestParam(required = false, name = "search") String search, @PathVariable("status") String status){
         Set<Criterion> criterions = new HashSet<>();
-        if (status.equals("active")){
-            criterions.add(Restrictions.eq("active", true));
+        LocalDate today = new LocalDate(Constants.DEFAULT_TIMEZONE);
+        if (status.equals("current")){
+            criterions.add(Restrictions.ge("endDate", today));
         } else {
-            criterions.add(Restrictions.or(Restrictions.isNull("active"), Restrictions.eq("active", false)));
+            criterions.add(Restrictions.lt("endDate", today));
         }
         Page<Event> page;
         if (!StringUtils.isEmpty(search)){

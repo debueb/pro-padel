@@ -7,7 +7,7 @@
      
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4><fmt:message key="CurrentEvents"/></h4>
+                <h4><fmt:message key="currentEvents"/></h4>
             </div>
             <div class="panel-body">
                 <c:choose>
@@ -34,7 +34,7 @@
             
         <div class="panel panel-info unit">
             <div class="panel-heading">
-                <h4><fmt:message key="PastEvents"/></h4>
+                <h4><fmt:message key="pastEvents"/></h4>
             </div>
             <div class="panel-body">
                 <c:choose>

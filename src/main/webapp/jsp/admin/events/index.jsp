@@ -19,14 +19,12 @@
             <div class="panel-body">
                 <div class="list-group">
                     <jsp:include page="/jsp/include/list-group-item.jsp">
-                        <jsp:param name="href" value="/admin/events/active"/>
-                        <jsp:param name="key" value="activeEvents"/>
-                        <jsp:param name="icon" value="eye"/>
+                        <jsp:param name="href" value="/admin/events/current"/>
+                        <jsp:param name="key" value="currentEvents"/>
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
-                        <jsp:param name="href" value="/admin/events/inactive"/>
-                        <jsp:param name="key" value="inactiveEvents"/>
-                        <jsp:param name="icon" value="eye-slash"/>
+                        <jsp:param name="href" value="/admin/events/past"/>
+                        <jsp:param name="key" value="pastEvents"/>
                     </jsp:include>
                 </div>
                 <a href="${contextPath}/admin/events/add" class="btn btn-primary btn-block unit-2"><fmt:message key="NewEvent"/></a>
