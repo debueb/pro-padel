@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.controller.events;
 
+import de.appsolve.padelcampus.comparators.EventByStartDateComparator;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.controller.BaseController;
@@ -75,7 +76,7 @@ public class EventsController extends BaseController{
             throw new ResourceNotFoundException();
         }
         List<Event> events = eventDAO.findAllActive();
-        Collections.sort(events);
+        Collections.sort(events, new EventByStartDateComparator());
         List<Event> currentEvents = new ArrayList<>();
         List<Event> pastEvents = new ArrayList<>();
         Iterator<Event> iterator = events.iterator();
