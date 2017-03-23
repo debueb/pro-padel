@@ -9,6 +9,7 @@ import java.util.List;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Participant;
+import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,11 +54,21 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         @SuppressWarnings("unchecked")
         List<Game> games = (List<Game>) criteria.list();
-        for (Game game: games){
+        Iterator<Game> iterator = games.iterator();
+        while (iterator.hasNext()){
+            Game game = iterator.next();
             for (Participant participant: game.getParticipants()){
                 if (participant instanceof Team){
                     Team t = (Team)participant;
                     Hibernate.initialize(t.getPlayers());
+                    if (!gender.equals(Gender.mixed)){
+                        for (Player player: t.getPlayers()){
+                            if (!player.getGender().equals(gender)){
+                                iterator.remove();
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }
