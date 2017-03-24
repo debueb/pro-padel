@@ -104,7 +104,7 @@ public class EventsController extends BaseController{
             Event event = iterator.next();
             if (event.getEventGroup() == null || !module.getEventGroups().contains(event.getEventGroup())){
                 iterator.remove();
-            } else if (event.getEndDate().isAfter(new LocalDate(Constants.DEFAULT_TIMEZONE))){
+            } else if (new LocalDate(Constants.DEFAULT_TIMEZONE).compareTo(event.getEndDate()) <= 0){
                 currentEvents.add(event);
             } else {
                 pastEvents.add(event);
