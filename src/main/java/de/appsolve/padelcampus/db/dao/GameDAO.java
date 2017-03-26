@@ -46,10 +46,8 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
 //        return (List<Game>) criteria.list();
 
         Criteria criteria = getCriteria();
-        //criteria.setFetchMode("participants.players", FetchMode.JOIN);
         criteria.createAlias("event", "e");
         criteria.add(Restrictions.gt("e.endDate", date));
-        criteria.add(Restrictions.eq("e.gender", gender));
         criteria.add(Restrictions.isNotEmpty("gameSets"));
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         @SuppressWarnings("unchecked")
@@ -61,16 +59,18 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
                 if (participant instanceof Team){
                     Team t = (Team)participant;
                     Hibernate.initialize(t.getPlayers());
-                    if (!gender.equals(Gender.mixed)){
-                        for (Player player: t.getPlayers()){
-                            if (!player.getGender().equals(gender)){
-                                //check if game has been removed before to avoid IllegalStateException
-                                if (games.contains(game)){
-                                    iterator.remove();
-                                    break;
-                                }
-                            }
+                    Gender teamGender = null;
+                    for (Player player: t.getPlayers()){
+                        if (teamGender == null){
+                            teamGender = player.getGender();
+                        } else if (!teamGender.equals(player.getGender())){
+                            teamGender = Gender.mixed;
                         }
+                    }
+                    //check if game has been removed before to avoid IllegalStateException
+                    if (games.contains(game) && (teamGender == null || !teamGender.equals(gender))){
+                        iterator.remove();
+                        break;
                     }
                 }
             }
