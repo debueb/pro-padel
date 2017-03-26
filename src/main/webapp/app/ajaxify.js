@@ -278,7 +278,7 @@ var project = require('./project');
 
                     // Inform Google Analytics of the change
                     if (typeof window._gaq !== 'undefined') {
-                        window._gaq.push(['_trackPageview', relativeUrl]);
+                        window._gaq.push(['_trackPageview', stateData.url]);
                     }
                     
                     //Update the URL if it was a redirect
