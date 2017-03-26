@@ -114,14 +114,23 @@ public class RankingUtil {
     
     public SortedMap<Participant, BigDecimal> getPlayerRanking(Gender category, Collection<Player> participants) {
         SortedMap<Participant, BigDecimal> ranking = getRanking(category);
-        ranking.keySet().retainAll(participants);
-        //add all participants without score
-        for (Participant p : participants) {
-            if (!ranking.containsKey(p)) {
-                ranking.put(p, p.getInitialRankingAsBigDecimal());
+        SortedMap<Participant, BigDecimal> eventRanking = new TreeMap<>();
+        for (Map.Entry<Participant, BigDecimal> entry: ranking.entrySet()){
+            Participant participant = entry.getKey();
+            if (participant instanceof Player){
+                Player player = (Player) participant;
+                if (participants.contains(player)){
+                    eventRanking.put(player, entry.getValue());
+                }
             }
         }
-        return ranking;
+        //add all participants without score
+        for (Participant p : participants) {
+            if (!eventRanking.containsKey(p)) {
+                eventRanking.put(p, p.getInitialRankingAsBigDecimal());
+            }
+        }
+        return eventRanking;
     }
     
     private SortedMap<Participant, BigDecimal> getRanking(List<Game> games) {
