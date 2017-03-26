@@ -64,8 +64,11 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
                     if (!gender.equals(Gender.mixed)){
                         for (Player player: t.getPlayers()){
                             if (!player.getGender().equals(gender)){
-                                iterator.remove();
-                                break;
+                                //check if game has been removed before to avoid IllegalStateException
+                                if (games.contains(game)){
+                                    iterator.remove();
+                                    break;
+                                }
                             }
                         }
                     }
