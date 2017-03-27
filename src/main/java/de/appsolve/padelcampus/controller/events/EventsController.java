@@ -25,6 +25,7 @@ import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
+import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
@@ -49,6 +50,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -88,6 +91,15 @@ public class EventsController extends BaseController{
     
     @Autowired
     protected Validator validator;
+    
+    @Autowired
+    PlayerCollectionEditor playerCollectionEditor;
+    
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Set.class, "team1", playerCollectionEditor);
+        binder.registerCustomEditor(Set.class, "team2", playerCollectionEditor);
+    }
     
     @RequestMapping("{moduleTitle}")
     public ModelAndView getEvent(@PathVariable("moduleTitle") String moduleTitle){
