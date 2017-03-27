@@ -11,16 +11,25 @@
             </div>
             <div class="panel-body">
                 <div class="alert alert-danger">${error}</div>
+                <c:choose>
+                    <c:when test="${empty Model}">
+                        <div class="alert alert-danger">
+                            <fmt:message key="ObjectDoesNotExist"/>
+                        </div>
+                        <p><a class="btn btn-primary btn-lg" href="/"><fmt:message key="Home"/></a>&nbsp;<a class="btn btn-primary btn-lg" href="/contact"><fmt:message key="Contact"/></a></p>
+                    </c:when>
+                    <c:otherwise>
+                        <h4><fmt:message key="AreYouSureYouWantToDelete"><fmt:param value="${Model}"/></fmt:message></h4>
 
-                <h4><fmt:message key="AreYouSureYouWantToDelete"><fmt:param value="${Model}"/></fmt:message></h4>
-
-                <form method="POST">
-                    <a class="btn btn-primary btn-back unit"><fmt:message key="Cancel"/></a>
-                    <c:if test="${not empty param.redirectUrl}">
-                        <input type="hidden" name="redirectUrl" value="${param.redirectUrl}"> 
-                    </c:if>
-                    <button class="btn btn-danger unit" style="margin-left: 10px;"><fmt:message key="Delete"/></button>
-                </form>
+                        <form method="POST">
+                            <a class="btn btn-primary btn-back unit"><fmt:message key="Cancel"/></a>
+                            <c:if test="${not empty param.redirectUrl}">
+                                <input type="hidden" name="redirectUrl" value="${param.redirectUrl}"> 
+                            </c:if>
+                            <button class="btn btn-danger unit" style="margin-left: 10px;"><fmt:message key="Delete"/></button>
+                        </form>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
     </div>
