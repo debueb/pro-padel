@@ -25,7 +25,7 @@ var project = {
             }
             //btn-back is used not only in header
             $(this).on('click tap', function(){
-               window.History.back();
+               window.history.back();
             });
         });
     },
