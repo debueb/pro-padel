@@ -14,6 +14,7 @@
                 <jsp:include page="/jsp/games/score-reporter.jsp"/>
                 <div class="alert alert-danger">${error}</div>
                 <form method="POST">
+                    <jsp:include page="/jsp/include/input-redirect.jsp"/>
                     <table style="width: 100%;" class="table-editgame table-fixed">
                         <thead>
                         <th></th>

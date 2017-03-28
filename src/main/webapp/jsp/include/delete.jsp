@@ -23,9 +23,7 @@
 
                         <form method="POST">
                             <a class="btn btn-primary btn-back unit"><fmt:message key="Cancel"/></a>
-                            <c:if test="${not empty param.redirectUrl}">
-                                <input type="hidden" name="redirectUrl" value="${param.redirectUrl}"> 
-                            </c:if>
+                            <jsp:include page="/jsp/include/input-redirect.jsp"/>
                             <button class="btn btn-danger unit" style="margin-left: 10px;"><fmt:message key="Delete"/></button>
                         </form>
                     </c:otherwise>
