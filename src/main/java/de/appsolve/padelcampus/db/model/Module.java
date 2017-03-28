@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
@@ -70,7 +71,7 @@ public class Module extends SortableEntity{
     @Column
     private String shortDescription;
     
-    @Column(length = 8000)
+    @Lob
     private String description;
     
     @Column

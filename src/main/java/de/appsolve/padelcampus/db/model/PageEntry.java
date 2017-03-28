@@ -6,10 +6,10 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
@@ -39,7 +39,7 @@ public class PageEntry extends SortableEntity{
     private String title;
     
     @NotEmpty(message = "{NotEmpty.message}")
-    @Column(columnDefinition = "text")
+    @Lob
     private String message;
     
     @Column
