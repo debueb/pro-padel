@@ -21,27 +21,46 @@
             <div class="panel-body">
                 <spf:form method="POST" modelAttribute="Model">
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
-                    <table class="table-full-width table-fixed">
+                    <table class="table-full-width table-add-pull-game">
                         <thead>
-                        <th class="text-center"><fmt:message key="Team1"/></th>
-                        <th class="text-center"><fmt:message key="Team2"/></th>
+                            <th style="padding-left: 10px;"><fmt:message key="Team"/></th>
+                            <c:forEach begin="1" end="${Event.numberOfSets}" var="setNumber" varStatus="status">
+                                <th class="text-center">${setNumber}.</th>
+                            </c:forEach>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <spf:select path="team1" class="select-multiple form-control" data-container="body">
-                                        <spf:options items="${Event.participants}" itemValue="UUID"/>
-                                    </spf:select>
-                                </td>
-                                <td>
-                                    <spf:select path="team2" class="select-multiple form-control" data-container="body">
-                                        <spf:options items="${Event.participants}" itemValue="UUID"/>
-                                    </spf:select>
-                                </td>
-                            </tr>
+                            <c:forEach begin="1" end="2" var="teamNumber">
+                                <tr>
+                                    <td>
+                                        <spf:select path="team${teamNumber}" class="select-multiple form-control" data-container="body">
+                                            <spf:options items="${Event.participants}" itemValue="UUID"/>
+                                        </spf:select>
+                                    </td>
+                                    <c:forEach begin="1" end="${Event.numberOfSets}" var="setNumber" varStatus="status">
+                                        <td>
+                                            <c:set var="paramName" value="set-${setNumber}-team-${teamNumber}"/>
+                                            <select name="${paramName}" class="select-simple form-control" data-container="body" data-live-search="false">
+                                                <option value="-1">-</option>
+                                                <c:choose>
+                                                    <c:when test="${Event.numberOfSets > 1 && status.last}">
+                                                        <c:set var="end" value="${Event.numberOfGamesInFinalSet}"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:set var="end" value="${Event.numberOfGamesPerSet}"/>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                <c:forEach begin="0" end="${end}" step="1" var="current">
+                                                    <option value="${current}" ${param[paramName] == current ? 'selected' : ''}>${current}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </td>
+                                    </c:forEach>
+                                </tr>
+                            </c:forEach>
                         </tbody>
                     </table>
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
+                    <a class="btn btn-primary btn-block btn-back unit-2"><fmt:message key="Cancel"/></a>
                 </spf:form>
             </div>
         </div>    

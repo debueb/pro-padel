@@ -14,6 +14,7 @@ import de.appsolve.padelcampus.data.AddPullGame;
 import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
+import de.appsolve.padelcampus.db.dao.GameSetDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Community;
@@ -44,6 +45,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -68,6 +70,8 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/events")
 public class EventsController extends BaseController{
     
+    private static final Logger LOG = Logger.getLogger(EventsController.class);
+    
     @Autowired
     ModuleDAOI moduleDAO;
     
@@ -76,6 +80,9 @@ public class EventsController extends BaseController{
     
     @Autowired
     GameDAOI gameDAO;
+    
+    @Autowired
+    GameSetDAOI gameSetDAO;
     
     @Autowired
     TeamDAOI teamDAO;
@@ -294,6 +301,7 @@ public class EventsController extends BaseController{
     
     @RequestMapping(value={"edit/{eventId}/addpullgame"}, method=POST)
     public ModelAndView postAddPullGame(
+            HttpServletRequest request,
             @PathVariable("eventId") Long eventId,
             @ModelAttribute("Model") AddPullGame addPullGame,
             @RequestParam(value="redirectUrl", required=false) String redirectUrl,
@@ -307,7 +315,7 @@ public class EventsController extends BaseController{
             bindingResult.addError(new ObjectError("id", msg.get("ChooseDistinctPlayers")));
             return getAddPullGameView(event, addPullGame);
         }
-        Set<Participant> teams = new HashSet<>();
+        List<Participant> teams = new ArrayList<>();
         teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam1()));
         teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam2()));
         for (Game game: event.getGames()){
@@ -318,8 +326,33 @@ public class EventsController extends BaseController{
         }
         Game game = new Game();
         game.setEvent(event);
-        game.setParticipants(teams);
+        game.setParticipants(new HashSet<>(teams));
+        game = gameDAO.saveOrUpdate(game);
+        
+        Set<GameSet> gameSets = new HashSet<>();
+        for (int setNumber=1; setNumber<=event.getNumberOfSets(); setNumber++){
+            for (int teamNumber=1; teamNumber<=teams.size(); teamNumber++){
+                try {
+                    LOG.info("set-"+setNumber+"-team-"+teamNumber+1);
+                    Integer setGames = Integer.parseInt(request.getParameter("set-"+setNumber+"-team-"+teamNumber));
+                    if (setGames != -1){
+                        GameSet gameSet = new GameSet();
+                        gameSet.setEvent(event);
+                        gameSet.setGame(game);
+                        gameSet.setSetGames(setGames);
+                        gameSet.setSetNumber(setNumber);
+                        gameSet.setParticipant(teams.get(teamNumber-1));
+                        gameSet = gameSetDAO.saveOrUpdate(gameSet);
+                        gameSets.add(gameSet);
+                    }
+                } catch (NumberFormatException e){
+                    LOG.info(e);
+                }
+            }
+        }
+        game.setGameSets(gameSets);
         gameDAO.saveOrUpdate(game);
+        
         if (!StringUtils.isEmpty(redirectUrl)){
             return new ModelAndView("redirect:/"+redirectUrl);
         }
