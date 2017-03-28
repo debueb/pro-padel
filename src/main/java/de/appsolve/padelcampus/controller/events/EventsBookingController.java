@@ -259,7 +259,7 @@ public class EventsBookingController extends BaseController{
                     event.getParticipants().add(booking.getPlayer());
                     event = eventDAO.saveOrUpdate(event);
 
-                    eventsUtil.createPullGames(event);
+                    //eventsUtil.createPullGames(event);
                     break;
                 default:
                     Set<Player> players = new HashSet<>();
