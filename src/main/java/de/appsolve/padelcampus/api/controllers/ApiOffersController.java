@@ -15,9 +15,9 @@ import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,12 +57,13 @@ public class ApiOffersController{
         List<CalendarConfig> configs = calendarConfigDAO.findFor(date);
         List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(date);
         List<TimeSlot> timeSlots = bookingUtil.getTimeSlotsForDate(date, configs, confirmedBookings, Boolean.TRUE, Boolean.TRUE);
-        Set<ApiOffer> offers = new HashSet<>();
+        Set<ApiOffer> offers = new TreeSet<>();
         for (TimeSlot timeSlot: timeSlots){
             if (timeSlot.getStartTime().equals(time)){
                 for (Offer offer: timeSlot.getAvailableOffers()){
                     ApiOffer apiOffer = new ApiOffer();
                     apiOffer.setName(offer.getName());
+                    apiOffer.setId(offer.getId());
                     offers.add(apiOffer);
                 }
             }
