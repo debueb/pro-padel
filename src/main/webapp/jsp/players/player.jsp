@@ -61,7 +61,7 @@
                                 <div class="list-item-text"><fmt:message key="SendMail"/></div>
                                 <div class="list-group-item-icon"><div class="fa fa-at"></div></div>
                             </a>
-                            <a href="/players/player/${Player.UUID}/vcard.vcf" class="list-group-item" download>
+                            <a href="/players/player/${Player.UUID}/vcard.vcf" class="list-group-item no-ajaxify" download>
                                 <div class="list-item-text"><fmt:message key="AddToContacts"/></div>
                                 <div class="list-group-item-icon"><div class="fa fa-phone-square"></div></div>
                             </a>  
