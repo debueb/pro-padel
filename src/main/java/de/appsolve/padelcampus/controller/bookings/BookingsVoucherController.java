@@ -59,7 +59,7 @@ public class BookingsVoucherController extends BookingsPaymentController{
     }
     
     @RequestMapping(value = "booking/{UUID}/voucher", method=POST)
-    public ModelAndView onPostVoucher(@PathVariable("UUID") String UUID, @RequestParam String voucherUUID){
+    public ModelAndView onPostVoucher(@PathVariable("UUID") String UUID, @RequestParam(required = false) String voucherUUID){
         Booking booking = bookingDAO.findByUUID(UUID);
         ModelAndView mav = getVoucherView(booking);
         try {
