@@ -19,6 +19,10 @@ public class EventByStartDateComparator implements Comparator<Event>, Serializab
     
     @Override
     public int compare(Event o1, Event o2) {
-        return o1.getStartDate().compareTo(o2.getStartDate());
+        int result = o1.getStartDate().compareTo(o2.getStartDate());
+        if (result == 0){
+            result = o1.getName().compareToIgnoreCase(o2.getName());
+        }
+        return result;
     }
 }
