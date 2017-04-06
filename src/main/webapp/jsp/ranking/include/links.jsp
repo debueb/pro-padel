@@ -19,6 +19,6 @@
         <div class="list-item-text"><fmt:message key="unisex_individual_ranking"/></div>
     </a>
     <a href="/${path}ranking/unisex/team" class="list-group-item">
-        <div class="list-item-text"><fmt:message key="unisex_individual_ranking"/></div>
+        <div class="list-item-text"><fmt:message key="unisex_team_ranking"/></div>
     </a>
 </div>
