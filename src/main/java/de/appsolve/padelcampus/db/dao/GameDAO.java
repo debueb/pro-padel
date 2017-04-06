@@ -68,7 +68,7 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
                         }
                     }
                     //check if game has been removed before to avoid IllegalStateException
-                    if (games.contains(game) && (teamGender == null || !teamGender.equals(gender))){
+                    if (games.contains(game) && !gender.equals(Gender.unisex) && (teamGender == null || !teamGender.equals(gender))){
                         iterator.remove();
                         break;
                     }

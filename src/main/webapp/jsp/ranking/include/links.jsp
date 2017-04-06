@@ -15,4 +15,10 @@
     <a href="/${path}ranking/mixed/team" class="list-group-item">
         <div class="list-item-text"><fmt:message key="mixed_team_ranking"/></div>
     </a>
+    <a href="/${path}ranking/unisex/individual" class="list-group-item">
+        <div class="list-item-text"><fmt:message key="unisex_individual_ranking"/></div>
+    </a>
+    <a href="/${path}ranking/unisex/team" class="list-group-item">
+        <div class="list-item-text"><fmt:message key="unisex_individual_ranking"/></div>
+    </a>
 </div>
