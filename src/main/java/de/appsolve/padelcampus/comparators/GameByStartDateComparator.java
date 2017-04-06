@@ -19,9 +19,18 @@ public class GameByStartDateComparator implements Comparator<Game>, Serializable
     
     @Override
     public int compare(Game o1, Game o2) {
+        int result = 0;
         if (o1.getStartDate()!=null && o2.getStartDate()!=null){
-            return o1.getStartDate().compareTo(o2.getStartDate());
+            result = o1.getStartDate().compareTo(o2.getStartDate());
+            if (result == 0){
+                if (o1.getStartTime()!=null && o2.getStartTime() !=null){
+                    result = o1.getStartTime().compareTo(o2.getStartTime());
+                } 
+            }
         }
-        return o1.getId().compareTo(o2.getId());
+        if (result == 0){
+            return o1.getId().compareTo(o2.getId());
+        }
+        return result;
     }
 }
