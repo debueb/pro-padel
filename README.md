@@ -2,7 +2,7 @@
 
 # pro-padel
 
-This repository contains the source code for the padel club managment software behind [padel.koeln](https://padel.koeln), [walls.de](https://walls.de) and [pro-padel.de](http://pro-padel.de)
+This repository contains the source code for the padel club managment software behind [walls.de](https://walls.de) and [pro-padel.de](http://pro-padel.de)
 
 
 ## technologies used
