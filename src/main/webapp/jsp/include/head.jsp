@@ -54,26 +54,14 @@
         <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet" title="project_css">
 
         <script src="/js/noconcat/bugsnag.js" data-apikey="c3a3e8e773db9d46f2d51d905ead0e83"></script>
-        <script>
-            Bugsnag.releaseStage = "${profile.id}";
-            Bugsnag.notifyReleaseStages = ["openshift"];
-            <c:if test="${not empty user}">
-                Bugsnag.user = {
-                    name: "${user.firstName} ${user.lastName}",
-                    email: "${user.email}"
-                };
-            </c:if>
+        <script src="/app/dist/bundle.js" 
+                data-release-stage="${profile.id}" 
+                data-user-name="${user.firstName} ${user.lastName}" 
+                data-user-email="${user.email}"
+                data-google-tagmanager-id="${sessionScope.customer.googleTagManagerId}"
+                data-google-analytics-id="${sessionScope.customer.googleAnalyticsTrackingId}"
+                >
         </script>
-        <script src="/app/dist/bundle.js"></script>
-                
-        <c:if test="${not empty sessionScope.customer and not empty sessionScope.customer.googleTagManagerId}">
-            <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                })(window,document,'script','dataLayer','${sessionScope.customer.googleTagManagerId}');
-            </script>
-        </c:if>
     </head>
     <%--</c:if>--%>
     <body ontouchstart="">

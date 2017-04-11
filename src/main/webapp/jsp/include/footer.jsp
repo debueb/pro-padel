@@ -34,24 +34,5 @@
             <a id="offline-msg-btn" class="btn btn-default unit" href="#">OK</i></a>
         </div>
     </div>
-    <c:if test="${not empty sessionScope.customer and not empty sessionScope.customer.googleAnalyticsTrackingId}">
-        <script type="text/javascript" data-ajaxify="false">
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-            ga('create', '${sessionScope.customer.googleAnalyticsTrackingId}', 'auto');
-            ga('require', 'displayfeatures');
-            ga('send', 'pageview');
-        </script>
-    </c:if>
-    <script type="text/javascript" data-ajaxify="false">
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/serviceworker.js');
-            });
-        }
-    </script>
     </body>
 </html>
