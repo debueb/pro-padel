@@ -12,7 +12,8 @@
   "license": "ISC",
   "devDependencies": {
     "webpack": "2.2.0",
-    "webpack-dev-server": "2.2.0"
+    "webpack-dev-server": "2.2.0",
+    "webpack-livereload-plugin": "^0.11.0"
   },
   "dependencies": {
     "jquery": "2.2.4"
