@@ -5,7 +5,6 @@
  */
 package de.appsolve.padelcampus.utils;
 
-import static de.appsolve.padelcampus.constants.Constants.SESSION_ACCESS_LEVEL;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_BOOKING;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_BOOKING_LIST_END_DATE;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_LOGIN_REDIRECT_PATH;
@@ -17,7 +16,6 @@ import de.appsolve.padelcampus.db.dao.AdminGroupDAOI;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.model.AdminGroup;
 import de.appsolve.padelcampus.db.model.Booking;
-import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Player;
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +39,7 @@ import static de.appsolve.padelcampus.constants.Constants.SESSION_RESERVATION_LI
 @Component
 public class SessionUtil {
 
-    private static final Logger log = Logger.getLogger(SessionUtil.class);
+    private static final Logger LOG = Logger.getLogger(SessionUtil.class);
     
     @Autowired
     AdminGroupDAOI adminGroupDAO;
@@ -131,7 +129,7 @@ public class SessionUtil {
         if (session != null) {
             session.setAttribute(attributeName, value);
         } else {
-            log.warn("Unable to set session varible due to null session");
+            LOG.warn("Unable to set session varible due to null session");
         }
     }
 

@@ -9,7 +9,6 @@ import de.appsolve.padelcampus.api.data.Option;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
-import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.ParticipantI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.SessionUtil;
