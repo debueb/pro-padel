@@ -543,7 +543,7 @@ var project = {
                 var $a = $(this);
                 var id = $a.attr('id');
                 $('a.menu-item.hasSubmodules.active').each(function(){
-                    $b = $(this);
+                    var $b = $(this);
                     var otherId = $b.attr('id');
                     if (otherId !== id){
                          $b.parent().find($('.' + otherId + '-subModules')).hide();
