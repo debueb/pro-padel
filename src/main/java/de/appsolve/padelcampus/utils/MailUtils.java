@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.appsolve.padelcampus.utils;
 
 import com.sparkpost.Client;
@@ -76,14 +71,19 @@ public class MailUtils {
             TemplateContentAttributes contentAttributes = new TemplateContentAttributes();
             contentAttributes.setFrom(new AddressAttributes(from));
             contentAttributes.setReplyTo(replyTo);
-            contentAttributes.setSubject(mail.getSubject());
-            contentAttributes.setHtml(getHTML(mail.getBody()));
-            contentAttributes.setText(mail.getBody());
+            
+            if (StringUtils.isEmpty(mail.getTemplateId()) || mail.getTemplateId().equals("TextEmail")){
+                contentAttributes.setSubject(mail.getSubject());
+                contentAttributes.setHtml(getHTML(mail.getBody()));
+                contentAttributes.setText(mail.getBody());
+            } else {
+                contentAttributes.setTemplateId(mail.getTemplateId());
+            }
+            
             transmission.setContentAttributes(contentAttributes);
 
             RestConnection connection = new RestConnection(client);
             ResourceTransmissions.create(connection, 0, transmission);
-        
         } catch (SparkPostException e){
             throw new MailException(e.getMessage(), e);
         }

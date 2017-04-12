@@ -35,10 +35,10 @@
                                     <td><a class="block" href="${editUrl}">${Player.firstName}</a></td>
                                     <td><a class="block" href="${editUrl}">${Player.lastName}</a></td>
                                     <td><a class="block" href="${editUrl}">${Player.phone}</a></td>
-                                    <td><a class="block" href="/admin/players/mail/${Player.UUID}">${Player.email}</a></td>
+                                    <td><a class="block" href="${editUrl}">${Player.email}</a></td>
                                     <td><a type="btn btn-primary" class="fa block text-center ${empty Player.passwordHash ? 'fa-close' : 'fa-check'}" href="${editUrl}"></a></td>
                                     <td><a type="btn btn-primary" class="fa block text-center ${empty Player.allowEmailContact ? 'fa-close' : Player.allowEmailContact ? 'fa-check' : 'fa-close'}" href="${editUrl}"></a></td>
-                                    <td><a class="block text-center" href="/admin/players/mail/${Player.UUID}"><i class="fa fa-envelope"></i></a></td>
+                                    <td><a class="block text-center" href="/admin/mail/player/${Player.UUID}"><i class="fa fa-envelope"></i></a></td>
                                     <td class="delete"><a href="/admin/players/${Player.id}/delete" type="btn btn-primary" class="fa fa-minus-circle"></a></td>
                                 </tr>
                             </c:forEach>
@@ -47,7 +47,7 @@
                 </div>
                 <jsp:include page="/jsp/admin/include/pagination.jsp"/>
                 <a href="/admin/players/add" class="btn btn-primary btn-block unit"><fmt:message key="NewPlayer"/></a>
-                <a href="/admin/players/mailall" class="btn btn-primary btn-block unit"><fmt:message key="MailAllPlayers"/></a>
+                <a href="/admin/mail/all" class="btn btn-primary btn-block unit"><fmt:message key="MailAllPlayers"/></a>
             </div>
         </div>
     </div>

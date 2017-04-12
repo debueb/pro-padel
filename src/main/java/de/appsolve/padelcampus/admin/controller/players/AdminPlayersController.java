@@ -6,12 +6,10 @@
 
 package de.appsolve.padelcampus.admin.controller.players;
 
-import com.google.common.collect.Sets;
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Player;
-import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,8 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.PathVariable;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -69,18 +65,6 @@ public class AdminPlayersController extends AdminBaseController<Player> {
         player.setInitialRanking(model.getInitialRanking());
         playerDAO.saveOrUpdate(player);
         return redirectToIndex(request);
-    }
-    
-    @RequestMapping(method=GET, value="/mail/{PlayerUUID}")
-    public ModelAndView mailPlayer(HttpServletRequest request, @PathVariable("PlayerUUID") String playerUUID){
-        Set<Player> player = Sets.newHashSet(playerDAO.findByUUID(playerUUID));
-        return getMailView(player, request);
-    }
-    
-    @RequestMapping(method=GET, value="/mailall")
-    public ModelAndView mailAll(HttpServletRequest request){
-        Set<Player> allPlayers = Sets.newHashSet(playerDAO.findPlayersRegisteredForEmails());
-        return getMailView(allPlayers, request);
     }
     
     @Override

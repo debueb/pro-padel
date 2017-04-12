@@ -13,7 +13,12 @@
             </div>
             <div class="panel-body">
                 <spf:form method="POST" action="/admin/mail" modelAttribute="Model">
-                    <div class="alert alert-info"><fmt:message key="MailAllPlayersWarning"/></div>
+                    <div class="alert alert-info">
+                        <fmt:message key="MailAllPlayersWarning"/>
+                    </div>
+                    <div class="alert alert-info unit-2">
+                        <fmt:message key="EditEmailTemplates"/>
+                    </div>
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
                     <div class="unit-2">
                         <div class="relative">
@@ -44,12 +49,28 @@
                             <span class="explanation-select"><fmt:message key="Players"/></span>
                         </div>
                         <div class="relative">
-                            <spf:input path="subject" type="text" class="form-control form-center-element"/>
-                            <div class="explanation"><fmt:message key="Subject"/></div>
+                            <spf:select 
+                                path="templateId" 
+                                class="form-control form-bottom-element select-simple select-toggle"
+                                data-container="body">
+                                <fmt:message key="TextEmail" var="TextEmail"/>
+                                <spf:option value="TextEmail" label="${TextEmail}"/>
+                                <c:forEach var="Template" items="${Templates}">
+                                    <spf:option value="${Template.id}" label="${Template.name}${not Template.published ? ' - TEMPLATE IS A DRAFT. PUBLISH IT FIRST' : ''}" disabled="${not Template.published}"/>
+                                </c:forEach>
+                            </spf:select>
+                            <span class="explanation-select"><fmt:message key="EmailTemplate"/></span>
                         </div>
-                        <div class="relative">
-                            <spf:textarea path="body" class="form-control form-bottom-element" rows="20"/>
-                            <div class="explanation"><fmt:message key="Message"/></div>
+                        <div class="select-toggle-TextEmail unit-2">
+                            <div class="relative">
+                                <fmt:message key="Subject" var="Subject"/>
+                                <spf:input path="subject" type="text" class="form-control form-top-element" placeholder="${Subject}"/>
+                                <div class="explanation">${Subject}</div>
+                            </div>
+                            <div class="relative">
+                                <spf:textarea path="body" class="form-control form-bottom-element" rows="20"/>
+                                <div class="explanation"><fmt:message key="Message"/></div>
+                            </div>
                         </div>
                     </div>
 

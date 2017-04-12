@@ -39,7 +39,7 @@
                                     <td><a href="${url}"><fmt:message key="${Event.eventType}"/></a></td>
                                     <td class="text-center">${fn:length(Event.participants)}</td>
                                     <td class="text-center">${Event.maxNumberOfParticipants}</td>
-                                    <td><a class="block text-center" href="/admin/events/${Event.id}/mail"><i class="fa fa-envelope"></i></a></td>
+                                    <td><a class="block text-center" href="/admin/mail/event/${Event.id}"><i class="fa fa-envelope"></i></a></td>
                                     <td class="delete"><a href="/admin/events/${Event.id}/delete" type="btn btn-primary" class="fa fa-minus-circle"></a></td>
                                 </tr>
                             </c:forEach>

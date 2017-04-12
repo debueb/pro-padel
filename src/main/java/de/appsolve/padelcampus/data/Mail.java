@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.appsolve.padelcampus.data;
 
 import de.appsolve.padelcampus.annotations.EmailWithTld;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -29,6 +23,8 @@ public class Mail {
     
     @NotEmpty(message = "{NotEmpty.body}")
     private String body;
+    
+    private String templateId;
     
     private Set<EmailContact> recipients;
     
@@ -62,6 +58,14 @@ public class Mail {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(String templateId) {
+        this.templateId = templateId;
     }
 
     public Set<EmailContact> getRecipients() {

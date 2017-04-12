@@ -614,12 +614,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
         return redirectToDraws(event);
     }
     
-    @RequestMapping(method=GET, value="/{eventId}/mail")
-    public ModelAndView mailAll(HttpServletRequest request, @PathVariable("eventId") Long eventId){
-        Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(eventId);
-        return getMailView(event.getAllPlayers(), request);
-    }
-    
     @RequestMapping(method=GET, value="/{eventId}/game/{gameId}/delete")
     public ModelAndView getDeleteGameView(@PathVariable("eventId") Long eventId, @PathVariable("gameId") Long gameId){
         Game game = gameDAO.findById(gameId);
