@@ -31,26 +31,31 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 public class SessionEventListener implements HttpSessionListener{
     
-    Logger LOG = Logger.getLogger(SessionEventListener.class);
+    private static final Logger LOG = Logger.getLogger(SessionEventListener.class);
+    
+    private static int activeSessions = 0;
+
+    @Autowired
+    private SessionUtil sessionUtil;
     
     @Autowired
-    SessionUtil sessionUtil;
+    private BookingBaseDAOI bookingBaseDAO;
     
     @Autowired
-    BookingBaseDAOI bookingBaseDAO;
-    
-    @Autowired
-    PayPalConfigBaseDAOI payPalConfigBaseDAO;
+    private PayPalConfigBaseDAOI payPalConfigBaseDAO;
     
     private static final Set<PaymentMethod> PAYMENT_METHODS_THAT_DO_NOT_REQUIRE_PAYMENT = EnumSet.of(PaymentMethod.Cash, PaymentMethod.Reservation);
         
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        //empty
+        activeSessions++;
     }
     
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
+        if(activeSessions > 0) {
+            activeSessions--;
+        }
         initDependencies(se.getSession().getServletContext());
         LocalDateTime now = new LocalDateTime();
         Booking booking = sessionUtil.getBooking(se.getSession());
@@ -64,6 +69,10 @@ public class SessionEventListener implements HttpSessionListener{
         for (Booking blockingBooking : findBlockedBookings) {
             cancelBooking(blockingBooking, maxAge);
         }
+    }
+    
+    public static int getActiveSessions() {
+        return activeSessions;
     }
 
     private void cancelBooking(Booking booking, LocalDateTime maxAge) {
