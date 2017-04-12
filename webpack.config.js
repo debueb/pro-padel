@@ -13,11 +13,13 @@ const PATHS = {
 };
 
 module.exports = {
-    entry: './src/main/webapp/app/index.js',
+    entry: {
+        main: './src/main/webapp/app/main.js'
+    },
 
     output: {
         path: PATHS.build,
-        filename: 'bundle.js'
+        filename: '[name].js'
     },
 
     module: {
