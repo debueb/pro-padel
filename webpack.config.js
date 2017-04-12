@@ -1,7 +1,7 @@
-var packageJSON         = require('./package.json'),
-    path                = require('path'),
-    webpack             = require('webpack'),
-    LiveReloadPlugin    = require('webpack-livereload-plugin');
+var packageJSON = require('./package.json'),
+    path = require('path'),
+    webpack = require('webpack'),
+    LiveReloadPlugin = require('webpack-livereload-plugin');
 
 const PATHS = {
     /* Openshift Online 2.x has a non upgradable Maven 3.0.4 installation and is not 
@@ -18,6 +18,21 @@ module.exports = {
     output: {
         path: PATHS.build,
         filename: 'bundle.js'
+    },
+
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['env']
+                    }
+                }
+            }
+        ]
     },
 
     devtool: "source-map",
