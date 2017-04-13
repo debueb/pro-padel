@@ -10,7 +10,11 @@ import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Player;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -21,7 +25,11 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -65,6 +73,22 @@ public class AdminPlayersController extends AdminBaseController<Player> {
         player.setInitialRanking(model.getInitialRanking());
         playerDAO.saveOrUpdate(player);
         return redirectToIndex(request);
+    }
+    
+    @RequestMapping("/exportemails")
+    @ResponseBody 
+        public HttpEntity<byte[]> exportEmails(){
+        List<Player> players = playerDAO.findPlayersRegisteredForEmails();
+        List<String> emails = new ArrayList<>();
+        for (Player player: players){
+            emails.add(player.getEmail());
+        }
+        byte[] data = StringUtils.join(emails, ",").getBytes(StandardCharsets.UTF_8);
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(new MediaType("text", "csv"));
+        header.set("Content-Disposition", "attachment; filename=players-that-allow-email-contact.csv");
+        header.setContentLength(data.length);
+        return new HttpEntity<>(data, header);
     }
     
     @Override

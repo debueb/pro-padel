@@ -48,6 +48,7 @@
                 <jsp:include page="/jsp/admin/include/pagination.jsp"/>
                 <a href="/admin/players/add" class="btn btn-primary btn-block unit"><fmt:message key="NewPlayer"/></a>
                 <a href="/admin/mail/all" class="btn btn-primary btn-block unit"><fmt:message key="MailAllPlayers"/></a>
+                <a href="/admin/players/exportemails" class="btn btn-primary btn-block unit no-ajaxify"><fmt:message key="ExportAllPlayers"/></a>
             </div>
         </div>
     </div>
