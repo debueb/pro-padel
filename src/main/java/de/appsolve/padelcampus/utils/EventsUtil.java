@@ -77,7 +77,6 @@ public class EventsUtil {
         //determine seed positions
         List<Integer> seedingPositions = getSeedPositions(participants);
 
-
         //fill up empty spots with bye's
         for (int i=participants.size(); i< numGamesPerRound*2; i++){
             participants.add(null);

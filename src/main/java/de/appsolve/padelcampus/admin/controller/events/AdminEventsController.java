@@ -319,39 +319,43 @@ public class AdminEventsController extends AdminBaseController<Event>{
     
     @RequestMapping(value={"edit/{eventId}/draws"}, method=POST)
     public ModelAndView postDraws(@PathVariable("eventId") Long eventId){
-        Event model = eventDAO.findByIdFetchWithParticipants(eventId);
-        ModelAndView mav = getDrawsView(eventId);
-        
-        //check min number of participants
-        if (model.getParticipants().size()<3){
-            mav.addObject("error", msg.get("PleaseSelectAtLeast3Participants"));
-            return mav;
-        }
-        //determine number of games per round
-        int numGamesPerRound = Integer.highestOneBit(model.getParticipants().size()-1);
+        try {
+            Event model = eventDAO.findByIdFetchWithParticipants(eventId);
 
-        //handle udpate operations for existing events
-        List<Game> eventGames = gameDAO.findByEvent(model);
-        int numExistingGamesPerRound = 0;
-        if (!eventGames.isEmpty()){
-            for (Game game: eventGames){
-                Integer round = game.getRound();
-                if (round!=null && round==0){
-                    numExistingGamesPerRound++;
+            //check min number of participants
+            if (model.getParticipants().size()<3){
+                throw new Exception(msg.get("PleaseSelectAtLeast3Participants"));
+            }
+            //determine number of games per round
+            int numGamesPerRound = Integer.highestOneBit(model.getParticipants().size()-1);
+
+            //handle udpate operations for existing events
+            List<Game> eventGames = gameDAO.findByEvent(model);
+            int numExistingGamesPerRound = 0;
+            if (!eventGames.isEmpty()){
+                for (Game game: eventGames){
+                    Integer round = game.getRound();
+                    if (round!=null && round==0){
+                        numExistingGamesPerRound++;
+                    }
+                }
+                if (numExistingGamesPerRound!=numGamesPerRound){
+                    throw new Exception(msg.get("CannotChangeNumberOfGames"));
                 }
             }
-            if (numExistingGamesPerRound!=numGamesPerRound){
-                mav.addObject("error", msg.get("CannotChangeNumberOfGames"));
-                return mav;
-            }
+
+            //determine ranking
+            SortedMap<Participant, BigDecimal> ranking =  rankingUtil.getRankedParticipants(model);
+
+            eventsUtil.createKnockoutGames(model, new ArrayList<>(ranking.keySet()));
+        } catch (Exception e){
+            LOG.error(e.getMessage(), e);
+            ModelAndView mav = getDrawsView(eventId);
+            mav.addObject("error", e.getMessage());
+            return mav;
         }
 
-        //determine ranking
-        SortedMap<Participant, BigDecimal> ranking =  rankingUtil.getRankedParticipants(model);
-
-        eventsUtil.createKnockoutGames(model, new ArrayList<>(ranking.keySet()));
-
-        return mav;
+        return getDrawsView(eventId);
     }
     
     @RequestMapping(value={"edit/{eventId}/draws/game/{gameId}"}, method=GET)
