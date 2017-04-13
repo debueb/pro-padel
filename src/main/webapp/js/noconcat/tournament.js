@@ -11,9 +11,11 @@ var Tournament = function() {
         init: function(options) {
             this.options = $.extend(defaults, options);
             this.canvas = document.getElementById('canvas');
-            this.ctx = this.canvas.getContext('2d');
-            this.bindEvents();
-            this.render();
+            if (this.canvas){
+                this.ctx = this.canvas.getContext('2d');
+                this.bindEvents();
+                this.render();
+            }
         },
         
         bindEvents: function() {
