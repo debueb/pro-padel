@@ -49,7 +49,7 @@
             </div>
             <div class="panel panel-info unit">
                 <div class="panel-heading">
-                    <h4><fmt:message key="NotificationSettings"/></h4>
+                    <h4><fmt:message key="MatchOffers"/></h4>
                 </div>
                 <div class="panel-body">
                     <spf:checkbox path="enableMatchNotifications" id="active"/><label for="active"><fmt:message key="NotifyMeAboutNewMatchOffers"/></label>
