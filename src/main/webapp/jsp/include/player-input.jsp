@@ -21,7 +21,7 @@
     <div class="explanation">${PhoneNumber}</div>
 </div>
 <div class="relative">
-    <spf:select path="gender" class="select-simple form-control" data-style="${not empty param.showPassword ? 'form-center-element' : 'form-bottom-element'}" data-container="body">
+    <spf:select path="gender" class="select-simple form-control ${not empty param.showPassword ? 'form-center-element' : 'form-bottom-element'}" data-container="body">
         <spf:option value="male"><fmt:message key="male"/></spf:option>
         <spf:option value="female"><fmt:message key="female"/></spf:option>
     </spf:select>
