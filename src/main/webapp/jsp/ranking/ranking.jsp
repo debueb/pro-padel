@@ -32,10 +32,12 @@
                                             <c:set var="hostPrefix" value="${req.scheme}://${Participant.customer.domainName}:${req.serverPort}"/>
                                         </c:if>
                                         <tr>
-                                            <td class="text-center ${RowClass}">${status.index+1}</td>
+                                            <c:set var="rank" value="${Ranking.value == lastRanking ? rank : status.index+1}"/>
+                                            <td class="text-center ${RowClass}">${rank}</td>
                                             <td class="${RowClass}"><a href="${hostPrefix}${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}">${Participant}</a></td>
                                             <td class="text-center ${RowClass}">${Ranking.value}</td>
                                         </tr>
+                                        <c:set var="lastRanking" value="${Ranking.value}"/>
                                     </c:forEach>
                                 </tbody>
                             </table>
