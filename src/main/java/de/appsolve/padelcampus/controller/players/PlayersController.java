@@ -24,7 +24,6 @@ import de.appsolve.padelcampus.utils.SortUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 import java.util.SortedMap;
@@ -109,6 +108,9 @@ public class PlayersController extends BaseController {
     @RequestMapping("/event/{id}")
     public ModelAndView getByEvent(@PathVariable("id") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(eventId);
+        if (event == null){
+            throw new ResourceNotFoundException();
+        }
         Set<Player> participants = event.getAllPlayers();
         return getPlayersView(event, participants, msg.get("PlayersIn", new Object[]{participants.size(), event.getName()}));
     }
