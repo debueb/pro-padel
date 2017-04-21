@@ -187,10 +187,16 @@ public class Booking extends CustomerEntity{
     }
     
     public String getAmountDouble(){
+        if (getAmount() == null){
+            return null;
+        }
         return TWO_FRACTIONAL_DIGITS_FORMAT.format(getAmount().doubleValue());
     }
     
     public String getAmountInt(){
+        if (getAmount()==null){
+            return null;
+        }
         BigDecimal value = amount.multiply(new BigDecimal("100"), MathContext.DECIMAL64);
         return value.toPlainString();
     }

@@ -34,19 +34,6 @@ public class OfferOption extends SortableEntity{
     @Enumerated(EnumType.STRING)
     private OfferOptionType offerOptionType;
     
-    @Column
-    private String cameraUrl;
-    
-    @Column
-    private Integer cameraPort;
-    
-    @Column
-    private String cameraUser;
-    
-    @Column(length = 8000)
-    private String cameraKey;
-    
-    
     public String getName() {
         return name;
     }
@@ -69,38 +56,6 @@ public class OfferOption extends SortableEntity{
 
     public void setOfferOptionType(OfferOptionType offerOptionType) {
         this.offerOptionType = offerOptionType;
-    }
-
-    public String getCameraUrl() {
-        return cameraUrl;
-    }
-
-    public void setCameraUrl(String cameraUrl) {
-        this.cameraUrl = cameraUrl;
-    }
-
-    public Integer getCameraPort() {
-        return cameraPort == null ? 22 : cameraPort;
-    }
-
-    public void setCameraPort(Integer cameraPort) {
-        this.cameraPort = cameraPort;
-    }
-
-    public String getCameraUser() {
-        return cameraUser;
-    }
-
-    public void setCameraUser(String cameraUser) {
-        this.cameraUser = cameraUser;
-    }
-
-    public String getCameraKey() {
-        return cameraKey;
-    }
-
-    public void setCameraKey(String cameraKey) {
-        this.cameraKey = cameraKey;
     }
 
     @Override

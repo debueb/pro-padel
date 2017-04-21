@@ -127,14 +127,6 @@
             <version>7.7.0</version>
             <type>jar</type>
         </dependency>
-        <!-- support for executing SSH commands on remote systems
-        used for triggering video recordings on Raspi camera build -->
-        <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-ssh</artifactId>
-            <version>1.5</version>
-            <classifier>jar-with-dependencies</classifier>
-        </dependency>
         <!-- bug reporting platform for Java and JS uncaught exceptions -->
         <dependency>
             <groupId>com.bugsnag</groupId>

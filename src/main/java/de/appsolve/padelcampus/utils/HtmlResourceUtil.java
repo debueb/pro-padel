@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -251,7 +250,7 @@ public class HtmlResourceUtil {
                 LOG.warn("Unable to load fallback /css/"+name);
                 return null;
             }
-            return IOUtils.toString(stream, StandardCharsets.UTF_8);
+            return IOUtils.toString(stream, Constants.UTF8);
         }
         
     }
