@@ -22,7 +22,7 @@ public interface BookingDAOI extends BaseEntityDAOI<Booking>{
     public Booking findByUUID(String UUID);
     public Booking findByUUIDWithEvent(String UUID);
     public Booking findByUUIDWithEventAndPlayers(String UUID);
-    
+    public Booking findByIdWithOfferOptions(Long id);    
     public List<Booking> findBlockedBookingsForDate(LocalDate date);
     public List<Booking> findBlockedBookingsBetween(LocalDate startDate, LocalDate endDate);
     public List<Booking> findBlockedBookings();

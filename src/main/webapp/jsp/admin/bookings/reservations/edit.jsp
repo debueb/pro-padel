@@ -32,11 +32,23 @@
 
                     <%-- Angebote --%>
                     <div class="relative">
-                        <spf:select path="offers" multiple="false" itemValue="id" itemLabel="name" class="select-simple form-control" data-style="form-center-element" data-container="body">
+                        <spf:select path="offers" multiple="false" itemValue="id" itemLabel="name" class="select-toggle select-simple form-control" data-style="form-center-element" data-container="body">
                             <spf:options items="${Offers}" itemValue="id" itemLabel="name"/>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Offer"/></span>
                     </div>
+                    
+                    <%-- Angebotsoptionen --%>
+                    <c:forEach var="Offer" items="${Offers}">
+                        <c:if test="${not empty Offer.offerOptions}">
+                            <div class="select-toggle-${Offer.id} relative">
+                                <spf:select path="offerOptions" multiple="multiple" itemValue="id" itemLabel="name" class="select-multiple form-control" data-style="form-center-element" data-container="body">
+                                    <spf:options items="${Offer.offerOptions}" itemValue="id" itemLabel="name"/>
+                                </spf:select>
+                                <span class="explanation-select"><fmt:message key="OfferOptions"/></span>
+                            </div> 
+                        </c:if>
+                    </c:forEach>
 
                     <%-- Start Datum --%>
                     <div class="datepicker-container">

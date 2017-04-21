@@ -35,6 +35,11 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
     public Booking findByUUIDWithEventAndPlayers(String UUID) {
         return findByUUIDFetchEagerly(UUID, "event", "players");
     }  
+    
+    @Override
+    public Booking findByIdWithOfferOptions(Long id){
+        return findByIdFetchEagerly(id, "offerOptions");
+    } 
 
     @Override
     @SuppressWarnings("unchecked")

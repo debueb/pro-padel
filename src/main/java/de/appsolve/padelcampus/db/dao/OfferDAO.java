@@ -4,6 +4,7 @@ import de.appsolve.padelcampus.db.dao.generic.SortedGenericDAO;
 import de.appsolve.padelcampus.db.model.Offer;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.springframework.stereotype.Component;
 
@@ -22,5 +23,10 @@ public class OfferDAO extends SortedGenericDAO<Offer> implements OfferDAOI{
     @Override
     public Offer findByIdFetchWithOfferOptions(Long id) {
         return findByIdFetchEagerly(id, "offerOptions");
+    }
+
+    @Override
+    public List<Offer> findAllFetchWithOfferOptions() {
+        return findAllFetchEagerly("offerOptions");
     }
 }

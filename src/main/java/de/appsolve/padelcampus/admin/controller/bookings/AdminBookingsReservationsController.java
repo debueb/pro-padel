@@ -28,6 +28,7 @@ import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
+import de.appsolve.padelcampus.spring.OfferOptionCollectionEditor;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.SessionUtil;
@@ -36,7 +37,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import javax.servlet.http.HttpServletRequest;
@@ -91,8 +91,12 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     @Autowired
     MasterDataDAOI masterDataDAO;
     
+    @Autowired
+    OfferOptionCollectionEditor offerOptionCollectionEditor;
+    
     @InitBinder
     public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Set.class, "offerOptions", offerOptionCollectionEditor);
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
         binder.registerCustomEditor(SortedSet.class, "offers", new CustomCollectionEditor(SortedSet.class) {
             @Override
@@ -254,7 +258,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     
     @RequestMapping(method = GET, value="booking/{bookingId}")
     public ModelAndView getEditBooking(@PathVariable("bookingId") Long bookingId){
-        Booking booking = bookingDAO.findById(bookingId);
+        Booking booking = bookingDAO.findByIdWithOfferOptions(bookingId);
         if (booking == null){
             return notFoundView();
         }
@@ -289,6 +293,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                     booking.setComment(model.getComment());
                     booking.setDuration(getDuration(model, calendarConfig));
                     booking.setOffer(offer);
+                    booking.setOfferOptions(model.getOfferOptions());
                     booking.setPaymentConfirmed(model.getPaymentConfirmed());
                     booking.setPaymentMethod(PaymentMethod.Reservation);
                     booking.setPublicBooking(model.getPublicBooking());
@@ -402,7 +407,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     protected ModelAndView getEditView(ReservationRequest request) {
         ModelAndView mav = new ModelAndView("admin/bookings/reservations/edit");
         mav.addObject("Model", request);
-        mav.addObject("Offers", offerDAO.findAll());
+        mav.addObject("Offers", offerDAO.findAllFetchWithOfferOptions());
         return mav;
     }
     
@@ -456,6 +461,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         request.setPublicBooking(booking.getPublicBooking());
         request.setPaymentConfirmed(booking.getPaymentConfirmed());
         request.setOffers(Sets.newHashSet(booking.getOffer()));
+        request.setOfferOptions(booking.getOfferOptions());
         return request;
     }
 

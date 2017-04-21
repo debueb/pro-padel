@@ -49,6 +49,8 @@ public class ReservationRequest extends CustomerEntity{
     @NotEmpty(message = "{NotEmpty.offers}")
     private Set<Offer> offers;
     
+    private Set<OfferOption> offerOptions;
+    
     @NotEmpty(message = "{NotEmpty.comment}")
     @Length(min = 3, max = 255, message = "{ReservationRequest.comment}")
     private String comment;
@@ -134,6 +136,14 @@ public class ReservationRequest extends CustomerEntity{
 
     public void setOffers(Set<Offer> offers) {
         this.offers = offers;
+    }
+
+    public Set<OfferOption> getOfferOptions() {
+        return offerOptions;
+    }
+
+    public void setOfferOptions(Set<OfferOption> offerOptions) {
+        this.offerOptions = offerOptions;
     }
 
     public String getComment() {
