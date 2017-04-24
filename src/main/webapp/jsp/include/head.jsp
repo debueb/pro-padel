@@ -1,7 +1,6 @@
 <%@include file="/jsp/include/include.jsp"%>
 <!DOCTYPE html>
 <html lang="en">
-    <%--<c:if test="${empty header['x-requested-with']}">--%>
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -63,7 +62,6 @@
                 >
         </script>
     </head>
-    <%--</c:if>--%>
     <body ontouchstart="">
         <c:if test="${not empty sessionScope.customer and not empty sessionScope.customer.googleTagManagerId}">
             <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${sessionScope.customer.googleTagManagerId}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
