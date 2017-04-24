@@ -31,7 +31,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -57,7 +56,7 @@ public class RankingUtil {
 
     private static final BigDecimal ELO_MAGIC_NUMBER = new BigDecimal("400");
 
-    private SortedMap<Participant, BigDecimal> rankingMap;
+    private Map<Participant, BigDecimal> rankingMap;
 
     @Autowired
     GameDAOI gameDAO;
@@ -68,9 +67,9 @@ public class RankingUtil {
     @Autowired
     TeamDAOI teamDAO;
     
-    public SortedMap<Participant, BigDecimal> getTeamRanking(Gender gender) {
+    public Map<Participant, BigDecimal> getTeamRanking(Gender gender) {
         List<Game> games = getGamesInLastYear(gender);
-        SortedMap<Participant, BigDecimal> ranking = getRanking(games);
+        Map<Participant, BigDecimal> ranking = getRanking(games);
         Set<Team> teams = new HashSet<>();
         for (Game game: games){
             Set<Participant> participants = game.getParticipants();
@@ -83,13 +82,13 @@ public class RankingUtil {
         return getTeamRanking(ranking, teams);
     }
     
-    public SortedMap<Participant, BigDecimal> getTeamRanking(Gender category, Collection<Team> teams) {
-        SortedMap<Participant, BigDecimal> ranking = getRanking(category);
+    public Map<Participant, BigDecimal> getTeamRanking(Gender category, Collection<Team> teams) {
+        Map<Participant, BigDecimal> ranking = getRanking(category);
         return getTeamRanking(ranking, teams);
     }
     
-    private SortedMap<Participant, BigDecimal> getTeamRanking(SortedMap<Participant, BigDecimal> ranking, Collection<Team> teams) {
-        SortedMap<Participant, BigDecimal> teamRanking = new TreeMap<>();
+    private Map<Participant, BigDecimal> getTeamRanking(Map<Participant, BigDecimal> ranking, Collection<Team> teams) {
+        Map<Participant, BigDecimal> teamRanking = new HashMap<>();
 
         for (Team team : teams) {
             BigDecimal teamScore = BigDecimal.ZERO;
@@ -104,17 +103,17 @@ public class RankingUtil {
             teamScore = teamScore.setScale(0, RoundingMode.HALF_UP);
             teamRanking.put(team, teamScore);
         }
-        return SortUtil.sortMap(teamRanking);
+        return teamRanking;
     }
 
-    public SortedMap<Participant, BigDecimal> getRanking(Gender gender) {
+    public Map<Participant, BigDecimal> getRanking(Gender gender) {
         List<Game> games = getGamesInLastYear(gender);
         return getRanking(games);
     }
     
-    public SortedMap<Participant, BigDecimal> getPlayerRanking(Gender category, Collection<Player> participants) {
-        SortedMap<Participant, BigDecimal> ranking = getRanking(category);
-        SortedMap<Participant, BigDecimal> eventRanking = new TreeMap<>();
+    public Map<Participant, BigDecimal> getPlayerRanking(Gender category, Collection<Player> participants) {
+        Map<Participant, BigDecimal> ranking = getRanking(category);
+        Map<Participant, BigDecimal> eventRanking = new HashMap<>();
         for (Map.Entry<Participant, BigDecimal> entry: ranking.entrySet()){
             Participant participant = entry.getKey();
             if (participant instanceof Player){
@@ -133,7 +132,7 @@ public class RankingUtil {
         return eventRanking;
     }
     
-    private SortedMap<Participant, BigDecimal> getRanking(List<Game> games) {
+    private Map<Participant, BigDecimal> getRanking(List<Game> games) {
         rankingMap = new TreeMap<>();
         SortedSet<Game> sortedGames = new TreeSet<>(new GameByStartDateComparator());
         sortedGames.addAll(games);
@@ -165,11 +164,10 @@ public class RankingUtil {
             value = value.setScale(0, RoundingMode.HALF_UP);
             entry.setValue(value);
         }
-
         return rankingMap;
     }
     
-    public SortedMap<Participant, BigDecimal> getPlayerRanking(Collection<Player> players){
+    public Map<Participant, BigDecimal> getPlayerRanking(Collection<Player> players){
         Set<Player> malePlayers = new HashSet<>();
         Set<Player> femalePlayers = new HashSet<>();
         for (Player player: players){
@@ -179,12 +177,12 @@ public class RankingUtil {
                 femalePlayers.add(player);
             }
         }
-        SortedMap<Participant, BigDecimal> ranking = getPlayerRanking(Gender.male, malePlayers);
+        Map<Participant, BigDecimal> ranking = getPlayerRanking(Gender.male, malePlayers);
         ranking.putAll(getPlayerRanking(Gender.female, femalePlayers));
         return ranking;
     }
     
-    public SortedMap<Participant, BigDecimal> getTeamRanking(Collection<Team> teams){
+    public Map<Participant, BigDecimal> getTeamRanking(Collection<Team> teams){
         Set<Team> maleTeams = new HashSet<>();
         Set<Team> femaleTeams = new HashSet<>();
         Set<Team> mixedTeams = new HashSet<>();
@@ -201,15 +199,15 @@ public class RankingUtil {
                 femaleTeams.add(team);
             }
         }
-        SortedMap<Participant, BigDecimal> ranking = getTeamRanking(Gender.male, maleTeams);
+        Map<Participant, BigDecimal> ranking = getTeamRanking(Gender.male, maleTeams);
         ranking.putAll(getTeamRanking(Gender.female, femaleTeams));
         ranking.putAll(getTeamRanking(Gender.mixed, mixedTeams));
         return ranking;
     }
 
     private void updateRanking(Game game, Team team1, Team team2) {
-        BigDecimal r2 = getTeamRanking((Team)team2);
         BigDecimal r1 = getTeamRanking((Team)team1);
+        BigDecimal r2 = getTeamRanking((Team)team2);
         
         for (Player player: team1.getPlayers()){
             BigDecimal r1p1 = getRanking(player);
@@ -380,8 +378,8 @@ public class RankingUtil {
         return scoreEntries;
     }
     
-    public SortedMap<Participant, BigDecimal> getRankedParticipants(Event model) {
-        SortedMap<Participant, BigDecimal> ranking = new TreeMap<>();
+    public Map<Participant, BigDecimal> getRankedParticipants(Event model) {
+        Map<Participant, BigDecimal> ranking = new HashMap<>();
         if (!model.getParticipants().isEmpty()){
             Participant firstParticipant = model.getParticipants().iterator().next();
             if (firstParticipant instanceof Player){
@@ -395,7 +393,7 @@ public class RankingUtil {
                 ranking = getTeamRanking(model.getGender(), teams);
             }
         }
-        return SortUtil.sortMap(ranking);
+        return ranking;
     }
     
     private Map<Integer, Integer> getSetMapForParticipant(Game game, Participant participant, Collection<GameSet> gameSets) {

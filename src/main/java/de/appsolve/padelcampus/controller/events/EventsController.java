@@ -158,7 +158,7 @@ public class EventsController extends BaseController{
                 }
             }
         }
-        SortedMap<Participant, BigDecimal> rankingMap = new TreeMap<>();
+        Map<Participant, BigDecimal> rankingMap = new HashMap<>();
         if (!event.getParticipants().isEmpty()){
             Participant participant = event.getParticipants().iterator().next();
             if (participant instanceof Player){
@@ -176,7 +176,8 @@ public class EventsController extends BaseController{
     @RequestMapping("event/{eventId}/communities")
     public ModelAndView getEventCommunities(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
-        SortedMap<Participant, BigDecimal> rankedParticipants = rankingUtil.getRankedParticipants(event);
+        Map<Participant, BigDecimal> participants = rankingUtil.getRankedParticipants(event);
+        Map<Participant, BigDecimal> rankedParticipants = SortUtil.sortMap(participants);
         Map<Community, SortedMap<Participant, BigDecimal>> communityMap = new HashMap<>();
         for (Participant participant: rankedParticipants.keySet()){
             if (participant instanceof Team){

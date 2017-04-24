@@ -41,6 +41,7 @@ import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATT
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
+import de.appsolve.padelcampus.utils.SortUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -345,9 +346,10 @@ public class AdminEventsController extends AdminBaseController<Event>{
             }
 
             //determine ranking
-            SortedMap<Participant, BigDecimal> ranking =  rankingUtil.getRankedParticipants(model);
+            Map<Participant, BigDecimal> ranking = rankingUtil.getRankedParticipants(model);
+            SortedMap<Participant, BigDecimal> sortedRanking = SortUtil.sortMap(ranking);
 
-            eventsUtil.createKnockoutGames(model, new ArrayList<>(ranking.keySet()));
+            eventsUtil.createKnockoutGames(model, new ArrayList<>(sortedRanking.keySet()));
         } catch (Exception e){
             LOG.error(e.getMessage(), e);
             ModelAndView mav = getDrawsView(eventId);

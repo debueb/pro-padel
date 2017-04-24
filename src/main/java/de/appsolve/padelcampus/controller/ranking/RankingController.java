@@ -17,7 +17,7 @@ import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.SortUtil;
 import java.math.BigDecimal;
-import java.util.SortedMap;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class RankingController extends BaseController {
         ModelAndView mav = new ModelAndView("ranking/ranking");
         mav.addObject("gender", gender);
         mav.addObject("category", category);
-        SortedMap<Participant, BigDecimal> rankings = null;
+        Map<Participant, BigDecimal> rankings = null;
         switch (category){
             case "individual":
                 rankings = rankingUtil.getRanking(gender);

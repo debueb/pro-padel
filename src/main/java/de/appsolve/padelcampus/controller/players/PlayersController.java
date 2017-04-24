@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import javax.servlet.http.HttpServletRequest;
@@ -116,7 +117,7 @@ public class PlayersController extends BaseController {
     }
 
     private ModelAndView getPlayersView(Event event, Collection<Player> players, String title){
-        SortedMap<Participant, BigDecimal> ranking = rankingUtil.getPlayerRanking(players);
+        Map<Participant, BigDecimal> ranking = rankingUtil.getPlayerRanking(players);
         ModelAndView mav = new ModelAndView("players/players");
         mav.addObject("RankingMap", SortUtil.sortMap(ranking));
         mav.addObject("title", title);
@@ -128,7 +129,7 @@ public class PlayersController extends BaseController {
         if (player == null){
             throw new ResourceNotFoundException();
         }
-        SortedMap<Participant, BigDecimal> ranking = rankingUtil.getRanking(player.getGender());
+        Map<Participant, BigDecimal> ranking = rankingUtil.getRanking(player.getGender());
         ModelAndView mav = new ModelAndView("players/player", "Player", player);
         mav.addObject("RankingValue", ranking.get(player));
         return mav;
