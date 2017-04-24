@@ -6,10 +6,7 @@
         <jsp:include page="/jsp/blog/blogentry.jsp"/>
     </c:forEach>
     <div class="row pageentry" id="blog-next">
-        <div>${Page.number}</div>
-        <div>${Page.last}</div>
-        <div>${Page}</div>
-        <div>${Page.number + 1}</div>
+        <div>Page: ${Page}</div>
     </div>
 </div>
 <div class="unit-4"></div>
