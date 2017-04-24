@@ -56,6 +56,10 @@ public class SessionEventListener implements HttpSessionListener {
         LocalDateTime now = new LocalDateTime();
         Booking booking = sessionUtil.getBooking(se.getSession());
         if (booking != null) {
+            if (booking.getId() != null){
+                //get latest booking from DB
+                booking = bookingBaseDAO.findById(booking.getId());
+            }
             cancelBooking(booking, now);
         }
 
