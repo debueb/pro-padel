@@ -3,7 +3,7 @@
 <div class="blog-content">
     <c:forEach var="PageEntry" items="${PageEntries}">
         <c:set var="PageEntry" value="${PageEntry}" scope="request"/>
-        <jsp:include page="/jsp/blog/blogentry.jsp"/>
+        <jsp:include page="/jsp/page/pageentry.jsp"/>
     </c:forEach>
     <div class="row pageentry" id="blog-next">
         <c:if test="${not Page.last}">
