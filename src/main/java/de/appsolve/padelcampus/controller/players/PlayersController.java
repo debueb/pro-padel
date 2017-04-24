@@ -27,7 +27,6 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringEscapeUtils;
