@@ -133,7 +133,7 @@ public class RankingUtil {
     }
     
     private Map<Participant, BigDecimal> getRanking(List<Game> games) {
-        rankingMap = new TreeMap<>();
+        rankingMap = new HashMap<>();
         SortedSet<Game> sortedGames = new TreeSet<>(new GameByStartDateComparator());
         sortedGames.addAll(games);
         for (Game game : sortedGames) {
