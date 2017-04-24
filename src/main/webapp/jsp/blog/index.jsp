@@ -1,6 +1,4 @@
-<%@include file="/jsp/include/include.jsp"%>
-<jsp:include page="/jsp/include/head.jsp"/>
-<div class="blog-content">
+<%@include file="/jsp/include/include.jsp"%><jsp:include page="/jsp/include/head.jsp"/><div class="blog-content">
     <c:forEach var="PageEntry" items="${PageEntries}">
         <c:set var="PageEntry" value="${PageEntry}" scope="request"/>
         <jsp:include page="/jsp/blog/blogentry.jsp"/>
