@@ -5,12 +5,13 @@
         <c:set var="PageEntry" value="${PageEntry}" scope="request"/>
         <jsp:include page="/jsp/blog/blogentry.jsp"/>
     </c:forEach>
-    <div class="row pageentry" id="blog-next">
-        <div>${Page}</div>
-        <div>${Page.number}</div>
-        <div>${Page.last}</div>
-        <c:set var="nextPage" value="${Page.number + 1}"/>
-        <div>${nextPage}</div>
+     <div class="row pageentry" id="blog-next">
+        <c:if test="${not Page.last}">
+        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2 relative">
+            <fmt:parseNumber value="${Page.number}" integerOnly="true" var="pageNumber" />
+            <a class="btn btn-primary btn-block" href="?page=${pageNumber+1}" data-content=".blog-content" data-replace="#blog-next"><fmt:message key="LoadMore"/></a>
+        </div>
+        </c:if>
     </div>
 </div>
 <div class="unit-4"></div>
