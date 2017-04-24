@@ -7,7 +7,7 @@
     </c:forEach>
      <div class="row pageentry" id="blog-next">
         <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2 relative">
-            <a class="btn btn-primary btn-block" href="?page=0" data-content=".blog-content" data-replace="#blog-next"><fmt:message key="LoadMore"/></a>
+            <a class="btn btn-primary btn-block" href="?page=${Page.number + 1}" data-content=".blog-content" data-replace="#blog-next"><fmt:message key="LoadMore"/></a>
         </div>
     </div>
 </div>
