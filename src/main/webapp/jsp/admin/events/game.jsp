@@ -6,6 +6,15 @@
         <jsp:include page="/jsp/include/back.jsp"/>
 
         <div class="page-header"></div>
+        
+        <ol class="unit-2 breadcrumb">
+            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
+            <li><a href="/admin/events"><fmt:message key="Events"/></a></li>
+            <li><a href="/admin/events/edit/${Event.id}">${Event.name}</a></li>
+            <li><a href="/admin/events/edit/${Event.id}/draws"><fmt:message key="Draws"/></a></li>
+            <li class="active"><fmt:message key="Game"/></li>
+        </ol>
+        
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4>${Event}</h4>
