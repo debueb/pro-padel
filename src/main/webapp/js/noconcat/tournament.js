@@ -2,7 +2,7 @@ var Tournament = function() {
     var defaults = {
         width: 2,
         color: '#FFF',
-        radius: 15,
+        radius: 10,
         regionSelector: '.region',
         containerSelector: '.tournament-container'
     };
