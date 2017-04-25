@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.data;
 
+import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
 import org.joda.time.LocalDate;
 
 /**
@@ -19,7 +20,7 @@ public class DateRange {
     private LocalDate endDate;
 
     public LocalDate getStartDate() {
-        return startDate;
+        return startDate == null ? new LocalDate(DEFAULT_TIMEZONE) : startDate;
     }
 
     public void setStartDate(LocalDate startDate) {
@@ -27,7 +28,7 @@ public class DateRange {
     }
 
     public LocalDate getEndDate() {
-        return endDate;
+        return endDate == null ? new LocalDate(DEFAULT_TIMEZONE) : endDate;
     }
 
     public void setEndDate(LocalDate endDate) {
