@@ -374,7 +374,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
         
         Game nextGame = game.getNextGame();
         if (nextGame!=null){
-            nextGame.getParticipants().clear();
+            nextGame.getParticipants().removeAll(game.getParticipants());
             gameDAO.saveOrUpdate(nextGame);
         }
         
