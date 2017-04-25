@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.controller;
 
+import static de.appsolve.padelcampus.constants.Constants.BLOG_PAGE_SIZE;
 import static de.appsolve.padelcampus.constants.Constants.PATH_HOME;
 import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.data.Mail;
@@ -41,8 +42,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class RootController extends BaseController{
     
     private static final Logger LOG = Logger.getLogger(RootController.class);
-    
-    private static final int BLOG_PAGE_SIZE = 10;
     
     @Autowired
     ModuleDAOI moduleDAO;
@@ -89,7 +88,7 @@ public class RootController extends BaseController{
     }
     
     @RequestMapping(method=POST)
-    public ModelAndView postIndex(HttpServletRequest request, @PageableDefault(size = BLOG_PAGE_SIZE) Pageable pageable,@PathVariable("moduleId") String moduleTitle, @ModelAttribute("Mail") Mail mail, BindingResult bindingResult){
+    public ModelAndView postIndex(HttpServletRequest request, @PageableDefault(size = BLOG_PAGE_SIZE) Pageable pageable, @PathVariable("moduleId") String moduleTitle, @ModelAttribute("Mail") Mail mail, BindingResult bindingResult){
         ModelAndView defaultView = getModuleView(moduleTitle, pageable);
         return sendMail(request, defaultView, mail, bindingResult);
     }

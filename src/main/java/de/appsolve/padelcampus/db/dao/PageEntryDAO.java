@@ -12,6 +12,7 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -33,8 +34,18 @@ public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEnt
     
     @Override
     public Page<PageEntry> findByModule(Module module, Pageable pageable) {
+        return findByRestriction(Restrictions.eq("module", module), pageable);
+    }
+
+    @Override
+    public Page<PageEntry> findByTitle(String title, Pageable pageable) {
+        title = title.replace("-", " ");
+        return findByRestriction(Restrictions.eq("title", title), pageable);
+    }
+
+    private Page<PageEntry> findByRestriction(SimpleExpression restriction, Pageable pageable) {
         Criteria countCriteria = getCriteria();
-        countCriteria.add(Restrictions.eq("module", module));
+        countCriteria.add(restriction);
         countCriteria.setProjection(Projections.rowCount());
         Long rowCount = (Long) countCriteria.uniqueResult();
         if (rowCount == 0L){
@@ -42,7 +53,7 @@ public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEnt
         }
         
         Criteria criteria = getCriteria();
-        criteria.add(Restrictions.eq("module", module));
+        criteria.add(restriction);
         criteria.setMaxResults(pageable.getPageSize());
         criteria.setFirstResult(pageable.getOffset());
         criteria.setProjection(Projections.distinct(Projections.property("id")));
@@ -51,7 +62,7 @@ public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEnt
         List<Long> list = criteria.list();
         
         Criteria c = getCriteria();
-        c.add(Restrictions.eq("module", module));
+        c.add(restriction);
         c.add(Restrictions.in("id", list));
         c.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         @SuppressWarnings("unchecked")

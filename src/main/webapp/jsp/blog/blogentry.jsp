@@ -5,7 +5,9 @@
             <div class="blog-header">
                 <div class="table-full-width">
                     <div class="table-row">
-                        <div class="col-xs-6 col-md-6 col-md-height blog-title">${PageEntry.title}</div>
+                        <div class="col-xs-6 col-md-6 col-md-height blog-title">
+                            <a href="${Module.url}/${PageEntry.url}">${PageEntry.title}</a>
+                        </div>
                         <div class="col-xs-6 col-md-6 col-md-height col-md-top text-right">
                             <a href="/players/player/${PageEntry.author.UUID}">
                             <c:choose>

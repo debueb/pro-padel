@@ -13,6 +13,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+import javax.validation.constraints.Pattern;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
@@ -35,6 +36,7 @@ public class PageEntry extends SortableEntity{
     private Player author;
     
     @NotEmpty(message = "{NotEmpty.title}")
+    @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}") 
     @Column
     private String title;
     
@@ -110,5 +112,9 @@ public class PageEntry extends SortableEntity{
     @Override
     public String toString(){
         return title;
+    }
+    
+    public String getUrl(){
+        return getTitle().replace(" ", "-");
     }
 }

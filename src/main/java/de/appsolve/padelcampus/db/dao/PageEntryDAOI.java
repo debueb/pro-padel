@@ -21,5 +21,7 @@ public interface PageEntryDAOI extends BaseEntityDAOI<PageEntry>{
     
     public List<PageEntry> findByModule(Module module);
     
+    public Page<PageEntry> findByTitle(String title, Pageable pageable);
+    
     public Page<PageEntry> findByModule(Module module, Pageable pageable);
 }
