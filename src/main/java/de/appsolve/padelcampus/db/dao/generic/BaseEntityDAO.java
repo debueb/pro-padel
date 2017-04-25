@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -157,7 +158,12 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         }
         List<Criterion> predicates = new ArrayList<>();
         for (String indexedPropery: getIndexedProperties()){
-            predicates.add(Restrictions.ilike(indexedPropery, search, MatchMode.ANYWHERE));
+            if (!StringUtils.isEmpty(search)){
+                String[] searchTerms = search.split(" ");
+                for (String searchTerm: searchTerms){
+                    predicates.add(Restrictions.ilike(indexedPropery, searchTerm, MatchMode.ANYWHERE));
+                }
+            }
         }
         if (!predicates.isEmpty()){
             criteria.add(Restrictions.or(predicates.toArray(new Criterion[predicates.size()])));
