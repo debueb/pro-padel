@@ -32,6 +32,6 @@ public class EventByStartDateComparator implements Comparator<Event>, Serializab
         if (result == 0){
             result = o1.getName().compareToIgnoreCase(o2.getName());
         }
-        return reverse ? Math.negateExact(result) : result;
+        return reverse ? result*-1 : result;
     }
 }
