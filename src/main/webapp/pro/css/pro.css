@@ -248,7 +248,7 @@ h1, .h1, h2, .h2, h3, .h3{
     overflow: hidden;
 }
 .mobile {
-    background-image: url(/pro/images/iphone-optimised.png);
+    background-image: url(/pro/images/iphone7-optimised.png);
     position: absolute;
     width: 95px;
     height: 196px;
@@ -257,9 +257,9 @@ h1, .h1, h2, .h2, h3, .h3{
     z-index: 5;
 }
 .tablet {
-    background-image: url(/pro/images/ipad-optimised.png);
+    background-image: url(/pro/images/ipad-air-optimised.png);
     width: 246px;
-    height: 330px;
+    height: 360px;
     z-index: 3;
     position: absolute;
     left: 0px;
@@ -335,10 +335,10 @@ h1, .h1, h2, .h2, h3, .h3{
     -o-transform-origin: top left;
     -ms-transform-origin: top left;
     -moz-transform-origin: top left;
-    width: 808px;
-    height: 1100px;
-    top: 35px;
-    left: 40px;
+    width: 890px;
+    height: 1200px;
+    top: 50px;
+    left: 31px;
     overflow-y: hidden;
 }
 .mobile .top {
@@ -354,10 +354,10 @@ h1, .h1, h2, .h2, h3, .h3{
     -o-transform-origin: top left;
     -ms-transform-origin: top left;
     -moz-transform-origin: top left;
-    width: 331px;
-    height: 492px;
-    top: 31px;
-    left: 10px;
+    width: 355px;
+    height: 632px;
+    top: 19px;
+    left: 9px;
     overflow-y: hidden;
 }
 iframe {
