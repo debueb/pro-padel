@@ -115,7 +115,6 @@ public class EventsController extends BaseController{
             throw new ResourceNotFoundException();
         }
         List<Event> events = eventDAO.findAllActive();
-        Collections.sort(events, new EventByStartDateComparator());
         List<Event> currentEvents = new ArrayList<>();
         List<Event> pastEvents = new ArrayList<>();
         Iterator<Event> iterator = events.iterator();
@@ -129,6 +128,9 @@ public class EventsController extends BaseController{
                 pastEvents.add(event);
             }
         }
+        Collections.sort(currentEvents, new EventByStartDateComparator());
+        Collections.sort(pastEvents, new EventByStartDateComparator(true));
+        
         ModelAndView mav = new ModelAndView("events/index");
         mav.addObject("CurrentEvents", currentEvents);
         mav.addObject("PastEvents", pastEvents);

@@ -17,12 +17,21 @@ public class EventByStartDateComparator implements Comparator<Event>, Serializab
     
     private static final long serialVersionUID = 1L;
     
+    private Boolean reverse = false;
+    
+    public EventByStartDateComparator(){
+    }
+    
+    public EventByStartDateComparator(Boolean reverse){
+        this.reverse = reverse;
+    }
+    
     @Override
     public int compare(Event o1, Event o2) {
         int result = o1.getStartDate().compareTo(o2.getStartDate());
         if (result == 0){
             result = o1.getName().compareToIgnoreCase(o2.getName());
         }
-        return result;
+        return reverse ? Math.negateExact(result) : result;
     }
 }
