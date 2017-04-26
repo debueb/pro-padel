@@ -10,28 +10,28 @@
 </div>
 <div class="content" style="background-color: #263248;">
     <div class="content-text">
-        <h3 class="text-center"><fmt:message key="WelcomeTo"><fmt:param value="${pageContext.request.serverName}"/></fmt:message></h3>
+        <h2 class="text-center"><fmt:message key="WelcomeTo"><fmt:param value="${pageContext.request.serverName}"/></fmt:message></h2>
         <br><br>
-        <h4 class="text-center"><fmt:message key="ProPadelDesc"/></h4>
+        <h3 class="text-center"><fmt:message key="ProPadelDesc"/></h3>
     </div>
 </div>
 <div class="parallax-window" data-parallax="scroll" data-image-src="/pro/images/3.jpg"></div>
 <div class="content" style="background-color: #FF9800">
     <div class="content-text">
-        <a href="/pro/tournaments" class="white"><h3 class="text-center"><fmt:message key="Tournaments"/></h3></a>
+        <a href="/pro/tournaments" class="white"><h2 class="text-center"><fmt:message key="Tournaments"/></h2></a>
         <br><br>
-        <a href="/pro/tournaments" class="white"><h4 class="text-center"><fmt:message key="TournamentsUserDesc"/></h4></a>
+        <a href="/pro/tournaments" class="white"><h3 class="text-center"><fmt:message key="TournamentsUserDesc"/></h3></a>
     
         <br><br><br><br>
-        <a href="/pro/ranking" class="white"><h3 class="text-center"><fmt:message key="Ranking"/></h3></a>
+        <a href="/pro/ranking" class="white"><h2 class="text-center"><fmt:message key="Ranking"/></h2></a>
         <br><br>
-        <a href="/pro/ranking" class="white"><h4 class="text-center"><fmt:message key="RankingUserDesc"/></h4></a>
+        <a href="/pro/ranking" class="white"><h3 class="text-center"><fmt:message key="RankingUserDesc"/></h3></a>
     </div>
 </div>
 <div class="parallax-window" data-parallax="scroll" data-image-src="/pro/images/4.jpg"></div>
 <div class="content content-teaser" style="background-color: #7E8AA2">
     <div  class="content-text" style="padding-bottom: 0px;">
-        <a href="/pro/operators" class="white"><h3 class="text-center"><fmt:message key="ForOperators"/></h3></a>
+        <a href="/pro/operators" class="white"><h2 class="text-center"><fmt:message key="ForOperators"/></h2></a>
         <br><br>
 
         <a href="/pro/operators">
@@ -68,6 +68,6 @@
     </div>
 </div>
 <div class="content" style="background-color: #7E8AA2; padding-top: 10px;">
-    <a href="/pro/operators" class="white"><h4 class="text-center"><fmt:message key="ForOperatorsDesc"/></h4></a>
+    <a href="/pro/operators" class="white"><h3 class="text-center"><fmt:message key="ForOperatorsDesc"/></h3></a>
 </div>
 <jsp:include page="/jsp/pro/include/footer-simple.jsp"/>
