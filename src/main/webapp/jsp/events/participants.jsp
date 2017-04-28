@@ -8,7 +8,7 @@
 
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4><fmt:message key="ParticipantsIn"><fmt:param value="${Model}"/></fmt:message></h4>
+                <h4><fmt:message key="ParticipantsIn"><fmt:param value="${fn:length(RankingMap)}"/><fmt:param value="${Model}"/></fmt:message></h4>
             </div>
             <div class="panel-body">
                 <div class="list-group">
