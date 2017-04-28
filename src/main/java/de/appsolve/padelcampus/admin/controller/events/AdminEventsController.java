@@ -322,29 +322,18 @@ public class AdminEventsController extends AdminBaseController<Event>{
     public ModelAndView postDraws(@PathVariable("eventId") Long eventId){
         try {
             Event model = eventDAO.findByIdFetchWithParticipants(eventId);
-
+            
+            //prevent udpate operations for existing events
+            List<Game> eventGames = gameDAO.findByEvent(model);
+            if (!eventGames.isEmpty()){
+                throw new Exception(msg.get("DrawsAlreadyExist"));
+            }
+            
             //check min number of participants
             if (model.getParticipants().size()<3){
                 throw new Exception(msg.get("PleaseSelectAtLeast3Participants"));
             }
-            //determine number of games per round
-            int numGamesPerRound = Integer.highestOneBit(model.getParticipants().size()-1);
-
-            //handle udpate operations for existing events
-            List<Game> eventGames = gameDAO.findByEvent(model);
-            int numExistingGamesPerRound = 0;
-            if (!eventGames.isEmpty()){
-                for (Game game: eventGames){
-                    Integer round = game.getRound();
-                    if (round!=null && round==0){
-                        numExistingGamesPerRound++;
-                    }
-                }
-                if (numExistingGamesPerRound!=numGamesPerRound){
-                    throw new Exception(msg.get("CannotChangeNumberOfGames"));
-                }
-            }
-
+            
             //determine ranking
             Map<Participant, BigDecimal> ranking = rankingUtil.getRankedParticipants(model);
             SortedMap<Participant, BigDecimal> sortedRanking = SortUtil.sortMap(ranking);
@@ -357,7 +346,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
             return mav;
         }
 
-        return getDrawsView(eventId);
+        return new ModelAndView("redirect:/admin/events/edit/"+eventId+"/draws");
     }
     
     @RequestMapping(value={"edit/{eventId}/draws/game/{gameId}"}, method=GET)

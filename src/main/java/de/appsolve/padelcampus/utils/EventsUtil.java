@@ -124,10 +124,6 @@ public class EventsUtil {
 
                 }
 
-//                if (numGamesPerRound == 1){
-//                    //TODO: when we are in the final, check if we also play for third place
-//                }
-
                 game = gameDAO.saveOrUpdate(game);
                 games.add(game);
             }
