@@ -39,7 +39,7 @@ public interface EventDAOI extends BaseEntityDAOI<Event>{
     
     List<Event> findAllFetchWithParticipantsAndPlayers();
     
-    List<Event> findAllWithParticipant(Participant participant);
+    List<Event> findAllUpcomingWithParticipant(Participant participant);
 
     public List<Event> findAllActive();
 

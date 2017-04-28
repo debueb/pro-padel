@@ -1,8 +1,8 @@
 package de.appsolve.padelcampus.db.dao;
 ;
 import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
-import java.util.List;
 import de.appsolve.padelcampus.db.model.Event;
+import java.util.List;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
@@ -13,7 +13,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+import org.joda.time.LocalDate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -26,27 +30,39 @@ import org.springframework.stereotype.Component;
 public class EventDAO extends GenericDAO<Event> implements EventDAOI{
 
     @Override
-    public List<Event> findAllWithParticipant(Participant participant) {
-        List<Event> allEvents = findAllFetchWithParticipants();
-        List<Event> matchingEvents = new ArrayList<>();
-        Iterator<Event> iterator = allEvents.iterator();
+    public List<Event> findAllUpcomingWithParticipant(Participant participant) {
+        Criteria crit = getCriteria();
+        crit.setFetchMode("participants", FetchMode.JOIN);
+        crit.setFetchMode("participants.players", FetchMode.JOIN);
+        crit.add(Restrictions.eq("active", true));
+        crit.add(Restrictions.ge("startDate", new LocalDate()));
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        @SuppressWarnings("unchecked")
+        List<Event> events = (List<Event>) crit.list();
+        
+        Iterator<Event> iterator = events.iterator();
         while (iterator.hasNext()){
+            boolean remove = true;
             Event event = iterator.next();
             if (event.getParticipants().contains(participant)){
-                matchingEvents.add(event);
+                remove = false;
             } else if (participant instanceof Player){
                 Player player = (Player) participant;
                 for (Participant eventParticipant: event.getParticipants()){
                     if (eventParticipant instanceof Team){
                         Team team = (Team) eventParticipant;
                         if (team.getPlayers().contains(player)){
-                            matchingEvents.add(event);
+                            remove = false;
                         }
                     }
                 }
             }
+            if (remove){
+                iterator.remove();
+            }
         }
-        return matchingEvents;
+        sort(events);
+        return events;
     }
 
     @Override

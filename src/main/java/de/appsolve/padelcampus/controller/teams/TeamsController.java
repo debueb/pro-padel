@@ -117,15 +117,17 @@ public class TeamsController extends BaseController{
             throw new ResourceNotFoundException();
         }
         ModelAndView mav = new ModelAndView("teams/team", "Team", team);
-        List<Game> games = gameDAO.findByParticipant(team);
-        Set<Event> currentEvents = new TreeSet<>();
+        
+        //get upcoming events
+        List<Event> currentEvents = eventDAO.findAllUpcomingWithParticipant(team);
+        
+        //get past events from actual game data so that teams that have not played will not be shown and so that pull events are considered
         Set<Event> pastEvents = new TreeSet<>();
         LocalDate today = LocalDate.now();
+        List<Game> games = gameDAO.findByParticipant(team);
         for (Game game: games){
             Event event = game.getEvent();
-            if (event.getEndDate().isAfter(today)){
-                currentEvents.add(event);
-            } else {
+            if (today.isAfter(event.getEndDate())){
                 pastEvents.add(event);
             }
         }
