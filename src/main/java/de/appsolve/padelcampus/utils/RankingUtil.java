@@ -6,8 +6,6 @@
 package de.appsolve.padelcampus.utils;
 
 import de.appsolve.padelcampus.comparators.GameByStartDateComparator;
-import static de.appsolve.padelcampus.constants.Constants.MATCH_PLAY_FACTOR;
-import static de.appsolve.padelcampus.constants.Constants.MATCH_WIN_FACTOR;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
@@ -32,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
@@ -359,7 +356,6 @@ public class RankingUtil {
 
         ScoreEntry entry = new ScoreEntry();
         entry.setParticipant(participant);
-        entry.setTotalPoints(matchesWon * MATCH_WIN_FACTOR + (matchesPlayed - matchesWon) * MATCH_PLAY_FACTOR);
         entry.setMatchesPlayed(matchesPlayed);
         entry.setMatchesWon(matchesWon);
         entry.setSetsPlayed(totalSetsPlayed);

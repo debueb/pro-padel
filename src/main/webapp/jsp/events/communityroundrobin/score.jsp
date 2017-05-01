@@ -9,17 +9,16 @@
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4><fmt:message key="ResultsIn"><fmt:param>${Event.name}</fmt:param></fmt:message></h4>
-                    </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-scores">
-                                <thead>
-                                <th class="text-center">#</th>
-                                <th><fmt:message key="Community"/></th>
-                                <th class="text-center"><fmt:message key="Points"/></th>
-                        <th class="text-center"><fmt:message key="Matches"/></th>
-                        <th class="text-center"><fmt:message key="Sets"/></th>
-                        <th class="text-center"><fmt:message key="Games"/></th>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-scores">
+                        <thead>
+                            <th class="text-center">#</th>
+                            <th><fmt:message key="Community"/></th>
+                            <th class="text-center"><fmt:message key="Matches"/></th>
+                            <th class="text-center"><fmt:message key="Sets"/></th>
+                            <th class="text-center"><fmt:message key="Games"/></th>
                         </thead>
                         <tbody>
                             <c:forEach var="CommunityScoreMapEntry" items="${CommunityScoreMap}" varStatus="status">
@@ -28,7 +27,6 @@
                                 <tr>
                                     <td class="text-center">${status.index+1}</td>
                                     <td>${Community}</td>
-                                    <td class="text-center">${ScoreEntry.totalPoints}</td>
                                     <td class="text-center">${ScoreEntry.matchesWon}:${ScoreEntry.matchesPlayed-ScoreEntry.matchesWon}</td>
                                     <td class="text-center">${ScoreEntry.setsWon}:${ScoreEntry.setsPlayed-ScoreEntry.setsWon}</td>
                                     <td class="text-center">${ScoreEntry.gamesWon}:${ScoreEntry.gamesPlayed-ScoreEntry.gamesWon}</td>

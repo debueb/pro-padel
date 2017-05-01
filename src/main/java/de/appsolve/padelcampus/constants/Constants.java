@@ -19,8 +19,6 @@ public class Constants {
     public static final String UTF8                         = "UTF-8";
     
     public static final int FIRST_SET                       = 1;
-    public static final int MATCH_WIN_FACTOR                = 3;
-    public static final int MATCH_PLAY_FACTOR               = 1;
     
     public static final int VOUCHER_NUM_CHARS               = 6;
     public static final int VOUCHER_DEFAULT_VALIDITY_IN_DAYS = 365;

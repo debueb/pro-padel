@@ -16,8 +16,6 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
     
     private Participant participant;
     
-    private int totalPoints;
-    
     private int matchesPlayed;
     private int matchesWon;
     
@@ -26,14 +24,6 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
     
     private int gamesPlayed;
     private int gamesWon;
-
-    public int getTotalPoints() {
-        return totalPoints;
-    }
-
-    public void setTotalPoints(int totalPoints) {
-        this.totalPoints = totalPoints;
-    }
 
     public int getSetsPlayed() {
         return setsPlayed;
@@ -92,14 +82,8 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
 
     @Override
     public int compareTo(ScoreEntry o) {
-        //points
-        int diff = o.totalPoints-totalPoints;
-        if (diff!=0){
-            return diff;
-        }
-        
         //matches
-        diff = getDiff(matchesPlayed, matchesWon, o.matchesPlayed, o.matchesWon);
+        int diff = getDiff(matchesPlayed, matchesWon, o.matchesPlayed, o.matchesWon);
         if (diff!=0){
             return diff;
         }
@@ -126,7 +110,6 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
     public int hashCode() {
         int hash = 3;
         hash = 31 * hash + Objects.hashCode(this.participant);
-        hash = 31 * hash + this.totalPoints;
         hash = 31 * hash + this.matchesPlayed;
         hash = 31 * hash + this.matchesWon;
         hash = 31 * hash + this.setsPlayed;
@@ -148,9 +131,6 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
             return false;
         }
         final ScoreEntry other = (ScoreEntry) obj;
-        if (this.totalPoints != other.totalPoints) {
-            return false;
-        }
         if (this.matchesPlayed != other.matchesPlayed) {
             return false;
         }
@@ -183,7 +163,6 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
     }
 
     public void add(ScoreEntry scoreEntry) {
-        this.totalPoints    += scoreEntry.getTotalPoints();
         this.gamesPlayed    += scoreEntry.getGamesPlayed();
         this.gamesWon       += scoreEntry.getGamesWon();
         this.matchesPlayed  += scoreEntry.getMatchesPlayed();
