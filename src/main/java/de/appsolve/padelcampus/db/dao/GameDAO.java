@@ -43,6 +43,7 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI{
         criteria.add(Restrictions.gt("e.endDate", date));
         criteria.add(Restrictions.isNotEmpty("gameSets"));
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        @SuppressWarnings("unchecked")
         List<Game> games = criteria.list();
 
 //        Criteria criteria = getCriteria();
