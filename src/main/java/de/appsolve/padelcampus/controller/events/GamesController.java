@@ -96,7 +96,6 @@ public class GamesController extends BaseController{
     
     @RequestMapping(value="/game/{gameId}/edit", method=POST)
     public ModelAndView postGame(@PathVariable("gameId") Long gameId, @RequestParam(value="redirectUrl", required=false) String redirectUrl, HttpServletRequest request){
-        
         Player user = sessionUtil.getUser(request);
         if (user == null){
             return getLoginView(request);
@@ -266,14 +265,5 @@ public class GamesController extends BaseController{
             }
         }
         return gamesMap;
-    }
-
-    private ModelAndView getLoginView(HttpServletRequest request) {
-        String redirectPath = request.getParameter("redirectUrl");
-        if (redirectPath == null){
-            redirectPath = request.getRequestURL().toString();
-        }
-        sessionUtil.setLoginRedirectPath(request, redirectPath);
-        return new ModelAndView("redirect:/login");
     }
 }

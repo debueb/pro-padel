@@ -30,6 +30,7 @@ import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
 import de.appsolve.padelcampus.utils.EventsUtil;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
+import de.appsolve.padelcampus.utils.SessionUtil;
 import de.appsolve.padelcampus.utils.SortUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -95,6 +96,9 @@ public class EventsController extends BaseController{
     
     @Autowired
     RankingUtil rankingUtil;
+    
+    @Autowired
+    SessionUtil sessionUtil;
     
     @Autowired
     protected Validator validator;
@@ -297,7 +301,11 @@ public class EventsController extends BaseController{
     }
     
     @RequestMapping(value={"edit/{eventId}/addpullgame"}, method=GET)
-    public ModelAndView getAddPullGame(@PathVariable("eventId") Long eventId){
+    public ModelAndView getAddPullGame(@PathVariable Long eventId, HttpServletRequest request){
+        Player user = sessionUtil.getUser(request);
+        if (user == null){
+            return getLoginView(request);
+        }
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
         return getAddPullGameView(event, new AddPullGame());
     }
@@ -309,6 +317,10 @@ public class EventsController extends BaseController{
             @ModelAttribute("Model") AddPullGame addPullGame,
             @RequestParam(value="redirectUrl", required=false) String redirectUrl,
             BindingResult bindingResult){
+        Player user = sessionUtil.getUser(request);
+        if (user == null){
+            return getLoginView(request);
+        }
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
         validator.validate(addPullGame, bindingResult);
         if (bindingResult.hasErrors()){
@@ -352,6 +364,13 @@ public class EventsController extends BaseController{
                     LOG.info(e);
                 }
             }
+        }
+        game.setGameSets(new HashSet<>(gameSets));
+        if (gameSets.isEmpty()){
+            //we use score reporter as an indicator that the game has been played
+            game.setScoreReporter(null);
+        } else {
+            game.setScoreReporter(user);
         }
         game.setGameSets(gameSets);
         gameDAO.saveOrUpdate(game);

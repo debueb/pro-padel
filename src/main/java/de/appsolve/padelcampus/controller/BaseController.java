@@ -14,6 +14,7 @@ import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import de.appsolve.padelcampus.reporting.ErrorReporter;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
+import de.appsolve.padelcampus.utils.SessionUtil;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -56,6 +57,9 @@ public abstract class BaseController {
     
     @Autowired
     protected ErrorReporter errorReporter;
+    
+    @Autowired
+    private SessionUtil sessionUtil;
     
     @ExceptionHandler(value=Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -116,5 +120,14 @@ public abstract class BaseController {
         Contact contact = new Contact();
         contact.setEmailAddress(environment.getProperty("DEFAULT_EMAIL_ADDRESS"));
         return contact;
+    }
+    
+    protected ModelAndView getLoginView(HttpServletRequest request) {
+        String redirectPath = request.getParameter("redirectUrl");
+        if (redirectPath == null){
+            redirectPath = request.getRequestURL().toString();
+        }
+        sessionUtil.setLoginRedirectPath(request, redirectPath);
+        return new ModelAndView("redirect:/login");
     }
 }
