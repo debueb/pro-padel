@@ -103,7 +103,7 @@ public class SessionEventListener implements HttpSessionListener {
                 }
             }
         } catch (Exception e) {
-            LOG.error(e);
+            LOG.error(e, e);
         }
 
     }
