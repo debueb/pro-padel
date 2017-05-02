@@ -174,7 +174,7 @@ public class Event extends ComparableEntity{
     }
 
     public Integer getNumberOfSets() {
-        return numberOfSets == null ? 3 : numberOfSets;
+        return numberOfSets == null ? 3 : Math.max(1, numberOfSets);
     }
 
     public void setNumberOfSets(Integer numberOfSets) {
@@ -182,7 +182,7 @@ public class Event extends ComparableEntity{
     }
 
     public Integer getNumberOfGamesPerSet() {
-        return numberOfGamesPerSet == null ? 7 : numberOfGamesPerSet;
+        return numberOfGamesPerSet == null ? 7 : Math.max(1, numberOfGamesPerSet);
     }
 
     public void setNumberOfGamesPerSet(Integer numberOfGamesPerSet) {
@@ -190,7 +190,7 @@ public class Event extends ComparableEntity{
     }
 
     public Integer getNumberOfGamesInFinalSet() {
-        return numberOfGamesInFinalSet == null ? 1 : numberOfGamesInFinalSet;
+        return numberOfGamesInFinalSet == null ? 1 : Math.max(1, numberOfGamesInFinalSet);
     }
 
     public void setNumberOfGamesInFinalSet(Integer numberOfGamesInFinalSet) {

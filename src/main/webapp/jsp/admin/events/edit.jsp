@@ -182,17 +182,17 @@
                     </div>
 
                     <div class="relative">
-                        <spf:input path="numberOfSets" type="number" class="form-control form-center-element"/>
+                        <spf:input path="numberOfSets" type="number" class="form-control form-center-element" min="1" max="5" />
                         <div class="explanation-select"><fmt:message key="MaxNumberOfSets"/></div>
                     </div>
 
                     <div class="relative">
-                        <spf:input path="numberOfGamesPerSet" type="number" class="form-control form-center-element"/>
+                        <spf:input path="numberOfGamesPerSet" type="number" class="form-control form-center-element" min="1" max="99"/>
                         <div class="explanation-select"><fmt:message key="MaxNumberOfGamesPerSet"/></div>
                     </div>
 
                     <div class="relative">
-                        <spf:input path="numberOfGamesInFinalSet" type="number" class="form-control form-bottom-element"/>
+                        <spf:input path="numberOfGamesInFinalSet" type="number" class="form-control form-bottom-element" min="1" max="99"/>
                         <div class="explanation-select"><fmt:message key="MaxNumberOfGamesInFinalSet"/></div>
                     </div>
 
