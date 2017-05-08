@@ -1,3 +1,5 @@
+const LOCAL_STORAGE_LAST_PAGE = 'lastPage';
+
 var project = {
     showShadow: function () {
         $('#shadow').show();
@@ -17,15 +19,19 @@ var project = {
         $('#ballWrapper').css('display', 'none');
     },
 
+    isNative(){
+        return "standalone" in window.navigator && window.navigator.standalone || window.navigator.userAgent.indexOf('ProPadel') >= 0;
+    },
+    
     enableBackButton: function () {
         $('.btn-back').livequery(function(){
             //show btn-back in header
-            if (("standalone" in window.navigator && window.navigator.standalone) || window.navigator.userAgent.indexOf('ProPadel') >= 0){
+            if (project.isNative()){
                 $(this).show();
             }
             //btn-back is used not only in header
             $(this).on('click tap', function(){
-               window.history.back();
+                window.history.back();
             });
         });
     },
@@ -583,29 +589,47 @@ var project = {
                 "lazyLoad": "progressive"
             });
         });
+    },
+    
+    saveLastPage(){
+        if (project.isNative()){
+            localStorage.setItem(LOCAL_STORAGE_LAST_PAGE, window.location.href);
+            $(window).on('statechangecomplete', function(){
+                localStorage.setItem(LOCAL_STORAGE_LAST_PAGE, window.location.href);
+            });
+        }
     }
 };
 
-$(document).ready(function () {
-    project.enableBackButton();
-    project.enableForms();
-    project.enablePrivateDataLinks();
-    project.enableDatePicker();
-    project.enableFormAutoSubmit();
-    project.enableSideMenu();
-    project.enableAccordion();
-    project.enableBookingLoginSelection();
-    project.enableSelectPicker();
-    project.enablePlusMinusInputFields();
-    project.enableUpdateBooking();
-    project.enableRegexChecksOnInputs();
-    project.enablePayMill();
-    project.enableAdvancedProfile();
-    project.enableSelectToggle();
-    project.enableAutoSearch();
-    project.enableTooltips();
-    project.enableSubmodules();
-    project.enableSlick();
-});
+var lastPage = localStorage.getItem(LOCAL_STORAGE_LAST_PAGE);
+//if we are running standalone mode, restore the page that the user last viewed
+if (project.isNative() && lastPage && lastPage !== window.location.href){
+    //make sure to remove last page to prevent redirect loops
+    localStorage.removeItem(LOCAL_STORAGE_LAST_PAGE);
+    window.location.href = lastPage;
+} else {        
+    $(document).ready(function () {
+        project.enableBackButton();
+        project.enableForms();
+        project.enablePrivateDataLinks();
+        project.enableDatePicker();
+        project.enableFormAutoSubmit();
+        project.enableSideMenu();
+        project.enableAccordion();
+        project.enableBookingLoginSelection();
+        project.enableSelectPicker();
+        project.enablePlusMinusInputFields();
+        project.enableUpdateBooking();
+        project.enableRegexChecksOnInputs();
+        project.enablePayMill();
+        project.enableAdvancedProfile();
+        project.enableSelectToggle();
+        project.enableAutoSearch();
+        project.enableTooltips();
+        project.enableSubmodules();
+        project.enableSlick();
+        project.saveLastPage();
+    });
+}
 
 module.exports = project;
