@@ -26,6 +26,11 @@ var project = require('./project');
             /* Application Generic Variables */
             $window = $(window);
             
+        // for the first page load, the state object empty
+        // we need to store the current url so that the back button works in our popstate handler
+        if (!window.history.state){
+            window.history.replaceState({method: 'GET', url: window.location.href}, document.title, window.location.href);
+        }   
         
         // HTML Helper
         var documentHtml = function (html) {
