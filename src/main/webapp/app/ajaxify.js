@@ -18,7 +18,7 @@ var project = require('./project');
     $(function () {
         // Prepare Variables
         var defaultContentSelector = '.wrapper',
-            contentSelector, 
+            contentSelector = defaultContentSelector, 
             $content,
             replaceElement,
             $body = $(document.body),
