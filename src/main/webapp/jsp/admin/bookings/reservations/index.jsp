@@ -18,7 +18,18 @@
                 <h4><fmt:message key="BookingsAndReservations"/></h4>
             </div>
             <div class="panel-body">
-                <jsp:include page="/jsp/admin/include/daterange.jsp"/>
+                <spf:form method="POST" modelAttribute="DateRange">
+                    <%-- Start Datum --%>
+                    <div class="datepicker-container">
+                        <div class="datepicker-text-container">
+                            <div class="datepicker-label"><fmt:message key="GameDate"/> <fmt:message key="GameDate"/></div>
+                            <span class="fa fa-calendar datepicker-icon"></span>
+                            <div class="datepicker-text"></div>
+                        </div>
+                        <spf:input type="hidden" path="startDate" class="datepicker-input form-control auto-submit" value="${DateRange.startDate}"/>
+                        <div class="datepicker" data-show-on-init="false" data-allow-past="true"></div>
+                    </div>
+                </spf:form>
 
                 <div class="table-responsive" style="margin-top: 40px;">
                     <table class="table table-striped table-bordered table-centered datatable">

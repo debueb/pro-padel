@@ -6,7 +6,6 @@
 package de.appsolve.padelcampus.utils;
 
 import static de.appsolve.padelcampus.constants.Constants.SESSION_BOOKING;
-import static de.appsolve.padelcampus.constants.Constants.SESSION_BOOKING_LIST_END_DATE;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_LOGIN_REDIRECT_PATH;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_PRIVILEGES;
 import static de.appsolve.padelcampus.constants.Constants.SESSION_PROFILE_REDIRECT_PATH;
@@ -158,14 +157,6 @@ public class SessionUtil {
     
     public LocalDate getBookingListStartDate(HttpServletRequest request){
         return (LocalDate) getObject(request, SESSION_BOOKING_LIST_START_DATE);
-    }
-    
-    public void setBookingListEndDate(HttpServletRequest httpRequest, LocalDate date) {
-        setObject(httpRequest, SESSION_BOOKING_LIST_END_DATE, date);
-    }
-    
-    public LocalDate getBookingListEndDate(HttpServletRequest request){
-        return (LocalDate) getObject(request, SESSION_BOOKING_LIST_END_DATE);
     }
     
     public void setReservationListStartDate(HttpServletRequest httpRequest, LocalDate date) {

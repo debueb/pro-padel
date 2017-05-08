@@ -38,7 +38,6 @@ public class Constants {
     public static final String SESSION_BOOKING              = "booking";
     public static final String SESSION_ACCESS_LEVEL         = "accessLevel";
     public static final String SESSION_BOOKING_LIST_START_DATE  = "bookingListStartDate";
-    public static final String SESSION_BOOKING_LIST_END_DATE    = "bookingListEndDate";
     public static final String SESSION_RESERVATION_LIST_START_DATE  = "reservationListStartDate";
     public static final String SESSION_RESERVATION_LIST_END_DATE    = "reservationListEndDate";
     public static final String SESSION_DEFAULT_LOCALE       = "sessionLocale";

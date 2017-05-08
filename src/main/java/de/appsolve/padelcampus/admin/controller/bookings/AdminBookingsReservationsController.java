@@ -116,13 +116,8 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         if (startDate == null){
             startDate = new LocalDate();
         }
-        LocalDate endDate = sessionUtil.getBookingListEndDate(request);
-        if (endDate == null){
-            endDate = startDate;
-        }
         DateRange dateRange = new DateRange();
         dateRange.setStartDate(startDate);
-        dateRange.setEndDate(endDate);
         return getIndexView(dateRange);
     }
     
@@ -132,7 +127,6 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         if (dateRange.getEndDate().isBefore(dateRange.getStartDate())){
             dateRange.setEndDate(dateRange.getStartDate());
         }
-        sessionUtil.setBookingListEndDate(request, dateRange.getEndDate());
         return getIndexView(dateRange); 
     }
     
@@ -388,7 +382,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     }
     
     private ModelAndView getIndexView(DateRange dateRange) {
-        List<Booking> bookings = bookingDAO.findActiveBookingsBetween(dateRange.getStartDate(), dateRange.getEndDate());
+        List<Booking> bookings = bookingDAO.findActiveBookingsBetween(dateRange.getStartDate(), dateRange.getStartDate());
         
         BigDecimal total = new BigDecimal(0);
         for (Booking booking: bookings){
