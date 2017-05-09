@@ -593,19 +593,30 @@ var project = {
     
     saveLastPage(){
         if (project.isNative()){
-            localStorage.setItem(LOCAL_STORAGE_LAST_PAGE, window.location.href);
+            window.localStorage.setItem(LOCAL_STORAGE_LAST_PAGE, window.location.href);
             $(window).on('statechangecomplete', function(){
-                localStorage.setItem(LOCAL_STORAGE_LAST_PAGE, window.location.href);
+                window.localStorage.setItem(LOCAL_STORAGE_LAST_PAGE, window.location.href);
             });
         }
     }
 };
 
-var lastPage = localStorage.getItem(LOCAL_STORAGE_LAST_PAGE);
+/* localStorage in-memory polyfill */
+if (!('localStorage' in window)) {
+  window.localStorage = {
+    _data       : {},
+    setItem     : function(id, val) { return this._data[id] = String(val); },
+    getItem     : function(id) { return this._data.hasOwnProperty(id) ? this._data[id] : undefined; },
+    removeItem  : function(id) { return delete this._data[id]; },
+    clear       : function() { return this._data = {}; }
+  };
+}
+
+var lastPage = window.localStorage.getItem(LOCAL_STORAGE_LAST_PAGE);
 //if we are running standalone mode, restore the page that the user last viewed
 if (project.isNative() && lastPage && lastPage !== window.location.href){
     //make sure to remove last page to prevent redirect loops
-    localStorage.removeItem(LOCAL_STORAGE_LAST_PAGE);
+    window.localStorage.removeItem(LOCAL_STORAGE_LAST_PAGE);
     window.location.href = lastPage;
 } else {        
     $(document).ready(function () {
