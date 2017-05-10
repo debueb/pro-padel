@@ -37,7 +37,7 @@ public class BlogController {
     @Autowired
     PageEntryDAOI pageEntryDAO;
     
-    @RequestMapping("{moduleTitle}/{pageEntryTitle}")
+    @RequestMapping("{moduleTitle}/post/{pageEntryTitle}")
     public ModelAndView getBlogEntry(@PathVariable String moduleTitle, @PathVariable String pageEntryTitle, @PageableDefault(size = BLOG_PAGE_SIZE) Pageable pageable){
         Module module = moduleDAO.findByUrlTitle(moduleTitle);
         if (module == null){
