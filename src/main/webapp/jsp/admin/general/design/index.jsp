@@ -24,9 +24,9 @@
                         <c:choose>
                             <c:when test="${fn:endsWith(Attribute.name, 'Color')}">
                                 <div class="input-group color-picker unit">
-                                    <span class="input-group-addon"><i></i></span>
+                                    <span class="input-group-addon form-left-element"><i></i></span>
                                     <span class="relative">
-                                        <input type="text" name="${Attribute.name}" class="form-control" value="${empty Attribute.cssValue ? Attribute.cssDefaultValue : Attribute.cssValue}" />
+                                        <input type="text" name="${Attribute.name}" class="form-control form-right-element" value="${empty Attribute.cssValue ? Attribute.cssDefaultValue : Attribute.cssValue}" />
                                         <span class="explanation"><fmt:message key="${Attribute.name}"/></span>
                                     </span>
                                 </div>
