@@ -81,7 +81,7 @@ public class RootController extends BaseController{
             case "netbeans-tomcat-status-test":
                 return getHomePage();
             case "serviceworker":
-                return new ModelAndView("forward:/js/noconcat/serviceworker.js");
+                return new ModelAndView("forward:/static/js/noconcat/serviceworker.js");
             default:
                 return getModuleView(moduleTitle, pageable);
         }
