@@ -31,7 +31,7 @@
                                 <spf:select 
                                     path="community" 
                                     class="form-control select-simple form-top-element"
-                                    data-container="body" 
+                                    data-container="body"
                                     >
                                     <fmt:message key="None" var="None"/>
                                     <spf:option value="" label="${None}"/>
@@ -56,6 +56,7 @@
                                 multiple="multiple"
                                 data-container="body" 
                                 data-live-search="true"
+                                data-max-options="2"
                                 data-abs-locale-currently-selected='${CurrentlySelected}'
                                 data-abs-locale-empty-title='${EmptyTitle}'
                                 data-abs-locale-error-text='${ErrorText}'

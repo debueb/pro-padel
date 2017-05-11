@@ -29,17 +29,17 @@
                             </c:forEach>
                         </thead>
                         <tbody>
-                            <c:forEach begin="1" end="2" var="teamNumber">
+                            <c:forEach begin="1" end="2" var="teamNumber" varStatus="teamStatus">
                                 <tr>
                                     <td>
-                                        <spf:select path="team${teamNumber}" class="select-multiple form-control" data-container="body">
+                                        <spf:select path="team${teamNumber}" class="select-multiple form-control ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'} form-left-element" data-container="body" data-max-options="2">
                                             <spf:options items="${Event.participants}" itemValue="UUID"/>
                                         </spf:select>
                                     </td>
                                     <c:forEach begin="1" end="${Event.numberOfSets}" var="setNumber" varStatus="status">
                                         <td>
                                             <c:set var="paramName" value="set-${setNumber}-team-${teamNumber}"/>
-                                            <select name="${paramName}" class="select-simple form-control" data-container="body" data-live-search="false">
+                                            <select name="${paramName}" class="select-simple form-control ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'} form-right-element" data-container="body" data-live-search="false">
                                                 <option value="-1">-</option>
                                                 <c:choose>
                                                     <c:when test="${Event.numberOfSets > 1 && status.last}">

@@ -271,19 +271,21 @@ var project = {
             countSelectedText: '{0}'
         };
         $('.select-simple, .select-multiple').livequery(function(){
-            if (!!$(this).attr('data-selected-text-format')){
+            var $select = $(this);
+            if (!!$select.attr('data-selected-text-format')){
                 options.selectedTextFormat = 'count > 2';
             }
-            $(this).selectpicker(options);
+            $select.selectpicker(options);
         });
         
         $('.select-ajax-search').livequery(function(){
+            var $select = $(this);
             var liveOptions = options;
             liveOptions.liveSearch = true;
             var typeSource = $(this).attr('data-abs-param-type-source');
-            $(this).selectpicker(liveOptions);
-            if($(this).data('selectpicker')){
-                $(this).ajaxSelectPicker({
+            $select.selectpicker(liveOptions);
+            if($select.data('selectpicker')){
+                $select.ajaxSelectPicker({
                     ajax: {
                         method: 'GET',
                         data: function () {
@@ -302,6 +304,19 @@ var project = {
                     preserveSelected: true
                 });
             }
+        });
+        
+        //auto close when max number of selected options is reached
+        $('.select-simple[data-max-options], .select-multiple[data-max-options], .select-ajax-search[data-max-options]').livequery(function(){
+            var $select = $(this);
+            var maxOptions = $select.attr('data-max-options');
+            $select.on('changed.bs.select', function (event, clickedIndex, newValue) {
+                var selectedOptions = $select.val();
+                if (selectedOptions && selectedOptions.length == maxOptions && newValue){
+                    $select.selectpicker('toggle');
+                }
+            });
+            
         });
     },
 
