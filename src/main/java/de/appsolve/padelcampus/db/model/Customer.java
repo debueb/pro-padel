@@ -133,7 +133,7 @@ public class Customer extends BaseEntity implements CustomerI{
     }
 
     public String getCompanyLogoPath() {
-        return companyLogo == null ? "/images/logo.png" : "/images/image/"+companyLogo.getSha256();
+        return companyLogo == null ? "/static/images/logo.png" : "/images/image/"+companyLogo.getSha256();
     }
 
     public Image getTouchIcon() {
@@ -145,7 +145,7 @@ public class Customer extends BaseEntity implements CustomerI{
     }
     
     public String getTouchIconPath() {
-        return touchIcon == null ? "/images/touch-icon-192x192.png" : "/images/image/"+touchIcon.getSha256();
+        return touchIcon == null ? "/static/images/touch-icon-192x192.png" : "/images/image/"+touchIcon.getSha256();
     }
 
     public String getFooterPrefix() {

@@ -9,12 +9,12 @@ const PATHS = {
      * Therefore, we depend on the development environment to generate our bundle into our sources
     build: path.join(__dirname, 'target', 'classes', 'META-INF', 'resources', 'app')
     */
-    build: path.join(__dirname, 'src', 'main', 'webapp', 'app', 'dist')
+    build: path.join(__dirname, 'src', 'main', 'webapp', 'static', 'app', 'dist')
 };
 
 module.exports = {
     entry: {
-        main: './src/main/webapp/app/main.js'
+        main: './src/main/webapp/static/app/main.js'
     },
 
     output: {

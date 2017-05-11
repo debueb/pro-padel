@@ -66,18 +66,18 @@ public class HtmlResourceUtil {
     @Autowired
     CustomerUtil customerUtil;
     
-    private static final String VARIABLES_LESS  = "/less/variables.less";
-    private static final String PROJECT_LESS    = "/less/90_project.less";
-    private static final String PROJECT_CSS     = "/css/90_project.css";
-    private static final String LOADER_LESS     = "/less/96_loader.less";
-    private static final String LOADER_CSS      = "/css/96_loader.css";
-    private static final String BOOTSTRAP_LESS  = "/less/10_bootstrap.less"; 
-    private static final String BOOTSTRAP_CSS   = "/css/10_bootstrap.css";
+    private static final String VARIABLES_LESS  = "/static/less/variables.less";
+    private static final String PROJECT_LESS    = "/static/less/90_project.less";
+    private static final String PROJECT_CSS     = "/static/css/90_project.css";
+    private static final String LOADER_LESS     = "/static/less/96_loader.less";
+    private static final String LOADER_CSS      = "/static/css/96_loader.css";
+    private static final String BOOTSTRAP_LESS  = "/static/less/10_bootstrap.less"; 
+    private static final String BOOTSTRAP_CSS   = "/static/css/10_bootstrap.css";
 
-    private static final String FOLDER_CSS      = "/css";
-    private static final String FOLDER_LESS     = "/less";
+    private static final String FOLDER_CSS      = "/static/css";
+    private static final String FOLDER_LESS     = "/static/less";
     
-    private static final String ALL_MIN_CSS = "/css/all.min.css";
+    private static final String ALL_MIN_CSS = "/static/css/all.min.css";
 
     public void updateCss(final ServletContext context) throws Exception {
         List<Customer> customers = customerDAO.findAll();
@@ -245,9 +245,9 @@ public class HtmlResourceUtil {
             byte[] bytes = Files.readAllBytes(file.toPath());
             return new String(bytes, Constants.UTF8);
         } catch (IOException e){
-            InputStream stream = context.getResourceAsStream("/css/"+name);
+            InputStream stream = context.getResourceAsStream("/static/css/"+name);
             if (stream == null){
-                LOG.warn("Unable to load fallback /css/"+name);
+                LOG.warn("Unable to load fallback /static/css/"+name);
                 return null;
             }
             return IOUtils.toString(stream, Constants.UTF8);
@@ -263,7 +263,7 @@ public class HtmlResourceUtil {
         atts.add(getCssAttribute("primaryLinkHoverColor", "#94cfeb", "#94cfeb"));
         atts.add(getCssAttribute("headerColor", "#070056", "#070056"));
         atts.add(getCssAttribute("footerColor", "#070054", "#070054"));
-        atts.add(getCssAttribute("backgroundImage", "url\\('\\/images\\/bg\\.jpg'\\)", "url('/images/bg.jpg')"));
+        atts.add(getCssAttribute("backgroundImage", "url\\('\\/static\\/images\\/bg\\.jpg'\\)", "url('/static/images/bg.jpg')"));
         atts.add(getCssAttribute("backgroundRepeat", "no-repeat", "no-repeat"));
         atts.add(getCssAttribute("backgroundSize", "cover", "cover"));
         atts.add(getCssAttribute("loaderOpacity", "@loaderOpacity: 1", "@loaderOpacity: 1"));

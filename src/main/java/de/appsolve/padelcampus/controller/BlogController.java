@@ -38,7 +38,7 @@ public class BlogController {
     PageEntryDAOI pageEntryDAO;
     
     /* {moduleTitle}/{pageEntryTable} mapping breaks static resource mapping, since @RequestMappings have precedence over static resource mappings */
-    @RequestMapping("{moduleTitle}/post/{pageEntryTitle}")
+    @RequestMapping("{moduleTitle}/{pageEntryTitle}")
     public ModelAndView getBlogEntry(@PathVariable String moduleTitle, @PathVariable String pageEntryTitle, @PageableDefault(size = BLOG_PAGE_SIZE) Pageable pageable){
         Module module = moduleDAO.findByUrlTitle(moduleTitle);
         if (module == null){

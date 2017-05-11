@@ -37,18 +37,4 @@ public class CssController extends BaseController{
     public String getAllMinCss(HttpServletRequest request, @PathVariable("customerName") String customerName) throws IOException{
         return htmlResourceUtil.getAllMinCss(request.getServletContext(), customerName);
     }
-    
-    @ResponseBody
-    @RequestMapping(value="/dev/{cssFile}.stylesheet", produces = "text/css")
-    public String getCssFile(HttpServletRequest request, @PathVariable("cssFile") String cssFile) throws IOException{
-        return htmlResourceUtil.getCssFile(request.getServletContext(), cssFile, "");
-    }
-    
-    @ResponseBody
-    @RequestMapping(value="/dev/{customer}/{cssFile}", produces = "text/css")
-    public String getCssFile(HttpServletRequest request, @PathVariable("customer") String customer, @PathVariable("cssFile") String cssFile) throws IOException{
-        return htmlResourceUtil.getCssFile(request.getServletContext(), cssFile, customer);
-    }
-    
-    
 }

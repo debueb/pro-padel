@@ -72,7 +72,7 @@ ${Attribute.cssValue}</textarea>
                                             width: 100%;
                                             height: 100%;
                                             background-size: 100% 100%;
-                                            content: ${empty Attribute.cssValue ? 'url(\'/images/bg.jpg\')' : Attribute.cssValue};
+                                            content: ${empty Attribute.cssValue ? 'url(\'/static/images/bg.jpg\')' : Attribute.cssValue};
                                         }
                                     </style>
                                 </figure>

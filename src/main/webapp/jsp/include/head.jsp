@@ -52,8 +52,8 @@
         
         <link rel="stylesheet" href="/css/${sessionScope.customer}/all.min.stylesheet" title="project_css">
 
-        <script src="/js/noconcat/bugsnag.js" data-apikey="c3a3e8e773db9d46f2d51d905ead0e83"></script>
-        <script src="/app/dist/main.js" 
+        <script src="/static/js/noconcat/bugsnag.js" data-apikey="c3a3e8e773db9d46f2d51d905ead0e83"></script>
+        <script src="/static/app/dist/main.js" 
                 data-release-stage="${profile.id}" 
                 data-user-name="${user.firstName} ${user.lastName}" 
                 data-user-email="${user.email}"

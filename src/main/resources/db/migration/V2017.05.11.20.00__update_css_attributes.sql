@@ -1,0 +1,2 @@
+UPDATE `CssAttribute` SET cssDefaultValue = 'url\\(\'\\/static\\/images\\/bg\\.jpg\'\\)' WHERE `cssDefaultValue` = 'url\\(\'\\/images\\/bg\\.jpg\'\\)';
+UPDATE `CssAttribute` SET cssValue = 'url(\'/static/images/bg.jpg\')' WHERE `cssValue` = 'url(\'/images/bg.jpg\')';

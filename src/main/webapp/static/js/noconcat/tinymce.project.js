@@ -38,18 +38,18 @@ var initTinyMce = function () {
         fontsize_formats: '8px 10px 12px 14px 16px 18px 24px 36px',
         image_advtab: true,
         templates: [
-          { title: 'Alert Danger', url: '/templates/AlertDanger.html' },
-          { title: 'Alert Info', url: '/templates/AlertInfo.html' },
-          { title: 'Alert Warning', url: '/templates/AlertWarning.html' },
-          { title: 'Button Default', url: '/templates/ButtonDefault.html' },
-          { title: 'Button Primary', url: '/templates/ButtonPrimary.html' },
-          { title: 'Content Only', url: '/templates/ContentOnly.html' },
-          { title: 'Content Left Image Right', url: '/templates/ContentLeftImageRight.html' },
-          { title: 'Content Right Image Left', url: '/templates/ContentRightImageLeft.html' },
-          { title: 'Blog Post Image Right', url: '/templates/BlogPostImageRight.html' },
-          { title: 'Blog Post Image Left', url: '/templates/BlogPostImageLeft.html' },
-          { title: 'Jumbotron', url: '/templates/Jumbotron.html' },
-          { title: 'Panel', url: '/templates/Panel.html' }
+          { title: 'Alert Danger', url: '/static/templates/AlertDanger.html' },
+          { title: 'Alert Info', url: '/static/templates/AlertInfo.html' },
+          { title: 'Alert Warning', url: '/static/templates/AlertWarning.html' },
+          { title: 'Button Default', url: '/static/templates/ButtonDefault.html' },
+          { title: 'Button Primary', url: '/static/templates/ButtonPrimary.html' },
+          { title: 'Content Only', url: '/static/templates/ContentOnly.html' },
+          { title: 'Content Left Image Right', url: '/static/templates/ContentLeftImageRight.html' },
+          { title: 'Content Right Image Left', url: '/static/templates/ContentRightImageLeft.html' },
+          { title: 'Blog Post Image Right', url: '/static/templates/BlogPostImageRight.html' },
+          { title: 'Blog Post Image Left', url: '/static/templates/BlogPostImageLeft.html' },
+          { title: 'Jumbotron', url: '/static/templates/Jumbotron.html' },
+          { title: 'Panel', url: '/static/templates/Panel.html' }
         ],
         file_picker_callback: function(callback, value, meta) {
             
@@ -65,10 +65,10 @@ var initTinyMce = function () {
                     }
                 });
                 
-                $('head').append('<script src="/filemanager/vendor.js"></script>');
-                $('head').append('<script src="/filemanager/file-manager.js"></script>');
-                $('head').append('<link href="/filemanager/vendor.css" rel="stylesheet"/>');
-                $('head').append('<link href="/filemanager/file-manager.css" rel="stylesheet"/>');
+                $('head').append('<script src="/static/filemanager/vendor.js"></script>');
+                $('head').append('<script src="/static/filemanager/file-manager.js"></script>');
+                $('head').append('<link href="/static/filemanager/vendor.css" rel="stylesheet"/>');
+                $('head').append('<link href="/static/filemanager/file-manager.css" rel="stylesheet"/>');
             }
         },
         file_picker_types: 'image',
