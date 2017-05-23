@@ -606,30 +606,41 @@ var project = {
     
     saveLastPage(){
         if (project.isNative()){
-            window.localStorage.setItem("lastPage", window.location.href);
+            storage.setItem("lastPage", window.location.href);
             $(window).on('statechangecomplete', function(){
-                window.localStorage.setItem("lastPage", window.location.href);
+                storage.setItem("lastPage", window.location.href);
             });
         }
     }
 };
 
+
+var storage;
 /* localStorage in-memory polyfill */
-if (!('localStorage' in window)) {
-  window.localStorage = {
-    _data       : {},
-    setItem     : function(id, val) { return this._data[id] = String(val); },
-    getItem     : function(id) { return this._data.hasOwnProperty(id) ? this._data[id] : undefined; },
-    removeItem  : function(id) { return delete this._data[id]; },
-    clear       : function() { return this._data = {}; }
-  };
+try{
+    //localStorage can be available but not accessible, so check both
+    if (('localStorage' in window) && window.localStorage) {
+        storage = window.localStorage;
+    } else {
+        throw('localStorage not available');
+    }
+} catch(ex){
+    //iOS safari throws an exception when trying to access window.localStorage and it is not available
+    console.log('polyfilling localStorage');
+    storage = {
+        _data       : {},
+        setItem     : function(id, val) { return this._data[id] = String(val); },
+        getItem     : function(id) { return this._data.hasOwnProperty(id) ? this._data[id] : undefined; },
+        removeItem  : function(id) { return delete this._data[id]; },
+        clear       : function() { return this._data = {}; }
+      };
 }
 
-var lastPage = window.localStorage.getItem("lastPage");
+var lastPage = storage.getItem("lastPage");
 //if we are running standalone mode, restore the page that the user last viewed
 if (project.isNative() && lastPage && lastPage !== window.location.href){
     //make sure to remove last page to prevent redirect loops
-    window.localStorage.removeItem("lastPage");
+    storage.removeItem("lastPage");
     window.location.href = lastPage;
 } else {        
     $(document).ready(function () {

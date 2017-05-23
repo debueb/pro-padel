@@ -13,4 +13,3 @@ require('./jquery.livequery');
 require('./project');
 require('./ajaxify');
 require('./dayscheduler');
-require('./serviceworker');
