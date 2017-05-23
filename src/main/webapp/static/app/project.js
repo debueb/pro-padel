@@ -1,5 +1,3 @@
-const LOCAL_STORAGE_LAST_PAGE = 'lastPage';
-
 var project = {
     showShadow: function () {
         $('#shadow').show();
@@ -608,9 +606,9 @@ var project = {
     
     saveLastPage(){
         if (project.isNative()){
-            window.localStorage.setItem(LOCAL_STORAGE_LAST_PAGE, window.location.href);
+            window.localStorage.setItem("lastPage", window.location.href);
             $(window).on('statechangecomplete', function(){
-                window.localStorage.setItem(LOCAL_STORAGE_LAST_PAGE, window.location.href);
+                window.localStorage.setItem("lastPage", window.location.href);
             });
         }
     }
@@ -627,11 +625,11 @@ if (!('localStorage' in window)) {
   };
 }
 
-var lastPage = window.localStorage.getItem(LOCAL_STORAGE_LAST_PAGE);
+var lastPage = window.localStorage.getItem("lastPage");
 //if we are running standalone mode, restore the page that the user last viewed
 if (project.isNative() && lastPage && lastPage !== window.location.href){
     //make sure to remove last page to prevent redirect loops
-    window.localStorage.removeItem(LOCAL_STORAGE_LAST_PAGE);
+    window.localStorage.removeItem("lastPage");
     window.location.href = lastPage;
 } else {        
     $(document).ready(function () {
