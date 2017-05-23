@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "watch": "webpack --watch -d",
-    "build": "webpack -p"
+    "build": "webpack -p && perl -pi -w -e 's/use strict//g;' src/main/webapp/static/app/dist/main.js"
   },
   "author": "",
   "license": "ISC",
