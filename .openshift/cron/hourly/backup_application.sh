@@ -20,4 +20,8 @@ ${OPENSHIFT_DATA_DIR}/dropbox_uploader.sh -f ${OPENSHIFT_DATA_DIR}/dropbox_uploa
 rm ${OPENSHIFT_TMP_DIR}/data_${TODAY}.tar.gz
 rm -rf ${OPENSHIFT_TMP_DIR}/data
 
+#delete old backups
+THREEMONTHSAGO=$(date --date "90 days ago" +"%Y_%m_%d")
+${OPENSHIFT_DATA_DIR}/dropbox_uploader.sh -f ${OPENSHIFT_DATA_DIR}/dropbox_uploader.config delete ${THREEMONTHSAGO}
+
 fi
