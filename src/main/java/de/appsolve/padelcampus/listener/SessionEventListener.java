@@ -7,10 +7,12 @@ package de.appsolve.padelcampus.listener;
 
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.APIContext;
+import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.db.dao.BookingBaseDAOI;
 import de.appsolve.padelcampus.db.dao.PayPalConfigBaseDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.PayPalConfig;
+import de.appsolve.padelcampus.reporting.ErrorReporter;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import java.util.List;
 import javax.servlet.ServletContext;
@@ -41,6 +43,9 @@ public class SessionEventListener implements HttpSessionListener {
 
     @Autowired
     private PayPalConfigBaseDAOI payPalConfigBaseDAO;
+    
+    @Autowired
+    protected ErrorReporter errorReporter;
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
@@ -79,31 +84,30 @@ public class SessionEventListener implements HttpSessionListener {
         try {
             //if the booking is not confirmed and has not been blocked or is older than max Age
             if (!booking.getConfirmed() && (booking.getBlockingTime() == null || booking.getBlockingTime().isBefore(maxAge))) {
-                switch (booking.getPaymentMethod()) {
-                    case PayPal:
-                        if (StringUtils.isEmpty(booking.getPaypalPaymentId())) {
-                            LOG.info("Cancelling paypal booking [UUID:" + booking.getUUID() + ", user=" + booking.getPlayer().toString() + ", date=" + booking.getBookingDate() + ", time=" + booking.getBookingTime() + ", payment state=unpaid] due to session timeout");
+                if (booking.getPaymentMethod()!=null && booking.getPaymentMethod().equals(PaymentMethod.PayPal)) {
+                    if (StringUtils.isEmpty(booking.getPaypalPaymentId())) {
+                        LOG.info("Cancelling paypal booking [UUID:" + booking.getUUID() + ", user=" + booking.getPlayer().toString() + ", date=" + booking.getBookingDate() + ", time=" + booking.getBookingTime() + ", payment state=unpaid] due to session timeout");
+                        bookingBaseDAO.cancelBooking(booking);
+                    } else {
+                        Payment payment = Payment.get(getApiContext(booking), booking.getPaypalPaymentId());
+                        if (payment.getState() == null || !payment.getState().equals("approved")) {
+                            LOG.info("Cancelling paypal booking [UUID:" + booking.getUUID() + ", user=" + booking.getPlayer().toString() + ", date=" + booking.getBookingDate() + ", time=" + booking.getBookingTime() + ", payment state=" + payment.getState() + "] due to session timeout");
                             bookingBaseDAO.cancelBooking(booking);
                         } else {
-                            Payment payment = Payment.get(getApiContext(booking), booking.getPaypalPaymentId());
-                            if (payment.getState() == null || !payment.getState().equals("approved")) {
-                                LOG.info("Cancelling paypal booking [UUID:" + booking.getUUID() + ", user=" + booking.getPlayer().toString() + ", date=" + booking.getBookingDate() + ", time=" + booking.getBookingTime() + ", payment state=" + payment.getState() + "] due to session timeout");
-                                bookingBaseDAO.cancelBooking(booking);
-                            } else {
-                                LOG.info("Fixing paypal booking [UUID:" + booking.getUUID() + ", user=" + booking.getPlayer().toString() + ", date=" + booking.getBookingDate() + ", time=" + booking.getBookingTime() + ", PayPal Payment ID:" + booking.getPaypalPaymentId() + "] that is approved by paypal but is not confirmed as paid, most likely to failed redirect from paypal to our system after successful payment");
-                                booking.setConfirmed(Boolean.TRUE);
-                                booking.setPaymentConfirmed(Boolean.TRUE);
-                                bookingBaseDAO.saveOrUpdate(booking);
-                            }
+                            LOG.info("Fixing paypal booking [UUID:" + booking.getUUID() + ", user=" + booking.getPlayer().toString() + ", date=" + booking.getBookingDate() + ", time=" + booking.getBookingTime() + ", PayPal Payment ID:" + booking.getPaypalPaymentId() + "] that is approved by paypal but is not confirmed as paid, most likely to failed redirect from paypal to our system after successful payment");
+                            booking.setConfirmed(Boolean.TRUE);
+                            booking.setPaymentConfirmed(Boolean.TRUE);
+                            bookingBaseDAO.saveOrUpdate(booking);
                         }
-                        break;
-                    default:
-                        LOG.info("Cancelling booking [user=" + booking.getPlayer().toString() + ", date=" + booking.getBookingDate() + ", time=" + booking.getBookingTime() + ", paymentMethod=" + booking.getPaymentMethod() + "] due to session timeout");
-                        bookingBaseDAO.cancelBooking(booking);
+                    }
+                } else {
+                    LOG.info("Cancelling booking [user=" + booking.getPlayer() + ", date=" + booking.getBookingDate() + ", time=" + booking.getBookingTime() + ", paymentMethod=" + booking.getPaymentMethod() + "] due to session timeout");
+                    bookingBaseDAO.cancelBooking(booking);
                 }
             }
         } catch (Exception e) {
             LOG.error(e, e);
+            errorReporter.notify(e);
         }
 
     }
