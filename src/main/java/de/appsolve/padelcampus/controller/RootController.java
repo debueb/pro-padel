@@ -77,6 +77,11 @@ public class RootController extends BaseController{
     @RequestMapping("/{moduleId}")
     public ModelAndView getIndex(@PathVariable("moduleId") String moduleTitle, @PageableDefault(size = BLOG_PAGE_SIZE) Pageable pageable){
         switch (moduleTitle){
+            case "autodisover":
+            case "serviceworker":
+            case "apple-app-site-association":
+            case ".well-known":
+                return new ModelAndView("error/404");
             case PATH_HOME:
             case "netbeans-tomcat-status-test":
                 return getHomePage();
