@@ -304,7 +304,7 @@ public class EventsController extends BaseController{
     public ModelAndView getAddPullGame(@PathVariable Long eventId, HttpServletRequest request){
         Player user = sessionUtil.getUser(request);
         if (user == null){
-            return getLoginView(request);
+            return getLoginView(request, request.getRequestURI());
         }
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
         return getAddPullGameView(event, new AddPullGame());
@@ -319,7 +319,7 @@ public class EventsController extends BaseController{
             BindingResult bindingResult){
         Player user = sessionUtil.getUser(request);
         if (user == null){
-            return getLoginView(request);
+            return getLoginView(request, request.getRequestURI());
         }
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
         validator.validate(addPullGame, bindingResult);
@@ -378,7 +378,50 @@ public class EventsController extends BaseController{
         if (!StringUtils.isEmpty(redirectUrl)){
             return new ModelAndView("redirect:/"+redirectUrl);
         }
-        return new ModelAndView("redirect:/events/event/"+event.getId()+"/pullgames");
+        return new ModelAndView("redirect:/edit?redirectUrl=events/event/"+event.getId()+"/pullgames");
+    }
+    
+    @RequestMapping(value={"edit/{eventId}/addfriendlygame"}, method=GET)
+    public ModelAndView getAddFriendlyGame(@PathVariable("eventId") Long eventId, HttpServletRequest request){
+        Player user = sessionUtil.getUser(request);
+        if (user == null){
+            return getLoginView(request, request.getRequestURI());
+        }
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        return getAddFriendlyGameView(event, new AddPullGame());
+    }
+    
+    @RequestMapping(value={"edit/{eventId}/addfriendlygame"}, method=POST)
+    public ModelAndView postAddFriendlyGame(
+            @PathVariable("eventId") Long eventId, 
+            @ModelAttribute("Model") AddPullGame addPullGame, 
+            @RequestParam(value="redirectUrl", required=false) String redirectUrl,
+            BindingResult bindingResult,
+            HttpServletRequest request){
+        Player user = sessionUtil.getUser(request);
+        if (user == null){
+            return getLoginView(request, request.getRequestURI());
+        }
+        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
+        validator.validate(addPullGame, bindingResult);
+        if (bindingResult.hasErrors()){
+            return getAddFriendlyGameView(event, addPullGame);
+        }
+        if (!Collections.disjoint(addPullGame.getTeam1(), addPullGame.getTeam2())){
+            bindingResult.addError(new ObjectError("id", msg.get("ChooseDistinctPlayers")));
+            return getAddFriendlyGameView(event, addPullGame);
+        }
+        Set<Participant> teams = new HashSet<>();
+        teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam1()));
+        teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam2()));
+        Game game = new Game();
+        game.setEvent(event);
+        game.setParticipants(teams);
+        game = gameDAO.saveOrUpdate(game);
+        if (!StringUtils.isEmpty(redirectUrl)){
+            return new ModelAndView("redirect:/"+redirectUrl);
+        }
+        return new ModelAndView("redirect:/games/game/"+game.getId()+"/edit?redirectUrl=events/event/"+event.getId()+"/pullgames");
     }
     
     private ModelAndView getKnockoutView(Event event, SortedMap<Integer, List<Game>> roundGameMap) {
@@ -416,8 +459,15 @@ public class EventsController extends BaseController{
         return participantGameGameSetMap;
     }
     
+    private ModelAndView getAddFriendlyGameView(Event event, AddPullGame game) {
+        ModelAndView mav = new ModelAndView("events/friendlygames/addfriendlygame");
+        mav.addObject("Event", event);
+        mav.addObject("Model", game);
+        return mav;
+    }
+    
     private ModelAndView getAddPullGameView(Event event, AddPullGame game) {
-        ModelAndView mav = new ModelAndView("admin/events/addpullgame");
+        ModelAndView mav = new ModelAndView("events/pullroundrobin/addpullgame");
         mav.addObject("Event", event);
         mav.addObject("Model", game);
         return mav;

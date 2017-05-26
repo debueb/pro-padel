@@ -7,13 +7,6 @@
 
         <div class="page-header"></div>
 
-        <ol class="unit-2 breadcrumb">
-            <li><a href="/admin"><fmt:message key="Administration"/></a></li>
-            <li><a href="/admin/events"><fmt:message key="Events"/></a></li>
-            <li><a href="/admin/events/edit/${Event.id}">${Event.name}</a></li>
-            <li class="active"><fmt:message key="AddGame"/></li>
-        </ol>
-
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4>${Event}: <fmt:message key="AddGame"/></h4>

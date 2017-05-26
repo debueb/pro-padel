@@ -122,12 +122,16 @@ public abstract class BaseController {
         return contact;
     }
     
+    protected ModelAndView getLoginView(HttpServletRequest request, String redirectPath) {
+        sessionUtil.setLoginRedirectPath(request, redirectPath);
+        return new ModelAndView("redirect:/login");
+    }
+    
     protected ModelAndView getLoginView(HttpServletRequest request) {
         String redirectPath = request.getParameter("redirectUrl");
         if (redirectPath == null){
             redirectPath = request.getRequestURL().toString();
         }
-        sessionUtil.setLoginRedirectPath(request, redirectPath);
-        return new ModelAndView("redirect:/login");
+        return getLoginRequiredView(request, redirectPath);
     }
 }

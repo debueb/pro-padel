@@ -449,40 +449,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
         return getGameScheduleView(event);
     }
     
-    @RequestMapping(value={"edit/{eventId}/addfriendlygame"}, method=GET)
-    public ModelAndView getAddFriendlyGame(@PathVariable("eventId") Long eventId){
-        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
-        return getAddFriendlyGameView(event, new AddPullGame());
-    }
-    
-    @RequestMapping(value={"edit/{eventId}/addfriendlygame"}, method=POST)
-    public ModelAndView postAddFriendlyGame(
-            @PathVariable("eventId") Long eventId, 
-            @ModelAttribute("Model") AddPullGame addPullGame, 
-            @RequestParam(value="redirectUrl", required=false) String redirectUrl,
-            BindingResult bindingResult){
-        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
-        validator.validate(addPullGame, bindingResult);
-        if (bindingResult.hasErrors()){
-            return getAddFriendlyGameView(event, addPullGame);
-        }
-        if (!Collections.disjoint(addPullGame.getTeam1(), addPullGame.getTeam2())){
-            bindingResult.addError(new ObjectError("id", msg.get("ChooseDistinctPlayers")));
-            return getAddFriendlyGameView(event, addPullGame);
-        }
-        Set<Participant> teams = new HashSet<>();
-        teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam1()));
-        teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam2()));
-        Game game = new Game();
-        game.setEvent(event);
-        game.setParticipants(teams);
-        gameDAO.saveOrUpdate(game);
-        if (!StringUtils.isEmpty(redirectUrl)){
-            return new ModelAndView("redirect:/"+redirectUrl);
-        }
-        return new ModelAndView("redirect:/events/event/"+event.getId()+"/pullgames");
-    }
-    
     @RequestMapping(value={"edit/{eventId}/schedule/{scheduleName}"}, method=POST)
     public ModelAndView postGroupSchedule(@PathVariable("eventId") Long eventId, @PathVariable("scheduleName") String scheduleName, @ModelAttribute("Model") GameList gameList, BindingResult bindingResult, HttpServletRequest request){
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
@@ -719,13 +685,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
         return mav;
     }
 
-    private ModelAndView getAddFriendlyGameView(Event event, AddPullGame game) {
-        ModelAndView mav = new ModelAndView("admin/events/addfriendlygame");
-        mav.addObject("Event", event);
-        mav.addObject("Model", game);
-        return mav;
-    }
-    
     private ModelAndView redirectToGroupDraws(Event model) {
         return new ModelAndView("redirect:/admin/events/edit/"+model.getId()+"/groupdraws");
     }
@@ -749,10 +708,6 @@ public class AdminEventsController extends AdminBaseController<Event>{
         EventGroups eventGroups = new EventGroups();
         eventGroups.setGroupParticipants(participantMap);
         return eventGroups;
-    }
-
-    private ModelAndView redirectToGameSchedule(Event model) {
-        return new ModelAndView("redirect:/admin/events/edit/"+model.getId()+"/gameschedule");
     }
 
     private ModelAndView getDeleteGameView(Game game) {

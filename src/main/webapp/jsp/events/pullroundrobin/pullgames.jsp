@@ -13,7 +13,17 @@
                 <h4><fmt:message key="Games"/></h4>
             </div>
             <div class="panel-body" style="padding: 0;">
-                <table class="table table-responsive table-striped table-fixed">
+                <div style="padding: 10px;">
+                    <c:choose>
+                        <c:when test="${Model.eventType eq 'PullRoundRobin'}">
+                            <a href="/events/edit/${Model.id}/addpullgame?redirectUrl=${redirectUrl}" class="btn btn-primary btn-block unit-2"><fmt:message key="AddGame"/></a>
+                        </c:when>
+                        <c:when test="${Model.eventType eq 'FriendlyGames'}">
+                            <a href="/events/edit/${Model.id}/addfriendlygame?redirectUrl=${redirectUrl}" class="btn btn-primary btn-block unit-2"><fmt:message key="AddGame"/></a>
+                        </c:when>
+                    </c:choose>
+                </div>
+                <table class="table table-responsive table-striped table-fixed unit-2">
                     <tbody>
                     <c:forEach var="GameResult" items="${GameResultMap}">
                         <c:set var="Game" value="${GameResult.key}"/>
@@ -45,17 +55,6 @@
                     </c:forEach>
                     </tbody>
                 </table>
-                <div style="padding: 10px;">
-                    <c:choose>
-                        <c:when test="${Model.eventType eq 'PullRoundRobin'}">
-                            <a href="/events/edit/${Model.id}/addpullgame?redirectUrl=${redirectUrl}" class="btn btn-primary btn-block unit-2"><fmt:message key="AddGame"/></a>
-                        </c:when>
-                        <c:when test="${Model.eventType eq 'FriendlyGames'}">
-                            <a href="/admin/events/edit/${Model.id}/addfriendlygame?redirectUrl=${redirectUrl}" class="btn btn-primary btn-block unit-2"><fmt:message key="AddGame"/></a>
-                        </c:when>
-                    </c:choose>
-                    
-                </div>
             </div>
         </div>
     </div>
