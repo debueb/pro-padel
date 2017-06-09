@@ -34,6 +34,8 @@ import java.util.TreeSet;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -43,6 +45,7 @@ import org.springframework.stereotype.Component;
  * 
  */
 @Component
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class RankingUtil {
 
     private static final Logger LOG = Logger.getLogger(RankingUtil.class);
