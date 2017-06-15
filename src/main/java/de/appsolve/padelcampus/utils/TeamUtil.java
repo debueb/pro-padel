@@ -31,6 +31,8 @@ public class TeamUtil {
             }
         });
         for (Player player: sortedPlayers){
+            name.append(player.getFirstName());
+            name.append(" ");
             name.append(player.getLastName());
             if (i<model.getPlayers().size()-1){
                 name.append(" / ");
