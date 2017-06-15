@@ -62,9 +62,9 @@ public class TestGroupKnockoutTournament extends TestBase {
         
         List<String> teamUUIDs = new ArrayList<>();
         for (long i=0; i<NUM_PLAYERS; i=i+2){
-            String teamName = "Test "+i+" / Test "+(i+1);
+            String teamName = String.format("Player %s Test %s / Player %s Test %s", i, i, i+1, i+1);
             Team team = teamDAO.findByAttribute("name", teamName);
-            Assert.assertNotNull(team);
+            Assert.assertNotNull("team must be findable by name", team);
             teamUUIDs.add(team.getUUID());
         }
         
