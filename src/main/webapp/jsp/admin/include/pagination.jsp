@@ -1,5 +1,5 @@
 <%@include file="/jsp/include/include.jsp"%>
-<c:set var="currentElements" value="${as:min((Page.number+1) * Page.size, Page.totalElements)}"/>
+<c:set var="currentElements" value="${Page.size == 0 ? Page.totalElements : as:min((Page.number+1) * Page.size, Page.totalElements)}"/>
 <c:set var="numPrev" value="1"/>
 <c:set var="numNext" value="1"/>
 <%-- jstl does not have Math.ceil, so we always add 0.5 if it is less than 0.5 --%>
