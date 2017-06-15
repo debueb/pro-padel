@@ -1,6 +1,6 @@
 <%@include file="/jsp/include/include.jsp"%>
 <jsp:include page="/jsp/include/head.jsp"/>
-<script src="${contextPath}/js/noconcat/tournament.js"></script>
+<script src="${contextPath}/static/js/noconcat/tournament.js"></script>
 
 <div class="page-header"></div>
 
