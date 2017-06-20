@@ -186,8 +186,8 @@
                         <tr>
                             <td></td>
                             <td class="text-center"><fmt:message key="EURmtl"><fmt:param value="0"/></fmt:message></td>
-                            <td class="text-center"><fmt:message key="EURmtl"><fmt:param value="40"/></fmt:message></td>
-                            <td class="text-center"><fmt:message key="EURmtl"><fmt:param value="70"/></fmt:message></td>
+                            <td class="text-center"><fmt:message key="EURmtl"><fmt:param value="49"/></fmt:message></td>
+                            <td class="text-center"><fmt:message key="EURmtl"><fmt:param value="99"/></fmt:message></td>
                             </tr>
                         </tbody>
                     </table>
