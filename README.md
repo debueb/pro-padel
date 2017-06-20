@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/debueb/padel.koeln.svg?branch=master)](https://travis-ci.org/debueb/padel.koeln)
+[![Build Status](https://travis-ci.org/debueb/pro-padel.svg?branch=master)](https://travis-ci.org/debueb/pro-padel)
 
 # pro-padel
 
