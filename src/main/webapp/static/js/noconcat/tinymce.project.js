@@ -25,6 +25,11 @@ var initTinyMce = function () {
           'template paste textcolor colorpicker textpattern imagetools codemirror'
         ],
         imagetools_toolbar: "rotateleft rotateright | flipv fliph | imageoptions",
+        image_dimensions: false,
+        image_class_list: [
+          {title: 'Full Width', value: 'full-width'},
+          {title: 'None', value: ''}
+        ],
         menu: {
             edit: {title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall'},
             insert: {title: 'Insert', items: 'link image media | template hr'},
