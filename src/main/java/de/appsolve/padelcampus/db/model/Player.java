@@ -282,6 +282,11 @@ public class Player extends Participant implements EmailContact, Validatable{
     public void setDaySchedules(Set<DaySchedule> daySchedules) {
         this.daySchedules = daySchedules;
     }
+    
+    @Transient
+    public boolean getGuest(){
+        return StringUtils.isEmpty(getPasswordHash());
+    }
 
     @Override
     public boolean isValid() {

@@ -84,7 +84,7 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
         criteria.add(Restrictions.ge("bookingDate", startDate));
         criteria.add(Restrictions.le("bookingDate", endDate));
         criteria.add(Restrictions.isNotNull("offer"));
-        criteria.add(Restrictions.or(Restrictions.eq("paymentMethod", PaymentMethod.Cash),Restrictions.eq("paymentMethod", PaymentMethod.Reservation), Restrictions.eq("paymentMethod", PaymentMethod.Voucher), Restrictions.eq("paymentConfirmed", true)));
+        criteria.add(Restrictions.or(Restrictions.eq("paymentMethod", PaymentMethod.Subscription), Restrictions.eq("paymentMethod", PaymentMethod.Cash),Restrictions.eq("paymentMethod", PaymentMethod.Reservation), Restrictions.eq("paymentMethod", PaymentMethod.Voucher), Restrictions.eq("paymentConfirmed", true)));
         criteria.add(Restrictions.or(Restrictions.isNull("cancelled"), Restrictions.eq("cancelled", false)));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<Booking>) criteria.list();
@@ -108,6 +108,21 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.eq("player", player));
         criteria.add(Restrictions.isNotNull("offer"));
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        @SuppressWarnings("unchecked")
+        List<Booking> list = criteria.list();
+        sort(list);
+        return list;
+    }
+    
+    @Override
+    public List<Booking> findActiveBookingsByPlayerBetween(Player player, LocalDate startDate, LocalDate endDate) {
+        Criteria criteria = getCriteria();
+        criteria.add(Restrictions.eq("player", player));
+        criteria.add(Restrictions.isNotNull("offer"));
+        criteria.add(Restrictions.ge("bookingDate", startDate));
+        criteria.add(Restrictions.le("bookingDate", endDate));
+        criteria.add(Restrictions.or(Restrictions.isNull("cancelled"), Restrictions.eq("cancelled", false)));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         @SuppressWarnings("unchecked")
         List<Booking> list = criteria.list();

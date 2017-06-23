@@ -11,6 +11,7 @@ package de.appsolve.padelcampus.constants;
  */
 public enum PaymentMethod {
     
+    Subscription,
     Cash,
     PayPal,
     PayDirekt,

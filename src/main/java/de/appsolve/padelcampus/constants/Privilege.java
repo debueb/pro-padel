@@ -20,6 +20,7 @@ public enum Privilege {
     ManageCommunities("/admin/communities.*"),
     ManagePlayers("/admin/players.*"),
     ManageTeams("/admin/teams.*"),
+    ManageSubscriptions("/admin/subscriptions.*"),
     ManageBookings("/admin/bookings.*"),
     ManageContact("/admin/contact.*"),
     ManageStaff("/admin/staff.*"),

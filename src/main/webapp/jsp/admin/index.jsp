@@ -33,11 +33,6 @@
                         <jsp:param name="icon" value="pie-chart"/>
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
-                        <jsp:param name="href" value="/admin/communities"/>
-                        <jsp:param name="key" value="Communities"/>
-                        <jsp:param name="icon" value="signing"/>
-                    </jsp:include>
-                    <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/players"/>
                         <jsp:param name="key" value="Players"/>
                         <jsp:param name="icon" value="user"/>
@@ -46,6 +41,16 @@
                         <jsp:param name="href" value="/admin/teams"/>
                         <jsp:param name="key" value="Teams"/>
                         <jsp:param name="icon" value="users"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/communities"/>
+                        <jsp:param name="key" value="Communities"/>
+                        <jsp:param name="icon" value="signing"/>
+                    </jsp:include>
+                    <jsp:include page="/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/subscriptions"/>
+                        <jsp:param name="key" value="Subscriptions"/>
+                        <jsp:param name="icon" value="money"/>
                     </jsp:include>
                     <jsp:include page="/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/eventgroups"/>

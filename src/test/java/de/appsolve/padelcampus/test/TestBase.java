@@ -18,6 +18,7 @@ import de.appsolve.padelcampus.db.dao.CustomerDAOI;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
+import de.appsolve.padelcampus.db.dao.SubscriptionDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.dao.VoucherDAOI;
 import de.appsolve.padelcampus.db.model.AdminGroup;
@@ -120,10 +121,15 @@ public abstract class TestBase  {
     protected CustomerDAOI customerDAO;
     
     @Autowired
+    protected SubscriptionDAOI subscriptionDAO;
+    
+    @Autowired
     protected SessionUtil sessionUtil;
     
     @Autowired
     protected Msg msg;
+    
+    protected Customer customer;
 
     @Before
     public void setUp() {
@@ -138,6 +144,8 @@ public abstract class TestBase  {
                 event = eventDAO.saveOrUpdate(event);
             }
             eventDAO.delete(events);
+            
+            subscriptionDAO.delete(subscriptionDAO.findAll());
             
             adminGroupDAO.delete(adminGroupDAO.findAll());
 
@@ -158,7 +166,7 @@ public abstract class TestBase  {
             
             customerDAO.delete(customerDAO.findAll());
             
-            Customer customer = new Customer();
+            customer = new Customer();
             customer.setName("testCustomer");
             customer.setDomainNames(new HashSet<>(Arrays.asList(new String[]{"localhost"})));
             customer  = customerDAO.saveOrUpdate(customer);

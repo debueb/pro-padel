@@ -607,7 +607,8 @@ public class BookingUtil {
     public List<PaymentMethod> getActivePaymentMethods() {
         //determine valid payment methods
         List<PaymentMethod> paymentMethods = new ArrayList<>();
-        //always support cash and vouchers
+        //always support subscriptions, cash and vouchers
+        paymentMethods.add(PaymentMethod.Subscription);
         paymentMethods.add(PaymentMethod.Cash);
         paymentMethods.add(PaymentMethod.Voucher);
         

@@ -23,9 +23,10 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import org.springframework.util.Assert;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
  *
@@ -54,7 +55,7 @@ public abstract class TestBookingVoucher extends TestBase{
                 .andExpect(redirectedUrl("/bookings/nologin"));
         
         Booking booking = (Booking) session.getAttribute(SESSION_BOOKING);
-        Assert.notNull(booking);
+        Assert.notNull(booking, "Booking should exist in session");
         
         mockMvc.perform(post("/bookings/nologin")
                 .session(session)
@@ -62,15 +63,32 @@ public abstract class TestBookingVoucher extends TestBase{
                 .param("lastName", "bucher")
                 .param("email", "padelcampus-unittest-1@appsolve.de")
                 .param("phone", "01739398758"))
-            .andExpect(redirectedUrl("/bookings/"+nextMonday+"/10:00/confirm"));
+            .andExpect(redirectedUrl("/bookings/" + nextMonday + "/10:00/offer/"+offer.getId()));
+        
+        mockMvc.perform(post("/bookings/" + nextMonday + "/10:00/offer/"+offer.getId())
+                .session(session)
+                .param("bookingTime", "10:00")
+                .param("offer", offer.getId().toString())
+                .param("bookingType", BookingType.loggedIn.name())
+                .param("duration", "60")
+                .param("paymentMethod", PaymentMethod.Voucher.name()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(model().hasNoErrors())
+                .andExpect(redirectedUrl("/bookings/"+nextMonday+"/10:00/confirm"));
+        
+        mockMvc.perform(get("/bookings/"+nextMonday+"/10:00/confirm")
+                .session(session))
+            .andExpect(view().name("bookings/confirm"))
+                .andExpect(model().hasNoErrors());
         
         booking = (Booking) session.getAttribute(SESSION_BOOKING);
-        Assert.notNull(booking.getPlayer());
+        Assert.notNull(booking.getPlayer(), "Booking player should exist");
         
         mockMvc.perform(post("/bookings/"+nextMonday+"/10:00/confirm")
                 .session(session)
                 .param("accept-cancellation-policy", "on"))
             .andExpect(redirectedUrl("/bookings/booking/"+booking.getUUID()+"/voucher"));
+        
         
         mockMvc.perform(post("/bookings/booking/"+booking.getUUID()+"/voucher")
                 .session(session)

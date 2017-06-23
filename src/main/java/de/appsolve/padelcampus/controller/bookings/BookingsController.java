@@ -1,3 +1,4 @@
+
 package de.appsolve.padelcampus.controller.bookings;
 
 /*
@@ -21,6 +22,7 @@ import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.FacilityDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
+import de.appsolve.padelcampus.db.dao.SubscriptionDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.dao.VoucherDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
@@ -28,6 +30,7 @@ import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Facility;
 import de.appsolve.padelcampus.db.model.Offer;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.db.model.Subscription;
 import de.appsolve.padelcampus.db.model.Voucher;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.spring.OfferOptionCollectionEditor;
@@ -52,6 +55,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 import org.joda.time.LocalDate;
@@ -67,9 +71,11 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 
@@ -105,6 +111,9 @@ public class BookingsController extends BaseController {
     
     @Autowired
     TeamDAOI teamDAO;
+    
+    @Autowired
+    SubscriptionDAOI subscriptionDAO;
     
     @Autowired
     BookingsPayPalController bookingsPayPalController;
@@ -160,8 +169,12 @@ public class BookingsController extends BaseController {
         return getIndexView(request, date, facilities);
     }
     
-    @RequestMapping("{day}/{time}/offer/{offerId}")
-    public ModelAndView showBookingView(@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("offerId") Long offerId, HttpServletRequest request) throws ParseException, Exception {
+    @RequestMapping(method = GET, value = "{day}/{time}/offer/{offerId}")
+    public ModelAndView getBookingView(
+            @PathVariable("day") String day, 
+            @PathVariable("time") String time, 
+            @PathVariable("offerId") Long offerId, 
+            HttpServletRequest request) throws ParseException, Exception {
         ModelAndView bookingView = getBookingView();
         try {
             Offer offer = offerDAO.findByIdFetchWithOfferOptions(offerId);
@@ -172,29 +185,40 @@ public class BookingsController extends BaseController {
         return bookingView;
     }
 
-    @RequestMapping(value = "{day}/{time}/offer/{offerId}", method = POST)
-    public ModelAndView selectBooking(@PathVariable("day") String day, @PathVariable("time") String time, @PathVariable("offerId") Long offerId, @ModelAttribute("Booking") Booking booking, BindingResult bindingResult, HttpServletRequest request) throws Exception {
+    @RequestMapping(method = POST, value = "{day}/{time}/offer/{offerId}")
+    public ModelAndView postBookingView(
+            @PathVariable("day") String day, 
+            @PathVariable("time") String time, 
+            @PathVariable("offerId") Long offerId, 
+            @ModelAttribute("Booking") Booking booking, 
+            BindingResult bindingResult, 
+            HttpServletRequest request) throws Exception {
         ModelAndView bookingView = getBookingView();
         try {
             validateAndAddObjectsToView(bookingView, request, booking, day, time, booking.getOffer());
+            
+            //user may not be logged in yet. only validate when logged in in order to catch errors early
+            Player player = sessionUtil.getUser(request);
+            if (player != null){
+                validatePaymentMethod(player, booking);
+            }
         } catch (Exception e){
             bookingView.addObject("error", e.getMessage());
             return bookingView;
         }
         sessionUtil.setBooking(request, booking);
 
-        String confirmURL = getConfirmURL(day, time);
+        String offerURL = getOfferURL(day, time, booking.getOffer());
         switch (booking.getBookingType()) {
-
             case loggedIn:
-                return getRedirectToConfirmView(confirmURL);
+                return getRedirectToUrl(getConfirmURL(day, time));
 
             case login:
-                sessionUtil.setLoginRedirectPath(request, confirmURL);
+                sessionUtil.setLoginRedirectPath(request, offerURL);
                 return getRedirectToLoginView();
 
             case register:
-                sessionUtil.setLoginRedirectPath(request, confirmURL);
+                sessionUtil.setLoginRedirectPath(request, offerURL);
                 return getRedirectToRegisterView();
 
             case nologin:
@@ -229,66 +253,69 @@ public class BookingsController extends BaseController {
             player.setId(existingPlayer.getId());
         }
         player = playerDAO.saveOrUpdate(player);
-        booking.setPlayer(player);
+        sessionUtil.setUser(request, player);
         sessionUtil.setBooking(request, booking);
         String day = booking.getBookingDate().toString(FormatUtils.DATE_HUMAN_READABLE);
         String time = booking.getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE);
-        return getRedirectToConfirmView(getConfirmURL(day, time));
+        return getRedirectToUrl(getOfferURL(day, time, booking.getOffer()));
     }
 
     @RequestMapping(value = "{day}/{time}/confirm")
     public ModelAndView showConfirmView(HttpServletRequest request) {
         Booking booking = sessionUtil.getBooking(request);
         ModelAndView confirmView = getBookingConfirmView(booking);
-        if (booking == null) {
-            confirmView.addObject("error", msg.get("SessionTimeout"));
-            return confirmView;
-        }
-
-        //user may have logged in or registered in the meantime - in contrast, the nologin method sets the player directly
-        Player user = sessionUtil.getUser(request);
-        if (user != null) {
+        try {
+            //at this point, user should either have logged in or registered a new account
+            Player user = sessionUtil.getUser(request);
+            if (booking == null || user == null) {
+                throw new Exception(msg.get("SessionTimeout"));
+            }
             booking.setPlayer(user);
+        } catch (Exception e){
+            confirmView.addObject("error", e.getMessage());
         }
-        if (booking.getPlayer() == null) {
-            confirmView.addObject("error", msg.get("SessionTimeout"));
-            return confirmView;
-        }
-
-        //TODO: make sure all required info is available
         return confirmView;
     }
 
     @RequestMapping(value = "{day}/{time}/confirm", method = POST)
-    public ModelAndView confirmBooking(HttpServletRequest request, @PathVariable("day") String day, @PathVariable("time") String time) throws Exception {
+    public ModelAndView confirmBooking(
+            HttpServletRequest request, 
+            @PathVariable("day") String day, 
+            @PathVariable("time") String time,
+            @RequestParam(value="public-booking", defaultValue = "false") Boolean isPublicBooking,
+            @RequestParam(value="accept-cancellation-policy", defaultValue = "false") Boolean isCancellationPolicyAccepted,
+            RedirectAttributes redirectAttributes) throws Exception {
         Booking booking = sessionUtil.getBooking(request);
         ModelAndView confirmView = getBookingConfirmView(booking);
         try {
             if (booking == null) {
                 throw new Exception(msg.get("SessionTimeout"));
             }
-            
-            String publicBooking = request.getParameter("public-booking");
-            Boolean isPublicBooking = !StringUtils.isEmpty(publicBooking) && publicBooking.equalsIgnoreCase("on");
-            booking.setPublicBooking(isPublicBooking);
-            
-            String cancellationPolicyCheckbox = request.getParameter("accept-cancellation-policy");
-            if (StringUtils.isEmpty(cancellationPolicyCheckbox) || !cancellationPolicyCheckbox.equals("on")) {
-                throw new Exception(msg.get("BookingCancellationPolicyNotAccepted"));
-            }
-            
-            //rerun checks (date time valid, overbooked...)
-            validateAndAddObjectsToView(null, request, booking, day, time, booking.getOffer());
-
             if (booking.getConfirmed()) {
                 throw new Exception(msg.get("BookingAlreadyConfirmed"));
             }
+            if (!isCancellationPolicyAccepted) {
+                throw new Exception(msg.get("BookingCancellationPolicyNotAccepted"));
+            }
+            
+            try {
+                //rerun checks (date time valid, overbooked...)
+                validateAndAddObjectsToView(null, request, booking, day, time, booking.getOffer());
+                validatePaymentMethod(booking.getPlayer(), booking);
+            } catch (Exception e){
+                //return to bookings page where user can modify booking
+                ModelAndView redirectView = new ModelAndView(String.format("redirect:/bookings/%s/%s/offer/%s", day, time, booking.getOffer().getId()));
+                redirectAttributes.addFlashAttribute("error", e.getMessage());
+                return redirectView;
+            }
 
+            booking.setPublicBooking(isPublicBooking);
             booking.setBlockingTime(new LocalDateTime());
             booking.setUUID(BookingUtil.generateUUID());
             bookingDAO.saveOrUpdate(booking);
 
             switch (booking.getPaymentMethod()) {
+                case Subscription:
                 case Cash:
                     if (booking.getConfirmed()){
                         throw new Exception(msg.get("BookingAlreadyConfirmed"));
@@ -320,10 +347,17 @@ public class BookingsController extends BaseController {
         ModelAndView mav = getBookingSuccessView();
         Booking booking = bookingDAO.findByUUIDWithEventAndPlayers(UUID);
         try {
-            if (!booking.getPaymentMethod().equals(PaymentMethod.Cash) && !booking.getPaymentConfirmed()){
-                throw new Exception(msg.get("PaymentHasNotBeenConfirmed"));
+            switch (booking.getPaymentMethod()){
+                case Subscription:
+                case Cash:
+                    //no need to check payment confirmation
+                    break;
+                default:
+                    if (!booking.getPaymentConfirmed()){
+                        throw new Exception(msg.get("PaymentHasNotBeenConfirmed"));
+                    }
             }
-
+            
             if (booking.getConfirmed()) {
                 throw new Exception(msg.get("BookingAlreadyConfirmed"));
             }
@@ -477,7 +511,15 @@ public class BookingsController extends BaseController {
         //set currency and price if offer and duration have been selected
         if (booking.getOffer()!=null && booking.getDuration()!=null){
             if (offerDurationPrice.getOffer().equals(booking.getOffer())){
-                BigDecimal price = offerDurationPrice.getDurationPriceMap().get(booking.getDuration().intValue());
+                BigDecimal price;
+                switch (booking.getPaymentMethod()){
+                    case Subscription:
+                        price = BigDecimal.ZERO;
+                        break;
+                    default:
+                        price = offerDurationPrice.getDurationPriceMap().get(booking.getDuration().intValue());
+                
+                }
                 booking.setAmount(price);
                 booking.setCurrency(offerDurationPrice.getConfig().getCurrency());
             }
@@ -489,6 +531,38 @@ public class BookingsController extends BaseController {
             mav.addObject("Booking", booking);
             mav.addObject("OfferDurationPrice", offerDurationPrice);
             mav.addObject("SelectedOffer", offer);
+        }
+    }
+    
+    private void validatePaymentMethod(Player player, Booking booking) throws Exception {
+        switch (booking.getPaymentMethod()){
+            case Subscription:
+                if (player == null){
+                    throw new Exception(msg.get("LoginFirstToPayWithSubscription"));
+                }
+                List<Subscription> subscriptions = subscriptionDAO.findByPlayer(player);
+                if (subscriptions == null || subscriptions.isEmpty()){
+                    throw new Exception(msg.get("MustBeAMemberToPayWithASubscription"));
+                }
+                
+                //find the least restrictive subscription
+                int maxMinPerDay = 0;
+                int maxMinPerWeek = 0;
+                for (Subscription subscription: subscriptions){
+                    maxMinPerDay    = Math.max(maxMinPerDay, subscription.getMaxMinutesPerDay());
+                    maxMinPerWeek   = Math.max(maxMinPerWeek, subscription.getMaxMinutesPerWeek());
+                }
+                
+                //for maxMinPerDay
+                checkMaxDuration(player, booking.getBookingDate(), booking.getBookingDate(), maxMinPerDay, booking, "MaxAllowedBookingDurationPerDayIs");
+                
+                //for maxMinPerWeek
+                //determine start and of week
+                LocalDate monday = booking.getBookingDate().withDayOfWeek(DateTimeConstants.MONDAY);
+                LocalDate sunday = booking.getBookingDate().withDayOfWeek(DateTimeConstants.SUNDAY);
+                checkMaxDuration(player, monday, sunday, maxMinPerWeek, booking, "MaxAllowedBookingDurationPerWeekIs");
+                
+                break;
         }
     }
 
@@ -532,7 +606,7 @@ public class BookingsController extends BaseController {
         return new ModelAndView("bookings/nologin", "Model", player);
     }
 
-    private ModelAndView getRedirectToConfirmView(String confirmURL) {
+    private ModelAndView getRedirectToUrl(String confirmURL) {
         return new ModelAndView("redirect:" + confirmURL);
     }
 
@@ -548,6 +622,10 @@ public class BookingsController extends BaseController {
         return new ModelAndView("bookings/cancel-success", "Booking", booking);
     }
 
+    private String getOfferURL(String day, String time, Offer offer) {
+        return "/bookings/" + day + "/" + time + "/offer/" + offer.getId();
+    }
+    
     private String getConfirmURL(String day, String time) {
         return "/bookings/" + day + "/" + time + "/confirm";
     }
@@ -561,5 +639,24 @@ public class BookingsController extends BaseController {
 
     public static ModelAndView getRedirectToSuccessView(Booking booking) {
         return new ModelAndView("redirect:"+booking.getSuccessUrl());
+    }
+
+    private void checkMaxDuration(Player player, LocalDate startDate, LocalDate endDate, Integer maxDuration, Booking booking, String errorMsgCode) throws Exception {
+        Long totalDuration = booking.getDuration();
+                
+        //optionally sum up the duration of already existing bookings
+        List<Booking> bookings = bookingDAO.findActiveBookingsByPlayerBetween(player, startDate, endDate);
+        if (bookings != null && !bookings.isEmpty()){
+            for (Booking existingBooking: bookings){
+                //avoid counting booking twice
+                if (!booking.equals(existingBooking)){
+                    totalDuration += existingBooking.getDuration();
+                }
+            }
+        }
+        //check maximum daily duration
+        if (totalDuration > maxDuration){
+            throw new Exception(msg.get(errorMsgCode, new Object[]{maxDuration}));
+        }
     }
 }

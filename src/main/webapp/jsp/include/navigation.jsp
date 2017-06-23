@@ -19,7 +19,7 @@
     </jsp:include>
 </c:if>
 <c:choose>
-    <c:when test="${not empty user}">
+    <c:when test="${not empty user and not user.guest}">
         <div class="menu-separator"></div>
         <fmt:message key="Account" var="title"/>
         <jsp:include page="/jsp/include/list-menu-item.jsp">

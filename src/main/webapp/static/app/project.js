@@ -376,12 +376,14 @@ var project = {
 
     enableUpdateBooking: function () {
         var updatePrice = function(){
-            var target = $('#booking-price'),
-                price = $(this).find('option:selected').attr('data-price');
-            target.html(price);
+            var target          = $('#booking-price'),
+                paymentMethod   = $('select#paymentMethod').find('option:selected').val(),
+                price           = paymentMethod === 'Subscription' ? '0,00' : $('select#duration').find('option:selected').attr('data-price'),
+                currency        = $('select#duration').find('option:selected').attr('data-currency');
+            target.html(`${price} ${currency}`);
         };
         
-        $('select.booking-duration').livequery(function(){
+        $('select#duration, select#paymentMethod').livequery(function(){
             updatePrice.apply(this);
             $(this).on('change', function () {
                 updatePrice.apply(this);

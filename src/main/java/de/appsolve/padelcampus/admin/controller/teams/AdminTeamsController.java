@@ -9,7 +9,6 @@ package de.appsolve.padelcampus.admin.controller.teams;
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.db.dao.CommunityDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
-import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Community;
 import de.appsolve.padelcampus.db.model.Team;
@@ -40,9 +39,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller()
 @RequestMapping("/admin/teams")
 public class AdminTeamsController extends AdminBaseController<Team> {
-    
-    @Autowired
-    PlayerDAOI playerDAO;
     
     @Autowired
     TeamDAOI teamDAO;
