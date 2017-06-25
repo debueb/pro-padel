@@ -56,7 +56,7 @@
         <script src="/static/app/dist/main.js" 
                 data-release-stage="${profile.id}" 
                 data-user-name="${user.firstName} ${user.lastName}" 
-                data-user-email="${user.email}"
+                data-user-mail="${user.email}"
                 data-google-tagmanager-id="${sessionScope.customer.googleTagManagerId}"
                 data-google-analytics-id="${sessionScope.customer.googleAnalyticsTrackingId}"
                 >
