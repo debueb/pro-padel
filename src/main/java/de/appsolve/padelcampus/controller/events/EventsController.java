@@ -45,6 +45,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
@@ -339,46 +340,12 @@ public class EventsController extends BaseController{
                 return getAddPullGameView(event, addPullGame);
             }
         }
-        Game game = new Game();
-        game.setEvent(event);
-        game.setParticipants(new HashSet<>(teams));
-        game = gameDAO.saveOrUpdate(game);
-        
-        Set<GameSet> gameSets = new HashSet<>();
-        for (int setNumber=1; setNumber<=event.getNumberOfSets(); setNumber++){
-            for (int teamNumber=1; teamNumber<=teams.size(); teamNumber++){
-                try {
-                    LOG.info("set-"+setNumber+"-team-"+teamNumber+1);
-                    Integer setGames = Integer.parseInt(request.getParameter("set-"+setNumber+"-team-"+teamNumber));
-                    if (setGames != -1){
-                        GameSet gameSet = new GameSet();
-                        gameSet.setEvent(event);
-                        gameSet.setGame(game);
-                        gameSet.setSetGames(setGames);
-                        gameSet.setSetNumber(setNumber);
-                        gameSet.setParticipant(teams.get(teamNumber-1));
-                        gameSet = gameSetDAO.saveOrUpdate(gameSet);
-                        gameSets.add(gameSet);
-                    }
-                } catch (NumberFormatException e){
-                    LOG.info(e);
-                }
-            }
-        }
-        game.setGameSets(new HashSet<>(gameSets));
-        if (gameSets.isEmpty()){
-            //we use score reporter as an indicator that the game has been played
-            game.setScoreReporter(null);
-        } else {
-            game.setScoreReporter(user);
-        }
-        game.setGameSets(gameSets);
-        gameDAO.saveOrUpdate(game);
+        saveGame(event, teams, request);
         
         if (!StringUtils.isEmpty(redirectUrl)){
             return new ModelAndView("redirect:/"+redirectUrl);
         }
-        return new ModelAndView("redirect:/edit?redirectUrl=events/event/"+event.getId()+"/pullgames");
+        return new ModelAndView("redirect:/events/event/"+event.getId()+"/pullgames");
     }
     
     @RequestMapping(value={"edit/{eventId}/addfriendlygame"}, method=GET)
@@ -402,7 +369,7 @@ public class EventsController extends BaseController{
         if (user == null){
             return getLoginView(request, request.getRequestURI());
         }
-        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
         validator.validate(addPullGame, bindingResult);
         if (bindingResult.hasErrors()){
             return getAddFriendlyGameView(event, addPullGame);
@@ -411,17 +378,16 @@ public class EventsController extends BaseController{
             bindingResult.addError(new ObjectError("id", msg.get("ChooseDistinctPlayers")));
             return getAddFriendlyGameView(event, addPullGame);
         }
-        Set<Participant> teams = new HashSet<>();
+        List<Participant> teams = new ArrayList<>();
         teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam1()));
         teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam2()));
-        Game game = new Game();
-        game.setEvent(event);
-        game.setParticipants(teams);
-        game = gameDAO.saveOrUpdate(game);
+        
+        saveGame(event, teams, request);
+        
         if (!StringUtils.isEmpty(redirectUrl)){
             return new ModelAndView("redirect:/"+redirectUrl);
         }
-        return new ModelAndView("redirect:/games/game/"+game.getId()+"/edit?redirectUrl=events/event/"+event.getId()+"/pullgames");
+        return new ModelAndView("redirect:/events/event/"+event.getId()+"/pullgames");
     }
     
     private ModelAndView getKnockoutView(Event event, SortedMap<Integer, List<Game>> roundGameMap) {
@@ -471,5 +437,43 @@ public class EventsController extends BaseController{
         mav.addObject("Event", event);
         mav.addObject("Model", game);
         return mav;
+    }
+
+    private void saveGame(Event event, List<Participant> teams, HttpServletRequest request) {
+        Game game = new Game();
+        game.setEvent(event);
+        game.setParticipants(new HashSet<>(teams));
+        game = gameDAO.saveOrUpdate(game);
+        
+        Set<GameSet> gameSets = new HashSet<>();
+        for (int setNumber=1; setNumber<=event.getNumberOfSets(); setNumber++){
+            for (int teamNumber=1; teamNumber<=teams.size(); teamNumber++){
+                try {
+                    LOG.info("set-"+setNumber+"-team-"+teamNumber+1);
+                    Integer setGames = Integer.parseInt(request.getParameter("set-"+setNumber+"-team-"+teamNumber));
+                    if (setGames != -1){
+                        GameSet gameSet = new GameSet();
+                        gameSet.setEvent(event);
+                        gameSet.setGame(game);
+                        gameSet.setSetGames(setGames);
+                        gameSet.setSetNumber(setNumber);
+                        gameSet.setParticipant(teams.get(teamNumber-1));
+                        gameSet = gameSetDAO.saveOrUpdate(gameSet);
+                        gameSets.add(gameSet);
+                    }
+                } catch (NumberFormatException e){
+                    LOG.info(e);
+                }
+            }
+        }
+        game.setGameSets(new HashSet<>(gameSets));
+        if (gameSets.isEmpty()){
+            //we use score reporter as an indicator that the game has been played
+            game.setScoreReporter(null);
+        } else {
+            game.setScoreReporter(sessionUtil.getUser(request));
+        }
+        game.setGameSets(gameSets);
+        gameDAO.saveOrUpdate(game);
     }
 }

@@ -32,7 +32,7 @@
                                     <c:forEach begin="1" end="${Event.numberOfSets}" var="setNumber" varStatus="status">
                                         <td>
                                             <c:set var="paramName" value="set-${setNumber}-team-${teamNumber}"/>
-                                            <select name="${paramName}" class="select-simple form-control ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'} form-right-element" data-container="body" data-live-search="false">
+                                            <select name="${paramName}" class="select-simple form-control ${status.last ? 'form-right-element' : 'form-center-element'} ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'}" data-container="body" data-live-search="false">
                                                 <option value="-1">-</option>
                                                 <c:choose>
                                                     <c:when test="${Event.numberOfSets > 1 && status.last}">

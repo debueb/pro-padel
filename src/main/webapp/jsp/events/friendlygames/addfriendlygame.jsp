@@ -14,26 +14,28 @@
             <div class="panel-body">
                 <spf:form method="POST" modelAttribute="Model">
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
-                    <table class="table-full-width table-fixed">
+                    <table class="table-full-width table-add-pull-game">
                         <thead>
-                        <th class="text-center"><fmt:message key="Team1"/></th>
-                        <th class="text-center"><fmt:message key="Team2"/></th>
+                            <th style="padding-left: 10px;"><fmt:message key="Team"/></th>
+                            <c:forEach begin="1" end="${Event.numberOfSets}" var="setNumber" varStatus="status">
+                                <th class="text-center">${setNumber}.</th>
+                            </c:forEach>
                         </thead>
                         <tbody>
-                            <tr>
-                                <fmt:message key="CurrentlySelected" var="CurrentlySelected"/>
-                                <fmt:message key="PleaseChoose" var="EmptyTitle"/>
-                                <fmt:message key="ErrorText" var="ErrorText"/>
-                                <fmt:message key="Search" var="SearchPlaceholder"/>
-                                <fmt:message key="StatusInitialized" var="StatusInitialized"/>
-                                <fmt:message key="SearchNoResults" var="SearchNoResults"/>
-                                <fmt:message key="StatusSearching" var="StatusSearching"/>
-
-                                <td>
-                                    <div class="relative">
+                            <fmt:message key="CurrentlySelected" var="CurrentlySelected"/>
+                            <fmt:message key="PleaseChoose" var="EmptyTitle"/>
+                            <fmt:message key="ErrorText" var="ErrorText"/>
+                            <fmt:message key="Search" var="SearchPlaceholder"/>
+                            <fmt:message key="StatusInitialized" var="StatusInitialized"/>
+                            <fmt:message key="SearchNoResults" var="SearchNoResults"/>
+                            <fmt:message key="StatusSearching" var="StatusSearching"/>
+                            <c:forEach begin="1" end="2" var="teamNumber" varStatus="teamStatus">
+                                <tr>
+                                    <td>
+                                        <div class="relative">
                                         <spf:select 
-                                            path="team1"
-                                            class="form-control select-ajax-search" 
+                                            path="team${teamNumber}"
+                                            class="form-control form-left-element ${teamStatus.first ? 'form-top-element' : 'form-bottom-element'} select-ajax-search" 
                                             data-container="body" 
                                             data-live-search="true"
                                             data-max-options="2"
@@ -48,29 +50,28 @@
                                             <spf:options items="${Model.team1}" itemValue="UUID"/>
                                         </spf:select>
                                     </div>
-                                </td>
-                                <td>
-                                    <div class="relative">
-                                        <spf:select 
-                                            path="team2" 
-                                            class="form-control select-ajax-search" 
-                                            data-container="body" 
-                                            data-live-search="true"
-                                            data-max-options="2"
-                                            data-abs-locale-currently-selected='${CurrentlySelected}'
-                                            data-abs-locale-empty-title='${EmptyTitle}'
-                                            data-abs-locale-error-text='${ErrorText}'
-                                            data-abs-locale-search-placeholder='${SearchPlaceholder}'
-                                            data-abs-locale-status-initialized='${StatusInitialized}'
-                                            data-abs-locale-search-no-results='${SearchNoResults}'
-                                            data-abs-locale-status-searching='${StatusSearching}'
-                                            data-abs-ajax-url="/api/players/options">
-                                            <fmt:message key="ChoosePartner" var="ChoosePartner"/>
-                                            <spf:options items="${Model.team2}" itemValue="UUID"/>
-                                        </spf:select>
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <c:forEach begin="1" end="${Event.numberOfSets}" var="setNumber" varStatus="status">
+                                        <td>
+                                            <c:set var="paramName" value="set-${setNumber}-team-${teamNumber}"/>
+                                            <select name="${paramName}" class="select-simple form-control ${status.last ? 'form-right-element' : 'form-center-element'} ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'}" data-container="body" data-live-search="false">
+                                                <option value="-1">-</option>
+                                                <c:choose>
+                                                    <c:when test="${Event.numberOfSets > 1 && status.last}">
+                                                        <c:set var="end" value="${Event.numberOfGamesInFinalSet}"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:set var="end" value="${Event.numberOfGamesPerSet}"/>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                <c:forEach begin="0" end="${end}" step="1" var="current">
+                                                    <option value="${current}" ${param[paramName] == current ? 'selected' : ''}>${current}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </td>
+                                    </c:forEach>
+                                </tr>
+                            </c:forEach>
                         </tbody>
                     </table>
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
