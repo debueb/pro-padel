@@ -85,7 +85,7 @@ public class AdminMailController{
         return getMailView(player, request);
     }
     
-    @RequestMapping(method=GET, value="/{teamId}/mail")
+    @RequestMapping(method=GET, value="/team/{teamId}")
     public ModelAndView mailTeam(HttpServletRequest request, @PathVariable("teamId") Long teamId){
         Team team = teamDAO.findByIdFetchWithPlayers(teamId);
         return getMailView(team.getPlayers(), request);
