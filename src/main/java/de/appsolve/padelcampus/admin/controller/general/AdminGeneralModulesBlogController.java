@@ -90,7 +90,7 @@ public class AdminGeneralModulesBlogController extends AdminSortableController<P
     public ModelAndView showAddView(HttpServletRequest request){
         PageEntry entry = createNewInstance();
         try {
-            InputStream is = context.getResourceAsStream("templates/BlogPostImageRight.html");
+            InputStream is = context.getResourceAsStream("static/templates/BlogPostImageRight.html");
             String html = IOUtils.toString(is, Constants.UTF8);
             entry.setMessage(html);
         } catch (IOException ex) {
