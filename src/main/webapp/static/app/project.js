@@ -18,7 +18,8 @@ var project = {
     },
 
     isNative(){
-        return "standalone" in window.navigator && window.navigator.standalone || window.navigator.userAgent.indexOf('ProPadel') >= 0;
+        return  "standalone" in window.navigator && window.navigator.standalone || 
+                "userAgent" in window.navigator && window.navigator.userAgent && window.navigator.userAgent.indexOf('ProPadel') >= 0;
     },
     
     enableBackButton: function () {
