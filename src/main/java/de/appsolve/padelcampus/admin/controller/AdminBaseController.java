@@ -53,7 +53,11 @@ public abstract class AdminBaseController<T extends BaseEntityI> extends BaseEnt
     
     @RequestMapping(value="edit/{modelId}", method=GET)
     public ModelAndView showEditView(HttpServletRequest request, @PathVariable("modelId") Long modelId){
-        return getEditView(findById(modelId));
+        T model = findById(modelId);
+        if (model == null){
+            return getNotFoundView();
+        }
+        return getEditView(model);
     }
     
     @RequestMapping(value={"add", "edit/{modelId}"}, method=POST)

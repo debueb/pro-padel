@@ -254,7 +254,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     public ModelAndView getEditBooking(@PathVariable("bookingId") Long bookingId){
         Booking booking = bookingDAO.findByIdWithOfferOptions(bookingId);
         if (booking == null){
-            return notFoundView();
+            return getNotFoundView();
         }
         ReservationRequest request = getReservationRequestFromBooking(booking);
         return getEditView(request);
@@ -323,30 +323,11 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         }
     }
     
-    @RequestMapping(method = GET, value="booking/{bookingId}/delete")
-    public ModelAndView getBookingDelete(@PathVariable("bookingId") Long bookingId){
-        Booking booking = bookingDAO.findById(bookingId);
-        if (booking == null){
-            return notFoundView();
-        }
-        return getBookingDeleteView(booking);
-    }
-    
-    @RequestMapping(method = POST, value="booking/{bookingId}/delete")
-    public ModelAndView postBookingDelete(@PathVariable("bookingId") Long bookingId){
-        Booking booking = bookingDAO.findById(bookingId);
-        if (booking == null){
-            return notFoundView();
-        }
-        bookingDAO.deleteById(bookingId);
-        return redirectToIndex();
-    }
-    
     @RequestMapping(method = GET, value="/{bookingId}/deleteall")
     public ModelAndView getBookingDeleteAll(@PathVariable("bookingId") Long bookingId){
         Booking booking = bookingDAO.findById(bookingId);
         if (booking == null){
-            return notFoundView();
+            return getNotFoundView();
         }
         List<Booking> commentBookings = bookingDAO.findByBlockingTimeAndComment(booking.getBlockingTime(), booking.getComment());
         return getBookingDeleteAllView(booking, commentBookings);
@@ -356,7 +337,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     public ModelAndView postBookingDeleteAll(HttpServletRequest request, @PathVariable("bookingId") Long bookingId){
         Booking booking = bookingDAO.findById(bookingId);
         if (booking == null){
-            return notFoundView();
+            return getNotFoundView();
         }
         List<Booking> commentBookings = bookingDAO.findByBlockingTimeAndComment(booking.getBlockingTime(), booking.getComment());
         bookingDAO.delete(commentBookings);
@@ -405,12 +386,6 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         return mav;
     }
     
-    private ModelAndView getBookingDeleteView(Booking booking) {
-        ModelAndView mav = new ModelAndView("include/delete");
-        mav.addObject("Model", booking);
-        return mav;
-    }
-
     private ModelAndView redirectToIndex() {
         return new ModelAndView("redirect:/admin/bookings/reservations");
     }
@@ -467,7 +442,8 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         return Long.valueOf(minutes);
     }
 
-    private ModelAndView notFoundView() {
+    @Override
+    public ModelAndView getNotFoundView() {
         return new ModelAndView("admin/bookings/reservations/notfound");
     }
 }

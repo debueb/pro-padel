@@ -25,14 +25,20 @@ public abstract class BaseEntityController<T extends BaseEntityI> extends BaseCo
     
     @RequestMapping(value = "/{id}/delete")
     public ModelAndView getDelete(HttpServletRequest request, @PathVariable("id") Long id){
-        @SuppressWarnings("unchecked")
         T model = (T)getDAO().findById(id);
+        if (model == null){
+            return getNotFoundView();
+        }
         return getDeleteView(model);
     }
     
     @RequestMapping(value = "/{id}/delete", method = POST)
     public ModelAndView postDelete(HttpServletRequest request, @PathVariable("id") Long id){
         try {
+            T model = (T)getDAO().findById(id);
+            if (model == null){
+                return getNotFoundView();
+            }
             getDAO().deleteById(id);
         } catch (DataIntegrityViolationException e){
             @SuppressWarnings("unchecked")
@@ -51,6 +57,10 @@ public abstract class BaseEntityController<T extends BaseEntityI> extends BaseCo
     
     
     protected ModelAndView getDeleteView(T model) {
-        return new ModelAndView("/include/delete", "Model", model);
+        return new ModelAndView("include/delete", "Model", model);
+    }
+    
+    public ModelAndView getNotFoundView() {
+        return new ModelAndView("include/notfound");
     }
 }
