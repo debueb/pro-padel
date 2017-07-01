@@ -105,7 +105,7 @@ public class TestMatchOffers extends TestBase {
         mockMvc.perform(get("/matchoffers/1/delete")
                 .session(session))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/include/delete"));
+                .andExpect(view().name("include/delete"));
         
         mockMvc.perform(post("/matchoffers/1/delete")
                 .session(session))
