@@ -12,7 +12,6 @@ import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.PaymentMethod;
-import de.appsolve.padelcampus.data.AddPullGame;
 import de.appsolve.padelcampus.data.EventGroups;
 import de.appsolve.padelcampus.data.GameList;
 import de.appsolve.padelcampus.data.GameData;
@@ -45,7 +44,6 @@ import de.appsolve.padelcampus.utils.SortUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -475,7 +473,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
     
     @Override
     protected ModelAndView getDeleteView(Event model) {
-        return new ModelAndView("/admin/events/delete", "Model", model);
+        return new ModelAndView(getModuleName()+"/delete", "Model", model);
     }
     
     @Override
@@ -483,6 +481,9 @@ public class AdminEventsController extends AdminBaseController<Event>{
     public ModelAndView postDelete(HttpServletRequest request, @PathVariable("id") Long id){
         try {
             Event event = eventDAO.findByIdFetchWithGames(id);
+            if (event == null){
+                return getNotFoundView();
+            }
             for (Game game: event.getGames()){
                 game.getGameSets().clear();
             }

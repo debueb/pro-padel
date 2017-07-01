@@ -36,6 +36,7 @@ public abstract class BaseEntityController<T extends BaseEntityI> extends BaseCo
     @RequestMapping(value = "/{id}/delete", method = POST)
     public ModelAndView postDelete(HttpServletRequest request, @PathVariable("id") Long id){
         try {
+            @SuppressWarnings("unchecked")
             T model = (T)getDAO().findById(id);
             if (model == null){
                 return getNotFoundView();
