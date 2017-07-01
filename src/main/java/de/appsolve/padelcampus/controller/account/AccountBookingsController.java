@@ -55,7 +55,7 @@ public class AccountBookingsController extends BaseController {
             return getLoginRequiredView(request, msg.get("MyBookings"));
         }
         ModelAndView view = new ModelAndView("account/bookings/index", "Model", user);
-        List<Booking> bookings = bookingDAO.findByPlayer(user);
+        List<Booking> bookings = bookingDAO.findOfferBookingsByPlayer(user);
         Iterator<Booking> iterator = bookings.iterator();
         while (iterator.hasNext()){
             Booking booking = iterator.next();

@@ -6,7 +6,6 @@ import java.util.List;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +16,7 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.joda.time.LocalDate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,37 +30,27 @@ import org.springframework.stereotype.Component;
 public class EventDAO extends GenericDAO<Event> implements EventDAOI{
 
     @Override
-    public List<Event> findAllUpcomingWithParticipant(Participant participant) {
+    public List<Event> findByParticipant(Participant participant) {
         Criteria crit = getCriteria();
-        crit.setFetchMode("participants", FetchMode.JOIN);
-        crit.setFetchMode("participants.players", FetchMode.JOIN);
+        crit.createAlias("participants", "p", JoinType.LEFT_OUTER_JOIN);
+        crit.add(Restrictions.eq("p.id", participant.getId()));
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        @SuppressWarnings("unchecked")
+        List<Event> events = (List<Event>) crit.list();
+        sort(events);
+        return events;
+    }
+    
+    @Override
+    public List<Event> findAllUpcomingWithParticipant(Team team) {
+        Criteria crit = getCriteria();
+        crit.createAlias("participants", "p", JoinType.LEFT_OUTER_JOIN);
+        crit.add(Restrictions.eq("p.id", team.getId()));
         crit.add(Restrictions.eq("active", true));
         crit.add(Restrictions.ge("startDate", new LocalDate()));
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         @SuppressWarnings("unchecked")
         List<Event> events = (List<Event>) crit.list();
-        
-        Iterator<Event> iterator = events.iterator();
-        while (iterator.hasNext()){
-            boolean remove = true;
-            Event event = iterator.next();
-            if (event.getParticipants().contains(participant)){
-                remove = false;
-            } else if (participant instanceof Player){
-                Player player = (Player) participant;
-                for (Participant eventParticipant: event.getParticipants()){
-                    if (eventParticipant instanceof Team){
-                        Team team = (Team) eventParticipant;
-                        if (team.getPlayers().contains(player)){
-                            remove = false;
-                        }
-                    }
-                }
-            }
-            if (remove){
-                iterator.remove();
-            }
-        }
         sort(events);
         return events;
     }

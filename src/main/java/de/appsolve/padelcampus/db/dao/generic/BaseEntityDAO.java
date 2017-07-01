@@ -10,6 +10,7 @@ import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.utils.CustomerUtil;
 import de.appsolve.padelcampus.utils.GenericsUtils;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -220,7 +221,7 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     }
 
     @Override
-    public void delete(List<T> entities) {
+    public void delete(Collection<T> entities) {
         for (T entity : entities) {
             deleteById(entity.getId());
         }

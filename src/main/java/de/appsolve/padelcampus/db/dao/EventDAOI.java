@@ -9,6 +9,7 @@ package de.appsolve.padelcampus.db.dao;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Participant;
+import de.appsolve.padelcampus.db.model.Team;
 import java.util.List;
 import java.util.Set;
 import org.hibernate.criterion.Criterion;
@@ -31,7 +32,9 @@ public interface EventDAOI extends BaseEntityDAOI<Event>{
     
     Event findByIdFetchWithParticipantsAndGamesAndGameParticipantsAndGamePlayers(Long id);
     
-    public List<Event> findAllFetchWithParticipants();
+    List<Event> findByParticipant(Participant participant);
+    
+    List<Event> findAllFetchWithParticipants();
     
     Page<Event> findAllFetchWithParticipantsAndPlayers(Pageable pageable);
     
@@ -39,9 +42,9 @@ public interface EventDAOI extends BaseEntityDAOI<Event>{
     
     List<Event> findAllFetchWithParticipantsAndPlayers();
     
-    List<Event> findAllUpcomingWithParticipant(Participant participant);
+    List<Event> findAllUpcomingWithParticipant(Team team);
 
-    public List<Event> findAllActive();
+    List<Event> findAllActive();
 
-    public List<Event> findAllActiveFetchWithParticipantsAndPlayers();
+    List<Event> findAllActiveFetchWithParticipantsAndPlayers();
 }

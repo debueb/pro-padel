@@ -6,6 +6,7 @@
 package de.appsolve.padelcampus.db.dao.generic;
 
 import de.appsolve.padelcampus.db.model.BaseEntityI;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,7 +49,7 @@ public interface BaseEntityDAOI<T extends BaseEntityI> {
 
    void deleteById(Long id);
 
-   void delete(List<T> entities);
+   void delete(Collection<T> entities);
    
    List<T> findByAttributes(Map<String, Object> attributeMap);
    

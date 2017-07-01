@@ -104,10 +104,21 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI{
     }
 
     @Override
-    public List<Booking> findByPlayer(Player player) {
+    public List<Booking> findOfferBookingsByPlayer(Player player) {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.eq("player", player));
         criteria.add(Restrictions.isNotNull("offer"));
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        @SuppressWarnings("unchecked")
+        List<Booking> list = criteria.list();
+        sort(list);
+        return list;
+    }
+    
+    @Override
+    public List<Booking> findAllBookingsByPlayer(Player player) {
+        Criteria criteria = getCriteria();
+        criteria.add(Restrictions.eq("player", player));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         @SuppressWarnings("unchecked")
         List<Booking> list = criteria.list();

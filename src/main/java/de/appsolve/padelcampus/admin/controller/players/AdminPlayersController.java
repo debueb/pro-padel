@@ -7,15 +7,29 @@
 package de.appsolve.padelcampus.admin.controller.players;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
+import de.appsolve.padelcampus.db.dao.BookingDAOI;
+import de.appsolve.padelcampus.db.dao.EventDAOI;
+import de.appsolve.padelcampus.db.dao.GameDAOI;
+import de.appsolve.padelcampus.db.dao.GameSetDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
+import de.appsolve.padelcampus.db.dao.TeamDAOI;
+import de.appsolve.padelcampus.db.model.Booking;
+import de.appsolve.padelcampus.db.model.Event;
+import de.appsolve.padelcampus.db.model.Game;
+import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.utils.CustomerUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -28,6 +42,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -41,6 +56,21 @@ public class AdminPlayersController extends AdminBaseController<Player> {
     
     @Autowired
     PlayerDAOI playerDAO;
+    
+    @Autowired
+    BookingDAOI bookingDAO;
+    
+    @Autowired
+    TeamDAOI teamDAO;
+    
+    @Autowired
+    EventDAOI eventDAO;
+    
+    @Autowired
+    GameDAOI gameDAO;
+    
+    @Autowired
+    GameSetDAOI gameSetDAO;
     
     @Override
     public ModelAndView showIndex(HttpServletRequest request, @PageableDefault(size = 10, sort = "firstName", direction = Sort.Direction.ASC) Pageable pageable, @RequestParam(required = false, name = "search") String search){
@@ -90,6 +120,68 @@ public class AdminPlayersController extends AdminBaseController<Player> {
         header.setContentLength(data.length);
         return new HttpEntity<>(data, header);
     }
+        
+    @Override
+    protected ModelAndView getDeleteView(Player player) {
+        ModelAndView mav = new ModelAndView(getModuleName()+"/delete", "Model", player);
+        List<Team> teams = teamDAO.findByPlayer(player);
+        
+        if (!player.getCustomer().equals(CustomerUtil.getCustomer())){
+            mav.addObject("error", msg.get("PlayerOriginallySignedUpWithWarning", new Object[]{player, player.getCustomer(), player.getCustomer().getDomainName()}));
+        }
+        //TODO: handle case user has references to another customer...
+        
+        mav.addObject("Bookings", bookingDAO.findAllBookingsByPlayer(player));
+        mav.addObject("Games", getGames(player, teams));
+        mav.addObject("Teams", teams);
+        mav.addObject("Events", getEvents(player, teams));
+        mav.addObject("moduleName", getModuleName());
+        return mav;
+    }
+    
+    @Override
+    public ModelAndView postDelete(HttpServletRequest request, @PathVariable("id") Long id){
+        Player player = playerDAO.findById(id);
+        if (player == null){
+            return getNotFoundView();
+        }
+        try {
+            //delete bookings
+            List<Booking> bookings = bookingDAO.findAllBookingsByPlayer(player);
+            bookingDAO.delete(bookings);
+            
+            //delete games (including active gamesets)
+            List<Team> teams = teamDAO.findByPlayer(player);
+            Set<Game> games = getGames(player, teams);
+            gameDAO.delete(games);
+            
+            //remove game sets that may not have been removed when a gameset was removed from game
+            Set<GameSet> gameSets = getGameSets(player, teams);
+            gameSetDAO.delete(gameSets);
+            
+            //remove from events
+            Set<Event> events = getEvents(player, teams);
+            for (Event event: events){
+                event.getParticipants().remove(player);
+                for (Team team: teams){
+                    event.getParticipants().remove(team);
+                }
+                eventDAO.saveOrUpdate(event);
+            }
+            
+            //delete teams
+            teamDAO.delete(teams);
+            
+            //delete player
+            playerDAO.deleteById(player.getId());
+        } catch (DataIntegrityViolationException e){
+            LOG.warn("Attempt to delete "+player+" failed due to "+e);
+            ModelAndView deleteView = getDeleteView(player);
+            deleteView.addObject("error", msg.get("CannotDeleteDueToRefrence", new Object[]{player.toString()}));
+            return deleteView;
+        }
+        return redirectToIndex(request);
+    }
     
     @Override
     public BaseEntityDAOI getDAO() {
@@ -99,5 +191,29 @@ public class AdminPlayersController extends AdminBaseController<Player> {
     @Override
     public String getModuleName() {
         return "admin/players";
+    }
+
+    private Set<Game> getGames(Player player, List<Team> teams) {
+        Set<Game> games = new TreeSet<>(gameDAO.findByParticipant(player));
+        for (Team team: teams){
+            games.addAll(gameDAO.findByParticipant(team));
+        }
+        return games;
+    }
+
+    private Set<Event> getEvents(Player player, List<Team> teams) {
+        Set<Event> events = new TreeSet<>(eventDAO.findByParticipant(player));
+        for (Team team: teams){
+            events.addAll(eventDAO.findByParticipant(team));
+        }
+        return events;
+    }
+
+    private Set<GameSet> getGameSets(Player player, List<Team> teams) {
+        Set<GameSet> gameSets = new TreeSet<>(gameSetDAO.findByParticipant(player));
+        for (Team team: teams){
+            gameSets.addAll(gameSetDAO.findByParticipant(team));
+        }
+        return gameSets;
     }
 }

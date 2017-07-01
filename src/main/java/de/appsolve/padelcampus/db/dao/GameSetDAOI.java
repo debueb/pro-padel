@@ -19,6 +19,7 @@ import java.util.List;
  */
 public interface GameSetDAOI extends BaseEntityDAOI<GameSet>{
     
+    List<GameSet> findByParticipant(Participant participant);
     List<GameSet> findByGame(Game game);
     List<GameSet> findByEvent(Event event);
     List<GameSet> findBy(Game game, Participant participant);

@@ -9,6 +9,8 @@ import de.appsolve.padelcampus.db.model.GameSet;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,6 +22,17 @@ public class GameSetDAO extends GenericDAO<GameSet> implements GameSetDAOI{
     
     private static final Logger log = Logger.getLogger(GameSetDAO.class);
 
+    
+    @Override
+    public List<GameSet> findByParticipant(Participant participant) {
+        Criteria crit = getCriteria();
+        crit.add(Restrictions.eq("participant", participant));
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        @SuppressWarnings("unchecked")
+        List<GameSet> gameSets = (List<GameSet>) crit.list();
+        return gameSets;
+    }
+    
     @Override
     public List<GameSet> findByGame(Game game) {
         Map<String, Object> attributes = new HashMap<>();

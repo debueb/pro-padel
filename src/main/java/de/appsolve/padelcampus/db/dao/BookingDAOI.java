@@ -29,6 +29,7 @@ public interface BookingDAOI extends BaseEntityDAOI<Booking>{
     public List<Booking> findActiveBookingsBetween(LocalDate startDate, LocalDate endDate);
     public List<Booking> findActiveReservationsBetween(LocalDate startDate, LocalDate endDate);
     public List<Booking> findActiveBookingsByPlayerBetween(Player player, LocalDate startDate, LocalDate endDate);
-    public List<Booking> findByPlayer(Player player);
+    public List<Booking> findOfferBookingsByPlayer(Player player);
+    public List<Booking> findAllBookingsByPlayer(Player player);
     public List<Booking> findByBlockingTimeAndComment(LocalDateTime blockingTime, String comment);
 }
