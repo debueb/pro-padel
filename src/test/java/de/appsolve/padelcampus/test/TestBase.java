@@ -16,6 +16,7 @@ import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
 import de.appsolve.padelcampus.db.dao.CustomerDAOI;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
+import de.appsolve.padelcampus.db.dao.MatchOfferDAOI;
 import de.appsolve.padelcampus.db.dao.OfferDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.SubscriptionDAOI;
@@ -124,6 +125,9 @@ public abstract class TestBase  {
     protected SubscriptionDAOI subscriptionDAO;
     
     @Autowired
+    protected MatchOfferDAOI matchOfferDAO;
+    
+    @Autowired
     protected SessionUtil sessionUtil;
     
     @Autowired
@@ -150,6 +154,8 @@ public abstract class TestBase  {
             adminGroupDAO.delete(adminGroupDAO.findAll());
 
             teamDAO.delete(teamDAO.findAll());
+            
+            matchOfferDAO.delete(matchOfferDAO.findAll());
 
             playerDAO.delete(playerDAO.findAll());
             
