@@ -15,7 +15,6 @@
         <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="/pro/js/bootstrap.min.js"></script>
         <script src="/pro/js/pro.js"></script>
-        <script src="/pro/js/parallax.js"></script>
         <link rel="stylesheet" href="/pro/css/bootstrap.css">
         <link rel="stylesheet" href="/pro/css/pro.css">
     </head>
