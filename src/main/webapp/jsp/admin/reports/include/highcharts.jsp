@@ -1,4 +1,18 @@
-<script src="/static/js/noconcat/highcharts.standalone.js"></script>
-<script src="/static/js/noconcat/highcharts.js"></script>
-<script src="/static/js/noconcat/highcharts.heatmap.js"></script>
-<script src="/static/js/noconcat/highcharts.project.js"></script>
+<script>
+    var loadHighCharts = function(callback){
+        if (!window.Highcharts){
+            $.getScript('/static/js/noconcat/highcharts.js', function(){
+                $.getScript('/static/js/noconcat/highcharts.heatmap.js', function(){
+                    Highcharts.setOptions({
+                        credits: {
+                            enabled: false
+                        }
+                    });
+                    callback();
+                });
+            });
+        } else {
+            callback();
+        }
+    };
+</script>
