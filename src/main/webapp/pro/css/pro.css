@@ -41,7 +41,6 @@ body,html{
 
 .parallax {
   /* Display and position the pseudo-element */
-  content: " ";
   position: absolute;
   top: 0;
   right: 0;
@@ -53,7 +52,6 @@ body,html{
    * Because the pseudo-element is further away, it appears to move more slowly, like in real life. */
   transform: translateZ(-1px) scale(1.5);
   /* Force the background image to fill the whole element. */
-  /*background-size: 100%;*/
   background-size: cover;
   /* Keep the image from overlapping sibling elements. */ 
   z-index: -1;
@@ -396,35 +394,6 @@ iframe {
 }
 
 
-/* Media Queries */
-
-@media only screen and (max-width:768px) {
-    #overlay { height:auto; }
-}
-
-
-/* Visibility Helpers */
-
-@media only screen and (min-width:769px) {
-    .visible-mobile,.visible-tablet,.hidden-desktop { 
-        display:none !important; 
-    }
-    .content-text{
-        padding: 150px 0;
-    }
-}
-
-@media only screen and (min-width:480px) and (max-width:768px) {
-    .visible-mobile,.hidden-tablet,.visible-desktop { 
-        display:none !important; 
-    }
-}
-
-@media only screen and (max-width:479px) {
-    .hidden-mobile,.visible-tablet,.visible-desktop { 
-        display:none !important; 
-    }
-}
 .content-teaser{
         padding: 50px 10px;
     }

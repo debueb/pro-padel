@@ -3,12 +3,10 @@
 
 <main class="section-wrapper">
     <section class="section content" style="background-color: #7E8AA2">
-        <div class="content-text">
-            <p>
+        <div class="content-text" style="margin-top: 50px;">
             <h2 class="text-center"><fmt:message key="ForOperators"/></h2>
             <br><br>
             <h3 class="text-center"><fmt:message key="ForOperatorsInfo"/></h3>
-            </p>
         </div>
     </section>
 
@@ -126,7 +124,7 @@
     </section>
 
     <section class="section" style="background-color: #FF9800;">
-        <div class="content">
+        <div class="content content-text">
             <h2 class="text-center"><fmt:message key="Pricing"/></h2>
             <br><br>
             <div class="panel panel-default">
