@@ -9,11 +9,13 @@
                 <c:if test="${not firstSubmodule and SubModule.showInMenu}">
                     <div class="menu-separator"></div>
                 </c:if>
-                <c:set var="firstSubmodule" value="false"/>
                 <c:set var="CustomerModule" value="${SubModule}" scope="request"/>
                 <div class="subModule" style="position: relative">
                     <jsp:include page="/jsp/include/list-menu-module.jsp"/>
                 </div>
+                <c:if test="${SubModule.showInMenu}">
+                     <c:set var="firstSubmodule" value="false"/>
+                </c:if>
             </c:forEach>
         </span>
     </c:if>
