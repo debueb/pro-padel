@@ -23,9 +23,56 @@
         </div>
     </div>
 </div>
-<script>
-    var app = app || {};
-    app.chartData = ${chartData}
-</script>
 <jsp:include page="/jsp/admin/reports/include/highcharts.jsp"/>
+<script>
+    loadHighCharts(function(){
+        var keys = [];
+        var values = [];
+        var data = ${chartData};
+        for(var k in data){
+            keys.push(k);
+            values.push(data[k]);
+        }
+        new Highcharts.Chart({
+            chart: {
+                renderTo: 'players',
+                type: 'bar',
+                marginTop: 20,
+                marginBottom: 70
+            },
+            title: {
+                text: null
+            },
+            subtitle: {
+                text: null
+            },
+            xAxis: {
+                categories: keys,
+                title: {
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: null
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series: [{
+                name: 'Buchungen',
+                data: values
+            }]
+        });
+    });
+</script>
 <jsp:include page="/jsp/include/footer.jsp"/>

@@ -16,7 +16,11 @@
 
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4><fmt:message key="Draws"/> ${Event.name}</h4>
+                <h4><fmt:message key="Draws"/> ${Event.name}
+                    <c:if test="${not empty Round}">
+                        <fmt:message key="Round"/> ${Round+1}
+                    </c:if>
+                </h4>
             </div>
             <div class="panel-body">
                 <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
@@ -32,11 +36,8 @@
                             </spf:select>
                             <div class="explanation-select">${Participants}</div>
                         </div>
-
                     </c:forEach>
-
-
-                    <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
+                    <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
                 </spf:form>
             </div>
         </div>    

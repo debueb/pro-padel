@@ -49,6 +49,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -83,6 +84,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller()
 @RequestMapping("/admin/events")
 public class AdminEventsController extends AdminBaseController<Event>{
+    
+    private static final Integer ROUND_NONE = null;
+    private static final Integer ROUND_ONE  = 0;
     
     @Autowired
     EventDAOI eventDAO;
@@ -284,6 +288,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 return redirectToIndex(request);
             
             case GroupKnockout:
+            case GroupTwoRounds:
                 model = getDAO().saveOrUpdate(model);
                 if (!model.getParticipants().isEmpty()){
                     return redirectToGroupDraws(model);
@@ -429,10 +434,76 @@ public class AdminEventsController extends AdminBaseController<Event>{
         //create missing games
         for (int groupNumber=0; groupNumber<event.getNumberOfGroups(); groupNumber++){
             Set<Participant> groupParticipants = eventGroups.getGroupParticipants().get(groupNumber);
-            gameUtil.createMissingGames(event, groupParticipants, groupNumber);
+            Integer roundNumber = null;
+            switch (event.getEventType()){
+                case GroupKnockout:
+                    //for GroupKnockout events, only knockout games have a round
+                    roundNumber = ROUND_NONE;
+                    break;
+                case GroupTwoRounds:
+                    //for GroupTwoRound events, every round has a number
+                    roundNumber = ROUND_ONE;
+                    break;
+            }
+            gameUtil.createMissingGames(event, groupParticipants, groupNumber, roundNumber);
         }
         
         return new ModelAndView("redirect:/admin/events/edit/"+eventId+"/groupschedule");
+    }
+    
+    @RequestMapping(value={"edit/{eventId}/groupdraws/{round}"}, method=GET)
+    public ModelAndView getGroupDrawsForRound(@PathVariable Long eventId, @PathVariable Integer round){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        try {
+            int maxParticipantsPerGroup = (int) Math.ceil(event.getParticipants().size() / event.getNumberOfGroups());
+            SortedMap<Integer, List<Game>> groupGames = eventsUtil.getGroupGameMap(event, round-1);
+            List<Participant> rankedParticipants = getRankedGroupParticipants(groupGames, event.getNumberOfGroups(), maxParticipantsPerGroup);
+            EventGroups eventGroupsRoundTwo = getEventGroupsRoundTwo(event, rankedParticipants);
+            return getGroupDrawsView(event, eventGroupsRoundTwo, round);
+        } catch (Exception e){
+            return getGroupDrawsView(event, null, round);
+        }
+    }
+    
+    @RequestMapping(value={"edit/{eventId}/groupdraws/{round}"}, method=POST)
+    public ModelAndView postGroupDrawsForRound(@PathVariable Long eventId, @PathVariable Integer round, @ModelAttribute("Model") @Valid EventGroups eventGroups, BindingResult bindingResult, HttpServletRequest request){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        Iterator<Map.Entry<Integer, Set<Participant>>> iterator = eventGroups.getGroupParticipants().entrySet().iterator();
+        while(iterator.hasNext()){
+            Map.Entry<Integer, Set<Participant>> entry = iterator.next();
+            if (entry.getValue() == null){
+                bindingResult.reject("PleaseSelectParticipantsForEachGroup");
+            }
+        }
+        
+        if (bindingResult.hasErrors()){
+            return getGroupDrawsView(event, eventGroups, round);
+        }
+        
+        //remove games of players who no longer participate
+        gameUtil.removeObsoleteGames(event);
+        
+        //remove games with teams that are no longer part of a group in the current round
+        Iterator<Game> gameIterator = event.getGames().iterator();
+        while (gameIterator.hasNext()){
+            Game game = gameIterator.next();
+            Integer groupNumber = game.getGroupNumber();
+            if (groupNumber != null && game.getRound().equals(round)){
+                Set<Participant> groupParticipants = eventGroups.getGroupParticipants().get(groupNumber);
+                if (!groupParticipants.containsAll(game.getParticipants())){
+                    gameIterator.remove();
+                    gameDAO.deleteById(game.getId());
+                }
+            }
+        }
+                
+        //create missing games
+        for (int groupNumber=0; groupNumber<event.getNumberOfGroupsSecondRound(); groupNumber++){
+            Set<Participant> groupParticipants = eventGroups.getGroupParticipants().get(groupNumber);
+            gameUtil.createMissingGames(event, groupParticipants, groupNumber, round);
+        }
+        
+        return new ModelAndView("redirect:/events/event/"+eventId+"/groupgames/"+round);
     }
     
     @RequestMapping(value={"edit/{eventId}/groupschedule"}, method=GET)
@@ -510,70 +581,53 @@ public class AdminEventsController extends AdminBaseController<Event>{
     @RequestMapping(method=POST, value="event/{eventId}/groupgamesend")
     public ModelAndView saveEventGroupGamesEnd(@PathVariable("eventId") Long eventId, @ModelAttribute("Model") Event dummy, BindingResult result){
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        try {
+            SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGameMap(event);
+            if (!roundGames.isEmpty()){
+                throw new Exception(msg.get("GroupGamesAlreadyEnded"));
+            }
+
+            SortedMap<Integer, List<Game>> groupGames = eventsUtil.getGroupGameMap(event);
+            if (groupGames.isEmpty()){
+                throw new Exception(msg.get("NoGroupGames"));
+            }
         
-        SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGameMap(event);
-        if (!roundGames.isEmpty()){
-            result.reject("GroupGamesAlreadyEnded");
+            List<Participant> rankedParticipants = getRankedGroupParticipants(groupGames, event.getNumberOfGroups(), event.getNumberOfWinnersPerGroup());
+
+            eventsUtil.createKnockoutGames(event, rankedParticipants);
+            return redirectToDraws(event);
+        } catch (Exception e){
+            result.addError(new ObjectError("*", e.getMessage()));
             return getGroupGamesEndView(dummy);
         }
-        
-        SortedMap<Integer, List<Game>> groupGames = eventsUtil.getGroupGameMap(event);
-        if (groupGames.isEmpty()){
-            result.reject("NoGroupGames");
-            return getGroupGamesEndView(dummy);
+    }
+    
+    @RequestMapping(method=GET, value="event/{eventId}/groupgamesend/{round}")
+    public ModelAndView getEventGroupGamesEndForRound(@PathVariable() Long eventId, @PathVariable Integer round){
+        Event event = eventDAO.findById(eventId);
+        return getGroupGamesEndView(event, round);
+    }
+    
+    @RequestMapping(method=POST, value="event/{eventId}/groupgamesend/{round}")
+    public ModelAndView saveEventGroupGamesEndForRound(@PathVariable() Long eventId, @PathVariable Integer round, @ModelAttribute("Model") Event dummy, BindingResult result){
+        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        try {
+            SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGameMap(event, round+1);
+            if (!roundGames.isEmpty()){
+                throw new Exception(msg.get("GroupGamesAlreadyEnded"));
+            }
+
+            SortedMap<Integer, List<Game>> groupGames = eventsUtil.getGroupGameMap(event, round);
+            if (groupGames.isEmpty()){
+                throw new Exception(msg.get("NoGroupGames"));
+            }
+            getRankedGroupParticipants(groupGames, event.getNumberOfGroups(), event.getNumberOfWinnersPerGroup());
+
+            return redirectToGroupDrawsRound(event, round+1);
+        } catch (Exception e){
+            result.addError(new ObjectError("*", e.getMessage()));
+            return getGroupGamesEndView(dummy, round);
         }
-        Iterator<Map.Entry<Integer, List<Game>>> iterator = groupGames.entrySet().iterator();
-        
-        //determine best participants of each group
-        Map<Integer, List<Participant>> rankedGroupParticipants = new TreeMap<>();
-        while (iterator.hasNext()){
-            Map.Entry<Integer, List<Game>> entry = iterator.next();
-            Integer groupNumber = entry.getKey();
-            List<Game> games = entry.getValue();
-            
-            //determine participant based on games to filter out participants who did not play
-            Set<Participant> participants = new HashSet<>();
-            List<Game> playedGames = new ArrayList<>();
-            for (Game game: games){
-                if (!game.getGameSets().isEmpty()){
-                    participants.addAll(game.getParticipants());
-                    playedGames.add(game);
-                }
-            }
-            
-            if (participants.isEmpty() || playedGames.isEmpty()){
-                result.reject("CannotEndGroupGames");
-                return getGroupGamesEndView(dummy);
-            }
-            
-            //get list of score entries sorted by rank
-            List<ScoreEntry> scoreEntries =  rankingUtil.getScores(participants, playedGames);
-            for (int groupPos=0; groupPos<event.getNumberOfWinnersPerGroup(); groupPos++){
-                List<Participant> rankedParticipants = rankedGroupParticipants.get(groupNumber);
-                if (rankedParticipants == null){
-                    rankedParticipants = new ArrayList<>();
-                }
-                Participant p = null;
-                try {
-                    p = scoreEntries.get(groupPos).getParticipant();
-                } catch (IndexOutOfBoundsException e){
-                    //could happen when not enough games were played in one group
-                }
-                rankedParticipants.add(p);
-                rankedGroupParticipants.put(groupNumber, rankedParticipants);
-            }
-        }
-        
-        //sort participants so that group winners are first
-        List<Participant> rankedParticipants = new ArrayList<>();
-        for (int groupPos=0; groupPos<event.getNumberOfWinnersPerGroup(); groupPos++){
-            for (int group=0; group<event.getNumberOfGroups(); group++){
-                rankedParticipants.add(rankedGroupParticipants.get(group).get(groupPos));
-            }
-        }
-        
-        eventsUtil.createKnockoutGames(event, rankedParticipants);
-        return redirectToDraws(event);
     }
     
     @RequestMapping(method=GET, value="/{eventId}/game/{gameId}/delete")
@@ -649,14 +703,24 @@ public class AdminEventsController extends AdminBaseController<Event>{
     }
     
     private ModelAndView getGroupDrawsView(Event event, EventGroups eventGroups){
+        return getGroupDrawsView(event, eventGroups, null);
+    }
+    
+    private ModelAndView getGroupDrawsView(Event event, EventGroups eventGroups, Integer round){
         ModelAndView mav = new ModelAndView("admin/events/groupdraws");
         mav.addObject("Event", event);
         mav.addObject("Model", eventGroups);
+        mav.addObject("Round", round);
         return mav;
     }
     
     private ModelAndView getGroupGamesEndView(Event event) {
-        ModelAndView mav = new ModelAndView("events/groupknockout/groupgamesend", "Model", event);
+        return getGroupGamesEndView(event, null);
+    }
+    
+    private ModelAndView getGroupGamesEndView(Event event, Integer round) {
+        ModelAndView mav = new ModelAndView("admin/events/groupgamesend", "Model", event);
+        mav.addObject("Round", round);
         return mav;
     }
 
@@ -689,6 +753,10 @@ public class AdminEventsController extends AdminBaseController<Event>{
     private ModelAndView redirectToGroupDraws(Event model) {
         return new ModelAndView("redirect:/admin/events/edit/"+model.getId()+"/groupdraws");
     }
+    
+    private ModelAndView redirectToGroupDrawsRound(Event model, Integer round) {
+        return new ModelAndView("redirect:/admin/events/edit/"+model.getId()+"/groupdraws/"+round);
+    }
 
     private EventGroups getDefaultEventGroups(Event event) {
         //initialize participant map
@@ -699,11 +767,51 @@ public class AdminEventsController extends AdminBaseController<Event>{
         
         //fill participant map from existing games if possible
         for (Game game: event.getGames()){
-            Integer groupNumber = game.getGroupNumber();
-            if (groupNumber != null){
-                Set<Participant> groupParticipants = participantMap.get(groupNumber);
-                groupParticipants.addAll(game.getParticipants());
-                participantMap.put(groupNumber, groupParticipants);
+            //ROUND_NONE for EventType.GroupKnockout, ROUND_ONE for EventType.GroupTwoRounds
+            if (Objects.equals(game.getRound(), ROUND_NONE) || game.getRound().equals(ROUND_ONE)){
+                Integer groupNumber = game.getGroupNumber();
+                if (groupNumber != null){
+                    Set<Participant> groupParticipants = participantMap.get(groupNumber);
+                    groupParticipants.addAll(game.getParticipants());
+                    participantMap.put(groupNumber, groupParticipants);
+                }
+            }
+        }
+        EventGroups eventGroups = new EventGroups();
+        eventGroups.setGroupParticipants(participantMap);
+        return eventGroups;
+    }
+    
+    private EventGroups getEventGroupsRoundTwo(Event event, List<Participant> rankedGroupParticipants) {
+        
+        //initialize participant map
+        Map<Integer, Set<Participant>> participantMap = new TreeMap<>();
+        
+        int grp=0;
+        for (Participant rankedGroupParticipant : rankedGroupParticipants) {
+            Set<Participant> participants = participantMap.get(grp);
+            if (participants == null){
+                participants = new TreeSet<>();
+            }
+            participants.add(rankedGroupParticipant);
+            participantMap.put(grp, participants);
+            
+            if (grp+1 >= event.getNumberOfGroupsSecondRound()){
+                grp = 0;
+            } else {
+                grp++;
+            }
+        }
+        
+        //fill participant map from existing games if possible
+        for (Game game: event.getGames()){
+            if (game.getRound() != null && game.getRound() == 1){
+                Integer groupNumber = game.getGroupNumber();
+                if (groupNumber != null){
+                    Set<Participant> groupParticipants = participantMap.get(groupNumber);
+                    groupParticipants.addAll(game.getParticipants());
+                    participantMap.put(groupNumber, groupParticipants);
+                }
             }
         }
         EventGroups eventGroups = new EventGroups();
@@ -715,5 +823,55 @@ public class AdminEventsController extends AdminBaseController<Event>{
         ModelAndView mav = new ModelAndView("include/delete");
         mav.addObject("Model", game);
         return mav;
+    }
+
+    private List<Participant> getRankedGroupParticipants(SortedMap<Integer, List<Game>> groupGames, Integer numberOfGroups, Integer maxWinnersPerGroup) throws Exception {
+        Map<Integer, List<Participant>> rankedGroupParticipants = new TreeMap<>();
+        Iterator<Map.Entry<Integer, List<Game>>> iterator = groupGames.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry<Integer, List<Game>> entry = iterator.next();
+            Integer groupNumber = entry.getKey();
+            List<Game> games = entry.getValue();
+
+            //determine participant based on games to filter out participants who did not play
+            Set<Participant> participants = new HashSet<>();
+            List<Game> playedGames = new ArrayList<>();
+            for (Game game: games){
+                if (!game.getGameSets().isEmpty()){
+                    participants.addAll(game.getParticipants());
+                    playedGames.add(game);
+                }
+            }
+
+            if (participants.isEmpty() || playedGames.isEmpty()){
+                throw new Exception(msg.get("CannotEndGroupGames"));
+            }
+
+            //get list of score entries sorted by rank
+            List<ScoreEntry> scoreEntries =  rankingUtil.getScores(participants, playedGames);
+            for (int groupPos=0; groupPos<maxWinnersPerGroup; groupPos++){
+                List<Participant> rankedParticipants = rankedGroupParticipants.get(groupNumber);
+                if (rankedParticipants == null){
+                    rankedParticipants = new ArrayList<>();
+                }
+                Participant p = null;
+                try {
+                    p = scoreEntries.get(groupPos).getParticipant();
+                } catch (IndexOutOfBoundsException e){
+                    //could happen when not enough games were played in one group
+                }
+                rankedParticipants.add(p);
+                rankedGroupParticipants.put(groupNumber, rankedParticipants);
+            }
+        }
+        
+        //sort participants so that group winners are first
+        List<Participant> rankedParticipants = new ArrayList<>();
+        for (int groupPos=0; groupPos<maxWinnersPerGroup; groupPos++){
+            for (int group=0; group<numberOfGroups; group++){
+                rankedParticipants.add(rankedGroupParticipants.get(group).get(groupPos));
+            }
+        }
+        return rankedParticipants;
     }
 }
