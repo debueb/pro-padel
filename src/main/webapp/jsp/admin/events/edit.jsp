@@ -66,7 +66,7 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <div class="select-toggle-GroupKnockout relative">
+                    <div class="select-toggle-GroupKnockout select-toggle-GroupTwoRounds relative">
                         <spf:input path="numberOfGroups" type="number" class="form-control form-center-element" min="1"/>
                         <div class="explanation-select"><fmt:message key="NumberOfGroups"/></div>
                     </div>
@@ -74,6 +74,11 @@
                     <div class="select-toggle-GroupKnockout relative">
                         <spf:input path="numberOfWinnersPerGroup" type="number" class="form-control form-center-element"/>
                         <div class="explanation-select"><fmt:message key="NumberOfWinnersPerGroups"/></div>
+                    </div>
+                    
+                    <div class="select-toggle-GroupTwoRounds relative">
+                        <spf:input path="numberOfGroupsSecondRound" type="number" class="form-control form-center-element" min="1"/>
+                        <div class="explanation-select"><fmt:message key="NumberOfGroupsSecondRound"/></div>
                     </div>
 
                     <div class="datepicker-container">
@@ -118,11 +123,11 @@
                         <div class="datepicker" data-show-on-init="false" data-allow-past="true"></div>
                     </div>
 
-                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-Knockout select-toggle-CommunityRoundRobin select-toggle-PullRoundRobin relative">
+                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-GroupTwoRounds select-toggle-Knockout select-toggle-CommunityRoundRobin select-toggle-PullRoundRobin relative">
                         <spf:input path="maxNumberOfParticipants" type="number" class="form-control form-center-element"/>
                         <div class="explanation-select"><fmt:message key="MaxNumberOfParticipants"/></div>
                     </div>
-                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-Knockout select-toggle-CommunityRoundRobin select-toggle-PullRoundRobin relative" data-style="form-center-element">
+                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-GroupTwoRounds select-toggle-Knockout select-toggle-CommunityRoundRobin select-toggle-PullRoundRobin relative" data-style="form-center-element">
                         <fmt:message key="CurrentlySelected" var="CurrentlySelected"/>
                         <fmt:message key="PleaseChoose" var="EmptyTitle"/>
                         <fmt:message key="ErrorText" var="ErrorText"/>
@@ -150,7 +155,7 @@
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Participants"/></span>
                     </div>
-                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-Knockout select-toggle-PullRoundRobin">
+                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-GroupTwoRounds select-toggle-Knockout select-toggle-PullRoundRobin">
                         <%-- Zahlungsmethoden --%>
                         <div class="relative">
                             <spf:select path="paymentMethods" class="select-multiple form-control" data-style="form-center-element" data-container="body">
@@ -219,6 +224,10 @@
                     <c:if test="${not empty Model.id and (Model.eventType eq 'GroupKnockout')}">
                         <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/groupdraws"><fmt:message key="ToGroupDraws"/></a>
                         <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/groupschedule"><fmt:message key="ToGameSchedule"/></a>
+                    </c:if>
+                    <c:if test="${not empty Model.id and (Model.eventType eq 'GroupTwoRounds')}">
+                        <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/groupdraws"><fmt:message key="ToGroupDraws"/> <fmt:message key="Round"/> 1</a>
+                        <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/groupdraws/round/1"><fmt:message key="ToGroupDraws"/> <fmt:message key="Round"/> 2</a>
                     </c:if>
                     <c:if test="${not empty Model.id and (Model.eventType eq 'PullRoundRobin' or Model.eventType eq 'SingleRoundRobin')}">
                         <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/gameschedule"><fmt:message key="ToGameSchedule"/></a>

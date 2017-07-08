@@ -38,10 +38,17 @@ public class EventsUtil {
     GameUtil gameUtil;
 
     public SortedMap<Integer, List<Game>> getRoundGameMap(Event event) {
+        return getRoundGameMap(event, null);
+    }
+    
+    public SortedMap<Integer, List<Game>> getRoundGameMap(Event event, Integer round) {
         SortedMap<Integer, List<Game>> roundGames= new TreeMap<>();
         
         for (Game game: event.getGames()){
             if (game.getRound()!=null){
+                if (round != null && !game.getRound().equals(round)){
+                    continue;
+                }
                 List<Game> games = roundGames.get(game.getRound());
                 if (games == null){
                     games = new ArrayList<>();
@@ -54,10 +61,17 @@ public class EventsUtil {
     }
 
     public SortedMap<Integer, List<Game>> getGroupGameMap(Event event) {
+        return getGroupGameMap(event, null);
+    }
+    
+    public SortedMap<Integer, List<Game>> getGroupGameMap(Event event, Integer round) {
         SortedMap<Integer, List<Game>> groupGames= new TreeMap<>();
         
         for (Game game: event.getGames()){
             if (game.getGroupNumber()!=null){
+                if (round != null && !round.equals(game.getRound())){
+                    continue;
+                }
                 List<Game> games = groupGames.get(game.getGroupNumber());
                 if (games == null){
                     games = new ArrayList<>();
