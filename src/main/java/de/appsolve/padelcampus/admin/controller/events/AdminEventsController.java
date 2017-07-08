@@ -791,7 +791,7 @@ public class AdminEventsController extends AdminBaseController<Event>{
         for (Participant rankedGroupParticipant : rankedGroupParticipants) {
             Set<Participant> participants = participantMap.get(grp);
             if (participants == null){
-                participants = new TreeSet();
+                participants = new TreeSet<>();
             }
             participants.add(rankedGroupParticipant);
             participantMap.put(grp, participants);
