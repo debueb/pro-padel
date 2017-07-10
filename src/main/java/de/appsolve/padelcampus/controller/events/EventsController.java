@@ -45,7 +45,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
@@ -240,28 +239,13 @@ public class EventsController extends BaseController{
     }
     
     @RequestMapping("event/{eventId}/groupgames")
-    public ModelAndView getEventGroupGames(@PathVariable("eventId") Long eventId){
-        Event event = eventDAO.findByIdFetchWithGames(eventId);
-        ModelAndView mav = new ModelAndView("events/groupknockout/groupgames", "Model", event);
-        
-        event = eventDAO.findByIdFetchWithGames(eventId);
-        SortedMap<Integer, List<Game>> groupGameMap = eventsUtil.getGroupGameMap(event);
-        SortedMap<Integer, List<Game>> roundGameMap = eventsUtil.getRoundGameMap(event);
-        
-        //Group // Participant // Game // GameResult
-        SortedMap<Integer, Map<Participant, Map<Game, String>>> groupParticipantGameResultMap = new TreeMap<>();
-        
-        Iterator<Map.Entry<Integer, List<Game>>> iterator = groupGameMap.entrySet().iterator();
-        while (iterator.hasNext()){
-            Map.Entry<Integer, List<Game>> entry = iterator.next();
-            Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(entry.getValue(), false);
-            Integer group = entry.getKey();
-            groupParticipantGameResultMap.put(group, participantGameResultMap);
-        }
-        mav.addObject("GroupParticipantGameResultMap", groupParticipantGameResultMap);
-        mav.addObject("RoundGameMap", roundGameMap);
-        gameUtil.addGameResultMap(mav, event.getGames());
-        return mav;
+    public ModelAndView getEventGroupGames(@PathVariable Long eventId){
+        return getGroupGameView(eventId, null);
+    }
+    
+    @RequestMapping("event/{eventId}/groupgames/{round}")
+    public ModelAndView getEventGroupGames(@PathVariable Long eventId, @PathVariable Integer round){
+        return getGroupGameView(eventId, round);
     }
     
     @RequestMapping("event/{eventId}/knockoutgames")
@@ -270,7 +254,7 @@ public class EventsController extends BaseController{
         SortedMap<Integer, List<Game>> groupGameMap = eventsUtil.getGroupGameMap(event);
         SortedMap<Integer, List<Game>> roundGameMap = eventsUtil.getRoundGameMap(event);
         if (roundGameMap.isEmpty()){
-            return new ModelAndView("events/groupknockout/knockoutgamesend", "Model", event);
+            return new ModelAndView("events/groupknockout/groupgamesendinfo", "Model", event);
         }
         ModelAndView mav = getKnockoutView(event, roundGameMap);
         mav.addObject("GroupGameMap", groupGameMap);
@@ -475,5 +459,36 @@ public class EventsController extends BaseController{
         }
         game.setGameSets(gameSets);
         gameDAO.saveOrUpdate(game);
+    }
+
+    private ModelAndView getGroupGameView(Long eventId, Integer roundNumber) {
+        Event event = eventDAO.findByIdFetchWithGames(eventId);
+        ModelAndView mav = new ModelAndView("events/groupknockout/groupgames", "Model", event);
+        
+        event = eventDAO.findByIdFetchWithGames(eventId);
+        SortedMap<Integer, List<Game>> groupGameMap = eventsUtil.getGroupGameMap(event, roundNumber);
+        SortedMap<Integer, List<Game>> roundGameMap;
+       
+        if (roundNumber == null){
+            roundGameMap = eventsUtil.getRoundGameMap(event);
+        } else {
+            roundGameMap = eventsUtil.getRoundGameMap(event, roundNumber+1);
+        }
+        
+        //Group // Participant // Game // GameResult
+        SortedMap<Integer, Map<Participant, Map<Game, String>>> groupParticipantGameResultMap = new TreeMap<>();
+        
+        Iterator<Map.Entry<Integer, List<Game>>> iterator = groupGameMap.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry<Integer, List<Game>> entry = iterator.next();
+            Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(entry.getValue(), false);
+            Integer group = entry.getKey();
+            groupParticipantGameResultMap.put(group, participantGameResultMap);
+        }
+        mav.addObject("GroupParticipantGameResultMap", groupParticipantGameResultMap);
+        mav.addObject("RoundGameMap", roundGameMap);
+        mav.addObject("Round", roundNumber);
+        gameUtil.addGameResultMap(mav, event.getGames());
+        return mav;
     }
 }

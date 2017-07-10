@@ -109,23 +109,26 @@ public class GameUtil {
     }
     
     public void createMissingGames(Event event, Set<Participant> participants) {
-        createMissingGames(event, participants, null);
+        createMissingGames(event, participants, null, null);
     }
     
-    public void createMissingGames(Event event, Set<Participant> participants, Integer groupNumber) {
+    public void createMissingGames(Event event, Set<Participant> participants, Integer groupNumber, Integer roundNumber) {
         List<Game> existingGames = gameDAO.findByEvent(event);
         for (Participant firstParticipant: participants){
             for (Participant secondParticipant: participants){
                 if (!firstParticipant.equals(secondParticipant)){
                     boolean gameExists = false;
                     for (Game game: existingGames){
+                        if (roundNumber != null && !roundNumber.equals(game.getRound())){
+                            continue;
+                        }
                         if (game.getParticipants().contains(firstParticipant) && game.getParticipants().contains(secondParticipant)){
                             gameExists = true;
                             break;
                         }
                     }
                     if (!gameExists){
-                        existingGames.add(createGame(event, firstParticipant, secondParticipant, groupNumber));
+                        existingGames.add(createGame(event, firstParticipant, secondParticipant, groupNumber, roundNumber));
                     }
                 }
             }
@@ -140,7 +143,7 @@ public class GameUtil {
                     if (!hasMatch(existingGames, team1) && !hasMatch(existingGames, team2)){
                         //make sure that players are distinct
                         if (Sets.intersection(team1.getPlayers(), team2.getPlayers()).isEmpty()){
-                            existingGames.add(createGame(event, team1, team2, null));
+                            existingGames.add(createGame(event, team1, team2));
                         }
                     }
                 }
@@ -165,12 +168,15 @@ public class GameUtil {
         return participantGameResultMap;
     }
 
-    private Game createGame(Event event, Participant firstParticipant, Participant secondParticipant, Integer groupNumber) {
+    private Game createGame(Event event, Participant firstParticipant, Participant secondParticipant) {
+        return createGame(event, firstParticipant, secondParticipant, null, null);
+    }
+    
+    private Game createGame(Event event, Participant firstParticipant, Participant secondParticipant, Integer groupNumber, Integer roundNumber) {
         Game game = new Game();
         game.setEvent(event);
-        if (groupNumber != null){
-            game.setGroupNumber(groupNumber);
-        }
+        game.setGroupNumber(groupNumber);
+        game.setRound(roundNumber);
         Set<Participant> gameParticipants = new LinkedHashSet<>();
         gameParticipants.add(firstParticipant);
         gameParticipants.add(secondParticipant);

@@ -41,7 +41,7 @@
     </section>
 
     <section class="section" style="background-color: #7E8AA2">
-        <div  class="content-text" style="padding-bottom: 0px;">
+        <div class="content-text" style="padding-top: 50px;">
             <a href="/pro/operators" class="white"><h2 class="text-center"><fmt:message key="ForOperators"/></h2></a>
             <br><br>
 
@@ -76,7 +76,7 @@
                     </section>
                 </div>
             </a>
-            <div class="content" style="background-color: #7E8AA2; padding-top: 50px;">
+            <div class="content" style="margin-bottom: 50px">
                 <a href="/pro/operators" class="white"><h3 class="text-center"><fmt:message key="ForOperatorsDesc"/></h3></a>
             </div>
         </div>
