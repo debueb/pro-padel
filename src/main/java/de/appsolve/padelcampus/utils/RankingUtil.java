@@ -56,8 +56,6 @@ public class RankingUtil {
 
     private static final BigDecimal ELO_MAGIC_NUMBER = new BigDecimal("400");
 
-    private Map<Participant, BigDecimal> rankingMap;
-
     @Autowired
     GameDAOI gameDAO;
 
@@ -133,7 +131,7 @@ public class RankingUtil {
     }
     
     private Map<Participant, BigDecimal> getRanking(List<Game> games) {
-        rankingMap = new HashMap<>();
+        Map<Participant, BigDecimal> rankingMap = new HashMap<>();
         SortedSet<Game> sortedGames = new TreeSet<>(new GameByStartDateComparator());
         sortedGames.addAll(games);
         for (Game game : sortedGames) {
@@ -152,9 +150,9 @@ public class RankingUtil {
             Participant p2 = iterator.next();
 
             if (p1 instanceof Team && p2 instanceof Team){
-                updateRanking(game, (Team) p1, (Team) p2);
+                updateRanking(rankingMap, game, (Team) p1, (Team) p2);
             } else {
-                updateRanking(game, p1, p2);
+                updateRanking(rankingMap, game, p1, p2);
             }
         }
         Iterator<Map.Entry<Participant, BigDecimal>> iterator = rankingMap.entrySet().iterator();
@@ -205,12 +203,12 @@ public class RankingUtil {
         return ranking;
     }
 
-    private void updateRanking(Game game, Team team1, Team team2) {
-        BigDecimal r1 = getTeamRanking((Team)team1);
-        BigDecimal r2 = getTeamRanking((Team)team2);
+    private void updateRanking(Map<Participant, BigDecimal> rankingMap, Game game, Team team1, Team team2) {
+        BigDecimal r1 = getTeamRanking(rankingMap, (Team)team1);
+        BigDecimal r2 = getTeamRanking(rankingMap, (Team)team2);
         
         for (Player player: team1.getPlayers()){
-            BigDecimal r1p1 = getRanking(player);
+            BigDecimal r1p1 = getRanking(rankingMap, player);
             BigDecimal tr1 = getTransformedRating(r1);
             BigDecimal tr2 = getTransformedRating(r2);
             
@@ -221,7 +219,7 @@ public class RankingUtil {
         }
         
         for (Player player: team2.getPlayers()){
-            BigDecimal r2p1 = getRanking(player);
+            BigDecimal r2p1 = getRanking(rankingMap, player);
             BigDecimal tr1 = getTransformedRating(r2);
             BigDecimal tr2 = getTransformedRating(r1);
             
@@ -232,9 +230,9 @@ public class RankingUtil {
         }
     }
     
-    private void updateRanking(Game game, Participant p1, Participant p2) {
-        BigDecimal r1 = getRanking(p1);
-        BigDecimal r2 = getRanking(p2);
+    private void updateRanking(Map<Participant, BigDecimal> rankingMap, Game game, Participant p1, Participant p2) {
+        BigDecimal r1 = getRanking(rankingMap, p1);
+        BigDecimal r2 = getRanking(rankingMap, p2);
         
         BigDecimal tr1 = getTransformedRating(r1);
         BigDecimal tr2 = getTransformedRating(r2);
@@ -252,7 +250,7 @@ public class RankingUtil {
         rankingMap.put(p2, newR2);
     }
     
-    private BigDecimal getRanking(Participant participant) {
+    private BigDecimal getRanking(Map<Participant, BigDecimal> rankingMap, Participant participant) {
         BigDecimal rating = rankingMap.get(participant);
         if (rating == null) {
             rating = participant.getInitialRankingAsBigDecimal();
@@ -301,10 +299,10 @@ public class RankingUtil {
         return new BigDecimal(0.5);
     }
 
-    private BigDecimal getTeamRanking(Team team) {
+    private BigDecimal getTeamRanking(Map<Participant, BigDecimal> rankingMap, Team team) {
         BigDecimal ranking = BigDecimal.ZERO;
         for (Player player : team.getPlayers()) {
-            ranking = ranking.add(getRanking(player));
+            ranking = ranking.add(getRanking(rankingMap, player));
         }
         ranking = ranking.divide(new BigDecimal(team.getPlayers().size()));
         return ranking;
