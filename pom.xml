@@ -112,7 +112,7 @@
         <dependency>
             <groupId>com.sparkpost</groupId>
             <artifactId>sparkpost-lib</artifactId>
-            <version>0.15</version>
+            <version>0.18</version>
         </dependency>
         <!-- sitemap.xml generator -->
         <dependency>

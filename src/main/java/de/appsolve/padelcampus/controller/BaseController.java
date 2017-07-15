@@ -6,6 +6,9 @@
 package de.appsolve.padelcampus.controller;
 
 import com.google.common.collect.Sets;
+import com.sparkpost.exception.SparkPostException;
+import com.sparkpost.model.responses.ServerErrorResponse;
+import com.sparkpost.model.responses.ServerErrorResponses;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.ContactDAOI;
 import de.appsolve.padelcampus.db.model.Contact;
@@ -74,6 +77,22 @@ public abstract class BaseController {
     public ModelAndView handleResourceNotFoundException(HttpServletRequest request, Exception ex){
         LOG.error(ex.getMessage() + " " + request.getRequestURL());
         return new ModelAndView("error/404", "Exception", ex);
+    }
+    
+    @ExceptionHandler(value=MailException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ModelAndView handleMailException(HttpServletRequest request, MailException ex){
+        if (ex.getCause() != null && ex.getCause() instanceof SparkPostException){
+            SparkPostException e = (SparkPostException) ex.getCause();
+            ServerErrorResponses serverErrorResponses = e.getServerErrorResponses();
+            if (serverErrorResponses != null){
+                List<ServerErrorResponse> errors = serverErrorResponses.getErrors();
+                if (errors != null && !errors.isEmpty()){
+                    return new ModelAndView("error/mailexception", "Exception", e);
+                }
+            }
+        }
+        return handleException(request, ex);
     }
     
     protected ModelAndView getLoginRequiredView(HttpServletRequest request, String title) {
