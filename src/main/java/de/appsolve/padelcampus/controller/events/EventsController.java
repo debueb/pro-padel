@@ -155,6 +155,9 @@ public class EventsController extends BaseController{
     @RequestMapping("event/{eventId}/participants")
     public ModelAndView getEventParticipants(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(eventId);
+        if (event == null){
+            throw new ResourceNotFoundException();
+        }
         //for friendly games get the participants from the games
         if (event.getEventType().equals(EventType.FriendlyGames)){
             Event eventWithGames = eventDAO.findByIdFetchWithParticipantsAndGamesAndGameParticipantsAndGamePlayers(eventId);
@@ -207,6 +210,9 @@ public class EventsController extends BaseController{
     @RequestMapping("event/{eventId}/communitygames")
     public ModelAndView getEventCommunityGames(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithGames(eventId);
+        if (event == null){
+            throw new ResourceNotFoundException();
+        }
         ModelAndView mav = new ModelAndView("events/communityroundrobin/communitygames", "Model", event);
         
         //Community // Participant // Game // GameResult
@@ -233,6 +239,9 @@ public class EventsController extends BaseController{
     @RequestMapping("event/{eventId}/pullgames")
     public ModelAndView getEventPullGames(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithGames(eventId);
+        if (event == null){
+            throw new ResourceNotFoundException();
+        }
         ModelAndView mav = new ModelAndView("events/pullroundrobin/pullgames", "Model", event);
         gameUtil.addGameResultMap(mav, event.getGames());
         return mav;
@@ -251,6 +260,9 @@ public class EventsController extends BaseController{
     @RequestMapping("event/{eventId}/knockoutgames")
     public ModelAndView getEventKnockoutGames(@PathVariable("eventId") Long eventId){
         Event event = eventDAO.findByIdFetchWithGames(eventId);
+        if (event == null){
+            throw new ResourceNotFoundException();
+        }
         SortedMap<Integer, List<Game>> groupGameMap = eventsUtil.getGroupGameMap(event);
         SortedMap<Integer, List<Game>> roundGameMap = eventsUtil.getRoundGameMap(event);
         if (roundGameMap.isEmpty()){
@@ -264,6 +276,9 @@ public class EventsController extends BaseController{
     @RequestMapping(method=GET, value="event/{eventId}/score")
     public ModelAndView getScore(@PathVariable("eventId") Long eventId, HttpServletRequest request){
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        if (event == null){
+            throw new ResourceNotFoundException();
+        }
         SortedMap<Community, ScoreEntry> communityScoreMap = new TreeMap<>();
         List<ScoreEntry> scores = rankingUtil.getScores(event.getParticipants(), event.getGames());
         for (ScoreEntry scoreEntry: scores){
@@ -463,6 +478,9 @@ public class EventsController extends BaseController{
 
     private ModelAndView getGroupGameView(Long eventId, Integer roundNumber) {
         Event event = eventDAO.findByIdFetchWithGames(eventId);
+        if (event == null){
+            throw new ResourceNotFoundException();
+        }
         ModelAndView mav = new ModelAndView("events/groupknockout/groupgames", "Model", event);
         
         event = eventDAO.findByIdFetchWithGames(eventId);
