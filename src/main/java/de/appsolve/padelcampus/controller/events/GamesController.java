@@ -19,6 +19,8 @@ import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.spring.LocalDateEditor;
+import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
@@ -33,8 +35,11 @@ import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -70,6 +75,11 @@ public class GamesController extends BaseController{
     @Autowired
     GameUtil gameUtil;
     
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
+    }
+    
     @RequestMapping
     public ModelAndView getIndex(){
         ModelAndView mav = new ModelAndView("games/index");
@@ -95,7 +105,11 @@ public class GamesController extends BaseController{
     }
     
     @RequestMapping(value="/game/{gameId}/edit", method=POST)
-    public ModelAndView postGame(@PathVariable("gameId") Long gameId, @RequestParam(value="redirectUrl", required=false) String redirectUrl, HttpServletRequest request){
+    public ModelAndView postGame(
+            @PathVariable Long gameId, 
+            @RequestParam(required=false) String redirectUrl,
+            @RequestParam LocalDate startDate,
+            HttpServletRequest request){
         Player user = sessionUtil.getUser(request);
         if (user == null){
             return getLoginView(request);
@@ -151,6 +165,7 @@ public class GamesController extends BaseController{
         } else {
             game.setScoreReporter(user);
         }
+        game.setStartDate(startDate);
         gameDAO.saveOrUpdate(game);
         
         Game nextGame = game.getNextGame();

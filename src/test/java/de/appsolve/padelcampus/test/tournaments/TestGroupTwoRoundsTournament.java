@@ -15,6 +15,7 @@ import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.test.*;
 import static de.appsolve.padelcampus.test.matchers.GlobalErrorsMatcher.globalErrors;
+import de.appsolve.padelcampus.utils.FormatUtils;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Assert;
@@ -160,6 +161,7 @@ public class TestGroupTwoRoundsTournament extends TestBase {
             
             String redirectUrl = "events/event/"+event.getId()+"/groupgames/0";
             MockHttpServletRequestBuilder builder = post("/games/game/"+game.getId()+"/edit")
+                    .param("startDate", getLastMonday().toString(FormatUtils.DATE_HUMAN_READABLE))
                     .param("redirectUrl", redirectUrl)
                     .session(session);
             for (Participant participant: game.getParticipants()){

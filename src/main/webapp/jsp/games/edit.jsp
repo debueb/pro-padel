@@ -49,6 +49,20 @@
                                     </c:forEach>
                                 </tr>
                             </c:forEach>
+                            <tr>
+                                <td><fmt:message key="GameDate"/></td>
+                                <td colspan="2">
+                                    <div class="datepicker-container">
+                                        <div class="datepicker-text-container">
+                                            <div class="datepicker-label"><fmt:message key="Date"/></div>
+                                            <span class="fa fa-calendar datepicker-icon"></span>
+                                            <div class="datepicker-text"></div>
+                                        </div>
+                                        <input type="hidden" name="startDate" class="datepicker-input" class="form-control" value="${Game.startDate}"/>
+                                        <div class="datepicker" data-allow-past="true" data-allow-future="false" data-show-on-init="false"></div>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
 
