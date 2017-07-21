@@ -22,6 +22,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
 /**
@@ -126,7 +127,19 @@ public class Game extends CustomerEntity{
     }
 
     public LocalDate getStartDate() {
-        return startDate;
+        if (startDate != null){
+            return startDate;
+        }
+        LocalDateTime lastUpdated = getLastUpdated();
+        if (lastUpdated != null){
+            return lastUpdated.toLocalDate();
+        }
+        if (event != null){
+            if (event.getStartDate() != null){
+                return event.getStartDate();
+            }
+        }
+        return null;
     }
 
     public void setStartDate(LocalDate startDate) {
