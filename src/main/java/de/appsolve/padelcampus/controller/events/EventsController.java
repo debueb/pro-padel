@@ -232,7 +232,7 @@ public class EventsController extends BaseController{
             }
         }
         mav.addObject("GroupParticipantGameResultMap", communityParticipantGameResultMap);
-        gameUtil.addGameResultMap(mav, event.getGames());
+        mav.addObject("GameResultMap", gameUtil.getGameResultMap(event.getGames()));
         return mav;
     }
     
@@ -242,8 +242,9 @@ public class EventsController extends BaseController{
         if (event == null){
             throw new ResourceNotFoundException();
         }
-        ModelAndView mav = new ModelAndView("events/pullroundrobin/pullgames", "Model", event);
-        gameUtil.addGameResultMap(mav, event.getGames());
+        ModelAndView mav = new ModelAndView("events/pullroundrobin/pullgames"); 
+        mav.addObject("Model", event);
+        mav.addObject("GameResultMap", gameUtil.getGameResultMap(event.getGames()));
         return mav;
     }
     
@@ -473,6 +474,7 @@ public class EventsController extends BaseController{
             game.setScoreReporter(sessionUtil.getUser(request));
         }
         game.setGameSets(gameSets);
+        game.setStartDate(new LocalDate());
         gameDAO.saveOrUpdate(game);
     }
 
@@ -506,7 +508,7 @@ public class EventsController extends BaseController{
         mav.addObject("GroupParticipantGameResultMap", groupParticipantGameResultMap);
         mav.addObject("RoundGameMap", roundGameMap);
         mav.addObject("Round", roundNumber);
-        gameUtil.addGameResultMap(mav, event.getGames());
+        mav.addObject("GameResultMap", gameUtil.getGameResultMap(event.getGames()));
         return mav;
     }
 }

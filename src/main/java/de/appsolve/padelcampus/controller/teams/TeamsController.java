@@ -83,28 +83,6 @@ public class TeamsController extends BaseController{
         return getTeamsView(event, msg.get("TeamsIn", new Object[]{event.getName()}), participants);
     }
        
-    @RequestMapping("/player/{playerUUID}")
-    public ModelAndView getTeamsForPlayer(@PathVariable("playerUUID") String playerUUID){
-        Player player = playerDAO.findByUUID(playerUUID);
-        List<Team> participants = teamDAO.findByPlayer(player);
-        Iterator<Team> iterator = participants.iterator();
-        while (iterator.hasNext()){
-            boolean remove = true;
-            Team team = iterator.next();
-            List<Game> games = gameDAO.findByParticipant(team);
-            for (Game game: games){
-                if (!game.getGameSets().isEmpty()){
-                    remove = false;
-                    break;
-                }
-            }
-            if (remove){
-                iterator.remove();
-            }
-        }
-        return getTeamsView(null, msg.get("TeamsWith", new Object[]{player.toString()}), participants);
-    }
-
     private ModelAndView getTeamsView(Event event, String title, Collection<? extends Participant> teams) {
         ModelAndView mav = new ModelAndView("teams/teams", "Teams", teams);
         mav.addObject("Model", event);

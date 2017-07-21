@@ -29,7 +29,16 @@ public class GameByStartDateComparator implements Comparator<Game>, Serializable
             }
         }
         if (result == 0){
-            return o1.getId().compareTo(o2.getId());
+            if (o1.getEvent() != null && o2.getEvent() != null){
+                if (o1.getEvent().getStartDate() != null && o2.getEvent().getStartDate() != null){
+                    result = o1.getEvent().getStartDate().compareTo(o2.getEvent().getStartDate());
+                    if (result == 0){
+                        result = o1.getId().compareTo(o2.getId());
+                    }
+                    return result;
+                }
+            }
+            result = o1.getId().compareTo(o2.getId());
         }
         return result;
     }

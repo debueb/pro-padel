@@ -31,7 +31,7 @@
                                         <c:if test="${empty sessionScope.customer}">
                                             <c:set var="hostPrefix" value="${req.scheme}://${Participant.customer.domainName}:${req.serverPort}"/>
                                         </c:if>
-                                        <tr>
+                                        <tr id="player-${Participant.UUID}">
                                             <c:set var="rank" value="${Ranking.value == lastRanking ? rank : status.index+1}"/>
                                             <td class="text-center ${RowClass}">${rank}</td>
                                             <td class="${RowClass}"><a href="${hostPrefix}${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}">${Participant}</a></td>

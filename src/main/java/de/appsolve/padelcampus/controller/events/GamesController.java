@@ -91,7 +91,7 @@ public class GamesController extends BaseController{
     public ModelAndView getGame(@PathVariable("gameId") Long gameId){
         Game game = gameDAO.findByIdFetchWithTeamsAndScoreReporter(gameId);
         ModelAndView indexView = new ModelAndView("games/game", "Game", game);
-        gameUtil.addGameResultMap(indexView, game);
+        indexView.addObject("GameResultMap", gameUtil.getGameResultMap(game));
         return indexView;
     }
     
@@ -242,7 +242,7 @@ public class GamesController extends BaseController{
         ModelAndView mav = new ModelAndView("games/games", "Games", games);
         String title = msg.get("AllGamesWith", new Object[]{team.getName()});
         mav.addObject("title", title);
-        gameUtil.addGameResultMap(mav, games);
+        mav.addObject("GameResultMap", gameUtil.getGameResultMap(games));
         return mav;
     }
 
@@ -255,7 +255,7 @@ public class GamesController extends BaseController{
         String title = msg.get("AllGamesWithTeamInEvent", new Object[]{team.getName(), event.getName()});
         mav.addObject("title", title);
         mav.addObject("Event", event);
-        gameUtil.addGameResultMap(mav, games);
+        mav.addObject("GameResultMap", gameUtil.getGameResultMap(games));
         return mav;
     }
     private ModelAndView getEditView(Long gameId) {

@@ -93,6 +93,7 @@ var project = {
                 textContainer   = $(this).find('.datepicker-text-container'),
                 maxDate         = $(datepicker).attr('data-max-date'),
                 allowPast       = $(datepicker).attr('data-allow-past'),
+                allowFuture     = $(datepicker).attr('data-allow-future'),
                 dayConfigs      = $(datepicker).attr('data-day-config');
                 
             if (!maxDate) {
@@ -120,8 +121,8 @@ var project = {
                 altFormat: "yy-mm-dd",
                 nextText: "",
                 prevText: "",
-                minDate: (allowPast) ? null : new Date(),
-                maxDate: maxDate,
+                minDate: allowPast ? null : new Date(),
+                maxDate: allowFuture === 'false' ? new Date(): maxDate,
                 onSelect: function (dateText) {
                     textField.text(dateText);
                     datepicker.slideUp();

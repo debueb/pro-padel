@@ -21,6 +21,7 @@ import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.utils.CustomerUtil;
+import de.appsolve.padelcampus.utils.GameUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +72,9 @@ public class AdminPlayersController extends AdminBaseController<Player> {
     
     @Autowired
     GameSetDAOI gameSetDAO;
+    
+    @Autowired
+    GameUtil gameUtil;
     
     @Override
     public ModelAndView showIndex(HttpServletRequest request, @PageableDefault(size = 10, sort = "firstName", direction = Sort.Direction.ASC) Pageable pageable, @RequestParam(required = false, name = "search") String search){
@@ -132,7 +136,7 @@ public class AdminPlayersController extends AdminBaseController<Player> {
         //TODO: handle case user has references to another customer...
         
         mav.addObject("Bookings", bookingDAO.findAllBookingsByPlayer(player));
-        mav.addObject("Games", getGames(player, teams));
+        mav.addObject("Games", gameUtil.getGames(player, teams));
         mav.addObject("Teams", teams);
         mav.addObject("Events", getEvents(player, teams));
         mav.addObject("moduleName", getModuleName());
@@ -152,7 +156,7 @@ public class AdminPlayersController extends AdminBaseController<Player> {
             
             //delete games (including active gamesets)
             List<Team> teams = teamDAO.findByPlayer(player);
-            Set<Game> games = getGames(player, teams);
+            Set<Game> games = gameUtil.getGames(player, teams);
             gameDAO.delete(games);
             
             //remove game sets that may not have been removed when a gameset was removed from game
@@ -191,14 +195,6 @@ public class AdminPlayersController extends AdminBaseController<Player> {
     @Override
     public String getModuleName() {
         return "admin/players";
-    }
-
-    private Set<Game> getGames(Player player, List<Team> teams) {
-        Set<Game> games = new TreeSet<>(gameDAO.findByParticipant(player));
-        for (Team team: teams){
-            games.addAll(gameDAO.findByParticipant(team));
-        }
-        return games;
     }
 
     private Set<Event> getEvents(Player player, List<Team> teams) {

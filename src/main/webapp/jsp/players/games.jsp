@@ -7,6 +7,8 @@
 
         <div class="page-header"></div>
 
+        <jsp:include page="/jsp/players/include/info.jsp"/>
+        
         <jsp:include page="/jsp/players/include/games.jsp"/>
     </div>
 </div>

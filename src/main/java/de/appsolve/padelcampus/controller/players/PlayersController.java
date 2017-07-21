@@ -6,16 +6,21 @@
 
 package de.appsolve.padelcampus.controller.players;
 
+import de.appsolve.padelcampus.comparators.TeamByNameComparator;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
+import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Event;
+import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
+import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.PlayerUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.RequestUtil;
@@ -25,6 +30,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +45,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -64,6 +73,12 @@ public class PlayersController extends BaseController {
     @Autowired
     RankingUtil rankingUtil;
     
+    @Autowired
+    GameUtil gameUtil;
+    
+    @Autowired
+    GameDAOI gameDAO;
+    
     @RequestMapping(method=GET, value="/player/{UUID}")
     public ModelAndView getPlayer(@PathVariable("UUID") String UUID, HttpServletRequest request){
         return getPlayerView(playerDAO.findByUUID(UUID));
@@ -83,11 +98,42 @@ public class PlayersController extends BaseController {
         return mav;
     }
     
+    @RequestMapping(method=GET, value="/player/{UUID}/games")
+    public ModelAndView getGamesForPlayer(@PathVariable String UUID, @RequestParam(defaultValue = "date") String sortBy){
+        Player player = playerDAO.findByUUID(UUID);
+        ModelAndView mav = new ModelAndView("players/games");
+        return gameUtil.getGameView(mav, player, sortBy);
+    }
+    
+    @RequestMapping("/player/{UUID}/teams")
+    public ModelAndView getTeamsForPlayer(@PathVariable String UUID){
+        Player player = playerDAO.findByUUID(UUID);
+        List<Team> teams = teamDAO.findByPlayer(player);
+        Collections.sort(teams, new TeamByNameComparator());
+        Iterator<Team> iterator = teams.iterator();
+        while (iterator.hasNext()){
+            boolean remove = true;
+            Team team = iterator.next();
+            List<Game> games = gameDAO.findByParticipant(team);
+            for (Game game: games){
+                if (!game.getGameSets().isEmpty()){
+                    remove = false;
+                    break;
+                }
+            }
+            if (remove){
+                iterator.remove();
+            }
+        }
+        ModelAndView mav = new ModelAndView("players/teams");
+        mav.addObject("Player", player);
+        mav.addObject("Teams", teams);
+        return mav;
+    }
+
+    
     @RequestMapping(value = "/player/{UUID}/vcard.vcf")
     public void addToContacts(@PathVariable("UUID") String UUID, HttpServletRequest request, HttpServletResponse response) throws IOException{
-        // Alternatively: application/octet-stream
-        // Depending on the desired browser behaviour
-        // Be sure to test thoroughly cross-browser
         Player player = playerDAO.findByUUID(UUID);
         StringBuilder sb = new StringBuilder();
         response.setHeader("Content-type", "text/x-vcard; charset=utf-8");

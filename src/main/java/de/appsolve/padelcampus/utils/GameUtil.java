@@ -5,18 +5,25 @@
  */
 package de.appsolve.padelcampus.utils;
 
+import de.appsolve.padelcampus.comparators.GameByEventComparator;
+import de.appsolve.padelcampus.comparators.GameByParticipantComparator;
+import de.appsolve.padelcampus.comparators.GameByStartDateComparator;
 import de.appsolve.padelcampus.comparators.ParticipantByGameResultComparator;
 import static de.appsolve.padelcampus.constants.Constants.FIRST_SET;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
+import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.GameSet;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.ParticipantI;
+import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -24,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import jersey.repackaged.com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,20 +46,44 @@ import org.springframework.web.servlet.ModelAndView;
 public class GameUtil {
     
     @Autowired
-    GameDAOI gameDAO;        
-
-    public void addGameResultMap(ModelAndView mav, Game game) {
-        Map<Game, String> map = new HashMap<>();
-        map.put(game, getGameResult(game, null, false));
-        mav.addObject("GameResultMap", map);
+    GameDAOI gameDAO;     
+    
+    @Autowired 
+    TeamDAOI teamDAO;
+    
+    public Set<Game> getGames(Player player) {
+        List<Team> teams = teamDAO.findByPlayer(player);
+        return getGames(player, teams);
     }
     
-    public void addGameResultMap(ModelAndView mav, Collection<Game> games) {
+    public Set<Game> getGames(Player player, List<Team> teams) {
+        Set<Game> games = new TreeSet<>(gameDAO.findByParticipant(player));
+        for (Team team: teams){
+            games.addAll(gameDAO.findByParticipant(team));
+        }
+        return games;
+    }
+
+    public Map<Game, String> getGameResultMap(Game game) {
+        Map<Game, String> map = new HashMap<>();
+        map.put(game, getGameResult(game, null, false));
+        return map;
+    }
+    
+    public Map<Game, String> getGameResultMap(Collection<Game> games) {
         Map<Game, String> map = new HashMap<>();
         for (Game game : games) {
             map.put(game, getGameResult(game, null, false));
         }
-        mav.addObject("GameResultMap", map);
+        return map;
+    }
+    
+    public Map<Game, String> getGameResultMap(Collection<Game> games, Comparator<Game> comparator) {
+        Map<Game, String> map = new TreeMap<>(comparator);
+        for (Game game : games) {
+            map.put(game, getGameResult(game, null, false));
+        }
+        return map;
     }
 
     public String getGameResult(Game game, final Participant sortByParticipant, final Boolean reverseGameResult) {
@@ -192,5 +224,35 @@ public class GameUtil {
             }
         }
         return false;
+    }
+
+    public ModelAndView getGameView(ModelAndView mav, Player player, String sortBy) {
+        if (player == null){
+            throw new ResourceNotFoundException();
+        }
+        Set<Game> games = getGames(player);
+        //filter out games without opponent (e.g. wild card games)
+        Iterator<Game> iterator = games.iterator();
+        while (iterator.hasNext()){
+            Game game = iterator.next();
+            if (game.getParticipants() == null || game.getParticipants().size()<2){
+                iterator.remove();
+            }
+        }
+        Comparator<Game> comparator;
+        switch (sortBy){
+            case "event":
+                comparator = new GameByEventComparator();
+                break;
+            case "participants":
+                comparator = new GameByParticipantComparator();
+                break;
+            default:
+                comparator = new GameByStartDateComparator();
+        }
+        Map<Game, String> gameResultMap = getGameResultMap(games, comparator);
+        mav.addObject("Player", player);
+        mav.addObject("GameResultMap", gameResultMap);
+        return mav;
     }
 }
