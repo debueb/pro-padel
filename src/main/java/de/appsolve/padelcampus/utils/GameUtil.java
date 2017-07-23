@@ -226,10 +226,7 @@ public class GameUtil {
         return false;
     }
 
-    public ModelAndView getGameView(ModelAndView mav, Player player, String sortBy) {
-        if (player == null){
-            throw new ResourceNotFoundException();
-        }
+    public Map<Game, String> getGameResultMap(Player player, String sortBy) {
         Set<Game> games = getGames(player);
         //filter out games without opponent (e.g. wild card games)
         Iterator<Game> iterator = games.iterator();
@@ -250,9 +247,6 @@ public class GameUtil {
             default:
                 comparator = new GameByStartDateComparator();
         }
-        Map<Game, String> gameResultMap = getGameResultMap(games, comparator);
-        mav.addObject("Player", player);
-        mav.addObject("GameResultMap", gameResultMap);
-        return mav;
+        return getGameResultMap(games, comparator);
     }
 }

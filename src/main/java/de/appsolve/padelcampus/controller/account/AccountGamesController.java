@@ -8,6 +8,7 @@ package de.appsolve.padelcampus.controller.account;
 
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +35,12 @@ public class AccountGamesController extends BaseController {
     @RequestMapping()
     public ModelAndView getIndex(HttpServletRequest request, @RequestParam(defaultValue = "date") String sortBy){
         Player player = sessionUtil.getUser(request);
+        if (player == null){
+            throw new ResourceNotFoundException();
+        }
         ModelAndView mav = new ModelAndView("account/games/index");
-        return gameUtil.getGameView(mav, player, sortBy);
+        mav.addObject("Player", player);
+        mav.addObject("GameResultMap", gameUtil.getGameResultMap(player, sortBy));
+        return mav;
     }
 }

@@ -102,7 +102,9 @@ public class PlayersController extends BaseController {
     public ModelAndView getGamesForPlayer(@PathVariable String UUID, @RequestParam(defaultValue = "date") String sortBy){
         Player player = playerDAO.findByUUID(UUID);
         ModelAndView mav = new ModelAndView("players/games");
-        return gameUtil.getGameView(mav, player, sortBy);
+        mav.addObject("Player", player);
+        mav.addObject("GameResultMap", gameUtil.getGameResultMap(player, sortBy));
+        return mav;
     }
     
     @RequestMapping("/player/{UUID}/teams")
