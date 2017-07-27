@@ -25,7 +25,12 @@
                             <c:forEach begin="1" end="2" var="teamNumber" varStatus="teamStatus">
                                 <tr>
                                     <td>
-                                        <spf:select path="team${teamNumber}" class="select-multiple form-control ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'} form-left-element" data-container="body" data-max-options="2">
+                                        <spf:select 
+                                            path="team${teamNumber}" 
+                                            class="select-multiple form-control ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'} form-left-element" 
+                                            data-container="body"
+                                            data-live-search="true"
+                                            data-max-options="2">
                                             <spf:options items="${Event.participants}" itemValue="UUID"/>
                                         </spf:select>
                                     </td>
