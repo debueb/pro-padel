@@ -87,7 +87,7 @@ public class AdminPlayersController extends AdminBaseController<Player> {
         if (result.hasErrors()){
             return getEditView(model);
         }
-        //make sure not to overwrite passwordHash, verfied etc.
+        //make sure not to overwrite passwordHash, verified etc.
         Player player;
         if (model.getId() != null){
             player = playerDAO.findById(model.getId());
@@ -105,6 +105,7 @@ public class AdminPlayersController extends AdminBaseController<Player> {
         player.setPhone(model.getPhone());
         player.setGender(model.getGender());
         player.setInitialRanking(model.getInitialRanking());
+        player.setAllowEmailContact(model.getAllowEmailContact());
         playerDAO.saveOrUpdate(player);
         return redirectToIndex(request);
     }
