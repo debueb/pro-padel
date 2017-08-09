@@ -39,7 +39,7 @@ public class TestGroupKnockoutTournament extends TestBase {
                 .session(session)
                 .param("firstName", "Player "+i)
                 .param("lastName", "Test "+i)
-                .param("email", "testplayer"+i+"@appsolve.de")
+                .param("email", "testplayer"+i+"@pro-padel.de")
                 .param("phone", "01739398758")
                 .param("gender", "male"))
                 .andExpect(status().is3xxRedirection());
@@ -51,8 +51,8 @@ public class TestGroupKnockoutTournament extends TestBase {
                 .andExpect(status().isOk());
         
         for (int i=0; i<NUM_PLAYERS; i=i+2){
-            Player first = playerDAO.findByEmail("testplayer"+i+"@appsolve.de");
-            Player second = playerDAO.findByEmail("testplayer"+(i+1)+"@appsolve.de");
+            Player first = playerDAO.findByEmail("testplayer"+i+"@pro-padel.de");
+            Player second = playerDAO.findByEmail("testplayer"+(i+1)+"@pro-padel.de");
             mockMvc.perform(post("/admin/teams/add")
                 .session(session)
                 .param("players", first.getUUID(), second.getUUID()))

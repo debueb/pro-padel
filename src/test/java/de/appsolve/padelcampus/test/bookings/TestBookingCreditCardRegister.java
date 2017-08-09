@@ -47,7 +47,7 @@ public class TestBookingCreditCardRegister extends TestBase {
                 .session(session)
                 .param("firstName", "test")
                 .param("lastName", "bucher")
-                .param("email", "padelcampus-unittest-3@appsolve.de")
+                .param("email", "padelcampus-unittest-3@pro-padel.de")
                 .param("phone", "01739398758")
                 .param("password", "test"))
             .andExpect(redirectedUrl("/bookings/"+nextMonday+"/10:00/offer/"+offer1.getId()));

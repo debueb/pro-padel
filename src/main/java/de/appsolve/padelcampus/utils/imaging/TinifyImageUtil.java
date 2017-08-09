@@ -36,8 +36,8 @@ public class TinifyImageUtil extends AbstractImageUtil{
     FileUtil fileUtil;
 
     public TinifyImageUtil(){
-        //dominik@appsolve.de --> https://tinypng.com/session/s/cunar7hQYCy7/YbSawnmy3tY6ew --> Iq3g1wY5w0-Lq9Fyp1nZNMYr4T-neSvv
-        //walls@appsolve.de --> https://tinypng.com/session/s/QeGQIc5lEM_M/wDq4J5st7WOns --> lT9aSwA6Jr5ywk58oeDALdL34b4k9hc_
+        //dominik@pro-padel.de --> https://tinypng.com/session/s/cunar7hQYCy7/YbSawnmy3tY6ew --> Iq3g1wY5w0-Lq9Fyp1nZNMYr4T-neSvv
+        //walls@pro-padel.de --> https://tinypng.com/session/s/QeGQIc5lEM_M/wDq4J5st7WOns --> lT9aSwA6Jr5ywk58oeDALdL34b4k9hc_
         //if we exceed the 500 images per month limit: create multiple accounts
         //and change key when server returns AccountException
         Tinify.setKey(TINIFY_KEYS.get(0));

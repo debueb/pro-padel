@@ -30,7 +30,7 @@ public class TestBookingDirectDebitLogin extends TestBase {
         LocalDate nextMonday = getNextMonday();
         
         Player player = new Player();
-        player.setEmail("padelcampus-unittest-2@appsolve.de");
+        player.setEmail("padelcampus-unittest-2@pro-padel.de");
         player.setFirstName("dummy");
         player.setLastName("dummy lastname");
         player.setPassword("test");
@@ -53,7 +53,7 @@ public class TestBookingDirectDebitLogin extends TestBase {
         
         mockMvc.perform(post("/login")
                 .session(session)
-                .param("email", "padelcampus-unittest-2@appsolve.de")
+                .param("email", "padelcampus-unittest-2@pro-padel.de")
                 .param("password", "test"))
             .andExpect(redirectedUrl("/bookings/" + nextMonday + "/10:00/offer/"+offer1.getId()));
         

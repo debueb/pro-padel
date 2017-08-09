@@ -72,10 +72,10 @@ import org.springframework.web.filter.DelegatingFilterProxy;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class TestBase  {
     
-    protected static final String ADMIN_EMAIL     = "admin@appsolve.de";
+    protected static final String ADMIN_EMAIL     = "admin@pro-padel.de";
     protected static final String ADMIN_PASSWORD  = "test";
     
-    protected static final String USER_EMAIL     = "user@appsolve.de";
+    protected static final String USER_EMAIL     = "user@pro-padel.de";
     protected static final String USER_PASSWORD  = "test";
     
     protected MockMvc mockMvc;

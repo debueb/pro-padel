@@ -38,7 +38,7 @@ public class TestMail extends TestBase {
         contact.setEmailAddress("d.wisskirchen@gmail.com");
         contact.setEmailDisplayName("Dominik Wißkirchen");
         mail.setRecipients(Sets.newHashSet(new EmailContact[]{contact}));
-        mail.setReplyTo("noreply@appsolve.de");
+        mail.setReplyTo("noreply@pro-padel.de");
         mail.setSubject(TestMail.class.getSimpleName());
         mailUtils.send(mail, null);
     }

@@ -27,7 +27,7 @@ public class TestBookingVoucherNoLogin extends TestBookingVoucher {
         
         //make sure user does not get created multiple times
         Map<String, Object> attrs = new HashMap<>();
-        attrs.put("email", "padelcampus-unittest-1@appsolve.de");
+        attrs.put("email", "padelcampus-unittest-1@pro-padel.de");
         List<Player> players = playerDAO.findByAttributes(attrs);
         Assert.notNull(players, "player should exist");
         Assert.isTrue(players.size() == 1, "player should only exist once");
