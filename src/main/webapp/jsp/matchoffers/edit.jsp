@@ -103,8 +103,30 @@
                     <%-- Teilnehmer --%>
                     <div class="relative">
                         <fmt:message key="Participants" var="Participants"/>
-                        <spf:select path="players" class="select-multiple show-tick form-control" data-style="form-center-element" title="${Participants}" multiple="true" data-live-search="true" data-container="body">
-                            <spf:options items="${Players}" itemValue="id"/>
+                        <fmt:message key="CurrentlySelected" var="CurrentlySelected"/>
+                        <fmt:message key="PleaseChoose" var="EmptyTitle"/>
+                        <fmt:message key="ErrorText" var="ErrorText"/>
+                        <fmt:message key="Search" var="SearchPlaceholder"/>
+                        <fmt:message key="StatusInitialized" var="StatusInitialized"/>
+                        <fmt:message key="SearchNoResults" var="SearchNoResults"/>
+                        <fmt:message key="StatusSearching" var="StatusSearching"/>
+                        <spf:select
+                            path="players"
+                            class="select-multiple show-tick form-control select-ajax-search"
+                            data-style="form-center-element"
+                            title="${Participants}"
+                            multiple="true"
+                            data-abs-ajax-url="/api/players/options"
+                            data-live-search="true"
+                            data-abs-locale-currently-selected='${CurrentlySelected}'
+                            data-abs-locale-empty-title='${EmptyTitle}'
+                            data-abs-locale-error-text='${ErrorText}'
+                            data-abs-locale-search-placeholder='${SearchPlaceholder}'
+                            data-abs-locale-status-initialized='${StatusInitialized}'
+                            data-abs-locale-search-no-results='${SearchNoResults}'
+                            data-abs-locale-status-searching='${StatusSearching}'
+                            data-container="body">
+                            <spf:options items="${Model.players}" itemValue="id"/>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Participants"/></span>
                     </div>
