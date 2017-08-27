@@ -5,27 +5,39 @@
  */
 package de.appsolve.padelcampus.db.model;
 
+import de.appsolve.padelcampus.constants.ImageCategory;
+
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Lob;
 
 /**
- *
  * @author dominik
  */
 @Entity
 public class Image extends CustomerEntity {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private String filePath;
-    
+
     private String sha256;
 
     private Integer width;
-    
+
     private Integer height;
-    
+
     private String contentType;
-    
+
+    private Long contentLength;
+
+    @Enumerated(EnumType.STRING)
+    private ImageCategory category;
+
+    @Lob
+    private byte[] content;
+
     public String getFilePath() {
         return filePath;
     }
@@ -64,5 +76,29 @@ public class Image extends CustomerEntity {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public byte[] getContent() {
+        return content;
+    }
+
+    public Long getContentLength() {
+        return contentLength;
+    }
+
+    public ImageCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(ImageCategory category) {
+        this.category = category;
+    }
+
+    public void setContentLength(Long contentLength) {
+        this.contentLength = contentLength;
+    }
+
+    public void setContent(byte[] content) {
+        this.content = content;
     }
 }

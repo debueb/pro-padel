@@ -20,7 +20,6 @@ import de.appsolve.padelcampus.filter.LoginFilter;
 import de.appsolve.padelcampus.filter.WhitespaceFilter;
 import de.appsolve.padelcampus.filter.XSSFilter;
 import de.appsolve.padelcampus.listener.SessionEventListener;
-import de.appsolve.padelcampus.resolver.PutAwareCommonsMultipartResolver;
 import de.appsolve.padelcampus.spring.RedirectInterceptor;
 import de.appsolve.padelcampus.spring.SubDomainLocaleResolver;
 import org.flywaydb.core.Flyway;
@@ -47,7 +46,6 @@ import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -124,12 +122,12 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
         return mapper;
     }
 
-    @Bean
-    public MultipartResolver multipartResolver() {
-        PutAwareCommonsMultipartResolver multipartResolver = new PutAwareCommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(20971520); //20MB
-        return multipartResolver;
-    }
+//    @Bean
+//    public MultipartResolver multipartResolver() {
+//        PutAwareCommonsMultipartResolver multipartResolver = new PutAwareCommonsMultipartResolver();
+//        multipartResolver.setMaxUploadSize(20971520); //20MB
+//        return multipartResolver;
+//    }
 
     @Bean
     public ClientHttpRequestFactory clientHttpRequestFactory() {

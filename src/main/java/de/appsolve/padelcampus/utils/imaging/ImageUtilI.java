@@ -6,19 +6,17 @@
 package de.appsolve.padelcampus.utils.imaging;
 
 import com.drew.imaging.ImageProcessingException;
+import de.appsolve.padelcampus.constants.ImageCategory;
 import de.appsolve.padelcampus.db.model.Image;
+
 import java.io.IOException;
 
 /**
- *
  * @author dominik
  */
 public interface ImageUtilI {
 
-    Image saveImage(String contentType, byte[] bytes, String folderName) throws IOException, ImageProcessingException;
+    Image saveImage(String contentType, byte[] bytes, ImageCategory category) throws IOException, ImageProcessingException;
 
-    Image saveImage(String contentType, byte[] bytes, Integer width, Integer height, String folderName) throws IOException, ImageProcessingException;
-    
-    Image saveImage(String contentType, byte[] bytes, Integer maxHeight, String folderName) throws IOException, ImageProcessingException;
-    
+    Image saveImage(String contentType, byte[] bytes, Integer width, Integer height, ImageCategory category) throws IOException, ImageProcessingException;
 }

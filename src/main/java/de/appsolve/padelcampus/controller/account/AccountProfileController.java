@@ -6,9 +6,7 @@
 package de.appsolve.padelcampus.controller.account;
 
 import com.drew.imaging.ImageProcessingException;
-import static de.appsolve.padelcampus.constants.Constants.DATA_DIR_PROFILE_PICTURES;
-import static de.appsolve.padelcampus.constants.Constants.PROFILE_PICTURE_HEIGHT;
-import static de.appsolve.padelcampus.constants.Constants.PROFILE_PICTURE_WIDTH;
+import de.appsolve.padelcampus.constants.ImageCategory;
 import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
@@ -17,11 +15,6 @@ import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.spring.DaySchedulePropertyEditor;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import de.appsolve.padelcampus.utils.imaging.ImageUtilI;
-import java.io.File;
-import java.io.IOException;
-import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,13 +26,20 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.Set;
+
+import static de.appsolve.padelcampus.constants.Constants.PROFILE_PICTURE_HEIGHT;
+import static de.appsolve.padelcampus.constants.Constants.PROFILE_PICTURE_WIDTH;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 /**
- *
  * @author dominik
  */
 @Controller()
@@ -57,10 +57,10 @@ public class AccountProfileController extends BaseController {
     @Autowired
     @Qualifier("TinifyImageUtil")
     ImageUtilI imageUtil;
-    
+
     @Autowired
     DaySchedulePropertyEditor daySchedulePropertyEditor;
-    
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Set.class, "daySchedules", daySchedulePropertyEditor);
@@ -69,7 +69,7 @@ public class AccountProfileController extends BaseController {
     @RequestMapping(method = GET)
     public ModelAndView getIndex(HttpServletRequest request) {
         Player user = sessionUtil.getUser(request);
-        if (user == null){
+        if (user == null) {
             return getLoginRequiredView(request, msg.get("Profile"));
         }
         user = playerDAO.findByUUIDWithDaySchedules(user.getUUID());
@@ -93,7 +93,7 @@ public class AccountProfileController extends BaseController {
             return profileView;
         }
         Player user = sessionUtil.getUser(request);
-        if (user == null){
+        if (user == null) {
             return new ModelAndView("include/loginrequired");
         }
         //make sure nobody changes another player's account
@@ -108,7 +108,7 @@ public class AccountProfileController extends BaseController {
             persistedPlayer.setEnableMatchNotifications(player.getEnableMatchNotifications());
             persistedPlayer.setNotificationSkillLevels(player.getNotificationSkillLevels());
             persistedPlayer.setAllowEmailContact(player.getAllowEmailContact());
-            if (persistedPlayer.getDaySchedules() != null){
+            if (persistedPlayer.getDaySchedules() != null) {
                 persistedPlayer.getDaySchedules().clear();
                 persistedPlayer.getDaySchedules().addAll(player.getDaySchedules());
             } else {
@@ -119,20 +119,7 @@ public class AccountProfileController extends BaseController {
             try {
                 MultipartFile pictureMultipartFile = player.getProfileImageMultipartFile();
                 if (!pictureMultipartFile.isEmpty()) {
-                    
-                    //delete old picture if it exists
-                    Image profileImage = persistedPlayer.getProfileImage();
-                    if (profileImage!=null){
-                        File profileFile = new File(profileImage.getFilePath());
-                        if (profileFile.exists()){
-                            boolean deleteSuccess = profileFile.delete();
-                            if (!deleteSuccess){
-                                LOG.warn("Unable to delete file "+profileFile.getAbsolutePath());
-                            }
-                        }
-                    }
-                    
-                    Image image = imageUtil.saveImage(pictureMultipartFile.getContentType(), pictureMultipartFile.getBytes(), PROFILE_PICTURE_WIDTH, PROFILE_PICTURE_HEIGHT, DATA_DIR_PROFILE_PICTURES);
+                    Image image = imageUtil.saveImage(pictureMultipartFile.getContentType(), pictureMultipartFile.getBytes(), PROFILE_PICTURE_WIDTH, PROFILE_PICTURE_HEIGHT, ImageCategory.profilePicture);
                     persistedPlayer.setProfileImage(image);
                 }
             } catch (IOException | ImageProcessingException e) {
@@ -144,12 +131,12 @@ public class AccountProfileController extends BaseController {
             sessionUtil.setUser(request, persistedPlayer);
         }
         String redirectPath = sessionUtil.getProfileRedirectPath(request);
-        if (redirectPath==null){
+        if (redirectPath == null) {
             redirectPath = "/home";
         } else {
             sessionUtil.setProfileRedirectPath(request, null);
         }
-        return new ModelAndView("redirect:"+redirectPath);
+        return new ModelAndView("redirect:" + redirectPath);
     }
 
     private ModelAndView getIndexView(Player user) {
