@@ -5,22 +5,10 @@
  */
 package de.appsolve.padelcampus.filter;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * This filter class removes any whitespace from the response. It actually trims
@@ -47,9 +35,8 @@ import javax.servlet.http.HttpServletResponseWrapper;
  * </pre>
  *
  * @author BalusC
- * @link http://balusc.blogspot.com/2007/12/whitespacefilter.html
- * 
  * @author mat - modifications
+ * @link http://balusc.blogspot.com/2007/12/whitespacefilter.html
  */
 public class WhitespaceFilter implements Filter {
 
@@ -62,6 +49,7 @@ public class WhitespaceFilter implements Filter {
     static final String[] STOP_TRIM_AFTER = {"</html", "<textarea", "<pre"};
 
     // Actions ------------------------------------------------------------------------------------
+
     /**
      * @param config
      * @throws javax.servlet.ServletException
@@ -84,8 +72,10 @@ public class WhitespaceFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         if (response instanceof HttpServletResponse) {
-            HttpServletResponse httpres = (HttpServletResponse) response;
-            chain.doFilter(request, wrapResponse(httpres, createTrimWriter(httpres)));
+            HttpServletResponse httpResponse = (HttpServletResponse) response;
+            WhitespaceFilterWrapper wrapper = new WhitespaceFilterWrapper(httpResponse);
+            chain.doFilter(request, wrapper);
+            httpResponse.getWriter().write(wrapper.getCaptureAsString());
         } else {
             chain.doFilter(request, response);
         }
@@ -97,128 +87,6 @@ public class WhitespaceFilter implements Filter {
     @Override
     public void destroy() {
         //
-    }
-
-    // Utility (may be refactored to public utility class) ----------------------------------------
-    /**
-     * Create a new PrintWriter for the given HttpServletResponse which trims
-     * all whitespace.
-     *
-     * @param response The involved HttpServletResponse.
-     * @return A PrintWriter which trims all whitespace.
-     * @throws IOException If something fails at I/O level.
-     */
-    private static PrintWriter createTrimWriter(final HttpServletResponse response)
-            throws IOException {
-        return new PrintWriter(new OutputStreamWriter(response.getOutputStream(), "UTF-8"), true) {
-            private final Object lock = new  Object();
-            private StringBuilder builder = new StringBuilder();
-            private boolean trim = false;
-
-            @Override
-            public void write(int c) {
-                builder.append((char) c); // It is actually a char, not an int.
-            }
-
-            @Override
-            public void write(char[] chars, int offset, int length) {
-                builder.append(chars, offset, length);
-                this.flush(); // Preflush it.
-            }
-
-            @Override
-            public void write(String string, int offset, int length) {
-                builder.append(string, offset, length);
-                this.flush(); // Preflush it.
-            }
-
-            // Finally override the flush method so that it trims whitespace.
-            @Override
-            public void flush() {
-                synchronized (lock) {
-                    BufferedReader reader = new BufferedReader(new StringReader(builder.toString()));
-                    String line = null;
-
-                    try {
-                        boolean firstLine = true;
-
-                        while ((line = reader.readLine()) != null) {
-
-                            if (firstLine && line.trim().startsWith("class")) {
-                                out.write(" ");
-                                firstLine = false;
-                            }
-
-                            if (startTrim(line)) {
-                                trim = true;
-                                out.write(line);
-                            } else if (trim) {
-
-                                if (line.endsWith(" ")) {
-                                    out.write(line.trim() + " ");
-                                } else if (line.startsWith(" ")) {
-                                    out.write(" " + line.trim());
-                                } else {
-                                    out.write(line.trim());
-                                }
-
-                                if (stopTrim(line)) {
-                                    trim = false;
-                                }
-
-                            } else {
-                                out.write(line+"\n");
-                            }
-                        }
-                    } catch (IOException ex) {
-                        setError();
-                        LOGGER.log(Level.SEVERE, "Page failed to render", ex);
-                        // Log e or do e.printStackTrace() if necessary.
-                    }
-
-                    // Reset the local StringBuilder and issue real flush.
-                    builder = new StringBuilder();
-                    super.flush();
-                }
-            }
-
-            private boolean startTrim(String line) {
-                for (String match : START_TRIM_AFTER) {
-                    if (line.contains(match)) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            private boolean stopTrim(String line) {
-                for (String match : STOP_TRIM_AFTER) {
-                    if (line.contains(match)) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        };
-    }
-
-    /**
-     * Wrap the given HttpServletResponse with the given PrintWriter.
-     *
-     * @param response The HttpServletResponse of which the given PrintWriter
-     * have to be wrapped in.
-     * @param writer The PrintWriter to be wrapped in the given
-     * HttpServletResponse.
-     * @return The HttpServletResponse with the PrintWriter wrapped in.
-     */
-    private static HttpServletResponse wrapResponse(
-            final HttpServletResponse response, final PrintWriter writer) {
-        return new HttpServletResponseWrapper(response) {
-            @Override
-            public PrintWriter getWriter() throws IOException {
-                return writer;
-            }
-        };
     }
 
 }

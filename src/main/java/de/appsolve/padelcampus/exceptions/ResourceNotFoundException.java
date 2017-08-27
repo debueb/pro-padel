@@ -6,9 +6,11 @@
 package de.appsolve.padelcampus.exceptions;
 
 /**
- *
  * @author dominik
  */
-public class ResourceNotFoundException extends RuntimeException{
-    
+public class ResourceNotFoundException extends RuntimeException {
+
+    public ResourceNotFoundException() {
+        super("Resource not found");
+    }
 }

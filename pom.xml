@@ -1,22 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.appsolve</groupId>
     <artifactId>pro-padel</artifactId>
     <version>1.0.1</version>
     <packaging>war</packaging>
-
     <name>pro-padel</name>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.6.RELEASE</version>
+        <relativePath/>
+    </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
-        <org.hibernate.version>4.3.11.Final</org.hibernate.version>
-        <tomcat.version>7.0.79</tomcat.version>
+        <!--<org.hibernate.version>4.3.11.Final</org.hibernate.version>-->
     </properties>
-    
+
     <dependencies>
+        <!-- Spring Boot + Embedded Tomcat -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- embedded tomcat, required for war packaging. war packaging is required for jsp to work in spring boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+        </dependency>
+
+        <!--&lt;!&ndash; servlet support &ndash;&gt;-->
+        <!--<dependency>-->
+        <!--<groupId>javax.servlet</groupId>-->
+        <!--<artifactId>javax.servlet-api</artifactId>-->
+        <!--<version>3.1.0</version>-->
+        <!--<scope>provided</scope>-->
+        <!--</dependency>-->
+        <!--&lt;!&ndash; jstl support &ndash;&gt;-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <!--<scope>provided</scope>-->
+        </dependency>
+
+
+        <!-- MySQL -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.38</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.1.0.Final</version>
+        </dependency>
+
         <!-- Basic language additions -->
         <dependency>
             <groupId>commons-lang</groupId>
@@ -48,7 +105,7 @@
         <dependency>
             <groupId>org.jadira.usertype</groupId>
             <artifactId>usertype.core</artifactId>
-            <version>3.2.0.GA</version>
+            <version>5.0.0.GA</version>
         </dependency>
         <!-- holiday definitions -->
         <dependency>
@@ -83,7 +140,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>4.0</version>
+            <version>4.2.0</version>
         </dependency>
         <!-- support for resizing images via Java -->
         <dependency>
@@ -134,7 +191,7 @@
             <artifactId>bugsnag</artifactId>
             <version>3.0.2</version>
         </dependency>
-        
+
         <!-- OWASP ESAPI needed for XSS Filter -->
         <dependency>
             <groupId>org.owasp.esapi</groupId>
@@ -151,23 +208,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.2</version>
-        </dependency>
-        
+
         <!-- support for suppressing findbugs warnings -->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
@@ -175,76 +216,7 @@
             <version>3.0.1u2</version>
             <type>jar</type>
         </dependency>
-        
-        <!-- Hibernate ORM -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${org.hibernate.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>${org.hibernate.version}</version>
-        </dependency>
-        
-        <!-- Form validation -->
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.1.0.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>5.2.4.Final</version>
-            <type>jar</type>
-        </dependency>
-        
-        <!-- Spring -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-crypto</artifactId>
-            <version>4.1.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-            <version>1.10.1.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-commons</artifactId>
-            <version>1.12.1.RELEASE</version>
-        </dependency>
-        
-        <!-- MySQL -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.38</version>
-        </dependency>
-        
+
         <!-- compress LESS CSS at runtime -->
         <dependency>
             <groupId>org.lesscss</groupId>
@@ -257,12 +229,16 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- Test dependencies -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${org.springframework.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -283,7 +259,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- javax.el-api somehow required by hibernate-validator -->
         <dependency>
             <groupId>javax.el</groupId>
@@ -306,36 +282,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.6.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <compilerArgument>-Xlint:unchecked</compilerArgument>
                 </configuration>
             </plugin>
-            
-            <!-- create war file -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <webResources>
-                        <resource>
-                            <filtering>true</filtering>
-                            <!-- replace variables in head and footer -->
-                            <directory>src/main/webapp</directory>
-                            <includes>
-                                <include>jsp/include/head.jsp</include>
-                                <include>jsp/include/footer.jsp</include>
-                                <include>WEB-INF/web.xml</include>
-                            </includes>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -344,7 +298,7 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.zeroturnaround</groupId>
                 <artifactId>jrebel-maven-plugin</artifactId>
@@ -365,44 +319,12 @@
                 </executions>
             </plugin>
 
-            <!-- allows to run war file in tomcat via mvn cargo:run -->
             <plugin>
-                <groupId>org.codehaus.cargo</groupId>
-                <artifactId>cargo-maven2-plugin</artifactId>
-                <version>1.6.4</version>
-                <configuration>
-                    <container>
-                        <containerId>tomcat8x</containerId>
-                        <artifactInstaller>
-                            <groupId>org.apache.tomcat</groupId>
-                            <artifactId>tomcat</artifactId>
-                            <version>${tomcat.version}</version>
-                        </artifactInstaller>
-                    </container>
-                    <configuration>
-                        <type>standalone</type>
-                        <home>
-                            ${project.build.directory}/apache-tomcat-${tomcat.version}
-                        </home>
-                        <properties>
-                            <cargo.servlet.port>8080</cargo.servlet.port>
-                            <cargo.logging>low</cargo.logging>
-                        </properties>
-                    </configuration>
-                    <deployables>
-                        <deployable>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <type>war</type>
-                            <properties>
-                                <context>/</context>
-                            </properties>
-                        </deployable>
-                    </deployables>
-                </configuration>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        
+
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -413,7 +335,7 @@
             </resource>
         </resources>
     </build>
-    
+
     <profiles>
         <profile>
             <id>dev</id>
@@ -422,23 +344,6 @@
             </activation>
             <properties>
                 <profile.id>dev</profile.id>
-                <!-- reload messages on every request -->
-                <messagesReloadInterval>0</messagesReloadInterval>
-                
-                <!-- do not cache static files -->
-                <httpResponseCacheDuration>0</httpResponseCacheDuration>
-                
-                 <!-- log4j log level -->
-                <log4j.loglevel>DEBUG</log4j.loglevel>
-                <log4j.logger.org.hibernate.type>INFO</log4j.logger.org.hibernate.type>
-                <log4j.logger.org.hibernate.SQL>INFO</log4j.logger.org.hibernate.SQL>
-                
-                <OPENSHIFT_MYSQL_DB_HOST>localhost</OPENSHIFT_MYSQL_DB_HOST>
-                <OPENSHIFT_MYSQL_DB_PORT>3306</OPENSHIFT_MYSQL_DB_PORT>
-                <OPENSHIFT_MYSQL_DB_USERNAME>padelcampus</OPENSHIFT_MYSQL_DB_USERNAME>
-                <OPENSHIFT_MYSQL_DB_PASSWORD>padelcampus</OPENSHIFT_MYSQL_DB_PASSWORD>
-                <OPENSHIFT_APP_NAME>padelcampus?useSSL=false</OPENSHIFT_APP_NAME>
-                <OPENSHIFT_DATA_DIR>/var/lib/openshift/54da6eaa4382ec9b55000029/app-root/data</OPENSHIFT_DATA_DIR>
             </properties>
             <build>
                 <plugins>
@@ -457,8 +362,8 @@
                                     <goal>install-node-and-npm</goal>
                                 </goals>
                                 <configuration>
-                                    <nodeVersion>v6.9.4</nodeVersion>
-                                    <npmVersion>4.1.2</npmVersion>
+                                    <nodeVersion>v8.1.4</nodeVersion>
+                                    <npmVersion>5.3.0</npmVersion>
                                 </configuration>
                             </execution>
                             <execution>
@@ -483,42 +388,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-        <profile>
-            <!-- When built in OpenShift the 'openshift' profile will be used when 
-            invoking mvn. -->
-            <!-- Use this profile for any OpenShift specific customization your app 
-            will need. -->
-            <!-- By default that is to put the resulting archive into the 'webapps' 
-            folder. -->
-            <!-- http://maven.apache.org/guides/mini/guide-building-for-different-environments.html -->
-            <id>openshift</id>
-            <build>
-                <finalName>test</finalName>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-war-plugin</artifactId>
-                        <version>2.1.1</version>
-                        <configuration>
-                            <outputDirectory>webapps</outputDirectory>
-                            <warName>ROOT</warName>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-            <properties>
-                <profile.id>openshift</profile.id>
-                <!-- cache static files for 1 day -->
-                <httpResponseCacheDuration>86400</httpResponseCacheDuration>
-                
-                <!-- do not reload messages -->
-                <messagesReloadInterval>-1</messagesReloadInterval>
-                
-                <!-- log4j log level -->
-                <log4j.loglevel>INFO</log4j.loglevel>
-                <log4j.logger.org.hibernate.type>WARN</log4j.logger.org.hibernate.type>
-                <log4j.logger.org.hibernate.SQL>WARN</log4j.logger.org.hibernate.SQL>
-            </properties>
         </profile>
     </profiles>
 

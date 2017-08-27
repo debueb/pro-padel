@@ -18,6 +18,7 @@ import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.external.cloudflare.CloudFlareApiClient;
 import de.appsolve.padelcampus.external.openshift.OpenshiftApiClient;
+import de.appsolve.padelcampus.reporting.ErrorReporter;
 import de.appsolve.padelcampus.utils.HtmlResourceUtil;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -68,6 +69,9 @@ public class ProOperatorsController extends BaseController implements ServletCon
     
     @Autowired
     HtmlResourceUtil htmlResourceUtil;
+
+    @Autowired
+    ErrorReporter errorReporter;
     
     private final static Pattern DNS_SUBDOMAIN_PATTERN = Pattern.compile("(?:[A-Za-z0-9][A-Za-z0-9\\-]{0,61}[A-Za-z0-9]|[A-Za-z0-9])");
     

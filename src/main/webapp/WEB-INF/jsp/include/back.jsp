@@ -1,0 +1,2 @@
+<%@include file="/WEB-INF/jsp/include/include.jsp"%>
+<%--<div id="btn-back" class="btn btn-primary" style="margin-top: 20px;">Zur�ck</div>--%>

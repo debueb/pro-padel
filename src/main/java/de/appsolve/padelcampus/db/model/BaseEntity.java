@@ -6,28 +6,23 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PreUpdate;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
 
+import javax.persistence.*;
+import java.util.Objects;
+
 /**
- *
  * @author dominik
  */
 @MappedSuperclass
-public abstract class BaseEntity implements BaseEntityI{
-    
+public abstract class BaseEntity implements BaseEntityI {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
     private Long id;
-    
+
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     private LocalDateTime lastUpdated;
@@ -67,14 +62,14 @@ public abstract class BaseEntity implements BaseEntityI{
         final BaseEntity other = (BaseEntity) obj;
         return Objects.equals(this.id, other.id);
     }
-    
+
     @Override
     public int compareTo(BaseEntityI o) {
         return toString().compareToIgnoreCase(o.toString());
     }
-    
+
     @PreUpdate
-    public void updateLastUpdated() { 
+    public void updateLastUpdated() {
         setLastUpdated(new LocalDateTime());
     }
 }
