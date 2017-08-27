@@ -66,7 +66,5 @@ public class Constants {
     public static final Integer STAFF_IMAGE_WIDTH = 300;
     public static final Integer STAFF_IMAGE_HEIGHT = 300;
 
-    public static final String OPENSHIFT_DATA_DIR = "OPENSHIFT_DATA_DIR";
-
     public static final int BLOG_PAGE_SIZE = 10;
 }
