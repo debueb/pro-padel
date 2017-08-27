@@ -24,6 +24,8 @@ import de.appsolve.padelcampus.spring.RedirectInterceptor;
 import de.appsolve.padelcampus.spring.SubDomainLocaleResolver;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
+import org.springframework.boot.context.embedded.MimeMappings;
 import org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
@@ -251,6 +253,18 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
         flyway.setBaselineOnMigrate(true);
         flyway.setDataSource(dataSource);
         return flyway;
+    }
+
+    /*
+        make sure css files are served with utf-8 encoding
+     */
+    @Bean
+    public EmbeddedServletContainerCustomizer customizeServletContainer() {
+        return container -> {
+            MimeMappings mappings = new MimeMappings(MimeMappings.DEFAULT);
+            mappings.add("css", "text/css;charset=UTF-8");
+            container.setMimeMappings(mappings);
+        };
     }
 
     private Filter xssFilter() {
