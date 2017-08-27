@@ -44,7 +44,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -227,22 +226,12 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public FilterRegistrationBean characterEncodingFilterBean() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(characterEncodingFilter());
-        registration.addUrlPatterns("/*");
-        registration.setName("characterEncodingFilter");
-        registration.setOrder(4);
-        return registration;
-    }
-
-    @Bean
     public FilterRegistrationBean whitespaceFilterBean() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new WhitespaceFilter());
         registration.addUrlPatterns("/*");
         registration.setName("whitespaceFilter");
-        registration.setOrder(5);
+        registration.setOrder(4);
         return registration;
     }
 
@@ -268,13 +257,6 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
         XSSFilter xssFilter = new XSSFilter();
         xssFilter.setExcludePattern(Pattern.compile("/admin/general/modules/page.*"));
         return xssFilter;
-    }
-
-    private Filter characterEncodingFilter() {
-        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
-        characterEncodingFilter.setEncoding("UTF-8");
-        characterEncodingFilter.setForceEncoding(true);
-        return characterEncodingFilter;
     }
 
     @Override
