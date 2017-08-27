@@ -7,8 +7,6 @@ package de.appsolve.padelcampus.constants;
 
 import org.joda.time.DateTimeZone;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -36,7 +34,6 @@ public class Constants {
     public static final String SESSION_LOGIN_REDIRECT_PATH = "loginRedirectPath";
     public static final String SESSION_PROFILE_REDIRECT_PATH = "profileRedirectPath";
     public static final String SESSION_BOOKING = "booking";
-    public static final String SESSION_ACCESS_LEVEL = "accessLevel";
     public static final String SESSION_BOOKING_LIST_START_DATE = "bookingListStartDate";
     public static final String SESSION_RESERVATION_LIST_START_DATE = "reservationListStartDate";
     public static final String SESSION_RESERVATION_LIST_END_DATE = "reservationListEndDate";
@@ -53,9 +50,6 @@ public class Constants {
 
     public static final String PATH_HOME = "home";
 
-
-    public static final List<String> VALID_LANGUAGES = Arrays.asList(new String[]{"de", "en", "es"});
-
     public static final String DEFAULT_LANGUAGE = "de";
     public static final Locale DEFAULT_LOCALE = new Locale(DEFAULT_LANGUAGE, "DE");
     public static final String DEFAULT_TIMEZONE_STRING = "Europe/Berlin";
@@ -63,13 +57,8 @@ public class Constants {
     public static final String DEFAULT_HOLIDAY_KEY = "GERMANY-nw";
     public static final String NO_HOLIDAY_KEY = "No Holidays";
 
-    public static final String MAIL_NOREPLY_SENDER_NAME = "noreply";
-
-    public static final String DATA_DIR_PROFILE_PICTURES = "profilePictures";
     public static final Integer PROFILE_PICTURE_WIDTH = 200;
     public static final Integer PROFILE_PICTURE_HEIGHT = 200;
-
-    public static final Integer COMPANY_LOGO_HEIGHT = 88;
 
     public static final Integer TOUCH_ICON_WIDTH = 192;
     public static final Integer TOUCH_ICON_HEIGHT = 192;
