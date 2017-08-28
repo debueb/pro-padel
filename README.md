@@ -8,20 +8,19 @@ This repository contains the source code for the padel club managment software b
 ## technologies used
 - [Maven](https://maven.apache.org/) - Java dependency managment and build process
 - [webpack](https://webpack.js.org) - Javascript minification and bundling
-- [Spring](https://spring.io/) - excellent backend framework 
+- [Spring Boot](https://spring.io/) - excellent backend framework
 - [Hibernate](http://hibernate.org/) - object relational mapper
 - [MySQL](https://www.mysql.com/)  - relational database
 - [sparkpost](http://sparkpost.com) - mail relay service
 - [LessCSS](http://lesscss.org) - CSS pre processor
 - [BugSnag](https://bugsnag.com) - bug tracking platform
-- [Openshift Online](http://openshift.com) - PAAS hosting
 - [Cloudflare](https://cloudflare.com) - CDN with excellent API
 - [Node](http://nodejs.org) - JS Runtime used during build process
 - [NPM](https://www.npmjs.com) - Node Package Manager
 - [JRebel](https://zeroturnaround.com/software/jrebel/) - JVM Hot Code replacement
 
 
-## running instructions
+## setup instructions
 - clone this repo
 - install MySQL
 - create MySQL database. See pom.xml for details
@@ -33,19 +32,39 @@ This repository contains the source code for the padel club managment software b
 - sign up with BugSnag
 - sign up with SparkPost
 - sign up with Cloudflare
-- sign up with Openshift Online 2.x
 - setup environment variables
+
+
+## run tests
+```shell
+mvn clean test
+```
+
+## run app
 ```shell
 export BUGSNAG_API_KEY=[BUGSNAG API KEY]
 export SPARKPOST_DEFAULT_SENDER=[SPARKPOST DEFAULT SENDER]
 export SPARKPOST_API_KEY=[SPARKPOST API KEY]
 export CLOUDFLARE_API_EMAIL=[CLOUDFLARE API EMAIL]
 export CLOUDFLARE_API_KEY=[CLOUDFLARE API KEY]
-export OPENSHIFT_USERNAME=[OPENSHIFT ONLINE USERNAME]
-export OPENSHIFT_PASSWORD=[OPENSHIFT ONLINE PASSWORD]
+export SPRING_DATASOURCE_PASSWORD=[DB PASS]
+export SPRING_DATASOURCE_URL=[jdbc:mysql://host:port/dbName]
+export SPRING_DATASOURCE_USERNAME=[DB USER]
 ```
-- run or debug the application with your J2EE IDE
-- alternatively, run `mvn clean package`, which will generate `target/ROOT.war`
+
+### barebones
+```shell
+mvn clean package -DskipTests spring-boot:run
+```
+
+### with JRebel
+```shell
+mvn clean package -DskipTests spring-boot:run "-Drun.jvmArguments='-agentpath:/~/Library/Application Support/IdeaIC2017.2/jr-ide-idea/lib/jrebel6/lib/libjrebel64.dylib'"
+```
+
+### with JRebel and IntelliJ
+
+as above, and [add IntelliJ macro and keymap](https://gist.github.com/debueb/50966c527ea443bb4cc7f455f5d833b6)
 
 ### keeping js up to date during development
 - install node
@@ -53,20 +72,12 @@ export OPENSHIFT_PASSWORD=[OPENSHIFT ONLINE PASSWORD]
 - run `npm run watch` to have webpack create your bundled resources and resource maps after editing any of the javascript source files
 
 ## deployment instructions
-- install node
-- install npm
-- run the webpack build process that minifies and bundles our JS. This process is actually part of the maven build process. However, due to limitations of the Openshift Online build environment, which currently only supports Maven 3.0.4, this process is currently only active in the development profile. Once Openshift Online has upgraded Maven to a current version, this step can be skipped
-```shell
-npm run build
-```
-- alternatively, you can just run build the development profile of the maven project. This will download node and npm and run webpack (same as above) and additionally compile and package the Java app and run all of the tests. 
 ```shell
 mvn clean package
 ```
-- commit changes and push to the desired openshift git repository. The openshift build process will kick in and deploy the application
-```shell
-git add .
-git commit -am "comment"
-git push openshift-remote
-```
+this will generate two war files in the target/ directory
+- ROOT.war - this is a runnable Spring Boot war file. Start it with java -jar ROOT.war
+- ROOT.war.original - this is a regular war file that you can deploy to an existing servlet container
+
+todo: describe CircleCI to AWS deployment process
 
