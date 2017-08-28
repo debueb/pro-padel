@@ -16,20 +16,6 @@ import de.appsolve.padelcampus.utils.CryptUtil;
 import de.appsolve.padelcampus.validation.constraints.Phone;
 import de.appsolve.padelcampus.validation.constraints.SelfValidating;
 import de.appsolve.padelcampus.validation.constraints.Validatable;
-import java.util.Collections;
-import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
-import javax.validation.constraints.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
@@ -37,93 +23,97 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import java.util.Collections;
+import java.util.Set;
+
 /**
- *
  * @author dominik
  */
 @Entity
 @DiscriminatorValue("Player")
 @SelfValidating(message = "{FirstNameAndLastNameMustBeDifferent}")
-public class Player extends Participant implements EmailContact, Validatable{
-    
+public class Player extends Participant implements EmailContact, Validatable {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+
     @Column
     @JsonIgnore
     @NotEmpty(message = "{NotEmpty.firstName}")
-    @Length(min = 2, max = 255, message = "${Length.firstName}")
+    @Length(min = 2, max = 255, message = "{Length.firstName}")
     @Pattern(regexp = "^[^\\s][À-ÿA-z\\-\\s]*[^\\s]$", message = "{RegExp.AlphaNum}")
     private String firstName;
-    
+
     @Column
     @JsonIgnore
     @NotEmpty(message = "{NotEmpty.lastName}")
-    @Length(min = 2, max = 255, message = "${Length.lastName}")
+    @Length(min = 2, max = 255, message = "{Length.lastName}")
     @Pattern(regexp = "^[^\\s][À-ÿA-z\\-\\s]*[^\\s]$", message = "{RegExp.AlphaNum}")
     private String lastName;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.email}")
     @EmailWithTld
     @JsonIgnore
     private String email;
-    
+
     @Column
     private Boolean allowEmailContact;
-    
+
     @Column
     private Boolean verified;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.phone}")
     @Phone(message = "{Phone}")
     @JsonIgnore
     private String phone;
-    
+
     @Transient
     @JsonIgnore
     //do not validate this field using Hibernate validation annotation b/c it will throw an error despite the @Tramsient annotation in case we saveOrUpdate it
     //@NotEmpty(message = "{NotEmpty.password}")
     private String password;
-    
+
     @Column
     @JsonIgnore
     private String passwordHash;
-    
+
     @Column
     @JsonIgnore
     private Boolean salted;
-    
+
     @Column
     @JsonIgnore
     private String passwordResetUUID;
-    
+
     @Column
     @JsonIgnore
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime passwordResetExpiryDate;
-    
+
     @Transient
     private MultipartFile profileImageMultipartFile;
-    
+
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Image profileImage;
-    
+
     @Column
     private Boolean enableMatchNotifications;
-    
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<SkillLevel> notificationSkillLevels;
-    
+
     @Column
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DaySchedule> daySchedules;
-    
+
     public String getFirstName() {
         return firstName;
     }
@@ -163,7 +153,7 @@ public class Player extends Participant implements EmailContact, Validatable{
     public void setVerified(Boolean verified) {
         this.verified = verified;
     }
-    
+
     public String getPhone() {
         return phone;
     }
@@ -179,7 +169,7 @@ public class Player extends Participant implements EmailContact, Validatable{
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     public String getPasswordHash() {
         return passwordHash;
     }
@@ -243,17 +233,17 @@ public class Player extends Participant implements EmailContact, Validatable{
     public void setNotificationSkillLevels(Set<SkillLevel> notificationSkillLevels) {
         this.notificationSkillLevels = notificationSkillLevels;
     }
-    
+
     @Override
-    public String toString(){
-        return firstName+" "+lastName;
+    public String toString() {
+        return firstName + " " + lastName;
     }
-    
-    public String getObfuscatedPhone(){
+
+    public String getObfuscatedPhone() {
         return CryptUtil.rot47(phone);
     }
-    
-    public String getObfuscatedEmail(){
+
+    public String getObfuscatedEmail() {
         return CryptUtil.rot47(email);
     }
 
@@ -282,15 +272,15 @@ public class Player extends Participant implements EmailContact, Validatable{
     public void setDaySchedules(Set<DaySchedule> daySchedules) {
         this.daySchedules = daySchedules;
     }
-    
+
     @Transient
-    public boolean getGuest(){
+    public boolean getGuest() {
         return StringUtils.isEmpty(getPasswordHash());
     }
 
     @Override
     public boolean isValid() {
-        if (!StringUtils.isEmpty(getFirstName()) && !StringUtils.isEmpty(getLastName()) && getFirstName().toLowerCase(Constants.DEFAULT_LOCALE).equals(getLastName().toLowerCase(Constants.DEFAULT_LOCALE))){
+        if (!StringUtils.isEmpty(getFirstName()) && !StringUtils.isEmpty(getLastName()) && getFirstName().toLowerCase(Constants.DEFAULT_LOCALE).equals(getLastName().toLowerCase(Constants.DEFAULT_LOCALE))) {
             return false;
         }
         return true;

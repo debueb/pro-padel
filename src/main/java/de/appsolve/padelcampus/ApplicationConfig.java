@@ -26,13 +26,10 @@ import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.MimeMappings;
-import org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -40,8 +37,6 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.validation.Validator;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.RequestContextListener;
@@ -81,39 +76,11 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
     @Autowired
     DataSource dataSource;
 
-    @Bean
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setCacheSeconds(env.getProperty("MESSAGES_RELOAD_INTERVAL", Integer.class, 0));
-        messageSource.setBasename("/WEB-INF/Messages");
-        messageSource.setDefaultEncoding("UTF-8");
-        SpringPhysicalNamingStrategy springPhysicalNamingStrategy = new SpringPhysicalNamingStrategy();
-        return messageSource;
-    }
-
-    @Bean
-    public MessageSource validationMessageSource() {
-        ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
-        source.setCacheSeconds(env.getProperty("MESSAGES_RELOAD_INTERVAL", Integer.class, 0));
-        source.setBasename("/WEB-INF/ValidationMessages");
-        source.setDefaultEncoding("UTF-8");
-        return source;
-    }
 
     @Bean
     public LocaleResolver localeResolver() {
         return new SubDomainLocaleResolver();
     }
-
-//    @Bean
-//    public DataSource dataSource() {
-//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-//        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-//        dataSource.setUrl("jdbc:mysql://" + env.getProperty("DB_HOST") + ":" + env.getProperty("DB_PORT") + "/" + env.getProperty("DB_NAME"));
-//        dataSource.setUsername(env.getProperty("DB_USERNAME"));
-//        dataSource.setPassword(env.getProperty("DB_PASSWORD"));
-//        return dataSource;
-//    }
 
     @Bean
     public ObjectMapper objectMapper() {
@@ -162,13 +129,6 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
         arrayList.add(new OpenshiftApiRequestInterceptor(env.getProperty("OPENSHIFT_USERNAME"), env.getProperty("OPENSHIFT_PASSWORD")));
         restTemplate.setInterceptors(arrayList);
         return restTemplate;
-    }
-
-    @Bean
-    public Validator validator() {
-        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
-        validator.setValidationMessageSource(validationMessageSource());
-        return validator;
     }
 
     @Bean
@@ -276,11 +236,6 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
-    }
-
-    @Override
-    public Validator getValidator() {
-        return validator();
     }
 
     @Override
