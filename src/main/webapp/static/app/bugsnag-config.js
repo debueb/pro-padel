@@ -4,7 +4,7 @@ var script          = document.querySelector('script[data-release-stage]'),
     userMail        = script.getAttribute('data-user-mail');
     
 Bugsnag.releaseStage = releaseStage;
-Bugsnag.notifyReleaseStages = ["openshift"];
+Bugsnag.notifyReleaseStages = ["production"];
 if (userName && userName !== " " && userMail){
     Bugsnag.user = {
         name: userName,

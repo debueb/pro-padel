@@ -54,7 +54,7 @@
 
         <script src="/static/js/noconcat/bugsnag.min.js" data-apikey="c3a3e8e773db9d46f2d51d905ead0e83"></script>
         <script src="/static/app/dist/main.js" 
-                data-release-stage="${profile.id}" 
+                data-release-stage="${fn:contains(pageContext.request.requestURL, 'localhost') ? 'development' : 'production'}"
                 data-user-name="${user.firstName} ${user.lastName}" 
                 data-user-mail="${user.email}"
                 data-google-tagmanager-id="${sessionScope.customer.googleTagManagerId}"
