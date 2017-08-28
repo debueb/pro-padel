@@ -9,12 +9,11 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 /**
- *
  * @author dominik
  */
 @MappedSuperclass
-public abstract class SortableEntity extends ComparableEntity{
-    
+public abstract class SortableEntity extends ComparableEntity {
+
     @Column
     private Long position;
 
@@ -25,23 +24,15 @@ public abstract class SortableEntity extends ComparableEntity{
     public void setPosition(Long position) {
         this.position = position;
     }
-    
+
     @Override
-    public int compareTo(BaseEntityI o){
-        if (o instanceof SortableEntity){
+    public int compareTo(BaseEntityI o) {
+        if (o instanceof SortableEntity) {
             SortableEntity other = (SortableEntity) o;
-            if (getPosition() != null && other.getPosition() != null){
-                return getPosition().compareTo(other.getPosition());
+            if (other.position == null) {
+                return this.position == null ? 1 : 0;
             }
-            if (getPosition() == null && other.getPosition() == null){
-                return 0;
-            }
-            if (getPosition() == null){
-                return 1;
-            }
-            if (other.getPosition() == null){
-                return -1;
-            }
+            return position.compareTo(other.position);
         }
         return super.compareTo(o);
     }
