@@ -114,6 +114,7 @@ public class AccountProfileController extends BaseController {
             } else {
                 persistedPlayer.setDaySchedules(player.getDaySchedules());
             }
+            playerDAO.saveOrUpdate(persistedPlayer);
 
             //resize Image
             try {
@@ -121,13 +122,13 @@ public class AccountProfileController extends BaseController {
                 if (!pictureMultipartFile.isEmpty()) {
                     Image image = imageUtil.saveImage(pictureMultipartFile.getContentType(), pictureMultipartFile.getBytes(), PROFILE_PICTURE_WIDTH, PROFILE_PICTURE_HEIGHT, ImageCategory.profilePicture);
                     persistedPlayer.setProfileImage(image);
+                    persistedPlayer = playerDAO.saveOrUpdateWithMerge(persistedPlayer);
                 }
             } catch (IOException | ImageProcessingException e) {
                 LOG.warn("Error while resizing image: " + e.getMessage());
                 bindingResult.addError(new ObjectError("pictureMultipartFile", msg.get("ErrorWhileResizingImage")));
                 return profileView;
             }
-            persistedPlayer = playerDAO.saveOrUpdateWithMerge(persistedPlayer);
             sessionUtil.setUser(request, persistedPlayer);
         }
         String redirectPath = sessionUtil.getProfileRedirectPath(request);
