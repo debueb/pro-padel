@@ -7,6 +7,8 @@ package de.appsolve.padelcampus.constants;
 
 import org.joda.time.DateTimeZone;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -67,4 +69,7 @@ public class Constants {
     public static final Integer STAFF_IMAGE_HEIGHT = 300;
 
     public static final int BLOG_PAGE_SIZE = 10;
+
+    // used in jsp - do not remove
+    public static final List<String> VALID_LANGUAGES = Arrays.asList(new String[]{"de", "en", "es"});
 }
