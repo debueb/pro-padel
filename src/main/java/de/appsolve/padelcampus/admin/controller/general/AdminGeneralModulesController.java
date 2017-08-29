@@ -171,6 +171,10 @@ public class AdminGeneralModulesController extends AdminBaseController<Module> {
                 parent.getSubModules().remove(module);
                 moduleDAO.saveOrUpdate(parent);
             }
+            if (module.getEventGroups() != null) {
+                module.getEventGroups().clear();
+                moduleDAO.saveOrUpdate(module);
+            }
             moduleDAO.deleteById(id);
             moduleUtil.reloadModules(request);
         } catch (DataIntegrityViolationException e) {

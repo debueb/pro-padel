@@ -58,7 +58,7 @@ public class Module extends SortableEntity {
     @Column
     private Boolean showOnHomepage;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<EventGroup> eventGroups;
 
     @Column
