@@ -285,20 +285,29 @@ public class LoginController extends BaseController {
             throw new Exception(msg.get("EmailAlreadyRegistered"));
         }
 
-        if (persistedPlayer != null) {
+        Player playerToPersist;
+        if (persistedPlayer == null) {
+            playerToPersist = player;
+        } else {
             //update existing player instead of generating a new one
-            player.setId(persistedPlayer.getId());
+            playerToPersist = persistedPlayer;
+            playerToPersist.setFirstName(player.getFirstName());
+            playerToPersist.setLastName(player.getLastName());
+            playerToPersist.setPhone(player.getPhone());
+            playerToPersist.setGender(player.getGender());
+            playerToPersist.setPassword(player.getPassword());
+            playerToPersist.setAllowEmailContact(player.getAllowEmailContact());
         }
 
         //create player object which also generates a UUID
-        player = playerDAO.saveOrUpdate(player);
+        playerToPersist = playerDAO.saveOrUpdate(playerToPersist);
 
-        String accountVerificationLink = PlayerUtil.getAccountVerificationLink(request, player);
+        String accountVerificationLink = PlayerUtil.getAccountVerificationLink(request, playerToPersist);
 
         Mail mail = new Mail();
         mail.addRecipient(player);
         mail.setSubject(msg.get("RegistrationMailSubject"));
-        mail.setBody(StringEscapeUtils.unescapeJava(msg.get("RegistrationMailBody", new Object[]{player.toString(), accountVerificationLink, RequestUtil.getBaseURL(request)})));
+        mail.setBody(StringEscapeUtils.unescapeJava(msg.get("RegistrationMailBody", new Object[]{playerToPersist.toString(), accountVerificationLink, RequestUtil.getBaseURL(request)})));
         try {
             mailUtils.send(mail, request);
         } catch (IOException | MailException e) {
@@ -306,7 +315,7 @@ public class LoginController extends BaseController {
         }
 
         //login user
-        sessionUtil.setUser(request, player);
+        sessionUtil.setUser(request, playerToPersist);
 
         //set auto login cookie if user has requested so
         setLoginCookie(request, response);

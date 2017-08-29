@@ -221,7 +221,7 @@ public class BookingsController extends BaseController {
                 result.addError(new ObjectError("id", msg.get("EmailAlreadyRegistered")));
                 return noLoginView;
             }
-            player.setId(existingPlayer.getId());
+            player = existingPlayer;
         }
         player = playerDAO.saveOrUpdate(player);
         sessionUtil.setUser(request, player);
