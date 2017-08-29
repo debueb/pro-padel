@@ -199,9 +199,10 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     the given instance does not become associated with the session, it remains detached
 
 
-    problem: if we use merge() only and the object does yet not exist, hibernate tries to create a new peristent object which may fail due to validation errors
+    problem: if we use merge() only and the object does yet not exist, hibernate clones the object before persisting it (failing to copy for instance @ElementCollection values) which leads to validation errors
      */
     @Override
+    @SuppressWarnings("unchecked")
     public T saveOrUpdate(T entity) {
         Session session = entityManager.unwrap(Session.class);
         if (entity.getId() == null) {
