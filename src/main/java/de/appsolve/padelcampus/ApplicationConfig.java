@@ -14,7 +14,6 @@ import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.data.CustomerI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.external.cloudflare.CloudFlareApiRequestInterceptor;
-import de.appsolve.padelcampus.external.openshift.OpenshiftApiRequestInterceptor;
 import de.appsolve.padelcampus.filter.AdminFilter;
 import de.appsolve.padelcampus.filter.LoginFilter;
 import de.appsolve.padelcampus.filter.WhitespaceFilter;
@@ -86,16 +85,8 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JodaModule());
-        //mapper.configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS , false);
         return mapper;
     }
-
-//    @Bean
-//    public MultipartResolver multipartResolver() {
-//        PutAwareCommonsMultipartResolver multipartResolver = new PutAwareCommonsMultipartResolver();
-//        multipartResolver.setMaxUploadSize(20971520); //20MB
-//        return multipartResolver;
-//    }
 
     @Bean
     public ClientHttpRequestFactory clientHttpRequestFactory() {
@@ -106,27 +97,10 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public ClientHttpRequestFactory openshiftClientHttpRequestFactory() {
-        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        factory.setReadTimeout(3 * 60000);
-        factory.setConnectTimeout(3 * 60000);
-        return factory;
-    }
-
-    @Bean
     public RestTemplate cloudFlareApiRestTemplate() {
         RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory());
         ArrayList<ClientHttpRequestInterceptor> arrayList = new ArrayList<>();
         arrayList.add(new CloudFlareApiRequestInterceptor(env.getProperty("CLOUDFLARE_API_EMAIL"), env.getProperty("CLOUDFLARE_API_KEY")));
-        restTemplate.setInterceptors(arrayList);
-        return restTemplate;
-    }
-
-    @Bean
-    public RestTemplate openshiftApiRestTemplate() {
-        RestTemplate restTemplate = new RestTemplate(openshiftClientHttpRequestFactory());
-        ArrayList<ClientHttpRequestInterceptor> arrayList = new ArrayList<>();
-        arrayList.add(new OpenshiftApiRequestInterceptor(env.getProperty("OPENSHIFT_USERNAME"), env.getProperty("OPENSHIFT_PASSWORD")));
         restTemplate.setInterceptors(arrayList);
         return restTemplate;
     }

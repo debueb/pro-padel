@@ -17,7 +17,6 @@ import de.appsolve.padelcampus.db.model.AdminGroup;
 import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.external.cloudflare.CloudFlareApiClient;
-import de.appsolve.padelcampus.external.openshift.OpenshiftApiClient;
 import de.appsolve.padelcampus.reporting.ErrorReporter;
 import de.appsolve.padelcampus.utils.HtmlResourceUtil;
 import org.apache.commons.lang.StringUtils;
@@ -51,7 +50,7 @@ public class ProOperatorsController extends BaseController implements ServletCon
 
     private static final Logger LOG = Logger.getLogger(ProOperatorsController.class);
     private final static Pattern DNS_SUBDOMAIN_PATTERN = Pattern.compile("(?:[A-Za-z0-9][A-Za-z0-9\\-]{0,61}[A-Za-z0-9]|[A-Za-z0-9])");
-    private final static String OPENSHIFT_URL = "padelkoeln-appsolve.rhcloud.com";
+    private final static String BACKEND_URL = "padelkoeln-appsolve.rhcloud.com";
     private final static String CLOUDFLARE_URL = "pro-padel.de";
     @Autowired
     CustomerDAOI customerDAO;
@@ -61,8 +60,6 @@ public class ProOperatorsController extends BaseController implements ServletCon
     AdminGroupDAOI adminGroupDAO;
     @Autowired
     CloudFlareApiClient cloudFlareApiClient;
-    @Autowired
-    OpenshiftApiClient openshiftApiClient;
     @Autowired
     HtmlResourceUtil htmlResourceUtil;
     @Autowired
@@ -101,10 +98,7 @@ public class ProOperatorsController extends BaseController implements ServletCon
             }
 
             //create DNS subdomain in cloudflare
-            String domainName = cloudFlareApiClient.addCnameRecord(projectName, CLOUDFLARE_URL, OPENSHIFT_URL);
-
-            //create openshift alias
-            openshiftApiClient.addAlias(domainName, OPENSHIFT_URL);
+            String domainName = cloudFlareApiClient.addCnameRecord(projectName, CLOUDFLARE_URL, BACKEND_URL);
 
             //save customer to DB
             HashSet<String> domainNames = new HashSet<>();

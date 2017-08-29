@@ -1,3 +1,0 @@
-echo "Stopping maintenance web server."
-kill -9 `cat ${OPENSHIFT_DATA_DIR}/maintenance/maintenance.pid`
-rm -rf ${OPENSHIFT_DATA_DIR}/maintenance/maintenance.pid

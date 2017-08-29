@@ -24,9 +24,6 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI {
     @Override
     public List<Game> findAllYoungerThanForGenderWithPlayers(LocalDate date, Gender gender) {
 
-        //does not work on Openshift
-        //https://bugzilla.redhat.com/show_bug.cgi?id=1329068
-
         Criteria criteria = getCriteria();
         criteria.setFetchMode("participants.players", FetchMode.JOIN);
         criteria.createAlias("event", "e");
@@ -35,14 +32,6 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI {
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         @SuppressWarnings("unchecked")
         List<Game> games = criteria.list();
-
-//        Criteria criteria = getCriteria();
-//        criteria.createAlias("event", "e");
-//        criteria.add(Restrictions.gt("e.endDate", date));
-//        criteria.add(Restrictions.isNotEmpty("gameSets"));
-//        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-//        @SuppressWarnings("unchecked")
-//        List<Game> games = (List<Game>) criteria.list();
         Iterator<Game> iterator = games.iterator();
 
         while (iterator.hasNext()) {
@@ -50,7 +39,6 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI {
             for (Participant participant : game.getParticipants()) {
                 if (participant instanceof Team) {
                     Team t = (Team) participant;
-                    //Hibernate.initialize(t.getPlayers());
                     Gender teamGender = null;
                     for (Player player : t.getPlayers()) {
                         if (teamGender == null) {

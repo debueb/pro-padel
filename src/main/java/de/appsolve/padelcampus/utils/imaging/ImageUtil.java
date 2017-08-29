@@ -46,7 +46,7 @@ public class ImageUtil extends AbstractImageUtil {
             originalImage = readImage(bytes);
             //https://github.com/thebuzzmedia/imgscalr/issues/82
             //when resizing with alpha the resulting image gets a tint
-            //also, on OpenJDK 7 on openshift does not support the alpha channel
+            //also, on OpenJDK 7 does not support the alpha channel
             if (originalImage.getColorModel().hasAlpha()) {
                 originalImage = dropAlphaChannel(originalImage);
             }
