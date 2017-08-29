@@ -22,7 +22,7 @@ import org.springframework.util.Assert;
  *
  * @author dominik
  */
-public class TestBookingDirectDebitLogin extends TestBase {
+public class BookingDirectDebitLoginTest extends TestBase {
 
     @Test
     public void testBookingWorkflowDirectDebitLogin() throws Exception {

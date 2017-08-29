@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author dominik
  */
-public class TestGroupKnockoutTournament extends TestBase {
+public class GroupKnockoutTournamentTest extends TestBase {
     
     private static final Integer NUM_PLAYERS    = 10;
 

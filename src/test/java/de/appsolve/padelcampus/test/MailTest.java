@@ -10,7 +10,6 @@ import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.model.Contact;
 import de.appsolve.padelcampus.utils.MailUtils;
-import java.util.Arrays;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,12 +21,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author dominik
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-public class TestMail extends TestBase {
+public class MailTest extends TestBase {
     
     @Autowired
     MailUtils mailUtils;
 
-    private static final Logger LOG = Logger.getLogger(TestMail.class);
+    private static final Logger LOG = Logger.getLogger(MailTest.class);
 
     @Test
     public void sendMail() throws Exception {
@@ -39,7 +38,7 @@ public class TestMail extends TestBase {
         contact.setEmailDisplayName("Dominik Wißkirchen");
         mail.setRecipients(Sets.newHashSet(new EmailContact[]{contact}));
         mail.setReplyTo("noreply@pro-padel.de");
-        mail.setSubject(TestMail.class.getSimpleName());
+        mail.setSubject(MailTest.class.getSimpleName());
         mailUtils.send(mail, null);
     }
 }

@@ -17,7 +17,7 @@ import org.springframework.util.Assert;
  *
  * @author dominik
  */
-public class TestBookingVoucherNoLogin extends TestBookingVoucher {
+public class BookingVoucherNoLoginTest extends BookingVoucherTest {
 
     
     @Test

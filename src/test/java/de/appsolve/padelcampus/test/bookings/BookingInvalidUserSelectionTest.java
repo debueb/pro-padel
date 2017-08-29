@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author dominik
  */
-public class TestBookingInvalidUserSelection extends TestBase {
+public class BookingInvalidUserSelectionTest extends TestBase {
     
     @Test
     public void testBookingInvalidDate() throws Exception {

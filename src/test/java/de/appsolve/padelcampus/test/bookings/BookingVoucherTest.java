@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author dominik
  */
-public abstract class TestBookingVoucher extends TestBase{
+public abstract class BookingVoucherTest extends TestBase{
     
     protected void bookViaVoucherAndNoLogin(Offer offer) throws Exception {
         LOG.info("Test booking workflow [paymentMethod: Voucher, bookingType: nologin]");

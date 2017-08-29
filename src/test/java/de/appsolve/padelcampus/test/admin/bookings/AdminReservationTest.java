@@ -21,7 +21,7 @@ import org.springframework.util.Assert;
  *
  * @author dominik
  */
-public class TestAdminReservation extends TestBase{
+public class AdminReservationTest extends TestBase{
     
     @Test
     public void testReservations() throws Exception{

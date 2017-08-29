@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.hasSize;
  *
  * @author dominik
  */
-public class TestCoreFunctions extends TestBase {
+public class CoreFunctionsTest extends TestBase {
 
     @Test
     public void testRootPage() throws Exception {

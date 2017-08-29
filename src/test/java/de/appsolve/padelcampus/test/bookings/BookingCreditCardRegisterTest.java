@@ -22,7 +22,7 @@ import org.springframework.util.Assert;
  *
  * @author dominik
  */
-public class TestBookingCreditCardRegister extends TestBase {
+public class BookingCreditCardRegisterTest extends TestBase {
 
     @Test
     public void testBookingWorkflowCreditCardRegister() throws Exception {

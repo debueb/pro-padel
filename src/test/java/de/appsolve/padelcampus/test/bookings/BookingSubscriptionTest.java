@@ -26,21 +26,21 @@ import org.springframework.util.Assert;
  *
  * @author dominik
  */
-public class TestBookingSubscription extends TestBase{
+public class BookingSubscriptionTest extends TestBase{
     
-    private static final String EXISTING_USER_FIRST_NAME = TestBookingSubscription.class.getSimpleName()+"_firstName";
-    private static final String EXISTING_USER_LAST_NAME  = TestBookingSubscription.class.getSimpleName()+"_lastName";
-    private static final String EXISTING_USER_EMAIL      = TestBookingSubscription.class.getSimpleName()+"_lastName@pro-padel.de";
-    private static final String EXISTING_USER_PASSWORD      = TestBookingSubscription.class.getSimpleName()+"_password";
+    private static final String EXISTING_USER_FIRST_NAME = BookingSubscriptionTest.class.getSimpleName()+"_firstName";
+    private static final String EXISTING_USER_LAST_NAME  = BookingSubscriptionTest.class.getSimpleName()+"_lastName";
+    private static final String EXISTING_USER_EMAIL      = BookingSubscriptionTest.class.getSimpleName()+"_lastName@pro-padel.de";
+    private static final String EXISTING_USER_PASSWORD      = BookingSubscriptionTest.class.getSimpleName()+"_password";
     
-    private static final String NO_LOGIN_USER_FIRST_NAME = TestBookingSubscription.class.getSimpleName()+"_firstName_noLogin";
-    private static final String NO_LOGIN_USER_LAST_NAME  = TestBookingSubscription.class.getSimpleName()+"_lastName_noLogin";
-    private static final String NO_LOGIN_USER_EMAIL      = TestBookingSubscription.class.getSimpleName()+"_lastName_noLogin@pro-padel.de";
+    private static final String NO_LOGIN_USER_FIRST_NAME = BookingSubscriptionTest.class.getSimpleName()+"_firstName_noLogin";
+    private static final String NO_LOGIN_USER_LAST_NAME  = BookingSubscriptionTest.class.getSimpleName()+"_lastName_noLogin";
+    private static final String NO_LOGIN_USER_EMAIL      = BookingSubscriptionTest.class.getSimpleName()+"_lastName_noLogin@pro-padel.de";
     
-    private static final String REGISTER_USER_FIRST_NAME = TestBookingSubscription.class.getSimpleName()+"_firstName_register";
-    private static final String REGISTER_USER_LAST_NAME  = TestBookingSubscription.class.getSimpleName()+"_lastName_register";
-    private static final String REGISTER_USER_EMAIL      = TestBookingSubscription.class.getSimpleName()+"_lastName_register@pro-padel.de";
-    private static final String REGISTER_USER_PASSWORD   = TestBookingSubscription.class.getSimpleName()+"_password_register";
+    private static final String REGISTER_USER_FIRST_NAME = BookingSubscriptionTest.class.getSimpleName()+"_firstName_register";
+    private static final String REGISTER_USER_LAST_NAME  = BookingSubscriptionTest.class.getSimpleName()+"_lastName_register";
+    private static final String REGISTER_USER_EMAIL      = BookingSubscriptionTest.class.getSimpleName()+"_lastName_register@pro-padel.de";
+    private static final String REGISTER_USER_PASSWORD   = BookingSubscriptionTest.class.getSimpleName()+"_password_register";
     
     
     @Before

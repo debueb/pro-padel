@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author dominik
  */
-public class TestMatchOffers extends TestBase {
+public class MatchOffersTest extends TestBase {
     
     @Autowired
     MatchOfferDAOI matchOfferDAO;

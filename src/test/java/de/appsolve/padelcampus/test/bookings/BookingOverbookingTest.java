@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author dominik
  */
-public class TestBookingOverbooking extends TestBookingVoucher {
+public class BookingOverbookingTest extends BookingVoucherTest {
     
     @Test
     public void testBookingOverbooking() throws Exception {
