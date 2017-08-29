@@ -1,33 +1,33 @@
 package de.appsolve.padelcampus.data;
 
 import de.appsolve.padelcampus.annotations.EmailWithTld;
-import java.util.HashSet;
-import java.util.Set;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
- *
  * @author dominik
  */
 public class Mail {
-    
+
     @NotEmpty(message = "{NotEmpty.email}")
     @EmailWithTld
     private String from;
-    
+
     @EmailWithTld
     private String replyTo;
-    
+
     @NotEmpty(message = "{NotEmpty.subject}")
     private String subject;
-    
+
     @NotEmpty(message = "{NotEmpty.body}")
     private String body;
-    
+
     private String templateId;
-    
+
     private Set<EmailContact> recipients;
-    
+
     public String getFrom() {
         return from;
     }
@@ -76,15 +76,15 @@ public class Mail {
     public void setRecipients(Set<? extends EmailContact> contacts) {
         this.recipients = (Set<EmailContact>) contacts;
     }
-    
+
     public <T extends EmailContact> void addRecipient(T contact) {
         Set<EmailContact> contacts = getRecipients();
         contacts.add(contact);
         setRecipients(contacts);
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("[from: %s, to: %s, subject: %s]", getFrom(), getRecipients(), getSubject());
     }
 }

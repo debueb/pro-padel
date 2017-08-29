@@ -6,16 +6,15 @@
 package de.appsolve.padelcampus.exceptions;
 
 /**
- *
  * @author dominik
  */
-public class MailException extends Exception{
-    
-    public MailException(String message){
+public class MailException extends Exception {
+
+    public MailException(String message) {
         super(message);
     }
-    
-    public MailException(String message, Throwable cause){
+
+    public MailException(String message, Throwable cause) {
         super(message, cause);
     }
 }

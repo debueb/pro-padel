@@ -7,39 +7,39 @@ package de.appsolve.padelcampus.utils;
 
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Player;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- *
  * @author dominik
  */
 @Component
 public class PlayerUtil {
-    
+
     @Autowired
     Msg msg;
-    
+
     @Autowired
     PlayerDAOI playerDAO;
 
-    public boolean isPasswordValid(Player player, String password){
-        if (player == null || StringUtils.isEmpty(player.getPasswordHash())){
+    public static String getAccountVerificationLink(HttpServletRequest request, Player player) {
+        return RequestUtil.getBaseURL(request) + "/login/confirm/" + player.getUUID();
+    }
+
+    public boolean isPasswordValid(Player player, String password) {
+        if (player == null || StringUtils.isEmpty(player.getPasswordHash())) {
             return false;
         }
-        if (!player.getSalted()){
+        if (!player.getSalted()) {
             String hash = DigestUtils.sha512Hex(password);
             return hash.equals(player.getPasswordHash());
         } else {
             return BCrypt.checkpw(password, player.getPasswordHash());
         }
-    }
-    
-    public static String getAccountVerificationLink(HttpServletRequest request, Player player){
-        return RequestUtil.getBaseURL(request)+"/login/confirm/"+player.getUUID();
     }
 }

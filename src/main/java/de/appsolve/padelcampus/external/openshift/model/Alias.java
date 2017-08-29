@@ -6,7 +6,6 @@
 package de.appsolve.padelcampus.external.openshift.model;
 
 /**
- *
  * @author dominik
  */
 public class Alias {

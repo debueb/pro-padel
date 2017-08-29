@@ -6,17 +6,16 @@
 package de.appsolve.padelcampus.constants;
 
 /**
- *
  * @author dominik
  */
 public enum PayDirektEndpoint {
-    
+
     Sandbox("https://api.sandbox.paydirekt.de/api/merchantintegration/v1"),
     Production("https://api.paydirekt.de/api/merchantintegration/v1");
-    
+
     private String url;
-    
-    private PayDirektEndpoint(String url){
+
+    private PayDirektEndpoint(String url) {
         this.url = url;
     }
 

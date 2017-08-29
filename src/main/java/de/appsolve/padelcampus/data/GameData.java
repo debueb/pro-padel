@@ -7,32 +7,32 @@ package de.appsolve.padelcampus.data;
 
 import de.appsolve.padelcampus.db.model.Game;
 import de.appsolve.padelcampus.db.model.Participant;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author dominik
  */
 public class GameData {
-    
+
     private Long id;
     private List<Participant> participantList;
 
-    public GameData(){
+    public GameData() {
     }
-    
-    public GameData(Game game){
+
+    public GameData(Game game) {
         this.id = game.getId();
         this.participantList = new ArrayList<>();
-        for (Participant p: game.getParticipants()){
-            if (p!=null){
+        for (Participant p : game.getParticipants()) {
+            if (p != null) {
                 participantList.add(p);
             }
         }
     }
-    
-    
+
+
     public Long getId() {
         return id;
     }
@@ -48,5 +48,5 @@ public class GameData {
     public void setParticipantList(List<Participant> participantList) {
         this.participantList = participantList;
     }
-    
+
 }

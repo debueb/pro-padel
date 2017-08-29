@@ -10,19 +10,20 @@ import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.PlayerUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 /**
- *
  * @author dominik
  */
 @Controller()
@@ -50,9 +51,9 @@ public class AccountPasswordController extends BaseController {
             return mav;
         }
         Player user = sessionUtil.getUser(request);
-        
-        if (playerUtil.isPasswordValid(user, changePasswordRequest.getOldPass())){
-            if (changePasswordRequest.getNewPass().equals(changePasswordRequest.getNewPassRepeat())){
+
+        if (playerUtil.isPasswordValid(user, changePasswordRequest.getOldPass())) {
+            if (changePasswordRequest.getNewPass().equals(changePasswordRequest.getNewPassRepeat())) {
                 //load latest data from db in case user has updated his account in current session
                 user = playerDAO.findById(user.getId());
                 user.setPassword(changePasswordRequest.getNewPass());

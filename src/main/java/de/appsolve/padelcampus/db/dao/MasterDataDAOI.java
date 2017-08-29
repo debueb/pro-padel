@@ -10,8 +10,7 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.MasterData;
 
 /**
- *
  * @author dominik
  */
-public interface MasterDataDAOI extends BaseEntityDAOI<MasterData>{
+public interface MasterDataDAOI extends BaseEntityDAOI<MasterData> {
 }

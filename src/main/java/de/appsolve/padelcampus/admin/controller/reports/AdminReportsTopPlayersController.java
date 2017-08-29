@@ -13,66 +13,66 @@ import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.SortUtil;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/admin/reports/players")
-public class AdminReportsTopPlayersController extends BaseController{
+public class AdminReportsTopPlayersController extends BaseController {
 
     @Autowired
     BookingDAOI bookingDAO;
-    
+
     @Autowired
     ObjectMapper objectMapper;
-    
+
     @RequestMapping()
-    public ModelAndView getIndex() throws JsonProcessingException{
+    public ModelAndView getIndex() throws JsonProcessingException {
         return getIndexView();
     }
-    
+
     private ModelAndView getIndexView() throws JsonProcessingException {
         ModelAndView mav = new ModelAndView("admin/reports/players/index");
         List<Booking> bookings = bookingDAO.findBlockedBookings();
-        
+
         Map<Player, Integer> map = new HashMap<>();
-        for (Booking booking: bookings){
+        for (Booking booking : bookings) {
             Player player = booking.getPlayer();
             Integer count = map.get(player);
-            if (count==null){
+            if (count == null) {
                 count = 1;
             } else {
                 count++;
             }
             map.put(player, count);
         }
-        
+
         Map<Player, Integer> sortedMap = SortUtil.sortMap(map);
-        
+
         //keep only top 20
         Iterator<Map.Entry<Player, Integer>> iterator = sortedMap.entrySet().iterator();
-        int i=0;
-        while (iterator.hasNext()){
+        int i = 0;
+        while (iterator.hasNext()) {
             iterator.next();
-            if (i>20){
+            if (i > 20) {
                 iterator.remove();
             }
             i++;
         }
-        
+
         mav.addObject("chartData", objectMapper.writeValueAsString(sortedMap));
-        
+
         return mav;
     }
-    
+
 }

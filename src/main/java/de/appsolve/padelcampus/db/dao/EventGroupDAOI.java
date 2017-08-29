@@ -10,8 +10,7 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.EventGroup;
 
 /**
- *
  * @author dominik
  */
-public interface EventGroupDAOI extends BaseEntityDAOI<EventGroup>{
+public interface EventGroupDAOI extends BaseEntityDAOI<EventGroup> {
 }

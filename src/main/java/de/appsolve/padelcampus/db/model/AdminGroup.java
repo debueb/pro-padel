@@ -7,41 +7,33 @@
 package de.appsolve.padelcampus.db.model;
 
 import de.appsolve.padelcampus.constants.Privilege;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Transient;
-import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- *
  * @author dominik
  */
 @Entity
-public class AdminGroup extends CustomerEntity{
-    
+public class AdminGroup extends CustomerEntity {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+
     @NotEmpty(message = "{NotEmpty.groupName}")
     @Column
     private String name;
-    
+
     @NotEmpty(message = "{NotEmpty.members}")
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @OrderBy("firstName, lastName")
     private Set<Player> players;
-    
+
     @NotEmpty(message = "{NotEmpty.privileges}")
-    @ElementCollection(fetch=FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Privilege> privileges;
 

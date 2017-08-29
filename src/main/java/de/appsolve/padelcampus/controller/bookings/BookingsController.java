@@ -1,4 +1,3 @@
-
 package de.appsolve.padelcampus.controller.bookings;
 
 /*
@@ -115,6 +114,17 @@ public class BookingsController extends BaseController {
 
     @Autowired
     OfferPropertyEditor offerPropertyEditor;
+
+    public static ModelAndView getBookingConfirmView(Booking booking) {
+        ModelAndView mav = new ModelAndView("bookings/confirm");
+        mav.addObject("Booking", booking);
+        mav.addObject("CancellationPolicyDeadline", CANCELLATION_POLICY_DEADLINE);
+        return mav;
+    }
+
+    public static ModelAndView getRedirectToSuccessView(Booking booking) {
+        return new ModelAndView("redirect:" + booking.getSuccessUrl());
+    }
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -599,17 +609,6 @@ public class BookingsController extends BaseController {
 
     private String getConfirmURL(String day, String time) {
         return "/bookings/" + day + "/" + time + "/confirm";
-    }
-
-    public static ModelAndView getBookingConfirmView(Booking booking) {
-        ModelAndView mav = new ModelAndView("bookings/confirm");
-        mav.addObject("Booking", booking);
-        mav.addObject("CancellationPolicyDeadline", CANCELLATION_POLICY_DEADLINE);
-        return mav;
-    }
-
-    public static ModelAndView getRedirectToSuccessView(Booking booking) {
-        return new ModelAndView("redirect:" + booking.getSuccessUrl());
     }
 
     private void checkMaxDuration(Player player, LocalDate startDate, LocalDate endDate, Integer maxDuration, Booking booking, String errorMsgCode) throws Exception {

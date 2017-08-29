@@ -11,12 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- *
  * @author dominik
  */
 @Controller
 @RequestMapping("/api/players")
-public class ApiPlayersController extends ApiBaseController<Player>{
+public class ApiPlayersController extends ApiBaseController<Player> {
 
     @Override
     Option getOption(Player model) {

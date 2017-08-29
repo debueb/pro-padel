@@ -5,10 +5,9 @@ import de.appsolve.padelcampus.db.model.CssAttribute;
 import org.springframework.stereotype.Component;
 
 /**
- *
  * @author dominik
  */
 @Component
-public class CssAttributeBaseDAO extends BaseEntityDAO<CssAttribute> implements CssAttributeBaseDAOI{
+public class CssAttributeBaseDAO extends BaseEntityDAO<CssAttribute> implements CssAttributeBaseDAOI {
 
 }

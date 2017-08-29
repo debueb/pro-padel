@@ -10,9 +10,6 @@ import de.appsolve.padelcampus.db.dao.BookingBaseDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.OfferOption;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
-import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -24,19 +21,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
+
 /**
- *
  * @author dominik
  */
 @Controller
 @RequestMapping("/api/bookings")
 public class ApiBookingsController {
-    
+
     private static final Logger LOG = Logger.getLogger(ApiBookingsController.class);
 
     @Autowired
     BookingBaseDAOI bookingBaseDAO;
-    
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
@@ -50,7 +51,7 @@ public class ApiBookingsController {
         LOG.info(String.format("Found %s bookings eligible for video recording", bookings.size()));
 
         List<Booking> videoBookings = new ArrayList<>();
-        for (Booking booking: bookings){
+        for (Booking booking : bookings) {
             if (booking.getOfferOptions() != null) {
                 for (OfferOption offerOption : booking.getOfferOptions()) {
                     if (offerOption.getOfferOptionType().equals(OfferOptionType.VideoRecording)) {

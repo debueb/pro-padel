@@ -10,8 +10,7 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.PayMillConfig;
 
 /**
- *
  * @author dominik
  */
-public interface PayMillConfigDAOI extends BaseEntityDAOI<PayMillConfig>{
+public interface PayMillConfigDAOI extends BaseEntityDAOI<PayMillConfig> {
 }

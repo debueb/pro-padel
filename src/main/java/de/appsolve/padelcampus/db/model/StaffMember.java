@@ -6,44 +6,44 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
 /**
- *
  * @author dominik
  */
 @Entity
-public class StaffMember extends SortableEntity{
-    
+public class StaffMember extends SortableEntity {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.name}")
     private String name;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.teaser}")
     @Length(max = 50, message = "{Length.StaffMember.teaser}")
     private String teaser;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.description}")
     @Length(max = 255, message = "{Length.StaffMember.description")
     private String description;
-    
+
     @OneToOne
     private Image profileImage;
-    
+
     @Transient
     private MultipartFile profileImageFile;
-    
+
     public String getName() {
         return name;
     }

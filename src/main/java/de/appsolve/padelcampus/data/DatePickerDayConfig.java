@@ -8,16 +8,15 @@ package de.appsolve.padelcampus.data;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- *
  * @author dominik
  */
 public class DatePickerDayConfig {
-    
+
     private Boolean selectable;
-    
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String cssClass;
-    
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String tooltip;
 

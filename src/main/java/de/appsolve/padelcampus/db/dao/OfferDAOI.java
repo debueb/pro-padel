@@ -8,14 +8,15 @@ package de.appsolve.padelcampus.db.dao;
 
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Offer;
+
 import java.util.List;
 
 /**
- *
  * @author dominik
  */
-public interface OfferDAOI extends BaseEntityDAOI<Offer>{
- 
+public interface OfferDAOI extends BaseEntityDAOI<Offer> {
+
     public List<Offer> findAllFetchWithOfferOptions();
+
     public Offer findByIdFetchWithOfferOptions(Long id);
 }

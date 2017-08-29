@@ -6,13 +6,12 @@
 package de.appsolve.padelcampus.api.controllers;
 
 /**
- *
  * @author dominik
  */
 public class ApiOffer implements Comparable<ApiOffer> {
-    
+
     private Long id;
-    
+
     private String name;
 
     public Long getId() {

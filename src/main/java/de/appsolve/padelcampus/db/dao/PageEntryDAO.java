@@ -3,27 +3,23 @@ package de.appsolve.padelcampus.db.dao;
 import de.appsolve.padelcampus.db.dao.generic.SortedGenericDAO;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.PageEntry;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.SimpleExpression;
+import org.hibernate.criterion.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
- *
  * @author dominik
  */
 @Component
-public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEntryDAOI{
+public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEntryDAOI {
 
     @Override
     public List<PageEntry> findByModule(Module module) {
@@ -31,7 +27,7 @@ public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEnt
         attributes.put("module", module);
         return findByAttributes(attributes);
     }
-    
+
     @Override
     public Page<PageEntry> findByModule(Module module, Pageable pageable) {
         return findByRestriction(Restrictions.eq("module", module), pageable);
@@ -48,10 +44,10 @@ public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEnt
         countCriteria.add(restriction);
         countCriteria.setProjection(Projections.rowCount());
         Long rowCount = (Long) countCriteria.uniqueResult();
-        if (rowCount == 0L){
+        if (rowCount == 0L) {
             return new PageImpl<>(new ArrayList<PageEntry>(), pageable, rowCount);
         }
-        
+
         Criteria criteria = getCriteria();
         criteria.add(restriction);
         criteria.setMaxResults(pageable.getPageSize());
@@ -60,7 +56,7 @@ public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEnt
         criteria.addOrder(Order.asc("position"));
         @SuppressWarnings("unchecked")
         List<Long> list = criteria.list();
-        
+
         Criteria c = getCriteria();
         c.add(restriction);
         c.add(Restrictions.in("id", list));
@@ -68,8 +64,8 @@ public class PageEntryDAO extends SortedGenericDAO<PageEntry> implements PageEnt
         @SuppressWarnings("unchecked")
         List<PageEntry> pageEntries = c.list();
         sort(pageEntries);
-        
-        
+
+
         Page<PageEntry> page = new PageImpl<>(pageEntries, pageable, rowCount);
         return page;
     }

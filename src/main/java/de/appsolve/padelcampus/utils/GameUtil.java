@@ -9,56 +9,37 @@ import de.appsolve.padelcampus.comparators.GameByEventComparator;
 import de.appsolve.padelcampus.comparators.GameByParticipantComparator;
 import de.appsolve.padelcampus.comparators.GameByStartDateComparator;
 import de.appsolve.padelcampus.comparators.ParticipantByGameResultComparator;
-import static de.appsolve.padelcampus.constants.Constants.FIRST_SET;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
-import de.appsolve.padelcampus.db.model.Event;
-import de.appsolve.padelcampus.db.model.Game;
-import de.appsolve.padelcampus.db.model.GameSet;
-import de.appsolve.padelcampus.db.model.Participant;
-import de.appsolve.padelcampus.db.model.ParticipantI;
-import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.db.model.Team;
-import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import de.appsolve.padelcampus.db.model.*;
 import jersey.repackaged.com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.ModelAndView;
+
+import java.util.*;
+
+import static de.appsolve.padelcampus.constants.Constants.FIRST_SET;
 
 /**
- *
  * @author dominik
  */
 @Component
 public class GameUtil {
-    
+
     @Autowired
-    GameDAOI gameDAO;     
-    
-    @Autowired 
+    GameDAOI gameDAO;
+
+    @Autowired
     TeamDAOI teamDAO;
-    
+
     public Set<Game> getGames(Player player) {
         List<Team> teams = teamDAO.findByPlayer(player);
         return getGames(player, teams);
     }
-    
+
     public Set<Game> getGames(Player player, List<Team> teams) {
         Set<Game> games = new TreeSet<>(gameDAO.findByParticipant(player));
-        for (Team team: teams){
+        for (Team team : teams) {
             games.addAll(gameDAO.findByParticipant(team));
         }
         return games;
@@ -69,7 +50,7 @@ public class GameUtil {
         map.put(game, getGameResult(game, null, false));
         return map;
     }
-    
+
     public Map<Game, String> getGameResultMap(Collection<Game> games) {
         Map<Game, String> map = new HashMap<>();
         for (Game game : games) {
@@ -77,7 +58,7 @@ public class GameUtil {
         }
         return map;
     }
-    
+
     public Map<Game, String> getGameResultMap(Collection<Game> games, Comparator<Game> comparator) {
         Map<Game, String> map = new TreeMap<>(comparator);
         for (Game game : games) {
@@ -92,89 +73,89 @@ public class GameUtil {
         List<GameSet> gameSets = new ArrayList<>(game.getGameSets());
         Collections.sort(gameSets);
 
-        int gameSetsDisplayed=0;
-        for (int set=FIRST_SET; set<gameSets.size(); set++){
+        int gameSetsDisplayed = 0;
+        for (int set = FIRST_SET; set < gameSets.size(); set++) {
             int participantId = 0;
             Set<Participant> participants = game.getParticipants();
-            if (sortByParticipant != null){
+            if (sortByParticipant != null) {
                 SortedSet<Participant> sortedParticipants = new TreeSet<>(new ParticipantByGameResultComparator(sortByParticipant, reverseGameResult));
                 sortedParticipants.addAll(participants);
                 participants = sortedParticipants;
             }
-            
-            for (Participant participant: participants){
+
+            for (Participant participant : participants) {
                 String setGames = "-";
-                for (GameSet gs: gameSets){
-                    if (gs.getSetNumber() == set && gs.getParticipant().equals(participant)){
-                        setGames = gs.getSetGames()+"";
+                for (GameSet gs : gameSets) {
+                    if (gs.getSetNumber() == set && gs.getParticipant().equals(participant)) {
+                        setGames = gs.getSetGames() + "";
                         gameSetsDisplayed++;
                         break;
                     }
                 }
                 result.append(setGames);
-                result.append(participantId%2==0 ? ":" : " "); //separate games by colon, sets by space
+                result.append(participantId % 2 == 0 ? ":" : " "); //separate games by colon, sets by space
                 participantId++;
             }
-            if (gameSetsDisplayed == gameSets.size()){
+            if (gameSetsDisplayed == gameSets.size()) {
                 break; //do not display third set if it was not played
             }
         }
-        
+
         return result.toString();
     }
-    
+
     public void removeObsoleteGames(Event event) {
         removeObsoleteGames(event, event.getParticipants());
     }
-    
+
     public void removeObsoleteGames(Event event, Set<? extends ParticipantI> newParticipants) {
         List<Game> eventGames = gameDAO.findByEvent(event);
         Iterator<Game> eventGameIterator = eventGames.iterator();
-        while (eventGameIterator.hasNext()){
+        while (eventGameIterator.hasNext()) {
             Game game = eventGameIterator.next();
             //only remove if game participant no longer participates in event
-            if (!newParticipants.containsAll(game.getParticipants())){
+            if (!newParticipants.containsAll(game.getParticipants())) {
                 eventGameIterator.remove();
                 gameDAO.deleteById(game.getId());
             }
         }
     }
-    
+
     public void createMissingGames(Event event, Set<Participant> participants) {
         createMissingGames(event, participants, null, null);
     }
-    
+
     public void createMissingGames(Event event, Set<Participant> participants, Integer groupNumber, Integer roundNumber) {
         List<Game> existingGames = gameDAO.findByEvent(event);
-        for (Participant firstParticipant: participants){
-            for (Participant secondParticipant: participants){
-                if (!firstParticipant.equals(secondParticipant)){
+        for (Participant firstParticipant : participants) {
+            for (Participant secondParticipant : participants) {
+                if (!firstParticipant.equals(secondParticipant)) {
                     boolean gameExists = false;
-                    for (Game game: existingGames){
-                        if (roundNumber != null && !roundNumber.equals(game.getRound())){
+                    for (Game game : existingGames) {
+                        if (roundNumber != null && !roundNumber.equals(game.getRound())) {
                             continue;
                         }
-                        if (game.getParticipants().contains(firstParticipant) && game.getParticipants().contains(secondParticipant)){
+                        if (game.getParticipants().contains(firstParticipant) && game.getParticipants().contains(secondParticipant)) {
                             gameExists = true;
                             break;
                         }
                     }
-                    if (!gameExists){
+                    if (!gameExists) {
                         existingGames.add(createGame(event, firstParticipant, secondParticipant, groupNumber, roundNumber));
                     }
                 }
             }
         }
     }
-    
+
     public List<Game> createMissingPullGames(Event event, Set<Team> participants) {
         List<Game> existingGames = gameDAO.findByEvent(event);
-        for (Team team1: participants){
-            for (Team team2: participants){
-                if (!team1.equals(team2)){
-                    if (!hasMatch(existingGames, team1) && !hasMatch(existingGames, team2)){
+        for (Team team1 : participants) {
+            for (Team team2 : participants) {
+                if (!team1.equals(team2)) {
+                    if (!hasMatch(existingGames, team1) && !hasMatch(existingGames, team2)) {
                         //make sure that players are distinct
-                        if (Sets.intersection(team1.getPlayers(), team2.getPlayers()).isEmpty()){
+                        if (Sets.intersection(team1.getPlayers(), team2.getPlayers()).isEmpty()) {
                             existingGames.add(createGame(event, team1, team2));
                         }
                     }
@@ -183,13 +164,13 @@ public class GameUtil {
         }
         return existingGames;
     }
-    
+
     public Map<Participant, Map<Game, String>> getParticipantGameResultMap(Collection<Game> games, Boolean reverseGameResult) {
         Map<Participant, Map<Game, String>> participantGameResultMap = new HashMap<>();
-        for (Game game: games){
-            for (Participant p: game.getParticipants()){
+        for (Game game : games) {
+            for (Participant p : game.getParticipants()) {
                 Map<Game, String> gameResultMap = participantGameResultMap.get(p);
-                if (gameResultMap == null){
+                if (gameResultMap == null) {
                     gameResultMap = new HashMap<>();
                 }
                 String result = getGameResult(game, p, reverseGameResult);
@@ -203,7 +184,7 @@ public class GameUtil {
     private Game createGame(Event event, Participant firstParticipant, Participant secondParticipant) {
         return createGame(event, firstParticipant, secondParticipant, null, null);
     }
-    
+
     private Game createGame(Event event, Participant firstParticipant, Participant secondParticipant, Integer groupNumber, Integer roundNumber) {
         Game game = new Game();
         game.setEvent(event);
@@ -218,8 +199,8 @@ public class GameUtil {
     }
 
     private boolean hasMatch(Collection<Game> existingGames, Team team) {
-        for (Game game: existingGames){
-            if (game.getParticipants().contains(team)){
+        for (Game game : existingGames) {
+            if (game.getParticipants().contains(team)) {
                 return true;
             }
         }
@@ -230,14 +211,14 @@ public class GameUtil {
         Set<Game> games = getGames(player);
         //filter out games without opponent (e.g. wild card games)
         Iterator<Game> iterator = games.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Game game = iterator.next();
-            if (game.getParticipants() == null || game.getParticipants().size()<2){
+            if (game.getParticipants() == null || game.getParticipants().size() < 2) {
                 iterator.remove();
             }
         }
         Comparator<Game> comparator;
-        switch (sortBy){
+        switch (sortBy) {
             case "event":
                 comparator = new GameByEventComparator();
                 break;

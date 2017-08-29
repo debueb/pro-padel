@@ -11,15 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/admin/bookings")
-public class AdminBookingsController{
-    
+public class AdminBookingsController {
+
     @RequestMapping()
-    public ModelAndView getIndex(){
+    public ModelAndView getIndex() {
         return new ModelAndView("admin/bookings/index");
     }
 }

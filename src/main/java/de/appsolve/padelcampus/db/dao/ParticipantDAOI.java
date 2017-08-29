@@ -10,10 +10,9 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Participant;
 
 /**
- *
  * @author dominik
  */
-public interface ParticipantDAOI extends BaseEntityDAOI<Participant>{
-    
+public interface ParticipantDAOI extends BaseEntityDAOI<Participant> {
+
     public Participant findByUUID(String UUID);
 }

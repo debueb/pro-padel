@@ -10,8 +10,7 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.PayDirektConfig;
 
 /**
- *
  * @author dominik
  */
-public interface PayDirektConfigDAOI extends BaseEntityDAOI<PayDirektConfig>{
+public interface PayDirektConfigDAOI extends BaseEntityDAOI<PayDirektConfig> {
 }

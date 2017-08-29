@@ -9,24 +9,20 @@ package de.appsolve.padelcampus.db.model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import java.util.Objects;
-import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import org.apache.log4j.Logger;
 
+import javax.persistence.*;
+import java.util.Objects;
+import java.util.Set;
+
 /**
- *
  * @author dominik
  */
 @Entity
-public class DaySchedule extends ComparableEntity{
-    
+public class DaySchedule extends ComparableEntity {
+
     private static final Logger LOG = Logger.getLogger(DaySchedule.class);
-    
+
     /*
     0 = Monday
     ...
@@ -34,7 +30,7 @@ public class DaySchedule extends ComparableEntity{
     */
     @Column
     private Long weekDay;
-    
+
     @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<ScheduleSlot> scheduleSlots;
 
@@ -72,7 +68,7 @@ public class DaySchedule extends ComparableEntity{
         final DaySchedule other = (DaySchedule) obj;
         return Objects.equals(this.getId(), other.getId()) && this.getWeekDay().equals(other.getWeekDay());
     }
-    
+
     @Override
     public String toString() {
         try {
@@ -84,6 +80,6 @@ public class DaySchedule extends ComparableEntity{
             return super.toString();
         }
     }
-    
-    
+
+
 }

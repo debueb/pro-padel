@@ -8,29 +8,30 @@ package de.appsolve.padelcampus.controller.contact;
 
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.Mail;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/contact")
-public class ContactController extends BaseController{
-    
+public class ContactController extends BaseController {
+
     @RequestMapping()
-    public ModelAndView getIndex(){
+    public ModelAndView getIndex() {
         return getIndexView(new Mail());
     }
-    
-    @RequestMapping(method=POST)
-    public ModelAndView postIndex(HttpServletRequest request, @ModelAttribute("Model") Mail mail, BindingResult bindingResult){
+
+    @RequestMapping(method = POST)
+    public ModelAndView postIndex(HttpServletRequest request, @ModelAttribute("Model") Mail mail, BindingResult bindingResult) {
         ModelAndView defaultView = getIndexView(mail);
         return sendMail(request, defaultView, mail, bindingResult);
     }

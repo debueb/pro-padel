@@ -1,32 +1,27 @@
 package de.appsolve.padelcampus.db.model;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.OrderBy;
 
 /**
- *
  * @author dominik
  */
 @Entity
 public class Subscription extends CustomerEntity {
-    
+
     @Column
     private String name;
-    
+
     @Column
     private BigDecimal price;
-    
+
     @Column
     private Integer maxMinutesPerDay;
-    
+
     @Column
     private Integer maxMinutesPerWeek;
-    
+
     @ManyToMany(fetch = FetchType.EAGER)
     @OrderBy("firstName, lastName")
     private Set<Player> players;
@@ -69,7 +64,7 @@ public class Subscription extends CustomerEntity {
 
     public void setPlayers(Set<Player> players) {
         this.players = players;
-    }  
+    }
 
     @Override
     public String toString() {

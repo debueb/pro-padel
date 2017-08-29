@@ -10,52 +10,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Constants;
-import static de.appsolve.padelcampus.constants.Constants.CANCELLATION_POLICY_DEADLINE;
-import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
-import static de.appsolve.padelcampus.constants.Constants.NO_HOLIDAY_KEY;
 import de.appsolve.padelcampus.constants.PaymentMethod;
-import de.appsolve.padelcampus.data.DatePickerDayConfig;
-import de.appsolve.padelcampus.data.Mail;
-import de.appsolve.padelcampus.data.OfferDurationPrice;
-import de.appsolve.padelcampus.data.TimeRange;
-import de.appsolve.padelcampus.data.TimeSlot;
-import de.appsolve.padelcampus.db.dao.BookingDAOI;
-import de.appsolve.padelcampus.db.dao.CalendarConfigDAOI;
-import de.appsolve.padelcampus.db.dao.ContactDAOI;
-import de.appsolve.padelcampus.db.dao.FacilityDAOI;
-import de.appsolve.padelcampus.db.dao.OfferDAOI;
-import de.appsolve.padelcampus.db.dao.PayDirektConfigDAOI;
-import de.appsolve.padelcampus.db.dao.PayMillConfigDAOI;
-import de.appsolve.padelcampus.db.dao.PayPalConfigDAOI;
-import de.appsolve.padelcampus.db.model.Booking;
-import de.appsolve.padelcampus.db.model.CalendarConfig;
-import de.appsolve.padelcampus.db.model.Contact;
-import de.appsolve.padelcampus.db.model.Facility;
-import de.appsolve.padelcampus.db.model.Offer;
-import de.appsolve.padelcampus.db.model.PayDirektConfig;
-import de.appsolve.padelcampus.db.model.PayMillConfig;
-import de.appsolve.padelcampus.db.model.PayPalConfig;
+import de.appsolve.padelcampus.data.*;
+import de.appsolve.padelcampus.db.dao.*;
+import de.appsolve.padelcampus.db.model.*;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
 import de.jollyday.ManagerParameters;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
@@ -65,64 +28,76 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.util.*;
+
+import static de.appsolve.padelcampus.constants.Constants.*;
+
 /**
- *
  * @author dominik
  */
 @Component
 public class BookingUtil {
-    
+
     private static final Logger log = Logger.getLogger(BookingUtil.class);
 
     @Autowired
     Msg msg;
-    
+
     @Autowired
     OfferDAOI offerDAO;
-    
+
     @Autowired
     FacilityDAOI facilityDAO;
-    
+
     @Autowired
     BookingDAOI bookingDAO;
-    
+
     @Autowired
     ContactDAOI contactDAO;
-    
+
     @Autowired
     CalendarConfigDAOI calendarConfigDAO;
-    
+
     @Autowired
     CalendarConfigUtil calendarConfigUtil;
-    
+
     @Autowired
     ObjectMapper objectMapper;
-    
+
     @Autowired
     MailUtils mailUtils;
-    
+
     @Autowired
     PayPalConfigDAOI payPalConfigDAO;
 
     @Autowired
     PayDirektConfigDAOI payDirektConfigDAO;
-    
+
     @Autowired
     PayMillConfigDAOI payMillConfigDAO;
-    
-    public List<TimeSlot> getTimeSlotsForDate(LocalDate selectedDate, List<CalendarConfig> allCalendarConfigs, List<Booking> existingBookings, Boolean onlyFutureTimeSlots, Boolean preventOverlapping) throws CalendarConfigException{
-        
+
+    public static String generateUUID() {
+        return UUID.randomUUID().toString();
+    }
+
+    public List<TimeSlot> getTimeSlotsForDate(LocalDate selectedDate, List<CalendarConfig> allCalendarConfigs, List<Booking> existingBookings, Boolean onlyFutureTimeSlots, Boolean preventOverlapping) throws CalendarConfigException {
+
         List<CalendarConfig> calendarConfigs = calendarConfigUtil.getCalendarConfigsMatchingDate(allCalendarConfigs, selectedDate);
         Iterator<CalendarConfig> iterator = calendarConfigs.iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             CalendarConfig calendarConfig = iterator.next();
             if (isHoliday(selectedDate, calendarConfig)) {
                 iterator.remove();
             }
         }
-        
+
         List<TimeSlot> timeSlots = new ArrayList<>();
-        if (calendarConfigs.size()>0){
+        if (calendarConfigs.size() > 0) {
             LocalDate today = new LocalDate(DEFAULT_TIMEZONE);
 
             //sort all calendar configurations for selected date by start time
@@ -131,15 +106,15 @@ public class BookingUtil {
             CalendarConfig previousConfig = null;
             LocalDateTime time = null;
             LocalDateTime now = new LocalDateTime(DEFAULT_TIMEZONE);
-            
+
             //generate list of bookable time slots
             for (CalendarConfig config : calendarConfigs) {
                 LocalDateTime startDateTime = getLocalDateTime(selectedDate, config.getStartTime());
-                if (time==null){
+                if (time == null) {
                     //on first iteration
                     time = startDateTime;
                 } else {
-                    if (time.plusMinutes(previousConfig.getMinInterval()).equals(startDateTime)){
+                    if (time.plusMinutes(previousConfig.getMinInterval()).equals(startDateTime)) {
                         //contiguous bookings possible
                         //time = time;
                     } else {
@@ -151,18 +126,18 @@ public class BookingUtil {
                 LocalDateTime endDateTime = getLocalDateTime(selectedDate, config.getEndTime());
                 while (time.plusMinutes(config.getMinDuration()).compareTo(endDateTime) <= 0) {
                     BigDecimal pricePerMinDuration;
-                    if (previousConfig == null){
+                    if (previousConfig == null) {
                         pricePerMinDuration = config.getBasePrice();
                     } else {
                         BigDecimal previousConfigBasePricePerMinute = getPricePerMinute(previousConfig);
                         pricePerMinDuration = previousConfigBasePricePerMinute.multiply(new BigDecimal(previousConfig.getMinInterval()), MathContext.DECIMAL128);
                         BigDecimal basePricePerMinute = getPricePerMinute(config);
-                        pricePerMinDuration = pricePerMinDuration.add(basePricePerMinute.multiply(new BigDecimal(config.getMinDuration()-previousConfig.getMinInterval()), MathContext.DECIMAL128));
+                        pricePerMinDuration = pricePerMinDuration.add(basePricePerMinute.multiply(new BigDecimal(config.getMinDuration() - previousConfig.getMinInterval()), MathContext.DECIMAL128));
                         previousConfig = null;
                     }
                     pricePerMinDuration = pricePerMinDuration.setScale(2, RoundingMode.HALF_EVEN);
                     if (onlyFutureTimeSlots) {
-                        if (selectedDate.isAfter(today) || time.isAfter(now)){
+                        if (selectedDate.isAfter(today) || time.isAfter(now)) {
                             addTimeSlot(timeSlots, time, config, pricePerMinDuration);
                         }
                     } else {
@@ -182,7 +157,7 @@ public class BookingUtil {
         }
         return timeSlots;
     }
-    
+
     private void addTimeSlot(List<TimeSlot> timeSlots, LocalDateTime time, CalendarConfig config, BigDecimal pricePerMinDuration) {
         TimeSlot timeSlot = new TimeSlot();
         timeSlot.setDate(time.toLocalDate());
@@ -192,25 +167,25 @@ public class BookingUtil {
         timeSlot.setPricePerMinDuration(pricePerMinDuration);
 
         //only add timeSlot if timeSlots does not already contain an entry that overlaps
-        if (!overlaps(timeSlot, timeSlots)){
+        if (!overlaps(timeSlot, timeSlots)) {
             timeSlots.add(timeSlot);
         }
     }
-    
+
     private boolean overlaps(TimeSlot timeSlot, List<TimeSlot> timeSlots) {
-        for (TimeSlot slot: timeSlots){
-            if (timeSlot.getStartTime().equals(slot.getStartTime())){
+        for (TimeSlot slot : timeSlots) {
+            if (timeSlot.getStartTime().equals(slot.getStartTime())) {
                 return configMatches(timeSlot, slot);
-            } else if (timeSlot.getStartTime().isBefore(slot.getStartTime())){
+            } else if (timeSlot.getStartTime().isBefore(slot.getStartTime())) {
                 //make sure timeSlot ends before slot starts
-                if (timeSlot.getEndTime().isAfter(slot.getStartTime())){
+                if (timeSlot.getEndTime().isAfter(slot.getStartTime())) {
                     return configMatches(timeSlot, slot);
                 }
             } else {
                 //disabled, as we do want overlapping time slots from different calendar configurations
 //                //only test if these time slots come from different configurations as we DO want overlapping time slots (when min interval is smaller than min duration)
 //                if (!timeSlot.getConfig().equals(slot.getConfig())){
-//                    
+//
 //                    //if timeSlot starts after slot, make sure it also starts before slot ends
 //                    if (timeSlot.getStartTime().isBefore(slot.getEndTime())){
 //                        return true;
@@ -220,22 +195,22 @@ public class BookingUtil {
         }
         return false;
     }
-    
-    private boolean configMatches(TimeSlot timeSlot, TimeSlot slot){
+
+    private boolean configMatches(TimeSlot timeSlot, TimeSlot slot) {
         return timeSlot.getConfig().equals(slot.getConfig());
     }
 
     public void checkForBookedCourts(TimeSlot timeSlot, List<Booking> confirmedBookings, Boolean preventOverlapping) {
         LocalTime startTime = timeSlot.getStartTime();
         LocalTime endTime = timeSlot.getEndTime();
-        
+
         for (Booking booking : confirmedBookings) {
-            
-            if (timeSlot.getDate().equals(booking.getBookingDate())){
+
+            if (timeSlot.getDate().equals(booking.getBookingDate())) {
                 LocalTime bookingStartTime = booking.getBookingTime();
                 LocalTime bookingEndTime = bookingStartTime.plusMinutes(booking.getDuration().intValue());
                 Boolean addBooking = false;
-                if (preventOverlapping){
+                if (preventOverlapping) {
                     if (startTime.isBefore(bookingEndTime)) {
                         if (endTime.isAfter(bookingStartTime)) {
                             addBooking = true;
@@ -243,16 +218,16 @@ public class BookingUtil {
                     }
                 } else {
                     //for displaying allocations
-                    if (startTime.compareTo(bookingStartTime)>=0){
-                        if (endTime.compareTo(bookingEndTime)<=0){
+                    if (startTime.compareTo(bookingStartTime) >= 0) {
+                        if (endTime.compareTo(bookingEndTime) <= 0) {
                             addBooking = true;
                         }
                     }
                 }
-                if (addBooking){
+                if (addBooking) {
                     Offer offer = booking.getOffer();
-                    for (Offer timeSlotOffer: timeSlot.getConfig().getOffers()){
-                        if (offer.equals(timeSlotOffer)){
+                    for (Offer timeSlotOffer : timeSlot.getConfig().getOffers()) {
+                        if (offer.equals(timeSlotOffer)) {
                             timeSlot.addBooking(booking);
                             break;
                         }
@@ -261,7 +236,7 @@ public class BookingUtil {
             }
         }
     }
-    
+
     public boolean isHoliday(LocalDate date, CalendarConfig calendarConfig) {
         String holidayKey = calendarConfig.getHolidayKey();
         boolean isHoliday = false;
@@ -275,10 +250,6 @@ public class BookingUtil {
         }
         return isHoliday;
     }
-    
-    public static String generateUUID() {
-        return UUID.randomUUID().toString();
-    }
 
     public void addWeekView(LocalDate selectedDate, List<Facility> selectedFacilities, ModelAndView mav, Boolean onlyFutureTimeSlots, Boolean preventOverlapping) throws JsonProcessingException {
         //calculate date configuration for datepicker
@@ -288,37 +259,37 @@ public class BookingUtil {
         List<CalendarConfig> calendarConfigs = calendarConfigDAO.findBetween(firstDay, lastDay);
         Collections.sort(calendarConfigs);
         Map<String, DatePickerDayConfig> dayConfigs = getDayConfigMap(firstDay, lastDay, calendarConfigs);
-        
+
         List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsBetween(firstDay, lastDay);
-        
+
         //calculate available time slots
         List<TimeSlot> timeSlots = new ArrayList<>();
         List<LocalDate> weekDays = new ArrayList<>();
-        for (int i=1; i<=CalendarWeekDay.values().length; i++){
+        for (int i = 1; i <= CalendarWeekDay.values().length; i++) {
             LocalDate date = selectedDate.withDayOfWeek(i);
             weekDays.add(date);
-            if (!onlyFutureTimeSlots || !date.isBefore(today)){
+            if (!onlyFutureTimeSlots || !date.isBefore(today)) {
                 try {
                     //generate list of bookable time slots
                     timeSlots.addAll(getTimeSlotsForDate(date, calendarConfigs, confirmedBookings, onlyFutureTimeSlots, preventOverlapping));
-                } catch (CalendarConfigException e){
+                } catch (CalendarConfigException e) {
                     //safe to ignore
                 }
             }
         }
-        
+
         SortedSet<Offer> offers = new TreeSet<>();
         List<TimeRange> rangeList = new ArrayList<>();
         //Map<TimeRange, List<TimeSlot>> rangeList = new TreeMap<>();
-        for (TimeSlot slot: timeSlots){
+        for (TimeSlot slot : timeSlots) {
             Set<Offer> slotOffers = slot.getConfig().getOffers();
             offers.addAll(slotOffers);
-            
+
             TimeRange range = new TimeRange();
             range.setStartTime(slot.getStartTime());
             range.setEndTime(slot.getEndTime());
 
-            if (rangeList.contains(range)){
+            if (rangeList.contains(range)) {
                 range = rangeList.get(rangeList.indexOf(range));
             } else {
                 rangeList.add(range);
@@ -329,21 +300,21 @@ public class BookingUtil {
             range.setTimeSlots(slotis);
         }
         Collections.sort(rangeList);
-        
+
         List<Offer> selectedOffers = new ArrayList<>();
-        if (selectedFacilities.isEmpty()){
+        if (selectedFacilities.isEmpty()) {
             selectedOffers = offerDAO.findAll();
         } else {
-            for (Facility facility: selectedFacilities){
+            for (Facility facility : selectedFacilities) {
                 selectedOffers.addAll(facility.getOffers());
             }
         }
         Collections.sort(selectedOffers);
-        
+
         mav.addObject("dayConfigs", objectMapper.writeValueAsString(dayConfigs));
         mav.addObject("maxDate", lastDay.toString());
         mav.addObject("Day", selectedDate);
-        mav.addObject("NextMonday", selectedDate.plusDays(8-selectedDate.getDayOfWeek()));
+        mav.addObject("NextMonday", selectedDate.plusDays(8 - selectedDate.getDayOfWeek()));
         mav.addObject("PrevSunday", selectedDate.minusDays(selectedDate.getDayOfWeek()));
         mav.addObject("WeekDays", weekDays);
         mav.addObject("RangeMap", rangeList);
@@ -357,8 +328,8 @@ public class BookingUtil {
         checkForBookedCourts(timeSlot, confirmedBookings, true);
 
         Long bookingSlotsLeft = offer.getMaxConcurrentBookings();
-        for (Booking existingBooking: timeSlot.getBookings()){
-            if (existingBooking.getOffer().equals(offer)){
+        for (Booking existingBooking : timeSlot.getBookings()) {
+            if (existingBooking.getOffer().equals(offer)) {
                 bookingSlotsLeft--;
             }
         }
@@ -393,107 +364,107 @@ public class BookingUtil {
     public BigDecimal getPricePerMinute(CalendarConfig config) {
         return config.getBasePrice().divide(new BigDecimal(config.getMinDuration().toString()), MathContext.DECIMAL128);
     }
-    
+
     public void sendBookingConfirmation(HttpServletRequest request, Booking booking) throws MailException, IOException {
         Mail mail = new Mail();
         mail.setSubject(msg.get("BookingSuccessfulMailSubject"));
         mail.setBody(msg.get("BookingSuccessfulMailBody", new Object[]{
-            booking.getPlayer().toString(),
-            FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()),
-            FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
-            booking.getName(),
-            msg.get(booking.getPaymentMethod().toString()),
-            booking.getAmount(),
-            booking.getCurrency(),
-            CANCELLATION_POLICY_DEADLINE,
-            RequestUtil.getBaseURL(request) + "/bookings/booking/" + booking.getUUID() + "/cancel",
-            RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
-            RequestUtil.getBaseURL(request)}));
+                booking.getPlayer().toString(),
+                FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()),
+                FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
+                booking.getName(),
+                msg.get(booking.getPaymentMethod().toString()),
+                booking.getAmount(),
+                booking.getCurrency(),
+                CANCELLATION_POLICY_DEADLINE,
+                RequestUtil.getBaseURL(request) + "/bookings/booking/" + booking.getUUID() + "/cancel",
+                RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
+                RequestUtil.getBaseURL(request)}));
         mail.addRecipient(booking.getPlayer());
         mailUtils.send(mail, request);
     }
-    
+
     public void sendEventBookingConfirmation(HttpServletRequest request, Booking booking) throws MailException, IOException {
         Mail mail = new Mail();
         mail.setSubject(msg.get("EventBookingSuccessfulMailSubject"));
         mail.setBody(msg.get("BookingEventSuccessfulMailBody", new Object[]{
-            booking.getPlayer().toString(),
-            FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()),
-            FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
-            booking.getName(),
-            msg.get(booking.getPaymentMethod().toString()),
-            booking.getAmount(),
-            booking.getCurrency(),
-            (StringUtils.isEmpty(booking.getEvent().getConfirmationMailRemark()) ? msg.get("None") : booking.getEvent().getConfirmationMailRemark()),
-            RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
-            RequestUtil.getBaseURL(request)}));
+                booking.getPlayer().toString(),
+                FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()),
+                FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
+                booking.getName(),
+                msg.get(booking.getPaymentMethod().toString()),
+                booking.getAmount(),
+                booking.getCurrency(),
+                (StringUtils.isEmpty(booking.getEvent().getConfirmationMailRemark()) ? msg.get("None") : booking.getEvent().getConfirmationMailRemark()),
+                RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
+                RequestUtil.getBaseURL(request)}));
         mail.addRecipient(booking.getPlayer());
         mailUtils.send(mail, request);
     }
-    
-    public void sendNewBookingNotification(HttpServletRequest request, Booking booking) throws MailException, IOException{
+
+    public void sendNewBookingNotification(HttpServletRequest request, Booking booking) throws MailException, IOException {
         Set<Contact> contactsToNotifyOnBooking = Sets.newHashSet(contactDAO.findAllForBookings());
-        if (!contactsToNotifyOnBooking.isEmpty()){
+        if (!contactsToNotifyOnBooking.isEmpty()) {
             Mail mail = new Mail();
             mail.setSubject(msg.get("BookingSuccessfulMailSubjectAdmin", new Object[]{
-                FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
-                FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
-                booking.getPlayer().toString()
+                    FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
+                    FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
+                    booking.getPlayer().toString()
             }));
             mail.setBody(msg.get("BookingSuccessfulMailBodyAdmin", getDetailBody(request, booking)));
             mail.setRecipients(contactsToNotifyOnBooking);
             mailUtils.send(mail, request);
         }
     }
-    
-    public void sendBookingCancellationNotification(HttpServletRequest request, Booking booking) throws MailException, IOException{
+
+    public void sendBookingCancellationNotification(HttpServletRequest request, Booking booking) throws MailException, IOException {
         List<Contact> contactsToNotifyOnBookingCancellation = contactDAO.findAllForBookingCancellations();
-        if (!contactsToNotifyOnBookingCancellation.isEmpty()){
+        if (!contactsToNotifyOnBookingCancellation.isEmpty()) {
             Mail mail = new Mail();
             mail.setSubject(msg.get("BookingCancelledAdminMailSubject", new Object[]{
-                FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
-                FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
-                booking.getPlayer().toString()
+                    FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
+                    FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
+                    booking.getPlayer().toString()
             }));
             mail.setBody(msg.get("BookingCancelledAdminMailBody", getDetailBody(request, booking)));
             mail.addRecipient(booking.getPlayer());
-                mailUtils.send(mail, request);
+            mailUtils.send(mail, request);
         }
     }
 
     private Object[] getDetailBody(HttpServletRequest request, Booking booking) {
         return new Object[]{
-            booking.getPlayer().toString(),
-            FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
-            FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
-            booking.getName(),
-            msg.get(booking.getPaymentMethod().toString()),
-            booking.getAmount(),
-            booking.getCurrency(),
-            RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
-            RequestUtil.getBaseURL(request) + "/admin/reports/booking/" + booking.getId()
+                booking.getPlayer().toString(),
+                FormatUtils.DATE_HUMAN_READABLE.print(booking.getBookingDate()),
+                FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
+                booking.getName(),
+                msg.get(booking.getPaymentMethod().toString()),
+                booking.getAmount(),
+                booking.getCurrency(),
+                RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
+                RequestUtil.getBaseURL(request) + "/admin/reports/booking/" + booking.getId()
         };
     }
-    
+
     public OfferDurationPrice getOfferDurationPrice(List<CalendarConfig> configs, List<Booking> confirmedBookings, LocalDate selectedDate, LocalTime selectedTime, Offer selectedOffer) throws CalendarConfigException {
         List<TimeSlot> timeSlotsForDate = getTimeSlotsForDate(selectedDate, configs, confirmedBookings, Boolean.TRUE, Boolean.TRUE);
         boolean validStartTime = false;
-        for (TimeSlot timeSlot: timeSlotsForDate){
-            if (timeSlot.getStartTime().equals(selectedTime)){
+        for (TimeSlot timeSlot : timeSlotsForDate) {
+            if (timeSlot.getStartTime().equals(selectedTime)) {
                 validStartTime = true;
                 break;
             }
         }
-        
+
         OfferDurationPrice offerDurationPrices = null;
-        if (validStartTime){
+        if (validStartTime) {
             //convert to required data structure
             Map<Offer, List<CalendarConfig>> offerConfigMap = new HashMap<>();
-            for (CalendarConfig config: configs){
-                for (Offer offer: config.getOffers()){
-                    if (offer.equals(selectedOffer)){
+            for (CalendarConfig config : configs) {
+                for (Offer offer : config.getOffers()) {
+                    if (offer.equals(selectedOffer)) {
                         List<CalendarConfig> list = offerConfigMap.get(offer);
-                        if (list==null){
+                        if (list == null) {
                             list = new ArrayList<>();
                         }
                         list.add(config);
@@ -508,13 +479,13 @@ public class BookingUtil {
 
             Iterator<Map.Entry<Offer, List<CalendarConfig>>> iterator = offerConfigMap.entrySet().iterator();
             //for every offer
-            while (iterator.hasNext()){
+            while (iterator.hasNext()) {
                 Map.Entry<Offer, List<CalendarConfig>> entry = iterator.next();
                 Offer offer = entry.getKey();
                 List<CalendarConfig> configsForOffer = entry.getValue();
 
                 //make sure the first configuration starts before the requested booking time
-                if (selectedTime.compareTo(configsForOffer.get(0).getStartTime()) < 0){
+                if (selectedTime.compareTo(configsForOffer.get(0).getStartTime()) < 0) {
                     continue;
                 }
 
@@ -525,18 +496,18 @@ public class BookingUtil {
                 CalendarConfig previousConfig = null;
                 Map<Integer, BigDecimal> durationPriceMap = new TreeMap<>();
                 Boolean isContiguous = true;
-                for (CalendarConfig config: configsForOffer){
+                for (CalendarConfig config : configsForOffer) {
 
                     //make sure there is no gap between calendar configurations
-                    if (endTime == null){
+                    if (endTime == null) {
                         //first run
                         endTime = getLocalDateTime(selectedDate, selectedTime).plusMinutes(config.getMinDuration());
                     } else {
                         //break if there are durations available and calendar configs are not contiguous
-                        if (!durationPriceMap.isEmpty()){
+                        if (!durationPriceMap.isEmpty()) {
                             //we substract min interval before the comparison as it has been added during the last iteration
                             LocalDateTime configStartDateTime = getLocalDateTime(selectedDate, config.getStartTime());
-                            if (!endTime.minusMinutes(config.getMinInterval()).equals(configStartDateTime)){
+                            if (!endTime.minusMinutes(config.getMinInterval()).equals(configStartDateTime)) {
                                 break;
                             }
                         }
@@ -558,17 +529,17 @@ public class BookingUtil {
                         Long bookingSlotsLeft = getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
 
                         //we only allow contiguous bookings for any given offer
-                        if (bookingSlotsLeft<1){
+                        if (bookingSlotsLeft < 1) {
                             isContiguous = false;
                             break;
                         }
 
-                        if (price == null){
+                        if (price == null) {
                             //see if previousConfig endTime - minInterval matches the selected time. if so, take half of the previous config price as a basis
-                            if (previousConfig != null && previousConfig.getEndTime().minusMinutes(previousConfig.getMinInterval()).equals(selectedTime)){
+                            if (previousConfig != null && previousConfig.getEndTime().minusMinutes(previousConfig.getMinInterval()).equals(selectedTime)) {
                                 BigDecimal previousConfigPricePerMinute = getPricePerMinute(previousConfig);
                                 price = previousConfigPricePerMinute.multiply(new BigDecimal(previousConfig.getMinInterval()), MathContext.DECIMAL128);
-                                price = price.add(pricePerMinute.multiply(new BigDecimal(duration-previousConfig.getMinInterval()), MathContext.DECIMAL128));
+                                price = price.add(pricePerMinute.multiply(new BigDecimal(duration - previousConfig.getMinInterval()), MathContext.DECIMAL128));
                             } else {
                                 price = pricePerMinute.multiply(new BigDecimal(duration.toString()), MathContext.DECIMAL128);
                             }
@@ -584,7 +555,7 @@ public class BookingUtil {
                         endTime = endTime.plusMinutes(interval);
                     }
 
-                    if (!durationPriceMap.isEmpty()){
+                    if (!durationPriceMap.isEmpty()) {
                         OfferDurationPrice odp = new OfferDurationPrice();
                         odp.setOffer(offer);
                         odp.setDurationPriceMap(durationPriceMap);
@@ -592,10 +563,10 @@ public class BookingUtil {
                         offerDurationPrices = odp;
                     }
 
-                    if (!isContiguous){
+                    if (!isContiguous) {
                         //we only allow coniguous bookings for one offer. process next offer
                         break;
-                    } 
+                    }
                     previousConfig = config;
 
                 }
@@ -611,13 +582,13 @@ public class BookingUtil {
         paymentMethods.add(PaymentMethod.Subscription);
         paymentMethods.add(PaymentMethod.Cash);
         paymentMethods.add(PaymentMethod.Voucher);
-        
+
         //check if PayPal config exists and is active
         PayPalConfig paypalConfig = payPalConfigDAO.findFirst();
         if (paypalConfig != null && paypalConfig.getActive()) {
             paymentMethods.add(PaymentMethod.PayPal);
         }
-        
+
         //check if PayDirekt config exists and is active
         PayDirektConfig payDirektConfig = payDirektConfigDAO.findFirst();
         if (payDirektConfig != null && payDirektConfig.getActive()) {

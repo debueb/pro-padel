@@ -1,19 +1,10 @@
 package de.appsolve.padelcampus.db.dao;
-;
+
 import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
 import de.appsolve.padelcampus.db.model.Event;
-import java.util.List;
 import de.appsolve.padelcampus.db.model.Participant;
-import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
@@ -22,12 +13,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.*;
+
+;
+
 /**
- *
  * @author dominik
  */
 @Component
-public class EventDAO extends GenericDAO<Event> implements EventDAOI{
+public class EventDAO extends GenericDAO<Event> implements EventDAOI {
 
     @Override
     public List<Event> findByParticipant(Participant participant) {
@@ -40,7 +34,7 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI{
         sort(events);
         return events;
     }
-    
+
     @Override
     public List<Event> findAllUpcomingWithParticipant(Team team) {
         Criteria crit = getCriteria();
@@ -61,47 +55,47 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI{
         attributes.put("active", true);
         return findByAttributes(attributes);
     }
-    
+
     @Override
     public Event findByIdFetchWithGames(Long id) {
         return super.findByIdFetchEagerly(id, "games");
     }
-    
+
     @Override
     public Event findByIdFetchWithParticipants(Long id) {
         return super.findByIdFetchEagerly(id, "participants");
     }
-    
+
     @Override
     public Event findByIdFetchWithParticipantsAndGames(Long id) {
         return super.findByIdFetchEagerly(id, "participants", "games");
     }
-    
+
     @Override
     public Event findByIdFetchWithParticipantsAndPlayers(Long id) {
         return super.findByIdFetchEagerly(id, "participants", "participants.players");
     }
-    
+
     @Override
     public Event findByIdFetchWithParticipantsAndGamesAndGameParticipantsAndGamePlayers(Long id) {
         return super.findByIdFetchEagerly(id, "participants", "games", "games.participants", "games.participants.players");
     }
-    
+
     @Override
     public List<Event> findAllFetchWithParticipants() {
         return super.findAllFetchEagerly("participants");
     }
-    
+
     @Override
     public Page<Event> findAllFetchWithParticipantsAndPlayers(Pageable pageable) {
         return super.findAllFetchEagerly(pageable, "participants", "participants.players");
     }
-    
+
     @Override
     public Page<Event> findAllFetchWithParticipantsAndPlayers(Pageable pageable, Set<Criterion> criterions) {
         return super.findAllFetchEagerly(pageable, criterions, "participants", "participants.players");
     }
-    
+
     @Override
     public List<Event> findAllFetchWithParticipantsAndPlayers() {
         return super.findAllFetchEagerly("participants", "participants.players");
@@ -113,9 +107,9 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI{
         attributes.put("active", true);
         return super.findAllFetchEagerlyWithAttributes(attributes, "participants", "participants.players");
     }
-    
+
     @Override
-    protected Set<String> getIndexedProperties(){
-       return new HashSet<>(Arrays.asList("name")); 
+    protected Set<String> getIndexedProperties() {
+        return new HashSet<>(Arrays.asList("name"));
     }
 }

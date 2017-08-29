@@ -13,13 +13,6 @@ import de.appsolve.padelcampus.data.DateRange;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
-import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
-import de.appsolve.padelcampus.utils.SortUtil;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,30 +20,35 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/admin/reports/utilization")
-public class AdminReportsUtilizationController extends BaseController{
+public class AdminReportsUtilizationController extends BaseController {
 
     @Autowired
     BookingDAOI bookingDAO;
-    
+
     @Autowired
     ObjectMapper objectMapper;
-    
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
     }
-    
+
     @RequestMapping()
-    public ModelAndView getIndex() throws JsonProcessingException{
+    public ModelAndView getIndex() throws JsonProcessingException {
         LocalDate endDate = new LocalDate();
         LocalDate startDate = endDate.minusMonths(3);
         DateRange dateRange = new DateRange();
@@ -58,33 +56,33 @@ public class AdminReportsUtilizationController extends BaseController{
         dateRange.setEndDate(endDate);
         return getIndexView(dateRange);
     }
-    
-    @RequestMapping(method=POST)
-    public ModelAndView postIndex(@ModelAttribute("DateRange") DateRange dateRange) throws JsonProcessingException{
+
+    @RequestMapping(method = POST)
+    public ModelAndView postIndex(@ModelAttribute("DateRange") DateRange dateRange) throws JsonProcessingException {
         return getIndexView(dateRange);
     }
-    
+
     private ModelAndView getIndexView(DateRange dateRange) throws JsonProcessingException {
         ModelAndView mav = new ModelAndView("admin/reports/utilization/index");
         List<Booking> bookings = bookingDAO.findBlockedBookingsBetween(dateRange.getStartDate(), dateRange.getEndDate());
-        
+
         Map<Long, Integer> map = new TreeMap<>();
-        for (Booking booking: bookings){
+        for (Booking booking : bookings) {
             LocalDate date = booking.getBookingDate();
             Long millis = date.toDateTimeAtStartOfDay().getMillis();
             Integer count = map.get(millis);
-            if (count==null){
+            if (count == null) {
                 count = 1;
             } else {
                 count++;
             }
             map.put(millis, count);
         }
-        
+
         mav.addObject("chartData", objectMapper.writeValueAsString(map));
         mav.addObject("DateRange", dateRange);
-        
+
         return mav;
     }
-    
+
 }

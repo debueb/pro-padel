@@ -1,12 +1,13 @@
 package de.appsolve.padelcampus.db.dao.generic;
 
 import de.appsolve.padelcampus.db.model.ComparableEntity;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 @Transactional
@@ -22,7 +23,7 @@ public abstract class SortedBaseDAO<T extends ComparableEntity> extends BaseEnti
         return results;
     }
 
-    
+
     @Override
     public List<T> findByAttributes(Map<String, Object> attributeMap) {
         List<T> results = super.findByAttributes(attributeMap);

@@ -6,12 +6,11 @@
 package de.appsolve.padelcampus.exceptions;
 
 /**
- *
  * @author dominik
  */
-public class CalendarConfigException extends Exception{
-    
-    public CalendarConfigException(String msg){
+public class CalendarConfigException extends Exception {
+
+    public CalendarConfigException(String msg) {
         super(msg);
     }
 }

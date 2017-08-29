@@ -6,32 +6,32 @@
 package de.appsolve.padelcampus.comparators;
 
 import de.appsolve.padelcampus.db.model.Event;
+
 import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- *
  * @author dominik
  */
-public class EventByStartDateComparator implements Comparator<Event>, Serializable{
-    
+public class EventByStartDateComparator implements Comparator<Event>, Serializable {
+
     private static final long serialVersionUID = 1L;
-    
+
     private Boolean reverse = false;
-    
-    public EventByStartDateComparator(){
+
+    public EventByStartDateComparator() {
     }
-    
-    public EventByStartDateComparator(Boolean reverse){
+
+    public EventByStartDateComparator(Boolean reverse) {
         this.reverse = reverse;
     }
-    
+
     @Override
     public int compare(Event o1, Event o2) {
         int result = o1.getStartDate().compareTo(o2.getStartDate());
-        if (result == 0){
+        if (result == 0) {
             result = o1.getName().compareToIgnoreCase(o2.getName());
         }
-        return reverse ? result*-1 : result;
+        return reverse ? result * -1 : result;
     }
 }

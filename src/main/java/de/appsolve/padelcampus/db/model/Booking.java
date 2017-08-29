@@ -10,74 +10,57 @@ import de.appsolve.padelcampus.constants.BookingType;
 import de.appsolve.padelcampus.constants.Currency;
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.utils.FormatUtils;
-import static de.appsolve.padelcampus.utils.FormatUtils.TWO_FRACTIONAL_DIGITS_FORMAT;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.Set;
+
+import static de.appsolve.padelcampus.utils.FormatUtils.TWO_FRACTIONAL_DIGITS_FORMAT;
+
 /**
- *
  * @author dominik
  */
 @Entity
-public class Booking extends CustomerEntity{
-    
+public class Booking extends CustomerEntity {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+    @ManyToMany(fetch = FetchType.LAZY)
+    Set<Player> players;
     @OneToOne
     private Player player;
-    
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate bookingDate;
-    
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalTime")
     private LocalTime bookingTime;
-    
     @Column
     private Long duration;
-    
     @Column
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
-    
     @Column
     private BigDecimal amount;
-    
     @Column
     @Enumerated(EnumType.STRING)
     private Currency currency;
-
     @Column
     @Enumerated(EnumType.STRING)
     private BookingType bookingType;
-    
     @OneToOne
     private Voucher voucher;
-    
     @Column
     @Length(max = 8000, message = "{Length.Booking.comment}")
     private String comment;
-    
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<OfferOption> offerOptions;
-    
     /**
      * indicates the time that the user has entered the checkout (payment) phase
      * to indicate that the court should be blocked to avoid duplicate bookings
@@ -87,54 +70,42 @@ public class Booking extends CustomerEntity{
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     private LocalDateTime blockingTime;
-    
     /**
      * if the booking has been confirmed to the user within the UI
      */
     @Column
     private Boolean confirmed;
-    
     /**
      * if the booking has been cancelled
      */
     @Column
     private Boolean cancelled;
-    
     /**
      * reason for cancellation
      */
     private String cancelReason;
-    
     /**
      * if the booking has been confirmed to the user by mail
      */
     @Column
     private Boolean confirmationMailSent;
-    
     /**
      * if the payment has been confirmed by the payment provider
      */
     @Column
-    private Boolean paymentConfirmed;            
-    
+    private Boolean paymentConfirmed;
     @Column
     private String UUID;
-    
     @ManyToOne
     private Offer offer;
-    
     @ManyToOne
     private Event event;
-    
-    @ManyToMany(fetch = FetchType.LAZY)
-    Set<Player> players;
-    
     @Column
     private Boolean publicBooking;
-    
+
     @Column
     private String paypalPaymentId;
-    
+
     public Player getPlayer() {
         return player;
     }
@@ -166,14 +137,14 @@ public class Booking extends CustomerEntity{
     public void setDuration(Long duration) {
         this.duration = duration;
     }
-    
-    public LocalTime getBookingEndTime(){
-        if (bookingTime!=null && duration!=null){
+
+    public LocalTime getBookingEndTime() {
+        if (bookingTime != null && duration != null) {
             return bookingTime.plusMinutes(getDuration().intValue());
         }
         return null;
     }
-    
+
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
     }
@@ -185,24 +156,24 @@ public class Booking extends CustomerEntity{
     public BigDecimal getAmount() {
         return amount;
     }
-    
-    public String getAmountDouble(){
-        if (getAmount() == null){
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public String getAmountDouble() {
+        if (getAmount() == null) {
             return null;
         }
         return TWO_FRACTIONAL_DIGITS_FORMAT.format(getAmount().doubleValue());
     }
-    
-    public String getAmountInt(){
-        if (getAmount()==null){
+
+    public String getAmountInt() {
+        if (getAmount() == null) {
             return null;
         }
         BigDecimal value = amount.multiply(new BigDecimal("100"), MathContext.DECIMAL64);
         return value.toPlainString();
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
     }
 
     public BookingType getBookingType() {
@@ -345,12 +316,12 @@ public class Booking extends CustomerEntity{
     public String toString() {
         return String.format("%s - %s - %s - %s", getPlayer(), getName(), getBookingDate() == null ? "no booking date" : getBookingDate().toString(FormatUtils.DATE_WITH_DAY), getBookingTime() == null ? "no booking time" : getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE));
     }
-    
-    public StringBuilder getBaseUrl(){
+
+    public StringBuilder getBaseUrl() {
         StringBuilder sb = new StringBuilder();
-        if (offer != null){
+        if (offer != null) {
             sb.append("/bookings/booking/");
-        } else if (event != null){
+        } else if (event != null) {
             sb.append("/events/bookings/");
         }
         sb.append(getUUID());
@@ -363,20 +334,20 @@ public class Booking extends CustomerEntity{
         sb.append("/success");
         return sb.toString();
     }
-    
+
     @Transient
     public String getAbortUrl() {
         StringBuilder sb = getBaseUrl();
         sb.append("/abort");
         return sb.toString();
     }
-    
+
     @Transient
-    public String getName(){
-        if (getOffer() != null){
+    public String getName() {
+        if (getOffer() != null) {
             return getOffer().getName();
         }
-        if (getEvent() != null){
+        if (getEvent() != null) {
             return getEvent().getName();
         }
         return null;
@@ -384,20 +355,20 @@ public class Booking extends CustomerEntity{
 
     @Override
     public int compareTo(BaseEntityI o) {
-        if (o instanceof Booking){
-            Booking other = (Booking )o;
-            if (getBookingDate()!=null && other.getBookingDate()!=null){
+        if (o instanceof Booking) {
+            Booking other = (Booking) o;
+            if (getBookingDate() != null && other.getBookingDate() != null) {
                 int result = getBookingDate().compareTo(other.getBookingDate());
-                if (result != 0){
+                if (result != 0) {
                     return result;
                 }
-                if (getBookingTime()!=null && other.getBookingTime()!=null){
+                if (getBookingTime() != null && other.getBookingTime() != null) {
                     return getBookingTime().compareTo(other.getBookingTime());
                 }
             }
         }
         return super.compareTo(o);
     }
-    
-    
+
+
 }

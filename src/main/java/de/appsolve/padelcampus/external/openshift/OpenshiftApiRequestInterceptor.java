@@ -5,8 +5,6 @@
  */
 package de.appsolve.padelcampus.external.openshift;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -15,23 +13,25 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 /**
- *
  * @author dominik
  */
-public class OpenshiftApiRequestInterceptor implements ClientHttpRequestInterceptor{
-    
+public class OpenshiftApiRequestInterceptor implements ClientHttpRequestInterceptor {
+
     private String openshiftUsername;
     private String openshiftPassword;
-    
-    public OpenshiftApiRequestInterceptor(String username, String password){
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)){
+
+    public OpenshiftApiRequestInterceptor(String username, String password) {
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             throw new IllegalArgumentException("Missing OPENSHIFT_USERNAME and/or OPENSHIFT_PASSWORD");
         }
         this.openshiftUsername = username;
         this.openshiftPassword = password;
     }
-    
+
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         HttpHeaders headers = request.getHeaders();

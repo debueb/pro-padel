@@ -8,31 +8,31 @@ package de.appsolve.padelcampus.spring;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.appsolve.padelcampus.db.model.DaySchedule;
-import java.beans.PropertyEditorSupport;
-import java.io.IOException;
-import java.util.Set;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.beans.PropertyEditorSupport;
+import java.io.IOException;
+import java.util.Set;
+
 /**
- *
  * @author dominik
  */
 @Component
 public class DaySchedulePropertyEditor extends PropertyEditorSupport {
-    
+
     private static final Logger LOG = Logger.getLogger(DaySchedulePropertyEditor.class);
 
     @Autowired
     ObjectMapper objectMapper;
 
     @Override
-    public void setAsText(String text)
-    {
+    public void setAsText(String text) {
         Object obj;
         try {
-            obj = objectMapper.readValue(text, new TypeReference<Set<DaySchedule>>(){});
+            obj = objectMapper.readValue(text, new TypeReference<Set<DaySchedule>>() {
+            });
             setValue(obj);
         } catch (IOException ex) {
             LOG.error(ex);

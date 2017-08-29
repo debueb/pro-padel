@@ -6,38 +6,33 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
- *
  * @author dominik
  */
 @Entity
-public class GameSet extends CustomerEntity{
-    
+public class GameSet extends CustomerEntity {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+
     @OneToOne
     private Game game;
-    
+
     @OneToOne
     private Participant participant;
-    
+
     //event needs to be fetched lazily for scores to work reasonably fast
     @OneToOne(fetch = FetchType.LAZY)
     private Event event;
-    
+
     @Column
     private Integer setNumber;
-    
+
     @Column
     private Integer setGames;
-    
+
     public Game getGame() {
         return game;
     }
@@ -77,14 +72,14 @@ public class GameSet extends CustomerEntity{
     public void setSetGames(Integer setGames) {
         this.setGames = setGames;
     }
-    
+
     @Override
-    public int compareTo(BaseEntityI o){
-        if (o instanceof GameSet){
+    public int compareTo(BaseEntityI o) {
+        if (o instanceof GameSet) {
             GameSet other = (GameSet) o;
             //sort by set first, then by participant
-            int r1 = getSetNumber()-other.getSetNumber();
-            if (r1!=0){
+            int r1 = getSetNumber() - other.getSetNumber();
+            if (r1 != 0) {
                 return r1;
             }
             return getParticipant().compareTo(other.getParticipant());

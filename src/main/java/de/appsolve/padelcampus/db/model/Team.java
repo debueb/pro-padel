@@ -6,38 +6,31 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.Transient;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
- *
  * @author dominik
  */
 @Entity
 @DiscriminatorValue("Team")
-public class Team extends Participant{
-    
+public class Team extends Participant {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.teamName}")
     private String name;
-    
-    @ManyToMany(fetch=FetchType.LAZY)
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @NotEmpty(message = "{NotEmpty.teamPlayers}")
     @OrderBy("firstName, lastName")
     private Set<Player> players;
-    
+
     @ManyToOne
     private Community community;
 

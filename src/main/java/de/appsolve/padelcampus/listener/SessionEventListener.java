@@ -14,15 +14,16 @@ import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.PayPalConfig;
 import de.appsolve.padelcampus.reporting.ErrorReporter;
 import de.appsolve.padelcampus.utils.SessionUtil;
-import java.util.List;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+import java.util.List;
 
 /**
  * Delete all unpaid blocking bookings whose session timeout has expired
@@ -34,18 +35,18 @@ public class SessionEventListener implements HttpSessionListener {
     private static final Logger LOG = Logger.getLogger(SessionEventListener.class);
 
     private static int activeSessions = 0;
-
-    @Autowired
-    private SessionUtil sessionUtil;
-
-    @Autowired
-    private BookingBaseDAOI bookingBaseDAO;
-
-    @Autowired
-    private PayPalConfigBaseDAOI payPalConfigBaseDAO;
-    
     @Autowired
     protected ErrorReporter errorReporter;
+    @Autowired
+    private SessionUtil sessionUtil;
+    @Autowired
+    private BookingBaseDAOI bookingBaseDAO;
+    @Autowired
+    private PayPalConfigBaseDAOI payPalConfigBaseDAO;
+
+    public static int getActiveSessions() {
+        return activeSessions;
+    }
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
@@ -61,7 +62,7 @@ public class SessionEventListener implements HttpSessionListener {
         LocalDateTime now = new LocalDateTime();
         Booking booking = sessionUtil.getBooking(se.getSession());
         if (booking != null) {
-            if (booking.getId() != null){
+            if (booking.getId() != null) {
                 //get latest booking from DB
                 booking = bookingBaseDAO.findById(booking.getId());
             }
@@ -76,15 +77,11 @@ public class SessionEventListener implements HttpSessionListener {
         }
     }
 
-    public static int getActiveSessions() {
-        return activeSessions;
-    }
-
     private void cancelBooking(Booking booking, LocalDateTime maxAge) {
         try {
             //if the booking is not confirmed and has not been blocked or is older than max Age
             if (!booking.getConfirmed() && (booking.getBlockingTime() == null || booking.getBlockingTime().isBefore(maxAge))) {
-                if (booking.getPaymentMethod()!=null && booking.getPaymentMethod().equals(PaymentMethod.PayPal)) {
+                if (booking.getPaymentMethod() != null && booking.getPaymentMethod().equals(PaymentMethod.PayPal)) {
                     if (StringUtils.isEmpty(booking.getPaypalPaymentId())) {
                         LOG.info("Cancelling paypal booking [UUID:" + booking.getUUID() + ", user=" + booking.getPlayer().toString() + ", date=" + booking.getBookingDate() + ", time=" + booking.getBookingTime() + ", payment state=unpaid] due to session timeout");
                         bookingBaseDAO.cancelBooking(booking);

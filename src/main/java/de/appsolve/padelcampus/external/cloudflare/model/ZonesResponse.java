@@ -8,11 +8,10 @@ package de.appsolve.padelcampus.external.cloudflare.model;
 import java.util.List;
 
 /**
- *
  * @author dominik
  */
-public class ZonesResponse extends CloudFlareApiResponse{
-    
+public class ZonesResponse extends CloudFlareApiResponse {
+
     private List<Zone> result;
 
     public List<Zone> getResult() {

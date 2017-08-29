@@ -9,14 +9,13 @@ package de.appsolve.padelcampus.data;
 import de.appsolve.padelcampus.annotations.EmailWithTld;
 
 /**
- *
  * @author dominik
  */
 public class Credentials {
-    
+
     @EmailWithTld
     private String email;
-    
+
     private String password;
 
     public String getEmail() {

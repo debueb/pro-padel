@@ -6,18 +6,18 @@
 package de.appsolve.padelcampus.admin.controller.reports;
 
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
+
 import java.util.Objects;
 
 /**
- *
  * @author dominik
  */
-public class TimeHeatMapEntry implements Comparable<TimeHeatMapEntry>{
-    
+public class TimeHeatMapEntry implements Comparable<TimeHeatMapEntry> {
+
     private CalendarWeekDay dayOfWeek;
-    
+
     private String time;
-    
+
     private Integer count;
 
     public CalendarWeekDay getDayOfWeek() {
@@ -27,7 +27,7 @@ public class TimeHeatMapEntry implements Comparable<TimeHeatMapEntry>{
     public void setDayOfWeek(CalendarWeekDay dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
     }
-    
+
     public String getTime() {
         return time;
     }
@@ -70,10 +70,10 @@ public class TimeHeatMapEntry implements Comparable<TimeHeatMapEntry>{
     @Override
     public int compareTo(TimeHeatMapEntry o) {
         int result = 0;
-        if (time != null){
+        if (time != null) {
             result = time.compareTo(o.time);
-            if (result == 0){
-                if (dayOfWeek != null){
+            if (result == 0) {
+                if (dayOfWeek != null) {
                     result = dayOfWeek.compareTo(o.dayOfWeek);
                 }
             }

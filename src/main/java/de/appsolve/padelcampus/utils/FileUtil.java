@@ -30,6 +30,11 @@ public class FileUtil {
     @Autowired
     ImageDAOI imageDAO;
 
+    public static String getFileContents(String fileName) throws IOException {
+        URL url = Resources.getResource(fileName);
+        return Resources.toString(url, Charsets.UTF_8);
+    }
+
     public Image save(String contentType, byte[] byteArray, ImageCategory category, Integer width, Integer height) throws IOException, ImageProcessingException {
         //generate file path based on checksum of byte array
         String checksum = DigestUtils.sha256Hex(byteArray);
@@ -62,11 +67,6 @@ public class FileUtil {
 
             return save(contentType, byteArray, category, bufferedImage.getWidth(), bufferedImage.getHeight());
         }
-    }
-
-    public static String getFileContents(String fileName) throws IOException {
-        URL url = Resources.getResource(fileName);
-        return Resources.toString(url, Charsets.UTF_8);
     }
 
 }

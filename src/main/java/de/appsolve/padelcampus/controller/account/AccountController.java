@@ -7,21 +7,21 @@
 package de.appsolve.padelcampus.controller.account;
 
 import de.appsolve.padelcampus.controller.BaseController;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/account")
 public class AccountController extends BaseController {
-    
+
     @RequestMapping()
-    public ModelAndView getIndex(HttpServletRequest request){
+    public ModelAndView getIndex(HttpServletRequest request) {
         return new ModelAndView("account/index");
     }
 }

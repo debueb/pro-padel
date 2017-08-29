@@ -7,50 +7,41 @@ package de.appsolve.padelcampus.utils;
 
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
-import de.appsolve.padelcampus.db.model.Event;
-import de.appsolve.padelcampus.db.model.Game;
-import de.appsolve.padelcampus.db.model.Participant;
-import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.db.model.Team;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import de.appsolve.padelcampus.db.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.*;
+
 /**
- *
  * @author dominik
  */
 @Component
 public class EventsUtil {
-    
+
     @Autowired
     GameDAOI gameDAO;
-    
+
     @Autowired
     TeamDAOI teamDAO;
-    
+
     @Autowired
     GameUtil gameUtil;
 
     public SortedMap<Integer, List<Game>> getRoundGameMap(Event event) {
         return getRoundGameMap(event, null);
     }
-    
+
     public SortedMap<Integer, List<Game>> getRoundGameMap(Event event, Integer round) {
-        SortedMap<Integer, List<Game>> roundGames= new TreeMap<>();
-        
-        for (Game game: event.getGames()){
-            if (game.getRound()!=null){
-                if (round != null && !game.getRound().equals(round)){
+        SortedMap<Integer, List<Game>> roundGames = new TreeMap<>();
+
+        for (Game game : event.getGames()) {
+            if (game.getRound() != null) {
+                if (round != null && !game.getRound().equals(round)) {
                     continue;
                 }
                 List<Game> games = roundGames.get(game.getRound());
-                if (games == null){
+                if (games == null) {
                     games = new ArrayList<>();
                 }
                 games.add(game);
@@ -63,17 +54,17 @@ public class EventsUtil {
     public SortedMap<Integer, List<Game>> getGroupGameMap(Event event) {
         return getGroupGameMap(event, null);
     }
-    
+
     public SortedMap<Integer, List<Game>> getGroupGameMap(Event event, Integer round) {
-        SortedMap<Integer, List<Game>> groupGames= new TreeMap<>();
-        
-        for (Game game: event.getGames()){
-            if (game.getGroupNumber()!=null){
-                if (round != null && !round.equals(game.getRound())){
+        SortedMap<Integer, List<Game>> groupGames = new TreeMap<>();
+
+        for (Game game : event.getGames()) {
+            if (game.getGroupNumber() != null) {
+                if (round != null && !round.equals(game.getRound())) {
                     continue;
                 }
                 List<Game> games = groupGames.get(game.getGroupNumber());
-                if (games == null){
+                if (games == null) {
                     games = new ArrayList<>();
                 }
                 games.add(game);
@@ -82,54 +73,54 @@ public class EventsUtil {
         }
         return groupGames;
     }
-    
-    
+
+
     public void createKnockoutGames(Event event, List<Participant> participants) {
         //determine number of games per round
-        int numGamesPerRound = Integer.highestOneBit(participants.size()-1);
+        int numGamesPerRound = Integer.highestOneBit(participants.size() - 1);
 
         //determine seed positions
         List<Integer> seedingPositions = getSeedPositions(participants);
 
         //fill up empty spots with bye's
-        for (int i=participants.size(); i< numGamesPerRound*2; i++){
+        for (int i = participants.size(); i < numGamesPerRound * 2; i++) {
             participants.add(null);
         }
 
         //create games
-        int round=0;
+        int round = 0;
         SortedMap<Integer, List<Game>> roundGames = new TreeMap<>();
-        while (numGamesPerRound>=1){
+        while (numGamesPerRound >= 1) {
             List<Game> games = new ArrayList<>();
-            for (int i=0; i<numGamesPerRound; i++){
+            for (int i = 0; i < numGamesPerRound; i++) {
                 Game game = new Game();
                 game.setEvent(event);
                 game.setRound(round);
                 game = gameDAO.saveOrUpdate(game);
 
-                if (round==0){
+                if (round == 0) {
                     //set participants
                     Set<Participant> gameParticipants = new HashSet<>();
-                    addParticipants(gameParticipants, participants.get(seedingPositions.get(i*2)));
-                    addParticipants(gameParticipants, participants.get(seedingPositions.get(i*2+1)));
+                    addParticipants(gameParticipants, participants.get(seedingPositions.get(i * 2)));
+                    addParticipants(gameParticipants, participants.get(seedingPositions.get(i * 2 + 1)));
                     game.setParticipants(gameParticipants);
                 } else {
                     //set game chain
-                    List<Game> previousRoundGames = roundGames.get(round-1);
-                    Game first = previousRoundGames.get(i*2);
-                    Game second = previousRoundGames.get(i*2+1);
+                    List<Game> previousRoundGames = roundGames.get(round - 1);
+                    Game first = previousRoundGames.get(i * 2);
+                    Game second = previousRoundGames.get(i * 2 + 1);
                     first.setNextGame(game);
                     second.setNextGame(game);
                     gameDAO.saveOrUpdate(first);
                     gameDAO.saveOrUpdate(second);
 
 
-                    if (round==1){
+                    if (round == 1) {
                         //advance seeds that have bye's
-                        if (first.getParticipants().size()==1){
+                        if (first.getParticipants().size() == 1) {
                             game.setParticipants(new HashSet<>(first.getParticipants()));
                         }
-                        if (second.getParticipants().size()==1){
+                        if (second.getParticipants().size() == 1) {
                             Set<Participant> existingParticipants = game.getParticipants();
                             existingParticipants.addAll(new HashSet<>(second.getParticipants()));
                             game.setParticipants(existingParticipants);
@@ -142,28 +133,28 @@ public class EventsUtil {
                 games.add(game);
             }
             roundGames.put(round, games);
-            numGamesPerRound = numGamesPerRound/2;
+            numGamesPerRound = numGamesPerRound / 2;
             round++;
         }
     }
-    
+
     private void addParticipants(Set<Participant> gameParticipants, Participant p) {
-        if (p != null){
+        if (p != null) {
             gameParticipants.add(p);
         }
     }
 
     private List<Integer> getSeedPositions(List<Participant> participants) {
-        Double numberOfDivisionRuns = Math.log(participants.size()) / Math.log(2)-1;
+        Double numberOfDivisionRuns = Math.log(participants.size()) / Math.log(2) - 1;
         List<Integer> seedingPositions = new ArrayList<>();
         seedingPositions.add(0);
         seedingPositions.add(1);
-        for (int divisionRun=0; divisionRun<numberOfDivisionRuns; divisionRun++){
+        for (int divisionRun = 0; divisionRun < numberOfDivisionRuns; divisionRun++) {
             int size = seedingPositions.size();
             List<Integer> newSeeedingPositions = new ArrayList<>();
-            for (Integer position: seedingPositions){
+            for (Integer position : seedingPositions) {
                 newSeeedingPositions.add(position);
-                newSeeedingPositions.add(size*2-1-position);
+                newSeeedingPositions.add(size * 2 - 1 - position);
             }
             seedingPositions = newSeeedingPositions;
         }
@@ -173,14 +164,14 @@ public class EventsUtil {
     public List<Game> createPullGames(Event model) {
         //create teams which do not exist yet
         Set<Team> teams = new HashSet<>();
-        for (Player player1: model.getPlayers()){
-            for (Player player2: model.getPlayers()){
-                if (!player1.equals(player2)){
+        for (Player player1 : model.getPlayers()) {
+            for (Player player2 : model.getPlayers()) {
+                if (!player1.equals(player2)) {
                     Set<Player> players = new HashSet<>();
                     players.add(player1);
                     players.add(player2);
                     Team team = teamDAO.findByPlayers(players);
-                    if (team == null){
+                    if (team == null) {
                         team = new Team();
                         team.setPlayers(players);
                         team.setName(TeamUtil.getTeamName(team));
@@ -200,5 +191,5 @@ public class EventsUtil {
         //create matches
         return gameUtil.createMissingPullGames(model, teams);
     }
-    
+
 }

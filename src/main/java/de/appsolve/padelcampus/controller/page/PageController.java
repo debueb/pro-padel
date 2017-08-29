@@ -16,16 +16,15 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/page/{moduleId}")
-public class PageController extends BaseController{
-    
+public class PageController extends BaseController {
+
     @RequestMapping()
-    public ModelAndView getIndex(@PathVariable("moduleId") String moduleTitle){
-        RedirectView red = new RedirectView("/"+UrlEscapers.urlPathSegmentEscaper().escape(moduleTitle));
+    public ModelAndView getIndex(@PathVariable("moduleId") String moduleTitle) {
+        RedirectView red = new RedirectView("/" + UrlEscapers.urlPathSegmentEscaper().escape(moduleTitle));
         red.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return new ModelAndView(red);
     }

@@ -40,13 +40,12 @@ import java.util.logging.Logger;
  */
 public class WhitespaceFilter implements Filter {
 
-    private final static Logger LOGGER = Logger.getLogger(WhitespaceFilter.class.getName());
-
     // Constants ----------------------------------------------------------------------------------
     // Specify here where you'd like to start/stop the trimming.
     // You may want to replace this by init-param and initialize in init() instead.
     static final String[] START_TRIM_AFTER = {"<html", "</textarea", "</pre"};
     static final String[] STOP_TRIM_AFTER = {"</html", "<textarea", "<pre"};
+    private final static Logger LOGGER = Logger.getLogger(WhitespaceFilter.class.getName());
 
     // Actions ------------------------------------------------------------------------------------
 

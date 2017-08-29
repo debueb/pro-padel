@@ -13,79 +13,66 @@ import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
-import de.appsolve.padelcampus.db.model.Event;
-import de.appsolve.padelcampus.db.model.Game;
-import de.appsolve.padelcampus.db.model.Participant;
-import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.db.model.*;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
-import de.appsolve.padelcampus.utils.GameUtil;
-import de.appsolve.padelcampus.utils.PlayerUtil;
-import de.appsolve.padelcampus.utils.RankingUtil;
-import de.appsolve.padelcampus.utils.RequestUtil;
-import de.appsolve.padelcampus.utils.SessionUtil;
-import de.appsolve.padelcampus.utils.SortUtil;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import de.appsolve.padelcampus.utils.*;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.util.*;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/players")
 public class PlayersController extends BaseController {
-    
+
     private static final Logger LOG = Logger.getLogger(PlayersController.class);
-    
+
     @Autowired
     PlayerDAOI playerDAO;
-    
+
     @Autowired
     TeamDAOI teamDAO;
-    
+
     @Autowired
     EventDAOI eventDAO;
-    
+
     @Autowired
     SessionUtil sessionUtil;
-    
+
     @Autowired
     RankingUtil rankingUtil;
-    
+
     @Autowired
     GameUtil gameUtil;
-    
+
     @Autowired
     GameDAOI gameDAO;
-    
-    @RequestMapping(method=GET, value="/player/{UUID}")
-    public ModelAndView getPlayer(@PathVariable("UUID") String UUID, HttpServletRequest request){
+
+    @RequestMapping(method = GET, value = "/player/{UUID}")
+    public ModelAndView getPlayer(@PathVariable("UUID") String UUID, HttpServletRequest request) {
         return getPlayerView(playerDAO.findByUUID(UUID));
     }
-    
-    @RequestMapping(method=POST, value="/player/{UUID}")
-    public ModelAndView resendAccountVerificationEmail(@PathVariable("UUID") String UUID, HttpServletRequest request) throws MailException, IOException{
+
+    @RequestMapping(method = POST, value = "/player/{UUID}")
+    public ModelAndView resendAccountVerificationEmail(@PathVariable("UUID") String UUID, HttpServletRequest request) throws MailException, IOException {
         Player player = sessionUtil.getUser(request);
         String accountVerificationLink = PlayerUtil.getAccountVerificationLink(request, player);
         Mail mail = new Mail();
@@ -97,33 +84,33 @@ public class PlayersController extends BaseController {
         mav.addObject("AccountVerificationLinkSent", true);
         return mav;
     }
-    
-    @RequestMapping(method=GET, value="/player/{UUID}/games")
-    public ModelAndView getGamesForPlayer(@PathVariable String UUID, @RequestParam(defaultValue = "date") String sortBy){
+
+    @RequestMapping(method = GET, value = "/player/{UUID}/games")
+    public ModelAndView getGamesForPlayer(@PathVariable String UUID, @RequestParam(defaultValue = "date") String sortBy) {
         Player player = playerDAO.findByUUID(UUID);
         ModelAndView mav = new ModelAndView("players/games");
         mav.addObject("Player", player);
         mav.addObject("GameResultMap", gameUtil.getGameResultMap(player, sortBy));
         return mav;
     }
-    
+
     @RequestMapping("/player/{UUID}/teams")
-    public ModelAndView getTeamsForPlayer(@PathVariable String UUID){
+    public ModelAndView getTeamsForPlayer(@PathVariable String UUID) {
         Player player = playerDAO.findByUUID(UUID);
         List<Team> teams = teamDAO.findByPlayer(player);
         Collections.sort(teams, new TeamByNameComparator());
         Iterator<Team> iterator = teams.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             boolean remove = true;
             Team team = iterator.next();
             List<Game> games = gameDAO.findByParticipant(team);
-            for (Game game: games){
-                if (!game.getGameSets().isEmpty()){
+            for (Game game : games) {
+                if (!game.getGameSets().isEmpty()) {
                     remove = false;
                     break;
                 }
             }
-            if (remove){
+            if (remove) {
                 iterator.remove();
             }
         }
@@ -133,13 +120,13 @@ public class PlayersController extends BaseController {
         return mav;
     }
 
-    
+
     @RequestMapping(value = "/player/{UUID}/vcard.vcf")
-    public void addToContacts(@PathVariable("UUID") String UUID, HttpServletRequest request, HttpServletResponse response) throws IOException{
+    public void addToContacts(@PathVariable("UUID") String UUID, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Player player = playerDAO.findByUUID(UUID);
         StringBuilder sb = new StringBuilder();
         response.setHeader("Content-type", "text/x-vcard; charset=utf-8");
-        response.setHeader("Content-Disposition", "attachment; filename=\""+player.toString()+".vcf\";");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + player.toString() + ".vcf\";");
         sb.append("BEGIN:VCARD\n");
         sb.append("VERSION:3.0\n");
         sb.append("N:").append(player.getLastName()).append(";").append(player.getFirstName()).append(";;;\n");
@@ -152,18 +139,18 @@ public class PlayersController extends BaseController {
         response.getOutputStream().write(sb.toString().getBytes(Charset.forName("UTF-8")));
         response.getOutputStream().flush();
     }
-    
+
     @RequestMapping("/event/{id}")
-    public ModelAndView getByEvent(@PathVariable("id") Long eventId){
+    public ModelAndView getByEvent(@PathVariable("id") Long eventId) {
         Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(eventId);
-        if (event == null){
+        if (event == null) {
             throw new ResourceNotFoundException();
         }
         Set<Player> participants = event.getAllPlayers();
         return getPlayersView(event, participants, msg.get("PlayersIn", new Object[]{participants.size(), event.getName()}));
     }
 
-    private ModelAndView getPlayersView(Event event, Collection<Player> players, String title){
+    private ModelAndView getPlayersView(Event event, Collection<Player> players, String title) {
         Map<Participant, BigDecimal> ranking = rankingUtil.getPlayerRanking(players);
         ModelAndView mav = new ModelAndView("players/players");
         mav.addObject("RankingMap", SortUtil.sortMap(ranking));
@@ -173,7 +160,7 @@ public class PlayersController extends BaseController {
     }
 
     private ModelAndView getPlayerView(Player player) {
-        if (player == null){
+        if (player == null) {
             throw new ResourceNotFoundException();
         }
         Map<Participant, BigDecimal> ranking = rankingUtil.getRanking(player.getGender());

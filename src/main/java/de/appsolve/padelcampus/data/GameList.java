@@ -6,12 +6,13 @@
 package de.appsolve.padelcampus.data;
 
 import de.appsolve.padelcampus.db.model.Game;
+
 import java.util.List;
 
 public class GameList {
 
     List<Game> list;
-    
+
     public List<Game> getList() {
         return list;
     }

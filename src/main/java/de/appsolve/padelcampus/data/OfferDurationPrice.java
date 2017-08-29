@@ -7,22 +7,22 @@ package de.appsolve.padelcampus.data;
 
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
+
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
 
 /**
- *
  * @author dominik
  */
 public class OfferDurationPrice implements Comparable<OfferDurationPrice> {
-    
+
     private Offer offer;
-    
+
     private Map<Integer, BigDecimal> durationPriceMap;
-    
+
     private CalendarConfig config;
-    
+
     public Offer getOffer() {
         return offer;
     }
@@ -49,10 +49,10 @@ public class OfferDurationPrice implements Comparable<OfferDurationPrice> {
 
     @Override
     public int compareTo(OfferDurationPrice o) {
-        if (offer==null){
+        if (offer == null) {
             return -1;
         }
-        if (o==null || o.getOffer() == null){
+        if (o == null || o.getOffer() == null) {
             return 1;
         }
         return offer.getName().compareTo(o.getOffer().getName());
@@ -82,6 +82,6 @@ public class OfferDurationPrice implements Comparable<OfferDurationPrice> {
         }
         return true;
     }
-    
-    
+
+
 }

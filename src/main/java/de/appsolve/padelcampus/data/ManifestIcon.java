@@ -6,11 +6,10 @@
 package de.appsolve.padelcampus.data;
 
 /**
- *
  * @author dominik
  */
 public class ManifestIcon {
-    
+
     private String src;
     private String type;
     private String sizes;

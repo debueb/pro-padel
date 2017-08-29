@@ -9,13 +9,13 @@ package de.appsolve.padelcampus.db.dao;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.AdminGroup;
 import de.appsolve.padelcampus.db.model.Player;
+
 import java.util.List;
 
 /**
- *
  * @author dominik
  */
-public interface AdminGroupDAOI extends BaseEntityDAOI<AdminGroup>{
-    
+public interface AdminGroupDAOI extends BaseEntityDAOI<AdminGroup> {
+
     List<AdminGroup> findByPlayer(Player player);
 }

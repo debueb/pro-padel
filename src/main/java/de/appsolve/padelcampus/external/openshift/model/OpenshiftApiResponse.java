@@ -8,11 +8,10 @@ package de.appsolve.padelcampus.external.openshift.model;
 import java.util.List;
 
 /**
- *
  * @author dominik
  */
 public class OpenshiftApiResponse {
-    
+
     private String status;
     private String type;
     private List<Message> messages;

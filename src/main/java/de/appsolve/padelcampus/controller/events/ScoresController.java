@@ -11,84 +11,74 @@ import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.GameSetDAOI;
-import de.appsolve.padelcampus.db.model.Event;
-import de.appsolve.padelcampus.db.model.Game;
-import de.appsolve.padelcampus.db.model.Participant;
-import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.db.model.*;
 import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import de.appsolve.padelcampus.utils.RankingUtil;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.*;
+
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/scores")
-public class ScoresController extends BaseController{
-    
+public class ScoresController extends BaseController {
+
     @Autowired
     EventDAOI eventDAO;
-    
+
     @Autowired
     GameDAOI gameDAO;
-    
+
     @Autowired
     GameSetDAOI gameSetDAO;
-    
+
     @Autowired
     RankingUtil rankingUtil;
-    
+
     @RequestMapping
-    public ModelAndView getIndex(){
+    public ModelAndView getIndex() {
         ModelAndView mav = new ModelAndView("scores/index");
         mav.addObject("Events", eventDAO.findAllActive());
         return mav;
     }
-    
+
     @RequestMapping("/event/{eventId}")
-    public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
+    public ModelAndView getEvent(@PathVariable("eventId") Long eventId) {
         Event event = eventDAO.findByIdFetchWithParticipants(eventId);
-        if (event == null){
+        if (event == null) {
             throw new ResourceNotFoundException();
         }
         List<Game> eventGames = gameDAO.findByEventWithPlayers(event);
         List<ScoreEntry> scoreEntries;
-        switch (event.getEventType()){
+        switch (event.getEventType()) {
             case PullRoundRobin:
                 //pull participants are individual players. game participants are teams
                 Set<Participant> teams = new HashSet<>();
-                for (Game game: eventGames){
+                for (Game game : eventGames) {
                     teams.addAll(game.getParticipants());
                 }
                 List<ScoreEntry> teamScores = rankingUtil.getScores(teams, eventGames);
                 Map<Player, ScoreEntry> playerScores = new HashMap<>();
-                for (ScoreEntry teamScore: teamScores){
+                for (ScoreEntry teamScore : teamScores) {
                     Team team = (Team) teamScore.getParticipant();
-                    for (Player player: team.getPlayers()){
+                    for (Player player : team.getPlayers()) {
                         ScoreEntry playerScore = playerScores.get(player);
-                        if (playerScore == null){
+                        if (playerScore == null) {
                             playerScore = new ScoreEntry();
                             playerScore.setParticipant(player);
-                        } 
-                        playerScore.setGamesPlayed(playerScore.getGamesPlayed()+teamScore.getGamesPlayed());
-                        playerScore.setGamesWon(playerScore.getGamesWon()+teamScore.getGamesWon());
-                        playerScore.setMatchesPlayed(playerScore.getMatchesPlayed()+teamScore.getMatchesPlayed());
-                        playerScore.setMatchesWon(playerScore.getMatchesWon()+teamScore.getMatchesWon());
-                        playerScore.setSetsPlayed(playerScore.getSetsPlayed()+teamScore.getSetsPlayed());
-                        playerScore.setSetsWon(playerScore.getSetsWon()+teamScore.getSetsWon());
+                        }
+                        playerScore.setGamesPlayed(playerScore.getGamesPlayed() + teamScore.getGamesPlayed());
+                        playerScore.setGamesWon(playerScore.getGamesWon() + teamScore.getGamesWon());
+                        playerScore.setMatchesPlayed(playerScore.getMatchesPlayed() + teamScore.getMatchesPlayed());
+                        playerScore.setMatchesWon(playerScore.getMatchesWon() + teamScore.getMatchesWon());
+                        playerScore.setSetsPlayed(playerScore.getSetsPlayed() + teamScore.getSetsPlayed());
+                        playerScore.setSetsWon(playerScore.getSetsWon() + teamScore.getSetsWon());
                         playerScores.put(player, playerScore);
                     }
                 }
@@ -98,7 +88,7 @@ public class ScoresController extends BaseController{
             case FriendlyGames:
                 //friendly games do not have participants. get them from all games
                 Set<Participant> participants = new HashSet<>();
-                for (Game game: eventGames){
+                for (Game game : eventGames) {
                     participants.addAll(game.getParticipants());
                 }
                 scoreEntries = rankingUtil.getScores(participants, eventGames);
@@ -106,7 +96,7 @@ public class ScoresController extends BaseController{
             default:
                 scoreEntries = rankingUtil.getScores(event.getParticipants(), eventGames);
         }
-        
+
         ModelAndView mav = new ModelAndView("scores/event", "Model", event);
         mav.addObject("ScoreEntries", scoreEntries);
         return mav;

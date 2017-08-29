@@ -12,15 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/error")
-public class ErrorController extends BaseController{
-    
+public class ErrorController extends BaseController {
+
     @RequestMapping("/{errorCode}")
-    public ModelAndView getErrorView(@PathVariable("errorCode") String errorCode){
-        return new ModelAndView("error/"+errorCode);
+    public ModelAndView getErrorView(@PathVariable("errorCode") String errorCode) {
+        return new ModelAndView("error/" + errorCode);
     }
 }

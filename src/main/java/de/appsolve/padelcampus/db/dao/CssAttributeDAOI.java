@@ -10,9 +10,8 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.CssAttribute;
 
 /**
- *
  * @author dominik
  */
-public interface CssAttributeDAOI extends BaseEntityDAOI<CssAttribute>{
-    
+public interface CssAttributeDAOI extends BaseEntityDAOI<CssAttribute> {
+
 }

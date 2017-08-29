@@ -6,33 +6,32 @@
 package de.appsolve.padelcampus.db.model;
 
 import de.appsolve.padelcampus.constants.PayDirektEndpoint;
-import de.appsolve.padelcampus.constants.PayPalEndpoint;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- *
  * @author dominik
  */
 @Entity
-public class PayDirektConfig extends CustomerEntity{
-    
+public class PayDirektConfig extends CustomerEntity {
+
     private static final long serialVersionUID = 1L;
-    
+
     @Column
     private Boolean active;
-    
+
     @Column
     @Enumerated(EnumType.STRING)
     private PayDirektEndpoint payDirektEndpoint;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.apiKey}")
     private String apiKey;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.apiSecret}")
     private String apiSecret;

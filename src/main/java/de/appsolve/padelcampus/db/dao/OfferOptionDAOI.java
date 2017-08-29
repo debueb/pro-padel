@@ -10,9 +10,8 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.OfferOption;
 
 /**
- *
  * @author dominik
  */
-public interface OfferOptionDAOI extends BaseEntityDAOI<OfferOption>{
-    
+public interface OfferOptionDAOI extends BaseEntityDAOI<OfferOption> {
+
 }

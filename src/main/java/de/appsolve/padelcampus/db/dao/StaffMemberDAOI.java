@@ -10,8 +10,7 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.StaffMember;
 
 /**
- *
  * @author dominik
  */
-public interface StaffMemberDAOI extends BaseEntityDAOI<StaffMember>{
+public interface StaffMemberDAOI extends BaseEntityDAOI<StaffMember> {
 }

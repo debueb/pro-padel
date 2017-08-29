@@ -8,15 +8,13 @@ package de.appsolve.padelcampus.admin.controller.teams;
 
 import de.appsolve.padelcampus.admin.controller.AdminBaseController;
 import de.appsolve.padelcampus.db.dao.CommunityDAOI;
-import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
+import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Community;
 import de.appsolve.padelcampus.db.model.Team;
 import de.appsolve.padelcampus.spring.CommunityPropertyEditor;
 import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
 import de.appsolve.padelcampus.utils.TeamUtil;
-import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,62 +30,64 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Set;
+
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/admin/teams")
 public class AdminTeamsController extends AdminBaseController<Team> {
-    
+
     @Autowired
     TeamDAOI teamDAO;
-    
+
     @Autowired
     CommunityDAOI communityDAO;
-    
+
     @Autowired
     PlayerCollectionEditor playerCollectionEditor;
-    
+
     @Autowired
     CommunityPropertyEditor communityPropertyEditor;
-    
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Set.class, "players", playerCollectionEditor);
         binder.registerCustomEditor(Community.class, communityPropertyEditor);
     }
-    
+
     @Override
-    public ModelAndView showIndex(HttpServletRequest request, @PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable, @RequestParam(required = false, name = "search") String search){
+    public ModelAndView showIndex(HttpServletRequest request, @PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable, @RequestParam(required = false, name = "search") String search) {
         return super.showIndex(request, pageable, search);
     }
-    
+
     @Override
-    protected ModelAndView getEditView(Team model){
-        ModelAndView mav =  super.getEditView(model);
+    protected ModelAndView getEditView(Team model) {
+        ModelAndView mav = super.getEditView(model);
         mav.addObject("Communities", communityDAO.findAll());
         return mav;
     }
-    
+
     @Override
-    public ModelAndView postEditView(@ModelAttribute("Model") Team model, HttpServletRequest request, BindingResult result){
+    public ModelAndView postEditView(@ModelAttribute("Model") Team model, HttpServletRequest request, BindingResult result) {
         model.setName(TeamUtil.getTeamName(model));
-        
+
         validator.validate(model, result);
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             return getEditView(model);
         }
-        
+
         //make sure team does not already exist
-        if (model.getId()==null){
+        if (model.getId() == null) {
             Team existingTeam = teamDAO.findByPlayers(model.getPlayers());
-            if (existingTeam != null){
+            if (existingTeam != null) {
                 result.addError(new ObjectError("*", msg.get("TeamAlreadyExistsWithName", new Object[]{existingTeam})));
                 return getEditView(model);
             }
         }
-        
+
         return super.postEditView(model, request, result);
     }
 
@@ -100,13 +100,13 @@ public class AdminTeamsController extends AdminBaseController<Team> {
     public String getModuleName() {
         return "admin/teams";
     }
-    
+
     @Override
     protected Page<Team> findAll(Pageable pageable) {
         Page<Team> findAllFetchWithPlayers = teamDAO.findAllFetchWithPlayers(pageable);
         return findAllFetchWithPlayers;
     }
-    
+
     @Override
     protected Team findById(Long modelId) {
         return teamDAO.findByIdFetchWithPlayers(modelId);

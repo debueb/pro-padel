@@ -8,11 +8,10 @@ package de.appsolve.padelcampus.data;
 import java.util.Set;
 
 /**
- *
  * @author dominik
  */
 public class Manifest {
-    
+
     private String short_name;
     private String name;
     private Set<ManifestIcon> icons;

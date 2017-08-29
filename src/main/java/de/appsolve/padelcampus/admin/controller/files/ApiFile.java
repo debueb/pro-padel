@@ -8,11 +8,10 @@ package de.appsolve.padelcampus.admin.controller.files;
 import java.util.Objects;
 
 /**
- *
  * @author dominik
  */
-public class ApiFile implements Comparable<ApiFile>{
-    
+public class ApiFile implements Comparable<ApiFile> {
+
     private String type;
     private String name;
     private String url;
@@ -52,8 +51,8 @@ public class ApiFile implements Comparable<ApiFile>{
 
     @Override
     public int compareTo(ApiFile o) {
-        if (getType().equals(o.getType())){
-            switch (o.getType()){
+        if (getType().equals(o.getType())) {
+            switch (o.getType()) {
                 case "file":
                     return getFileSize().compareTo(o.getFileSize());
                 default:

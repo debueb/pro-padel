@@ -8,11 +8,10 @@ package de.appsolve.padelcampus.constants;
 import java.util.regex.Pattern;
 
 /**
- *
  * @author dominik
  */
 public enum Privilege {
-    
+
     AccessAdminInterface("/admin[\\/]?"),
     ManageCustomers("/admin/customers.*"),
     ManageGeneral("/admin/general.*"),
@@ -27,13 +26,13 @@ public enum Privilege {
     ManageFiles("/admin/files.*"),
     SendMails("/admin/mail.*"),
     ViewReports("/admin/reports.*");
-    
+
     private final Pattern pathPattern;
 
-    private Privilege(String path){
+    private Privilege(String path) {
         pathPattern = Pattern.compile(path);
     }
-    
+
     public Pattern getPathPattern() {
         return pathPattern;
     }

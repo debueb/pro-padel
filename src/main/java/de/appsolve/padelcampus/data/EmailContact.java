@@ -6,7 +6,6 @@
 package de.appsolve.padelcampus.data;
 
 /**
- *
  * @author dominik
  */
 public interface EmailContact {
@@ -14,5 +13,5 @@ public interface EmailContact {
     String getEmailAddress();
 
     String getEmailDisplayName();
-    
+
 }

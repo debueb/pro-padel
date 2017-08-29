@@ -8,21 +8,20 @@ package de.appsolve.padelcampus.utils;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
  * @author dominik
  */
 public class RequestUtil {
-    
-    public static String getBaseURL(HttpServletRequest request){
+
+    public static String getBaseURL(HttpServletRequest request) {
         String scheme = request.getScheme();
-        String serverName = request.getServerName() ;
+        String serverName = request.getServerName();
         String portStr = "";
         int port = request.getServerPort();
-        if (scheme.equals("http") && port != 80){
-            portStr = ":"+port;
-        } else if (scheme.equals("https") && port != 443){
-            portStr = ":"+port;
+        if (scheme.equals("http") && port != 80) {
+            portStr = ":" + port;
+        } else if (scheme.equals("https") && port != 443) {
+            portStr = ":" + port;
         }
-        return scheme+"://"+serverName + portStr + request.getContextPath();
+        return scheme + "://" + serverName + portStr + request.getContextPath();
     }
 }

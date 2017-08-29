@@ -8,17 +8,16 @@ package de.appsolve.padelcampus.controller.account;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- *
  * @author dominik
  */
 public class ChangePasswordRequest {
 
     @NotEmpty(message = "{NotEmpty.oldPass}")
     private String oldPass;
-    
+
     @NotEmpty(message = "{NotEmpty.newPass}")
     private String newPass;
-    
+
     @NotEmpty(message = "{NotEmpty.newPassRepeat}")
     private String newPassRepeat;
 
@@ -45,6 +44,6 @@ public class ChangePasswordRequest {
     public void setNewPassRepeat(String newPassRepeat) {
         this.newPassRepeat = newPassRepeat;
     }
-    
-    
+
+
 }

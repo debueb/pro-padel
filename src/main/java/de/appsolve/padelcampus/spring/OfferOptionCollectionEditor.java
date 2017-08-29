@@ -6,30 +6,30 @@
 package de.appsolve.padelcampus.spring;
 
 import de.appsolve.padelcampus.db.dao.OfferOptionDAOI;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 /**
- *
  * @author dominik
  */
 @Component
-public class OfferOptionCollectionEditor extends CustomCollectionEditor{
-    
+public class OfferOptionCollectionEditor extends CustomCollectionEditor {
+
     @Autowired
     OfferOptionDAOI offerOptionDAO;
-    
+
     public OfferOptionCollectionEditor() {
         super(Set.class);
     }
-    
+
     @Override
     protected Object convertElement(Object element) {
-        if (element == null){
+        if (element == null) {
             return null;
         }
-        return offerOptionDAO.findById(Long.parseLong((String)element));
+        return offerOptionDAO.findById(Long.parseLong((String) element));
     }
 }

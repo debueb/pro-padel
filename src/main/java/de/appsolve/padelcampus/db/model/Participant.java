@@ -6,40 +6,32 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Transient;
 
 /**
- *
  * @author dominik
  */
 @Entity
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(
-    name="participantType",
-    discriminatorType=DiscriminatorType.STRING
+        name = "participantType",
+        discriminatorType = DiscriminatorType.STRING
 )
-public abstract class Participant extends ComparableEntity implements ParticipantI{
-    
+public abstract class Participant extends ComparableEntity implements ParticipantI {
+
     @Column
     private String UUID;
-    
+
     @Column
     private Integer initialRanking;
-    
+
     @Transient
-    public String getDiscriminatorValue(){
-    DiscriminatorValue val = this.getClass().getAnnotation( DiscriminatorValue.class );
+    public String getDiscriminatorValue() {
+        DiscriminatorValue val = this.getClass().getAnnotation(DiscriminatorValue.class);
         return val == null ? null : val.value();
     }
-    
+
     @Override
     public String getUUID() {
         return UUID;
@@ -49,15 +41,15 @@ public abstract class Participant extends ComparableEntity implements Participan
         this.UUID = UUID;
     }
 
+    public Integer getInitialRanking() {
+        return 1300;
+    }
+
     public void setInitialRanking(Integer initialRanking) {
         this.initialRanking = initialRanking;
     }
-    
-    public Integer getInitialRanking(){
-        return 1300;
-    }
-    
-    public BigDecimal getInitialRankingAsBigDecimal(){
+
+    public BigDecimal getInitialRankingAsBigDecimal() {
         return new BigDecimal(getInitialRanking());
     }
 }

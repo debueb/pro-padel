@@ -11,42 +11,42 @@ import de.appsolve.padelcampus.constants.OfferOptionType;
 import de.appsolve.padelcampus.db.dao.OfferOptionDAOI;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.OfferOption;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/admin/bookings/offeroptions")
 public class AdminBookingsOfferOptionsController extends AdminSortableController<OfferOption> {
-    
+
     @Autowired
     OfferOptionDAOI offerOptionDAO;
-    
+
     @Override
-    protected ModelAndView getIndexView(Page<OfferOption> page){
+    protected ModelAndView getIndexView(Page<OfferOption> page) {
         ModelAndView indexView = super.getIndexView(page);
         indexView.addObject("OfferOptionTypes", OfferOptionType.values());
         return indexView;
     }
-    
+
     @Override
-    public ModelAndView showAddView(HttpServletRequest request){
+    public ModelAndView showAddView(HttpServletRequest request) {
         OfferOption newOffer = createNewInstance();
         Long position = 0L;
-        for (OfferOption offer: offerOptionDAO.findAll()){
-            position = Math.max(position, offer.getPosition()+1);
+        for (OfferOption offer : offerOptionDAO.findAll()) {
+            position = Math.max(position, offer.getPosition() + 1);
         }
         newOffer.setPosition(position);
         return getEditView(newOffer);
     }
-    
+
     @Override
     public BaseEntityDAOI getDAO() {
         return offerOptionDAO;

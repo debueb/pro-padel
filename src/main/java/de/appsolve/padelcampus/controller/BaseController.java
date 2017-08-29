@@ -34,19 +34,14 @@ import java.util.List;
 public abstract class BaseController {
 
     private static final Logger LOG = Logger.getLogger(BaseController.class);
-
-    @Autowired
-    Validator validator;
-
-    @Autowired
-    ContactDAOI contactDAO;
-
     @Autowired
     public Msg msg;
-
     @Autowired
     public MailUtils mailUtils;
-
+    @Autowired
+    Validator validator;
+    @Autowired
+    ContactDAOI contactDAO;
     @Autowired
     Environment environment;
 

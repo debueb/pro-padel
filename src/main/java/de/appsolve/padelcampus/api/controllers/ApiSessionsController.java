@@ -11,16 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- *
  * @author dominik
  */
 @Controller
 @RequestMapping("/api/sessions")
-public class ApiSessionsController{
+public class ApiSessionsController {
 
     @RequestMapping
     @ResponseBody
-    public Integer getSessionCount(){
+    public Integer getSessionCount() {
         return SessionEventListener.getActiveSessions();
     }
 }

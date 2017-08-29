@@ -13,26 +13,25 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
- *
  * @author dominik
  */
 @Component
 public class Msg {
-    
+
     private static final Logger LOG = Logger.getLogger(Msg.class);
-    
+
     @Autowired
     ApplicationContext context;
-    
-    public String get(String code){
+
+    public String get(String code) {
         return get(code, null);
     }
-    
-    public String get(String code, Object[] args){
+
+    public String get(String code, Object[] args) {
         try {
             return context.getMessage(code, args, LocaleContextHolder.getLocale());
-        } catch (NoSuchMessageException e){
-            LOG.warn("Missing translation for key "+code, e);
+        } catch (NoSuchMessageException e) {
+            LOG.warn("Missing translation for key " + code, e);
             return code;
         }
     }

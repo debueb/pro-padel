@@ -6,20 +6,20 @@
 package de.appsolve.padelcampus.data;
 
 import de.appsolve.padelcampus.db.model.Player;
-import java.util.Set;
-import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Size;
+import java.util.Set;
+
 /**
- *
  * @author dominik
  */
 public class AddPullGame {
- 
+
     @NotEmpty(message = "{Size.team}")
     @Size(min = 2, max = 2, message = "{Size.team}")
     private Set<Player> team1;
-    
+
     @NotEmpty(message = "{Size.team}")
     @Size(min = 2, max = 2, message = "{Size.team}")
     private Set<Player> team2;

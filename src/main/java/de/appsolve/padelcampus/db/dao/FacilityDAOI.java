@@ -10,9 +10,8 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Facility;
 
 /**
- *
  * @author dominik
  */
-public interface FacilityDAOI extends BaseEntityDAOI<Facility>{
-    
+public interface FacilityDAOI extends BaseEntityDAOI<Facility> {
+
 }

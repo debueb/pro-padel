@@ -5,16 +5,17 @@
  */
 package de.appsolve.padelcampus.spring;
 
-import java.beans.PropertyEditorSupport;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.util.StringUtils;
 
+import java.beans.PropertyEditorSupport;
+
 /**
- *
  * @author dominik
  */
+
 /**
  * Custom PropertyEditorSupport to convert from String to
  * Date using JODA.

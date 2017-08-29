@@ -7,33 +7,29 @@
 package de.appsolve.padelcampus.db.model;
 
 import de.appsolve.padelcampus.constants.OfferOptionType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Transient;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.*;
+
 /**
- *
  * @author dominik
  */
 @Entity
-public class OfferOption extends SortableEntity{
-    
+public class OfferOption extends SortableEntity {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.name}")
     private String name;
-    
+
     @Column
     private String description;
-    
+
     @Enumerated(EnumType.STRING)
     private OfferOptionType offerOptionType;
-    
+
     public String getName() {
         return name;
     }
@@ -49,7 +45,7 @@ public class OfferOption extends SortableEntity{
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public OfferOptionType getOfferOptionType() {
         return offerOptionType;
     }

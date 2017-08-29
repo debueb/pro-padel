@@ -8,11 +8,10 @@ package de.appsolve.padelcampus.data;
 import java.util.List;
 
 /**
- *
  * @author dominik
  */
 public class NestableItem {
-    
+
     private Long id;
     private List<NestableItem> children;
 

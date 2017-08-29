@@ -16,9 +16,6 @@ import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.SortUtil;
-import java.math.BigDecimal;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,44 +23,47 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.Map;
+
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/ranking")
 public class RankingController extends BaseController {
-    
+
     @Autowired
     RankingUtil rankingUtil;
-    
+
     @Autowired
     TeamDAOI teamDAO;
-    
+
     @Autowired
     ParticipantDAOI participantDAO;
-    
+
     @Autowired
     ModuleUtil moduleUtil;
-    
+
     @RequestMapping
-    public ModelAndView getIndex(HttpServletRequest request){
+    public ModelAndView getIndex(HttpServletRequest request) {
         Module module = moduleUtil.getCustomerModule(request, ModuleType.Ranking);
         return getIndexView(module.getTitle(), module.getDescription());
     }
-    
+
     @RequestMapping("{gender}/{category}")
-    public ModelAndView getRanking(@PathVariable("gender") Gender gender, @PathVariable("category") String category){
+    public ModelAndView getRanking(@PathVariable("gender") Gender gender, @PathVariable("category") String category) {
         return getRanking(gender, category, null);
     }
-    
+
     @RequestMapping("{gender}/{category}/{participant}")
-    public ModelAndView getRanking(@PathVariable("gender") Gender gender, @PathVariable("category") String category, @PathVariable("participant") String participantUUID){
+    public ModelAndView getRanking(@PathVariable("gender") Gender gender, @PathVariable("category") String category, @PathVariable("participant") String participantUUID) {
         ModelAndView mav = new ModelAndView("ranking/ranking");
         mav.addObject("gender", gender);
         mav.addObject("category", category);
         Map<Participant, BigDecimal> rankings = null;
-        switch (category){
+        switch (category) {
             case "individual":
                 rankings = rankingUtil.getRanking(gender);
                 break;
@@ -73,7 +73,7 @@ public class RankingController extends BaseController {
             default:
                 throw new NotImplementedException("unsupported category");
         }
-        if (participantUUID != null){
+        if (participantUUID != null) {
             Participant participant = participantDAO.findByUUID(participantUUID);
             mav.addObject("SelectedParticipant", participant);
         }
@@ -81,8 +81,8 @@ public class RankingController extends BaseController {
         mav.addObject("path", getPath());
         return mav;
     }
-    
-    protected ModelAndView getIndexView(String title, String description){
+
+    protected ModelAndView getIndexView(String title, String description) {
         ModelAndView mav = new ModelAndView("ranking/index");
         mav.addObject("path", getPath());
         mav.addObject("title", title);

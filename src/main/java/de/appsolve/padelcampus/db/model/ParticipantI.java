@@ -6,11 +6,11 @@
 package de.appsolve.padelcampus.db.model;
 
 /**
- *
  * @author dominik
  */
 public interface ParticipantI {
-    
+
     String getUUID();
+
     String toString();
 }

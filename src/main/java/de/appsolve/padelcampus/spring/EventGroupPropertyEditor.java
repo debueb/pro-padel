@@ -7,12 +7,12 @@ package de.appsolve.padelcampus.spring;
 
 import de.appsolve.padelcampus.db.dao.EventGroupDAOI;
 import de.appsolve.padelcampus.db.model.EventGroup;
-import java.beans.PropertyEditorSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.beans.PropertyEditorSupport;
+
 /**
- *
  * @author dominik
  */
 @Component
@@ -20,15 +20,14 @@ public class EventGroupPropertyEditor extends PropertyEditorSupport {
 
     @Autowired
     EventGroupDAOI eventGroupDAO;
-    
+
     @Override
-    public void setAsText(String text)
-    {
+    public void setAsText(String text) {
         try {
             Long id = Long.parseLong(text);
             EventGroup config = eventGroupDAO.findById(id);
             setValue(config);
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             setValue(null);
         }
     }

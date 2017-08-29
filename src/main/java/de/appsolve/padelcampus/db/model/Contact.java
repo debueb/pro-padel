@@ -8,36 +8,36 @@ package de.appsolve.padelcampus.db.model;
 
 import de.appsolve.padelcampus.annotations.EmailWithTld;
 import de.appsolve.padelcampus.data.EmailContact;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- *
  * @author dominik
  */
 @Entity
-public class Contact extends CustomerEntity implements EmailContact{
-    
+public class Contact extends CustomerEntity implements EmailContact {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+
     @Column
     @EmailWithTld
     @NotEmpty(message = "{NotEmpty.email}")
     private String emailAddress;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.name}")
     private String emailDisplayName;
-    
+
     @Column
     private Boolean notifyOnContactForm;
-    
+
     @Column
     private Boolean notifyOnBooking;
-    
+
     @Column
     private Boolean notifyOnBookingCancellation;
 
@@ -82,9 +82,9 @@ public class Contact extends CustomerEntity implements EmailContact{
     public void setNotifyOnBookingCancellation(Boolean notifyOnBookingCancellation) {
         this.notifyOnBookingCancellation = notifyOnBookingCancellation;
     }
-    
+
     @Override
     public String toString() {
-        return emailDisplayName + " ("+emailAddress+")";
+        return emailDisplayName + " (" + emailAddress + ")";
     }
 }

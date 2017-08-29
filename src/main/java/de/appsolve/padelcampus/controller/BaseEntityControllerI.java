@@ -9,13 +9,13 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.BaseEntityI;
 
 /**
- *
- * @author dominik
  * @param <T>
+ * @author dominik
  */
 public interface BaseEntityControllerI<T extends BaseEntityI> {
-    
+
     public BaseEntityDAOI<T> getDAO();
+
     public String getModuleName();
-    
+
 }

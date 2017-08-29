@@ -6,7 +6,6 @@
 package de.appsolve.padelcampus.external.cloudflare.model;
 
 /**
- *
  * @author dominik
  */
 public class Zone {

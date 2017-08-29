@@ -5,13 +5,6 @@ import de.appsolve.padelcampus.db.model.DaySchedule;
 import de.appsolve.padelcampus.db.model.MatchOffer;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.ScheduleSlot;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.hibernate.Criteria;
@@ -21,12 +14,13 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
+import java.util.*;
+
 /**
- *
  * @author dominik
  */
 @Component
-public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
+public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI {
 
     @Override
     public Player findByEmail(String email) {
@@ -37,7 +31,7 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
     public Player findByUUID(String UUID) {
         return findByAttribute("UUID", UUID);
     }
-    
+
     @Override
     public Player findByUUIDWithDaySchedules(String UUID) {
         return findByUUIDFetchEagerly(UUID, "daySchedules");
@@ -47,24 +41,24 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
     public Player findByPasswordResetUUID(String UUID) {
         return findByAttribute("passwordResetUUID", UUID);
     }
-    
+
     @Override
-    public Player saveOrUpdate(Player player){
-        if (StringUtils.isEmpty(player.getUUID())){
+    public Player saveOrUpdate(Player player) {
+        if (StringUtils.isEmpty(player.getUUID())) {
             UUID randomUUID = UUID.randomUUID();
             player.setUUID(randomUUID.toString());
         }
-        if (!StringUtils.isEmpty(player.getPassword())){
+        if (!StringUtils.isEmpty(player.getPassword())) {
             player.setPasswordHash(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt()));
             player.setSalted(true);
         }
-        if (!StringUtils.isEmpty(player.getFirstName())){
+        if (!StringUtils.isEmpty(player.getFirstName())) {
             player.setFirstName(WordUtils.capitalizeFully(player.getFirstName().trim(), new char[]{' ', '-'}));
         }
-        if (!StringUtils.isEmpty(player.getLastName())){
+        if (!StringUtils.isEmpty(player.getLastName())) {
             player.setLastName(WordUtils.capitalizeFully(player.getLastName().trim(), new char[]{' ', '-'}));
         }
-        if (!StringUtils.isEmpty(player.getEmail())){
+        if (!StringUtils.isEmpty(player.getEmail())) {
             player.setEmail(player.getEmail().trim());
         }
         player.setCustomer(getCustomer());
@@ -91,33 +85,33 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
         @SuppressWarnings("unchecked")
         List<Player> interestedPlayers = (List<Player>) criteria.list();
         Iterator<Player> iterator = interestedPlayers.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Player player = iterator.next();
             //remove all players that are not interested in the skill levels associated with the match offer
-            if (Collections.disjoint(player.getNotificationSkillLevels(), offer.getSkillLevels())){
+            if (Collections.disjoint(player.getNotificationSkillLevels(), offer.getSkillLevels())) {
                 iterator.remove();
             } else {
                 //remove all players that are not interested in day and time of the offer, if they have set their schedule
-                if (player.getDaySchedules() != null){
+                if (player.getDaySchedules() != null) {
                     boolean timeMatches = false;
-                    for (DaySchedule daySchedule: player.getDaySchedules()){
-                        int dayOfWeek = daySchedule.getWeekDay().intValue()+1;          //0-based, 0=Monday
+                    for (DaySchedule daySchedule : player.getDaySchedules()) {
+                        int dayOfWeek = daySchedule.getWeekDay().intValue() + 1;          //0-based, 0=Monday
                         int dayOfWeekOffer = offer.getStartDate().dayOfWeek().get();    //1-based, 1=Monday
-                        if (dayOfWeek == dayOfWeekOffer){
-                            if (daySchedule.getScheduleSlots() != null){
-                                for (ScheduleSlot slot: daySchedule.getScheduleSlots()){
-                                    if (offer.getStartTime().compareTo(slot.getStartTime()) >= 0 && offer.getEndTime().compareTo(slot.getEndTime()) <=0){
+                        if (dayOfWeek == dayOfWeekOffer) {
+                            if (daySchedule.getScheduleSlots() != null) {
+                                for (ScheduleSlot slot : daySchedule.getScheduleSlots()) {
+                                    if (offer.getStartTime().compareTo(slot.getStartTime()) >= 0 && offer.getEndTime().compareTo(slot.getEndTime()) <= 0) {
                                         timeMatches = true;
                                         break;
                                     }
                                 }
-                                if (timeMatches){
+                                if (timeMatches) {
                                     break;
                                 }
                             }
                         }
                     }
-                    if (!timeMatches){
+                    if (!timeMatches) {
                         iterator.remove();
                     }
                 }
@@ -125,7 +119,7 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
         }
         return interestedPlayers;
     }
-    
+
     @Override
     @SuppressWarnings("unchecked")
     public List<Player> findPlayersRegisteredForEmails() {
@@ -136,9 +130,9 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI{
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<Player>) criteria.list();
     }
-    
+
     @Override
-    protected Set<String> getIndexedProperties(){
-       return new HashSet<>(Arrays.asList("firstName", "lastName", "email", "phone")); 
+    protected Set<String> getIndexedProperties() {
+        return new HashSet<>(Arrays.asList("firstName", "lastName", "email", "phone"));
     }
 }

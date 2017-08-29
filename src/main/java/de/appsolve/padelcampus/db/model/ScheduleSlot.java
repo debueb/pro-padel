@@ -7,25 +7,26 @@
 package de.appsolve.padelcampus.db.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
-import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalTime;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import java.util.Objects;
+
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
+
 /**
- *
  * @author dominik
  */
 @Entity
-public class ScheduleSlot extends ComparableEntity{
-    
+public class ScheduleSlot extends ComparableEntity {
+
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalTime")
     @JsonFormat(shape = STRING, pattern = "HH:mm")
     private LocalTime startTime;
-    
+
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalTime")
     @JsonFormat(shape = STRING, pattern = "HH:mm")
@@ -46,7 +47,7 @@ public class ScheduleSlot extends ComparableEntity{
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 5;

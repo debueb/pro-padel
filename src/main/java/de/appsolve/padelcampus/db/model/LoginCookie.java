@@ -6,25 +6,25 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import javax.persistence.Entity;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
+import javax.persistence.Entity;
+
 /**
- *
  * @author dominik
  */
 @Entity
-public class LoginCookie extends CustomerEntity{
-    
+public class LoginCookie extends CustomerEntity {
+
     private static final long serialVersionUID = 1L;
-    
+
     private String UUID;
-    
+
     private String playerUUID;
-    
+
     private String loginCookieHash;
-    
+
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate validUntil;
 

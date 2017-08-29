@@ -15,16 +15,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/admin/contact")
 public class AdminContactController extends AdminBaseController<Contact> {
-    
+
     @Autowired
     ContactDAOI contactDAO;
-    
+
     @Override
     public BaseEntityDAOI getDAO() {
         return contactDAO;

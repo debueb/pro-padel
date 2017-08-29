@@ -82,8 +82,16 @@ public class Image extends CustomerEntity {
         return content;
     }
 
+    public void setContent(byte[] content) {
+        this.content = content;
+    }
+
     public Long getContentLength() {
         return contentLength;
+    }
+
+    public void setContentLength(Long contentLength) {
+        this.contentLength = contentLength;
     }
 
     public ImageCategory getCategory() {
@@ -92,13 +100,5 @@ public class Image extends CustomerEntity {
 
     public void setCategory(ImageCategory category) {
         this.category = category;
-    }
-
-    public void setContentLength(Long contentLength) {
-        this.contentLength = contentLength;
-    }
-
-    public void setContent(byte[] content) {
-        this.content = content;
     }
 }

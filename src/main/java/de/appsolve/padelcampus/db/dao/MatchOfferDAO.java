@@ -3,9 +3,6 @@ package de.appsolve.padelcampus.db.dao;
 import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
 import de.appsolve.padelcampus.db.model.MatchOffer;
 import de.appsolve.padelcampus.db.model.Player;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
@@ -13,12 +10,15 @@ import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
- *
  * @author dominik
  */
 @Component
-public class MatchOfferDAO extends GenericDAO<MatchOffer> implements MatchOfferDAOI{
+public class MatchOfferDAO extends GenericDAO<MatchOffer> implements MatchOfferDAOI {
 
     @Override
     @SuppressWarnings("unchecked")

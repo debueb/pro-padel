@@ -6,14 +6,7 @@ package de.appsolve.padelcampus.controller.bookings;
  * and open the template in the editor.
  */
 
-import com.paypal.api.payments.Amount;
-import com.paypal.api.payments.Details;
-import com.paypal.api.payments.Links;
-import com.paypal.api.payments.Payer;
-import com.paypal.api.payments.Payment;
-import com.paypal.api.payments.PaymentExecution;
-import com.paypal.api.payments.RedirectUrls;
-import com.paypal.api.payments.Transaction;
+import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import de.appsolve.padelcampus.db.dao.BookingDAOI;
@@ -22,10 +15,6 @@ import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.PayPalConfig;
 import de.appsolve.padelcampus.utils.RequestUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,31 +22,35 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/bookings")
-public class BookingsPayPalController extends BookingsPaymentController{
-    
+public class BookingsPayPalController extends BookingsPaymentController {
+
     private static final Logger LOG = Logger.getLogger(BookingsPayPalController.class);
-    
+
     @Autowired
     SessionUtil sessionUtil;
-    
+
     @Autowired
     BookingDAOI bookingDAO;
-    
+
     @Autowired
     PayPalConfigDAOI payPalConfigDAO;
-    
+
     public ModelAndView redirectToPaypal(Booking booking, HttpServletRequest request) throws Exception {
-        if (booking.getPaymentConfirmed()){
+        if (booking.getPaymentConfirmed()) {
             return BookingsController.getRedirectToSuccessView(booking);
         }
         APIContext apiContext = getApiContext();
-        
+
         Details details = new Details();
         details.setShipping("0");
         details.setSubtotal(booking.getAmountDouble());
@@ -77,7 +70,7 @@ public class BookingsPayPalController extends BookingsPaymentController{
 
         Payer payer = new Payer();
         payer.setPaymentMethod("paypal");
-        
+
         Payment payment = new Payment();
         payment.setIntent("sale");
         payment.setPayer(payer);
@@ -87,27 +80,27 @@ public class BookingsPayPalController extends BookingsPaymentController{
         redirectUrls.setCancelUrl(RequestUtil.getBaseURL(request) + booking.getAbortUrl());
         redirectUrls.setReturnUrl(RequestUtil.getBaseURL(request) + booking.getBaseUrl().append("/paypal/return").toString());
         payment.setRedirectUrls(redirectUrls);
-        
+
         Payment createdPayment = payment.create(apiContext);
-        LOG.info("Created PayPal payment with id = "+ createdPayment.getId() + " and status = "+ createdPayment.getState());
+        LOG.info("Created PayPal payment with id = " + createdPayment.getId() + " and status = " + createdPayment.getState());
         booking.setPaypalPaymentId(createdPayment.getId());
         bookingDAO.saveOrUpdate(booking);
-        
+
         //TODO check payment state
         Iterator<Links> links = createdPayment.getLinks().iterator();
         while (links.hasNext()) {
             Links link = links.next();
             if (link.getRel().equalsIgnoreCase("approval_url")) {
-                return new ModelAndView("redirect:"+link.getHref());
+                return new ModelAndView("redirect:" + link.getHref());
             }
         }
         throw new Exception("PayPal did not return a valid approval URL");
     }
-    
+
     @RequestMapping("booking/{UUID}/paypal/return")
-    public ModelAndView onPaymentReturn(@PathVariable("UUID") String UUID, HttpServletRequest request){
+    public ModelAndView onPaymentReturn(@PathVariable("UUID") String UUID, HttpServletRequest request) {
         Booking booking = bookingDAO.findByUUID(UUID);
-        if (booking.getPaymentConfirmed()){
+        if (booking.getPaymentConfirmed()) {
             return BookingsController.getRedirectToSuccessView(booking);
         }
         try {
@@ -118,23 +111,23 @@ public class BookingsPayPalController extends BookingsPaymentController{
             payment = payment.execute(getApiContext(), paymentExecute);
             //check payment status, throw exception if not successful
             String state = payment.getState();
-            if (!state.equals("approved")){
-                throw new Exception("PayPal returned unexpected payment status: "+state);
+            if (!state.equals("approved")) {
+                throw new Exception("PayPal returned unexpected payment status: " + state);
             }
-            LOG.info("Approved PayPal payment with id = "+ payment.getId());
+            LOG.info("Approved PayPal payment with id = " + payment.getId());
             booking.setPaymentConfirmed(true);
             bookingDAO.saveOrUpdate(booking);
-            
-            return new ModelAndView("forward:"+booking.getSuccessUrl());
-        } catch (Exception e){
+
+            return new ModelAndView("forward:" + booking.getSuccessUrl());
+        } catch (Exception e) {
             LOG.error("Error while executing paypal payment", e);
             ModelAndView bookingConfirmView = BookingsController.getBookingConfirmView(booking);
             bookingConfirmView.addObject("error", msg.get("PayPalError", new String[]{e.getMessage()}));
             return bookingConfirmView;
         }
     }
-    
-    private APIContext getApiContext() throws PayPalRESTException{
+
+    private APIContext getApiContext() throws PayPalRESTException {
         PayPalConfig config = payPalConfigDAO.findFirst();
         APIContext apiContext = new APIContext(config.getClientId(), config.getClientSecret(), config.getPayPalEndpoint().getMode());
         return apiContext;

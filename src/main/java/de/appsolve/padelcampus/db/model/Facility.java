@@ -6,31 +6,27 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.*;
+import java.util.Set;
+
 /**
- *
  * @author dominik
  */
 @Entity
-public class Facility extends CustomerEntity{
-    
+public class Facility extends CustomerEntity {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.name}")
     private String name;
-    
-    @ManyToMany(fetch=FetchType.EAGER)
+
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Offer> offers;
-    
+
     public String getName() {
         return name;
     }

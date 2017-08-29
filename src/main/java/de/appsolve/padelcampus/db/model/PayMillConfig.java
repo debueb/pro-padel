@@ -5,29 +5,29 @@
  */
 package de.appsolve.padelcampus.db.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
 /**
- *
  * @author dominik
  */
 @Entity
-public class PayMillConfig extends CustomerEntity{
-    
+public class PayMillConfig extends CustomerEntity {
+
     private static final long serialVersionUID = 1L;
-    
+
     @Column
     private Boolean enableDirectDebit;
-    
+
     @Column
     private Boolean enableCreditCard;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.privateApiKey}")
     private String privateApiKey;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.publicApiKey}")
     private String publicApiKey;

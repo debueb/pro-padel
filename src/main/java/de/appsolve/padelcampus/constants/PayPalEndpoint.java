@@ -6,18 +6,17 @@
 package de.appsolve.padelcampus.constants;
 
 /**
- *
  * @author dominik
  */
 public enum PayPalEndpoint {
-    
+
     Sandbox("https://api.sandbox.paypal.com/", "sandbox"),
     Production("https://api.paypal.com/", "live");
-    
+
     private final String url;
     private final String mode;
-    
-    private PayPalEndpoint(String url, String mode){
+
+    private PayPalEndpoint(String url, String mode) {
         this.url = url;
         this.mode = mode;
     }

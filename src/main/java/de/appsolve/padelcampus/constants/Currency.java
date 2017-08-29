@@ -6,20 +6,19 @@
 package de.appsolve.padelcampus.constants;
 
 /**
- *
  * @author dominik
  */
 public enum Currency {
-    
+
     EUR("€");
-    
+
     private final String symbol;
-    
-    Currency(String symbol){
+
+    Currency(String symbol) {
         this.symbol = symbol;
     }
-    
-    public String getSymbol(){
+
+    public String getSymbol() {
         return symbol;
     }
 }

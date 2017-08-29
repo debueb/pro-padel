@@ -6,11 +6,10 @@
 package de.appsolve.padelcampus.constants;
 
 /**
- *
  * @author dominik
  */
 public enum EventType {
-    
+
     SingleRoundRobin,
     CommunityRoundRobin,
     PullRoundRobin,

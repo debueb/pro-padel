@@ -8,11 +8,10 @@ package de.appsolve.padelcampus.external.openshift.model;
 import java.util.List;
 
 /**
- *
  * @author dominik
  */
 public class Application {
-    
+
     private String id;
     private List<Alias> aliases;
     private String app_url;

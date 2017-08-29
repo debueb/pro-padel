@@ -8,12 +8,11 @@ package de.appsolve.padelcampus.external.cloudflare;
 import de.appsolve.padelcampus.external.cloudflare.model.CloudFlareApiResponse;
 
 /**
- *
  * @author dominik
  */
-public class CloudFlareApiException extends Exception{
-    
-    public CloudFlareApiException(CloudFlareApiResponse response){
-        super("CloudFlare API returned invalid response: "+response.getErrors());
+public class CloudFlareApiException extends Exception {
+
+    public CloudFlareApiException(CloudFlareApiResponse response) {
+        super("CloudFlare API returned invalid response: " + response.getErrors());
     }
 }

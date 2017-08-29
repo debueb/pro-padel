@@ -10,13 +10,12 @@ import java.nio.file.Path;
 import java.util.Comparator;
 
 /**
- *
  * @author dominik
  */
-public class PathByFileNameComparator implements Comparator<Path>, Serializable{
-    
+public class PathByFileNameComparator implements Comparator<Path>, Serializable {
+
     private static final long serialVersionUID = 1L;
-    
+
     @Override
     public int compare(Path o1, Path o2) {
         return o1.getFileName().compareTo(o2.getFileName());

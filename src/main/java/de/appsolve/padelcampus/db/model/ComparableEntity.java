@@ -6,9 +6,8 @@
 package de.appsolve.padelcampus.db.model;
 
 /**
- *
  * @author dominik
  */
-public abstract class ComparableEntity extends CustomerEntity{
-    
+public abstract class ComparableEntity extends CustomerEntity {
+
 }

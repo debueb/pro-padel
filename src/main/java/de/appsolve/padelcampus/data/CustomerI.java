@@ -8,13 +8,15 @@ package de.appsolve.padelcampus.data;
 import java.util.Set;
 
 /**
- *
  * @author dominik
  */
 public interface CustomerI {
 
     String getName();
+
     String getDefaultEmail();
+
     String getDefaultLanguage();
+
     Set<String> getSupportedLanguages();
 }

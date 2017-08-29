@@ -11,21 +11,20 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 /**
- *
  * @author dominik
  */
 @Entity
-public class CssAttribute extends CustomerEntity{
-    
+public class CssAttribute extends CustomerEntity {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+
     @Column
     private String name;
-    
+
     @Column
     private String cssDefaultValue;
-    
+
     @Column
     private String cssValue;
 
@@ -52,7 +51,7 @@ public class CssAttribute extends CustomerEntity{
     public void setCssValue(String cssValue) {
         this.cssValue = cssValue;
     }
-    
+
     @Override
     public String toString() {
         return name;

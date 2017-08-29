@@ -5,32 +5,25 @@
  */
 package de.appsolve.padelcampus.resolver;
 
-import java.util.Locale;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
+
 /**
- *
  * @author dominik
  */
 public class PutAwareCommonsMultipartResolver extends CommonsMultipartResolver {
 
     private static final String MULTIPART = "multipart/";
 
-    @Override
-    public boolean isMultipart(HttpServletRequest request) {
-        return request != null && isMultipartContent(request);
-    }
-
     /**
      * Utility method that determines whether the request contains multipart
      * content.
-     * 
+     *
      * @param request The servlet request to be evaluated. Must be non-null.
-     * 
      * @return <code>true</code> if the request is multipart; {@code false}
      * otherwise.
-     * 
      * @see ServletFileUpload#isMultipartContent(HttpServletRequest)
      */
     public static final boolean isMultipartContent(HttpServletRequest request) {
@@ -39,6 +32,11 @@ public class PutAwareCommonsMultipartResolver extends CommonsMultipartResolver {
             return false;
         }
         return contentType.toLowerCase(Locale.ENGLISH).startsWith(MULTIPART);
+    }
+
+    @Override
+    public boolean isMultipart(HttpServletRequest request) {
+        return request != null && isMultipartContent(request);
     }
 
 }

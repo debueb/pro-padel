@@ -6,32 +6,32 @@
 package de.appsolve.padelcampus.admin.controller.files;
 
 import de.appsolve.padelcampus.db.model.Image;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Collection;
 
 /**
- *
  * @author dominik
  */
-public class ImageFileFilter implements FileFilter{
-    
+public class ImageFileFilter implements FileFilter {
+
     private final Collection<Image> images;
-    
-    public ImageFileFilter(Collection<Image> images){
+
+    public ImageFileFilter(Collection<Image> images) {
         this.images = images;
     }
 
     @Override
     public boolean accept(File file) {
-        if (file.isHidden()){
+        if (file.isHidden()) {
             return false;
         }
-        if (file.isDirectory()){
+        if (file.isDirectory()) {
             return true;
         }
-        for (Image image: images){
-            if (image.getSha256().equals(file.getName())){
+        for (Image image : images) {
+            if (image.getSha256().equals(file.getName())) {
                 return true;
             }
         }

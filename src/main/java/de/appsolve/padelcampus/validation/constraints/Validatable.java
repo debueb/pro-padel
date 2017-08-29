@@ -6,7 +6,6 @@
 package de.appsolve.padelcampus.validation.constraints;
 
 /**
- *
  * @author dominik
  */
 public interface Validatable {

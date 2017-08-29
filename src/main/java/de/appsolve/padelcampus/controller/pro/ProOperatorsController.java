@@ -20,12 +20,6 @@ import de.appsolve.padelcampus.external.cloudflare.CloudFlareApiClient;
 import de.appsolve.padelcampus.external.openshift.OpenshiftApiClient;
 import de.appsolve.padelcampus.reporting.ErrorReporter;
 import de.appsolve.padelcampus.utils.HtmlResourceUtil;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.regex.Pattern;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,86 +29,83 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.regex.Pattern;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 /**
- *
  * @author dominik
  */
 @Controller
 @RequestMapping("/pro/operators")
-public class ProOperatorsController extends BaseController implements ServletContextAware{
-    
+public class ProOperatorsController extends BaseController implements ServletContextAware {
+
     private static final Logger LOG = Logger.getLogger(ProOperatorsController.class);
-    
-    private ServletContext servletContext;
-    
+    private final static Pattern DNS_SUBDOMAIN_PATTERN = Pattern.compile("(?:[A-Za-z0-9][A-Za-z0-9\\-]{0,61}[A-Za-z0-9]|[A-Za-z0-9])");
+    private final static String OPENSHIFT_URL = "padelkoeln-appsolve.rhcloud.com";
+    private final static String CLOUDFLARE_URL = "pro-padel.de";
     @Autowired
     CustomerDAOI customerDAO;
-    
     @Autowired
     PlayerDAOI playerDAO;
-    
     @Autowired
     AdminGroupDAOI adminGroupDAO;
-    
     @Autowired
     CloudFlareApiClient cloudFlareApiClient;
-    
     @Autowired
     OpenshiftApiClient openshiftApiClient;
-    
     @Autowired
     HtmlResourceUtil htmlResourceUtil;
-
     @Autowired
     ErrorReporter errorReporter;
-    
-    private final static Pattern DNS_SUBDOMAIN_PATTERN = Pattern.compile("(?:[A-Za-z0-9][A-Za-z0-9\\-]{0,61}[A-Za-z0-9]|[A-Za-z0-9])");
-    
-    private final static String OPENSHIFT_URL   = "padelkoeln-appsolve.rhcloud.com";
-    private final static String CLOUDFLARE_URL  = "pro-padel.de";
-    
+    private ServletContext servletContext;
+
     @RequestMapping()
-    public ModelAndView operators(){
+    public ModelAndView operators() {
         return new ModelAndView("pro/operators", "Customers", customerDAO.findAll());
     }
-    
-    @RequestMapping(method=GET, value="newaccount")
-    public ModelAndView newAccount(){
+
+    @RequestMapping(method = GET, value = "newaccount")
+    public ModelAndView newAccount() {
         return new ModelAndView("pro/newaccount", "Model", new CustomerRegistrationModel());
     }
-    
-    @RequestMapping(method=POST, value="newaccount")
-    public ModelAndView postNewAccount(HttpServletRequest request, @ModelAttribute("Model") CustomerRegistrationModel customerAccount, BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
+
+    @RequestMapping(method = POST, value = "newaccount")
+    public ModelAndView postNewAccount(HttpServletRequest request, @ModelAttribute("Model") CustomerRegistrationModel customerAccount, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return new ModelAndView("pro/newaccount", "Model", customerAccount);
         }
         try {
-            if (StringUtils.isEmpty(customerAccount.getCustomer().getName())){
+            if (StringUtils.isEmpty(customerAccount.getCustomer().getName())) {
                 throw new Exception(msg.get("ProjectNameFormatRequirements"));
             }
             String projectName = customerAccount.getCustomer().getName().toLowerCase(Constants.DEFAULT_LOCALE).replace(" ", "-");
             //verify dns name requirements
-            if (!DNS_SUBDOMAIN_PATTERN.matcher(projectName).matches()){
+            if (!DNS_SUBDOMAIN_PATTERN.matcher(projectName).matches()) {
                 throw new Exception(msg.get("ProjectNameFormatRequirements"));
             }
-            
+
             //make sure customer does not exist yet
             Customer customer = customerDAO.findByName(projectName);
-            if (customer != null){
+            if (customer != null) {
                 throw new Exception(msg.get("ProjectAlreadyExists"));
             }
-            
+
             //create DNS subdomain in cloudflare
             String domainName = cloudFlareApiClient.addCnameRecord(projectName, CLOUDFLARE_URL, OPENSHIFT_URL);
-            
+
             //create openshift alias
             openshiftApiClient.addAlias(domainName, OPENSHIFT_URL);
-            
+
             //save customer to DB
             HashSet<String> domainNames = new HashSet<>();
             domainNames.add(domainName);
@@ -123,14 +114,14 @@ public class ProOperatorsController extends BaseController implements ServletCon
 
             //create admin account in DB
             Player adminPlayer = playerDAO.findByEmail(customerAccount.getPlayer().getEmail());
-            if (adminPlayer == null){
+            if (adminPlayer == null) {
                 customerAccount.getPlayer().setCustomer(customer);
                 adminPlayer = playerDAO.saveOrUpdate(customerAccount.getPlayer());
             }
-            
+
             //create admin group in DB
             AdminGroup adminGroup = adminGroupDAO.findByAttribute("customer", customer);
-            if (adminGroup == null){
+            if (adminGroup == null) {
                 adminGroup = new AdminGroup();
                 adminGroup.setName(domainName + " Admins");
                 EnumSet<Privilege> privileges = EnumSet.complementOf(EnumSet.of(Privilege.ManageCustomers));
@@ -139,31 +130,31 @@ public class ProOperatorsController extends BaseController implements ServletCon
                 adminGroup.setCustomer(customer);
                 adminGroupDAO.saveOrUpdate(adminGroup);
             }
-            
+
             //create all.min.css.stylesheet for new customer
             htmlResourceUtil.updateCss(servletContext, customer);
-            
+
             Mail mail = new Mail();
             mail.addRecipient(getDefaultContact());
             mail.setSubject("New Customer Registration");
             mail.setBody(customer.toString());
             mailUtils.send(mail, request);
-            
-            return new ModelAndView("redirect:/pro/operators/newaccount/"+customer.getId());
-        } catch (Exception e){
+
+            return new ModelAndView("redirect:/pro/operators/newaccount/" + customer.getId());
+        } catch (Exception e) {
             LOG.error(e.getMessage(), e);
             errorReporter.notify(e);
             bindingResult.addError(new ObjectError("id", e.getMessage()));
             return new ModelAndView("pro/newaccount", "Model", customerAccount);
         }
     }
-    
+
     @RequestMapping("newaccount/{customerId}")
     public ModelAndView newAccountSuccess(@PathVariable("customerId") Long customerId) {
         Customer customer = customerDAO.findById(customerId);
         String domainName = customer.getDomainNames().iterator().next();
-        
-        ModelAndView mav =  new ModelAndView("pro/newaccount-success");
+
+        ModelAndView mav = new ModelAndView("pro/newaccount-success");
         mav.addObject("domainName", domainName);
         return mav;
     }

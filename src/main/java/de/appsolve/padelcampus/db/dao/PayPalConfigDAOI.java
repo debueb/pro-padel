@@ -10,8 +10,7 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.PayPalConfig;
 
 /**
- *
  * @author dominik
  */
-public interface PayPalConfigDAOI extends BaseEntityDAOI<PayPalConfig>{
+public interface PayPalConfigDAOI extends BaseEntityDAOI<PayPalConfig> {
 }

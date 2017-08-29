@@ -6,11 +6,10 @@
 package de.appsolve.padelcampus.external.cloudflare.model;
 
 /**
- *
  * @author dominik
  */
 public class DnsRecord {
-    
+
     private String type;
     private String name;
     private String content;

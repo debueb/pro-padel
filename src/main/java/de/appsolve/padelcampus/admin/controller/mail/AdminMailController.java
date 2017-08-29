@@ -24,10 +24,6 @@ import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.RequestUtil;
-import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -39,91 +35,96 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 /**
- *
  * @author dominik
  */
 @Controller
 @RequestMapping("/admin/mail")
-public class AdminMailController{
-    
+public class AdminMailController {
+
     private static final Logger LOG = Logger.getLogger(AdminMailController.class);
-    
+
     @Autowired
     PlayerDAOI playerDAO;
-    
+
     @Autowired
     TeamDAOI teamDAO;
-    
+
     @Autowired
     EventDAOI eventDAO;
-    
+
     @Autowired
     PlayerCollectionEditor playerCollectionEditor;
-    
+
     @Autowired
     MailUtils mailUtils;
-    
+
     @Autowired
     Msg msg;
-    
+
     @Autowired
     Environment environment;
-    
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Set.class, "recipients", playerCollectionEditor);
     }
-    
-    @RequestMapping(method=GET, value="/player/{PlayerUUID}")
-    public ModelAndView mailPlayer(HttpServletRequest request, @PathVariable("PlayerUUID") String playerUUID){
+
+    @RequestMapping(method = GET, value = "/player/{PlayerUUID}")
+    public ModelAndView mailPlayer(HttpServletRequest request, @PathVariable("PlayerUUID") String playerUUID) {
         Set<Player> player = Sets.newHashSet(playerDAO.findByUUID(playerUUID));
         return getMailView(player, request);
     }
-    
-    @RequestMapping(method=GET, value="/team/{teamId}")
-    public ModelAndView mailTeam(HttpServletRequest request, @PathVariable("teamId") Long teamId){
+
+    @RequestMapping(method = GET, value = "/team/{teamId}")
+    public ModelAndView mailTeam(HttpServletRequest request, @PathVariable("teamId") Long teamId) {
         Team team = teamDAO.findByIdFetchWithPlayers(teamId);
         return getMailView(team.getPlayers(), request);
     }
-    
-    @RequestMapping(method=GET, value="/event/{eventId}")
-    public ModelAndView mailEvent(HttpServletRequest request, @PathVariable("eventId") Long eventId){
+
+    @RequestMapping(method = GET, value = "/event/{eventId}")
+    public ModelAndView mailEvent(HttpServletRequest request, @PathVariable("eventId") Long eventId) {
         Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(eventId);
         return getMailView(event.getAllPlayers(), request);
     }
-    
-    @RequestMapping(method=GET, value="/all")
-    public ModelAndView mailAll(HttpServletRequest request){
+
+    @RequestMapping(method = GET, value = "/all")
+    public ModelAndView mailAll(HttpServletRequest request) {
         Set<Player> allPlayers = Sets.newHashSet(playerDAO.findPlayersRegisteredForEmails());
         return getMailView(allPlayers, request);
     }
-    
-    @RequestMapping(method=POST)
-    public ModelAndView postMailAll(HttpServletRequest request, @ModelAttribute("Model") Mail mail, BindingResult result){
-        if (result.hasErrors()){
+
+    @RequestMapping(method = POST)
+    public ModelAndView postMailAll(HttpServletRequest request, @ModelAttribute("Model") Mail mail, BindingResult result) {
+        if (result.hasErrors()) {
             return getMailView(mail);
         }
         try {
             mailUtils.send(mail, request);
             return new ModelAndView("admin/mail-success");
-        } catch (IOException | MailException e){
+        } catch (IOException | MailException e) {
             result.addError(new ObjectError("*", e.getMessage()));
             return getMailView(mail);
         }
     }
-    
+
     private ModelAndView getMailView(Set<Player> players, HttpServletRequest request) {
         Mail mail = new Mail();
         mail.setRecipients(players);
-        mail.setBody(msg.get("MailAllPlayersBody", new Object[]{RequestUtil.getBaseURL(request)+"/account/profile"}));
+        mail.setBody(msg.get("MailAllPlayersBody", new Object[]{RequestUtil.getBaseURL(request) + "/account/profile"}));
         return getMailView(mail);
     }
-    
+
     private ModelAndView getMailView(Mail mail) {
         ModelAndView mav = new ModelAndView("admin/mail", "Model", mail);
         try {

@@ -8,17 +8,13 @@ package de.appsolve.padelcampus.data;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
+import java.math.BigDecimal;
+import java.util.*;
+
 /**
- *
  * @author dominik
  */
 public class TimeSlot implements Comparable<TimeSlot> {
@@ -32,7 +28,7 @@ public class TimeSlot implements Comparable<TimeSlot> {
     private CalendarConfig config;
 
     private List<Booking> bookings;
-    
+
     private BigDecimal pricePerMinDuration;
 
     public LocalDate getDate() {
@@ -70,7 +66,7 @@ public class TimeSlot implements Comparable<TimeSlot> {
     public List<Booking> getBookings() {
         return bookings == null ? new ArrayList<Booking>() : bookings;
     }
-    
+
     public void setBookings(List<Booking> bookings) {
         this.bookings = bookings;
     }
@@ -94,12 +90,12 @@ public class TimeSlot implements Comparable<TimeSlot> {
     //jstl
     public List<Offer> getAvailableOffers() {
         List<Offer> sortedOffers = new ArrayList<>();
-        if (config != null){
+        if (config != null) {
             sortedOffers.addAll(config.getOffers());
         }
         Collections.sort(sortedOffers);
         Iterator<Offer> iterator = sortedOffers.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Offer offer = iterator.next();
             if (getFreeCourtCount(offer) <= 0) {
                 iterator.remove();
@@ -107,7 +103,7 @@ public class TimeSlot implements Comparable<TimeSlot> {
         }
         return sortedOffers;
     }
-    
+
     private Long getFreeCourtCount(Offer offer) {
         Long freeCourtCount = offer.getMaxConcurrentBookings();
         for (Booking booking : getBookings()) {
@@ -118,7 +114,7 @@ public class TimeSlot implements Comparable<TimeSlot> {
         }
         return freeCourtCount;
     }
-    
+
     @Override
     public int compareTo(TimeSlot o) {
         return getStartTime().compareTo(o.getStartTime());

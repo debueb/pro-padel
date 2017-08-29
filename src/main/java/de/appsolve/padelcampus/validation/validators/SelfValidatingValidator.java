@@ -7,19 +7,20 @@ package de.appsolve.padelcampus.validation.validators;
 
 import de.appsolve.padelcampus.validation.constraints.SelfValidating;
 import de.appsolve.padelcampus.validation.constraints.Validatable;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- *
  * @author dominik
  */
 public class SelfValidatingValidator implements ConstraintValidator<SelfValidating, Validatable> {
 
-    public void initialize(SelfValidating constraintAnnotation) {}
+    public void initialize(SelfValidating constraintAnnotation) {
+    }
 
     public boolean isValid(Validatable value,
-        ConstraintValidatorContext constraintValidatorContext) {
+                           ConstraintValidatorContext constraintValidatorContext) {
 
         return value.isValid();
     }

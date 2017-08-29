@@ -5,9 +5,8 @@ import de.appsolve.padelcampus.db.model.PayDirektConfig;
 import org.springframework.stereotype.Component;
 
 /**
- *
  * @author dominik
  */
 @Component
-public class PayDirektConfigDAO extends GenericDAO<PayDirektConfig> implements PayDirektConfigDAOI{
+public class PayDirektConfigDAO extends GenericDAO<PayDirektConfig> implements PayDirektConfigDAOI {
 }

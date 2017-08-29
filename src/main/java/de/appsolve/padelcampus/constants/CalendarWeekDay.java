@@ -10,11 +10,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
  * @author dominik
  */
 public enum CalendarWeekDay {
-    
+
     Monday,
     Tuesday,
     Wednesday,
@@ -22,8 +21,8 @@ public enum CalendarWeekDay {
     Friday,
     Saturday,
     Sunday;
-    
-    public static Set valuesAsSet(){
+
+    public static Set valuesAsSet() {
         return new HashSet<>(Arrays.asList(CalendarWeekDay.values()));
     }
 }

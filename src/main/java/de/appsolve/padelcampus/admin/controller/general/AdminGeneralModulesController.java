@@ -58,26 +58,21 @@ public class AdminGeneralModulesController extends AdminBaseController<Module> {
     private final static Logger LOG = Logger.getLogger(AdminGeneralModulesController.class);
 
     private final RequestMappingHandlerMapping handlerMapping;
+    @Autowired
+    ModuleDAOI moduleDAO;
+    @Autowired
+    PageEntryDAOI pageEntryDAO;
+    @Autowired
+    ModuleUtil moduleUtil;
+    @Autowired
+    EventGroupDAOI eventGroupDAO;
+    @Autowired
+    EventGroupPropertyEditor eventGroupPropertyEditor;
 
     @Autowired
     public AdminGeneralModulesController(RequestMappingHandlerMapping handlerMapping) {
         this.handlerMapping = handlerMapping;
     }
-
-    @Autowired
-    ModuleDAOI moduleDAO;
-
-    @Autowired
-    PageEntryDAOI pageEntryDAO;
-
-    @Autowired
-    ModuleUtil moduleUtil;
-
-    @Autowired
-    EventGroupDAOI eventGroupDAO;
-
-    @Autowired
-    EventGroupPropertyEditor eventGroupPropertyEditor;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {

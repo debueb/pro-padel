@@ -4,28 +4,23 @@
  */
 package de.appsolve.padelcampus.filter;
 
-import java.io.IOException;
-import java.util.regex.Pattern;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.regex.Pattern;
+
 /**
- *
  * @author Dominik
  */
 public class XSSFilter implements Filter {
-    
+
     private static final Logger log = Logger.getLogger(XSSFilter.class);
 
     private Pattern excludePattern;
-    
-    public void setExcludePattern(Pattern pattern){
+
+    public void setExcludePattern(Pattern pattern) {
         this.excludePattern = pattern;
     }
 

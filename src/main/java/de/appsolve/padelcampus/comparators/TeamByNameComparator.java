@@ -6,15 +6,15 @@
 package de.appsolve.padelcampus.comparators;
 
 import de.appsolve.padelcampus.db.model.Team;
+
 import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- *
  * @author dominik
  */
-public class TeamByNameComparator implements Comparator<Team>, Serializable{
-    
+public class TeamByNameComparator implements Comparator<Team>, Serializable {
+
     @Override
     public int compare(Team o1, Team o2) {
         return o1.getName().compareToIgnoreCase(o2.getName());

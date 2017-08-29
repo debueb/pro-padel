@@ -6,23 +6,23 @@
 package de.appsolve.padelcampus.controller;
 
 import de.appsolve.padelcampus.utils.RequestUtil;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- *
  * @author dominik
  */
 @Controller
 @RequestMapping(("/robots.txt"))
 public class RobotsTxtController {
-    
+
     @RequestMapping(produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String getRobotsTxt(HttpServletRequest request){
+    public String getRobotsTxt(HttpServletRequest request) {
         StringBuilder builder = new StringBuilder();
         builder.append("User-Agent: *\n");
         builder.append("Disallow: /players/\n");

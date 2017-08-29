@@ -9,51 +9,51 @@ import de.appsolve.padelcampus.external.openshift.model.Alias;
 import de.appsolve.padelcampus.external.openshift.model.Application;
 import de.appsolve.padelcampus.external.openshift.model.ApplicationsApiResponse;
 import de.appsolve.padelcampus.external.openshift.model.OpenshiftApiResponse;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 /**
- *
  * @author dominik
  */
 @Component
 public class OpenshiftApiClient {
-    
+
     private static final String OPENSHIFT_API_URL = "https://openshift.redhat.com/broker/rest/";
-    
+
     @Autowired
     RestTemplate openshiftApiRestTemplate;
-    
-    public void addAlias(String aliasId, final String applicationUrl) throws OpenshiftApiException{
+
+    public void addAlias(String aliasId, final String applicationUrl) throws OpenshiftApiException {
         ApplicationsApiResponse applicationsResponse = getApplications();
         List<Application> applications = applicationsResponse.getData();
-        
-        String appUrl = "http://"+applicationUrl;
-        if (!appUrl.endsWith("/")){
+
+        String appUrl = "http://" + applicationUrl;
+        if (!appUrl.endsWith("/")) {
             appUrl += "/";
         }
-        for (Application application: applications){
-            if (application.getApp_url().equalsIgnoreCase(appUrl)){
+        for (Application application : applications) {
+            if (application.getApp_url().equalsIgnoreCase(appUrl)) {
                 boolean aliasExists = false;
-                for (Alias existingAlias: application.getAliases()){
-                    if (existingAlias.getId().equalsIgnoreCase(aliasId)){
+                for (Alias existingAlias : application.getAliases()) {
+                    if (existingAlias.getId().equalsIgnoreCase(aliasId)) {
                         aliasExists = true;
                         break;
                     }
                 }
-                if (!aliasExists){
+                if (!aliasExists) {
                     postAlias(application.getId(), aliasId);
                 }
                 break;
             }
         }
     }
-    
-    private ApplicationsApiResponse getApplications() throws OpenshiftApiException{
+
+    private ApplicationsApiResponse getApplications() throws OpenshiftApiException {
         ApplicationsApiResponse response = openshiftApiRestTemplate.getForObject(OPENSHIFT_API_URL + "applications", ApplicationsApiResponse.class);
-        if (response.getStatus() == null || !response.getStatus().equals("ok")){
+        if (response.getStatus() == null || !response.getStatus().equals("ok")) {
             throw new OpenshiftApiException(response);
         }
         return response;
@@ -63,9 +63,9 @@ public class OpenshiftApiClient {
         Alias newAlias = new Alias();
         newAlias.setId(aliasId);
         OpenshiftApiResponse response = openshiftApiRestTemplate.postForObject(OPENSHIFT_API_URL + "application/" + applicationId + "/aliases", newAlias, OpenshiftApiResponse.class);
-        if (response.getStatus() == null || !response.getStatus().equals("created")){
+        if (response.getStatus() == null || !response.getStatus().equals("created")) {
             throw new OpenshiftApiException(response);
         }
     }
-    
+
 }

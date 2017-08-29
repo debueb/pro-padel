@@ -6,7 +6,6 @@
 package de.appsolve.padelcampus.utils;
 
 /**
- *
  * @author dominik
  */
 public class CryptUtil {

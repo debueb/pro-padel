@@ -6,67 +6,59 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
+
 /**
- *
  * @author dominik
  */
 @Entity
-public class Game extends CustomerEntity{
-    
+public class Game extends CustomerEntity {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+
     @ManyToOne
     private Event event;
-    
-    @ManyToMany(fetch=FetchType.EAGER)
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @OrderBy(value = "name")
     private Set<Participant> participants;
-    
-    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = false)
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = false)
     private Set<GameSet> gameSets;
-    
-    @OneToOne(fetch=FetchType.LAZY)
+
+    @OneToOne(fetch = FetchType.LAZY)
     private Player scoreReporter;
-    
+
     @Column
     private String voucherUUID;
-    
+
     @Column
     private Integer round;
-    
+
     @Column
     private Integer groupNumber;
-    
+
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate startDate;
-    
+
     @Column
     private Integer startTimeHour;
-    
+
     @Column
     private Integer startTimeMinute;
-    
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Game nextGame;
 
@@ -77,7 +69,7 @@ public class Game extends CustomerEntity{
     public void setEvent(Event event) {
         this.event = event;
     }
-    
+
     public Set<Participant> getParticipants() {
         return participants == null ? new LinkedHashSet<Participant>() : participants;
     }
@@ -127,15 +119,15 @@ public class Game extends CustomerEntity{
     }
 
     public LocalDate getStartDate() {
-        if (startDate != null){
+        if (startDate != null) {
             return startDate;
         }
         LocalDateTime lastUpdated = getLastUpdated();
-        if (lastUpdated != null){
+        if (lastUpdated != null) {
             return lastUpdated.toLocalDate();
         }
-        if (event != null){
-            if (event.getStartDate() != null){
+        if (event != null) {
+            if (event.getStartDate() != null) {
                 return event.getStartDate();
             }
         }
@@ -161,10 +153,10 @@ public class Game extends CustomerEntity{
     public void setStartTimeHour(Integer startTimeHour) {
         this.startTimeHour = startTimeHour;
     }
-    
-    public LocalTime getStartTime(){
-        if (getStartTimeHour() != null && getStartTimeMinute() != null){
-            return TIME_HUMAN_READABLE.parseLocalTime(getStartTimeHour()+":"+getStartTimeMinute());
+
+    public LocalTime getStartTime() {
+        if (getStartTimeHour() != null && getStartTimeMinute() != null) {
+            return TIME_HUMAN_READABLE.parseLocalTime(getStartTimeHour() + ":" + getStartTimeMinute());
         }
         return null;
     }
@@ -176,29 +168,29 @@ public class Game extends CustomerEntity{
     public void setNextGame(Game nextGame) {
         this.nextGame = nextGame;
     }
-    
-    public Set<Player> getPlayers(){
+
+    public Set<Player> getPlayers() {
         Set<Player> players = new HashSet<>();
-        for (Participant p: getParticipants()){
-            if (p instanceof Player){
-                players.add((Player)p);
-            } else if (p instanceof Team){
+        for (Participant p : getParticipants()) {
+            if (p instanceof Player) {
+                players.add((Player) p);
+            } else if (p instanceof Team) {
                 Team team = (Team) p;
                 players.addAll(team.getPlayers());
             }
         }
         return players;
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (Participant participant: getParticipants()){
+        for (Participant participant : getParticipants()) {
             sb.append(participant.toString());
             sb.append(" vs. ");
         }
-        if (sb.length()>0){
-            return sb.substring(0, sb.length()-" vs. ".length());
+        if (sb.length() > 0) {
+            return sb.substring(0, sb.length() - " vs. ".length());
         }
         return sb.toString();
     }

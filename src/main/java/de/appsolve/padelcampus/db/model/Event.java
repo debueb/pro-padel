@@ -10,129 +10,119 @@ import de.appsolve.padelcampus.constants.Currency;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.PaymentMethod;
-import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
-import java.math.BigDecimal;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.TreeSet;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.TreeSet;
+
+import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
+
 /**
- *
  * @author dominik
  */
 @Entity
-public class Event extends ComparableEntity{
-    
+public class Event extends ComparableEntity {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.eventName}")
     private String name;
-    
+
     @Column
     @Enumerated(EnumType.STRING)
     private EventType eventType;
-    
+
     @Column
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    
+
     @Column
     private Integer numberOfGroups;
-    
+
     @Column
     private Integer numberOfGroupsSecondRound;
-    
+
     @Column
     private Integer numberOfWinnersPerGroup;
-    
+
     @Column
     private Integer numberOfSets;
-    
+
     @Column
     private Integer numberOfGamesPerSet;
-    
+
     @Column
     private Integer numberOfGamesInFinalSet;
-    
+
     @Column
     private Boolean active;
-    
-    @ManyToMany(fetch=FetchType.LAZY)
+
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Participant> participants;
-    
+
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate startDate;
-    
+
     @Column
     private Integer startTimeHour;
-    
+
     @Column
     private Integer startTimeMinute;
 
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate endDate;
-    
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="event", cascade = CascadeType.REMOVE)
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "event", cascade = CascadeType.REMOVE)
     @OrderBy(value = "id")
     private Set<Game> games;
-    
+
     @Column
     private String location;
-    
+
     @Column(columnDefinition = "text")
     private String description;
-    
+
     @ManyToOne(fetch = FetchType.EAGER)
     private EventGroup eventGroup;
-    
+
     @Column
     @NotNull(message = "{NotEmpty.maxNumberOfParticipants}")
     private Integer maxNumberOfParticipants;
-    
+
     @Column
     private BigDecimal price;
-    
+
     @Column
     @Enumerated(EnumType.STRING)
     private Currency currency;
-    
-    @ElementCollection(fetch=FetchType.EAGER)
+
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<PaymentMethod> paymentMethods;
-    
+
     @Column
     private Boolean allowSignup;
-    
+
     @Column
     private Boolean showParticipants;
-    
+
     @Column
     private Boolean showGames;
-    
+
     @Column
     private Boolean showScores;
-    
+
     @Column(length = 8000)
     private String confirmationMailRemark;
 
@@ -219,13 +209,17 @@ public class Event extends ComparableEntity{
     public Set<Participant> getParticipants() {
         return participants == null ? new LinkedHashSet<Participant>() : participants;
     }
-    
+
     public void setParticipants(Set<Participant> participant) {
         this.participants = participant;
     }
-    
+
     public LocalDate getStartDate() {
         return startDate;
+    }
+
+    public void setStartDate(LocalDate dateTime) {
+        this.startDate = dateTime;
     }
 
     public Integer getStartTimeHour() {
@@ -243,16 +237,12 @@ public class Event extends ComparableEntity{
     public void setStartTimeMinute(Integer startTimeMinute) {
         this.startTimeMinute = startTimeMinute;
     }
-    
-    public LocalTime getStartTime(){
-        if (getStartTimeHour() == null || getStartTimeMinute() == null){
+
+    public LocalTime getStartTime() {
+        if (getStartTimeHour() == null || getStartTimeMinute() == null) {
             return null;
         }
-        return TIME_HUMAN_READABLE.parseLocalTime(getStartTimeHour()+":"+getStartTimeMinute());
-    }
-
-    public void setStartDate(LocalDate dateTime) {
-        this.startDate = dateTime;
+        return TIME_HUMAN_READABLE.parseLocalTime(getStartTimeHour() + ":" + getStartTimeMinute());
     }
 
     public LocalDate getEndDate() {
@@ -296,7 +286,7 @@ public class Event extends ComparableEntity{
     }
 
     public Integer getMaxNumberOfParticipants() {
-        return maxNumberOfParticipants == null ?  0 : maxNumberOfParticipants;
+        return maxNumberOfParticipants == null ? 0 : maxNumberOfParticipants;
     }
 
     public void setMaxNumberOfParticipants(Integer maxNumberOfParticipants) {
@@ -366,40 +356,40 @@ public class Event extends ComparableEntity{
     public void setConfirmationMailRemark(String confirmationMailRemark) {
         this.confirmationMailRemark = confirmationMailRemark;
     }
-    
-    public Set<Team> getTeams(){
+
+    public Set<Team> getTeams() {
         Set<Team> teams = new TreeSet<>();
-        for (Participant participant: getParticipants()){
-            if (participant instanceof Team){
-                teams.add((Team)participant);
+        for (Participant participant : getParticipants()) {
+            if (participant instanceof Team) {
+                teams.add((Team) participant);
             }
         }
         return teams;
     }
-    
-    public Set<Player> getPlayers(){
+
+    public Set<Player> getPlayers() {
         Set<Player> players = new TreeSet<>();
-        for (Participant participant: getParticipants()){
-            if (participant instanceof Player){
-                players.add((Player)participant);
+        for (Participant participant : getParticipants()) {
+            if (participant instanceof Player) {
+                players.add((Player) participant);
             }
         }
         return players;
     }
-    
-    public Set<Player> getAllPlayers(){
+
+    public Set<Player> getAllPlayers() {
         Set<Player> players = new TreeSet<>();
-        for (Participant participant: getParticipants()){
-            if (participant instanceof Player){
-                players.add((Player)participant);
-            } else if (participant instanceof Team){
+        for (Participant participant : getParticipants()) {
+            if (participant instanceof Player) {
+                players.add((Player) participant);
+            } else if (participant instanceof Team) {
                 Team team = (Team) participant;
                 players.addAll(team.getPlayers());
             }
         }
         return players;
     }
-    
+
     @Override
     public String toString() {
         return name;
@@ -407,7 +397,7 @@ public class Event extends ComparableEntity{
 
     @Override
     public int compareTo(BaseEntityI o) {
-        if (o instanceof Event){
+        if (o instanceof Event) {
             Event other = (Event) o;
             return getName().compareToIgnoreCase(other.getName());
         }

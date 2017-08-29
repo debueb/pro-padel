@@ -6,24 +6,24 @@
 package de.appsolve.padelcampus.comparators;
 
 import de.appsolve.padelcampus.db.model.Game;
+
 import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- *
  * @author dominik
  */
 public class GameByEventComparator implements Comparator<Game>, Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     @Override
     public int compare(Game o1, Game o2) {
         int result = 0;
-        if (o1.getEvent() != null && o2.getEvent() != null){
+        if (o1.getEvent() != null && o2.getEvent() != null) {
             result = o1.getEvent().getName().compareToIgnoreCase(o2.getEvent().getName());
-        } 
-        if (result == 0){
+        }
+        if (result == 0) {
             result = o1.getId().compareTo(o2.getId());
         }
         return result;

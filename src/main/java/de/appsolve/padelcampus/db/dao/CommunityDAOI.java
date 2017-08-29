@@ -10,9 +10,8 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Community;
 
 /**
- *
  * @author dominik
  */
-public interface CommunityDAOI extends BaseEntityDAOI<Community>{
-    
+public interface CommunityDAOI extends BaseEntityDAOI<Community> {
+
 }

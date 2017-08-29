@@ -6,22 +6,22 @@
 package de.appsolve.padelcampus.data;
 
 import de.appsolve.padelcampus.db.model.Participant;
+
 import java.util.Objects;
 
 /**
- *
  * @author dominik
  */
-public class ScoreEntry implements Comparable<ScoreEntry>{
-    
+public class ScoreEntry implements Comparable<ScoreEntry> {
+
     private Participant participant;
-    
+
     private int matchesPlayed;
     private int matchesWon;
-    
+
     private int setsPlayed;
     private int setsWon;
-    
+
     private int gamesPlayed;
     private int gamesWon;
 
@@ -40,7 +40,7 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
     public void setGamesPlayed(int gamesPlayed) {
         this.gamesPlayed = gamesPlayed;
     }
-    
+
     public Participant getParticipant() {
         return participant;
     }
@@ -72,6 +72,7 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
     public void setSetsWon(int setsWon) {
         this.setsWon = setsWon;
     }
+
     public int getGamesWon() {
         return gamesWon;
     }
@@ -84,23 +85,23 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
     public int compareTo(ScoreEntry o) {
         //matches
         int diff = getDiff(matchesPlayed, matchesWon, o.matchesPlayed, o.matchesWon);
-        if (diff!=0){
+        if (diff != 0) {
             return diff;
         }
-        
+
         //sets
         diff = getDiff(setsPlayed, setsWon, o.setsPlayed, o.setsWon);
-        if (diff!=0){
+        if (diff != 0) {
             return diff;
         }
-        
+
         //games
         diff = getDiff(gamesPlayed, gamesWon, o.gamesPlayed, o.gamesWon);
-        if (diff!=0){
+        if (diff != 0) {
             return diff;
         }
-        
-        if (participant!=null && o.getParticipant()!=null){
+
+        if (participant != null && o.getParticipant() != null) {
             return participant.toString().compareToIgnoreCase(o.getParticipant().toString());
         }
         return -1;
@@ -151,23 +152,22 @@ public class ScoreEntry implements Comparable<ScoreEntry>{
         }
         return Objects.equals(this.participant, other.participant);
     }
-    
-    
+
 
     private int getDiff(int played, int won, int oPlayed, int oWon) {
-        int lost = played-won;
+        int lost = played - won;
         int diff = won - lost;
-        int oLost = oPlayed-oWon;
+        int oLost = oPlayed - oWon;
         int oDiff = oWon - oLost;
         return oDiff - diff;
     }
 
     public void add(ScoreEntry scoreEntry) {
-        this.gamesPlayed    += scoreEntry.getGamesPlayed();
-        this.gamesWon       += scoreEntry.getGamesWon();
-        this.matchesPlayed  += scoreEntry.getMatchesPlayed();
-        this.matchesWon     += scoreEntry.getMatchesWon();
-        this.setsPlayed     += scoreEntry.getSetsPlayed();
-        this.setsWon        += scoreEntry.getSetsWon();
+        this.gamesPlayed += scoreEntry.getGamesPlayed();
+        this.gamesWon += scoreEntry.getGamesWon();
+        this.matchesPlayed += scoreEntry.getMatchesPlayed();
+        this.matchesWon += scoreEntry.getMatchesWon();
+        this.setsPlayed += scoreEntry.getSetsPlayed();
+        this.setsWon += scoreEntry.getSetsWon();
     }
 }

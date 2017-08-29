@@ -6,50 +6,44 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
-import javax.validation.constraints.Pattern;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
 
+import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+
 /**
- *
  * @author dominik
  */
 @Entity
-public class PageEntry extends SortableEntity{
-    
+public class PageEntry extends SortableEntity {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate lastModified;
-    
+
     @OneToOne
     private Player author;
-    
+
     @NotEmpty(message = "{NotEmpty.title}")
-    @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}") 
+    @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}")
     @Column
     private String title;
-    
+
     @NotEmpty(message = "{NotEmpty.message}")
     @Lob
     private String message;
-    
+
     @Column
     private Boolean fullWidth;
-    
+
     @Column
     private Boolean showContactForm;
-    
+
     @ManyToOne(targetEntity = Module.class, fetch = FetchType.EAGER)
     private Module module;
 
@@ -108,13 +102,13 @@ public class PageEntry extends SortableEntity{
     public void setModule(Module module) {
         this.module = module;
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return title;
     }
-    
-    public String getUrl(){
+
+    public String getUrl() {
         return getTitle().replace(" ", "-");
     }
 }

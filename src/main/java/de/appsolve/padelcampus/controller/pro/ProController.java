@@ -5,21 +5,21 @@
  */
 package de.appsolve.padelcampus.controller.pro;
 
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- *
  * @author dominik
  */
 @Controller
 @RequestMapping("/pro")
 public class ProController {
-    
+
     @RequestMapping
-    public ModelAndView index(HttpServletRequest request){
+    public ModelAndView index(HttpServletRequest request) {
         return new ModelAndView("pro/index");
     }
 }

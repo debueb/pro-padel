@@ -10,10 +10,9 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.LoginCookie;
 
 /**
- *
  * @author dominik
  */
-public interface LoginCookieDAOI extends BaseEntityDAOI<LoginCookie>{
-    
+public interface LoginCookieDAOI extends BaseEntityDAOI<LoginCookie> {
+
     LoginCookie findByUUID(String UUID);
 }

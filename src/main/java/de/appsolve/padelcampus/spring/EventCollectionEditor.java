@@ -6,30 +6,30 @@
 package de.appsolve.padelcampus.spring;
 
 import de.appsolve.padelcampus.db.dao.EventDAOI;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 /**
- *
  * @author dominik
  */
 @Component
-public class EventCollectionEditor extends CustomCollectionEditor{
-    
+public class EventCollectionEditor extends CustomCollectionEditor {
+
     @Autowired
     EventDAOI eventDAO;
-    
+
     public EventCollectionEditor() {
         super(Set.class);
     }
-    
+
     @Override
     protected Object convertElement(Object element) {
-        if (element == null || !(element instanceof String)){
+        if (element == null || !(element instanceof String)) {
             return null;
         }
-        return eventDAO.findById(Long.valueOf((String)element));
+        return eventDAO.findById(Long.valueOf((String) element));
     }
 }

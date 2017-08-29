@@ -11,11 +11,10 @@ import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.db.model.PayPalConfig;
 
 /**
- *
  * @author dominik
  */
-public interface PayPalConfigBaseDAOI extends BaseEntityDAOI<PayPalConfig>{
-    
+public interface PayPalConfigBaseDAOI extends BaseEntityDAOI<PayPalConfig> {
+
     PayPalConfig findByCustomer(Customer customer);
-    
+
 }

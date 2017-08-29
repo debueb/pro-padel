@@ -14,30 +14,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import org.springframework.web.servlet.ModelAndView;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 /**
- *
  * @author dominik
  */
 @Controller
 @RequestMapping("/invoices")
 public class InvoicesController {
-    
+
     @Autowired
     BookingDAOI bookingDAO;
-    
+
     @Autowired
     MasterDataDAOI masterDataDAO;
-    
+
     @Autowired
     Msg msg;
-    
+
     @RequestMapping(method = GET, value = "booking/{bookingUUID}")
-    public ModelAndView getInvoice(@PathVariable("bookingUUID") String uuid){
+    public ModelAndView getInvoice(@PathVariable("bookingUUID") String uuid) {
         MasterData masterData = masterDataDAO.findFirst();
-        if (masterData == null){
+        if (masterData == null) {
             return new ModelAndView("invoices/masterdata_missing");
         }
         Booking booking = bookingDAO.findByUUID(uuid);

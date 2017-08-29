@@ -11,31 +11,31 @@ import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/account/games")
 public class AccountGamesController extends BaseController {
-    
+
     @Autowired
     SessionUtil sessionUtil;
-    
+
     @Autowired
     GameUtil gameUtil;
-    
+
     @RequestMapping()
-    public ModelAndView getIndex(HttpServletRequest request, @RequestParam(defaultValue = "date") String sortBy){
+    public ModelAndView getIndex(HttpServletRequest request, @RequestParam(defaultValue = "date") String sortBy) {
         Player player = sessionUtil.getUser(request);
-        if (player == null){
+        if (player == null) {
             throw new ResourceNotFoundException();
         }
         ModelAndView mav = new ModelAndView("account/games/index");

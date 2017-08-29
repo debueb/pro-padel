@@ -11,12 +11,11 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 
 /**
- *
  * @author dominik
  */
 @MappedSuperclass
-public abstract class CustomerEntity extends BaseEntity{
-    
+public abstract class CustomerEntity extends BaseEntity {
+
     @OneToOne(fetch = FetchType.EAGER)
     private Customer customer;
 

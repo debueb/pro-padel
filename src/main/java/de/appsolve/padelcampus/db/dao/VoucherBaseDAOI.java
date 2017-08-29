@@ -8,14 +8,14 @@ package de.appsolve.padelcampus.db.dao;
 
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Voucher;
-import java.util.List;
 import org.joda.time.LocalDate;
 
+import java.util.List;
+
 /**
- *
  * @author dominik
  */
-public interface VoucherBaseDAOI extends BaseEntityDAOI<Voucher>{
-    
+public interface VoucherBaseDAOI extends BaseEntityDAOI<Voucher> {
+
     public List<Voucher> findExpiredBefore(LocalDate oneMonthAgo);
 }

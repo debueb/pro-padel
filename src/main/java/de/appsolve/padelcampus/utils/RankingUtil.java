@@ -11,26 +11,7 @@ import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
-import de.appsolve.padelcampus.db.model.Event;
-import de.appsolve.padelcampus.db.model.Game;
-import de.appsolve.padelcampus.db.model.GameSet;
-import de.appsolve.padelcampus.db.model.Participant;
-import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.db.model.Team;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import de.appsolve.padelcampus.db.model.*;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +19,14 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.util.*;
+
 /**
- *
  * @author dominik
  * see https://metinmediamath.wordpress.com/2013/11/27/how-to-calculate-the-elo-rating-including-example/
- * 
  */
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -61,30 +45,30 @@ public class RankingUtil {
 
     @Autowired
     EventDAOI eventDAO;
-    
+
     @Autowired
     TeamDAOI teamDAO;
-    
+
     public Map<Participant, BigDecimal> getTeamRanking(Gender gender) {
         List<Game> games = getGamesInLastYear(gender);
         Map<Participant, BigDecimal> ranking = getRanking(games);
         Set<Team> teams = new HashSet<>();
-        for (Game game: games){
+        for (Game game : games) {
             Set<Participant> participants = game.getParticipants();
-            for (Participant p : participants){
-                if (p instanceof Team){
-                    teams.add((Team)p);
+            for (Participant p : participants) {
+                if (p instanceof Team) {
+                    teams.add((Team) p);
                 }
             }
         }
         return getTeamRanking(ranking, teams);
     }
-    
+
     public Map<Participant, BigDecimal> getTeamRanking(Gender category, Collection<Team> teams) {
         Map<Participant, BigDecimal> ranking = getRanking(category);
         return getTeamRanking(ranking, teams);
     }
-    
+
     private Map<Participant, BigDecimal> getTeamRanking(Map<Participant, BigDecimal> ranking, Collection<Team> teams) {
         Map<Participant, BigDecimal> teamRanking = new HashMap<>();
 
@@ -108,15 +92,15 @@ public class RankingUtil {
         List<Game> games = getGamesInLastYear(gender);
         return getRanking(games);
     }
-    
+
     public Map<Participant, BigDecimal> getPlayerRanking(Gender category, Collection<Player> participants) {
         Map<Participant, BigDecimal> ranking = getRanking(category);
         Map<Participant, BigDecimal> eventRanking = new HashMap<>();
-        for (Map.Entry<Participant, BigDecimal> entry: ranking.entrySet()){
+        for (Map.Entry<Participant, BigDecimal> entry : ranking.entrySet()) {
             Participant participant = entry.getKey();
-            if (participant instanceof Player){
+            if (participant instanceof Player) {
                 Player player = (Player) participant;
-                if (participants.contains(player)){
+                if (participants.contains(player)) {
                     eventRanking.put(player, entry.getValue());
                 }
             }
@@ -129,7 +113,7 @@ public class RankingUtil {
         }
         return eventRanking;
     }
-    
+
     private Map<Participant, BigDecimal> getRanking(List<Game> games) {
         Map<Participant, BigDecimal> rankingMap = new HashMap<>();
         SortedSet<Game> sortedGames = new TreeSet<>(new GameByStartDateComparator());
@@ -149,7 +133,7 @@ public class RankingUtil {
             Participant p1 = iterator.next();
             Participant p2 = iterator.next();
 
-            if (p1 instanceof Team && p2 instanceof Team){
+            if (p1 instanceof Team && p2 instanceof Team) {
                 updateRanking(rankingMap, game, (Team) p1, (Team) p2);
             } else {
                 updateRanking(rankingMap, game, p1, p2);
@@ -164,12 +148,12 @@ public class RankingUtil {
         }
         return rankingMap;
     }
-    
-    public Map<Participant, BigDecimal> getPlayerRanking(Collection<Player> players){
+
+    public Map<Participant, BigDecimal> getPlayerRanking(Collection<Player> players) {
         Set<Player> malePlayers = new HashSet<>();
         Set<Player> femalePlayers = new HashSet<>();
-        for (Player player: players){
-            if (player.getGender().equals(Gender.male)){
+        for (Player player : players) {
+            if (player.getGender().equals(Gender.male)) {
                 malePlayers.add(player);
             } else {
                 femalePlayers.add(player);
@@ -179,19 +163,19 @@ public class RankingUtil {
         ranking.putAll(getPlayerRanking(Gender.female, femalePlayers));
         return ranking;
     }
-    
-    public Map<Participant, BigDecimal> getTeamRanking(Collection<Team> teams){
+
+    public Map<Participant, BigDecimal> getTeamRanking(Collection<Team> teams) {
         Set<Team> maleTeams = new HashSet<>();
         Set<Team> femaleTeams = new HashSet<>();
         Set<Team> mixedTeams = new HashSet<>();
-        for (Team team: teams){
+        for (Team team : teams) {
             Set<Gender> teamGender = new HashSet<>();
-            for (Player player: team.getPlayers()){
+            for (Player player : team.getPlayers()) {
                 teamGender.add(player.getGender());
             }
-            if (teamGender.size() > 1){
+            if (teamGender.size() > 1) {
                 mixedTeams.add(team);
-            } else if (teamGender.iterator().next().equals(Gender.male)){
+            } else if (teamGender.iterator().next().equals(Gender.male)) {
                 maleTeams.add(team);
             } else {
                 femaleTeams.add(team);
@@ -204,36 +188,36 @@ public class RankingUtil {
     }
 
     private void updateRanking(Map<Participant, BigDecimal> rankingMap, Game game, Team team1, Team team2) {
-        BigDecimal r1 = getTeamRanking(rankingMap, (Team)team1);
-        BigDecimal r2 = getTeamRanking(rankingMap, (Team)team2);
-        
-        for (Player player: team1.getPlayers()){
+        BigDecimal r1 = getTeamRanking(rankingMap, (Team) team1);
+        BigDecimal r2 = getTeamRanking(rankingMap, (Team) team2);
+
+        for (Player player : team1.getPlayers()) {
             BigDecimal r1p1 = getRanking(rankingMap, player);
             BigDecimal tr1 = getTransformedRating(r1);
             BigDecimal tr2 = getTransformedRating(r2);
-            
+
             BigDecimal e1 = getExpectedScore(tr1, tr2);
             BigDecimal s1 = getScore(game, team1);
             BigDecimal newR1 = ELO_K_FACTOR.multiply((s1.subtract(e1))).add(r1p1);
             rankingMap.put(player, newR1);
         }
-        
-        for (Player player: team2.getPlayers()){
+
+        for (Player player : team2.getPlayers()) {
             BigDecimal r2p1 = getRanking(rankingMap, player);
             BigDecimal tr1 = getTransformedRating(r2);
             BigDecimal tr2 = getTransformedRating(r1);
-            
+
             BigDecimal e1 = getExpectedScore(tr1, tr2);
             BigDecimal s1 = getScore(game, team2);
             BigDecimal newR1 = ELO_K_FACTOR.multiply((s1.subtract(e1))).add(r2p1);
             rankingMap.put(player, newR1);
         }
     }
-    
+
     private void updateRanking(Map<Participant, BigDecimal> rankingMap, Game game, Participant p1, Participant p2) {
         BigDecimal r1 = getRanking(rankingMap, p1);
         BigDecimal r2 = getRanking(rankingMap, p2);
-        
+
         BigDecimal tr1 = getTransformedRating(r1);
         BigDecimal tr2 = getTransformedRating(r2);
 
@@ -249,7 +233,7 @@ public class RankingUtil {
         rankingMap.put(p1, newR1);
         rankingMap.put(p2, newR2);
     }
-    
+
     private BigDecimal getRanking(Map<Participant, BigDecimal> rankingMap, Participant participant) {
         BigDecimal rating = rankingMap.get(participant);
         if (rating == null) {
@@ -374,16 +358,16 @@ public class RankingUtil {
         Collections.sort(scoreEntries);
         return scoreEntries;
     }
-    
+
     public Map<Participant, BigDecimal> getRankedParticipants(Event model) {
         Map<Participant, BigDecimal> ranking = new HashMap<>();
-        if (!model.getParticipants().isEmpty()){
+        if (!model.getParticipants().isEmpty()) {
             Participant firstParticipant = model.getParticipants().iterator().next();
-            if (firstParticipant instanceof Player){
+            if (firstParticipant instanceof Player) {
                 ranking = getPlayerRanking(model.getGender(), model.getPlayers());
-            } else if (firstParticipant instanceof Team){
+            } else if (firstParticipant instanceof Team) {
                 List<Team> teams = new ArrayList<>();
-                for (Participant p: model.getParticipants()){
+                for (Participant p : model.getParticipants()) {
                     Team team = (Team) p;
                     teams.add(teamDAO.findByIdFetchWithPlayers(team.getId()));
                 }
@@ -392,7 +376,7 @@ public class RankingUtil {
         }
         return ranking;
     }
-    
+
     private Map<Integer, Integer> getSetMapForParticipant(Game game, Participant participant, Collection<GameSet> gameSets) {
         Map<Integer, Integer> setMap = new HashMap<>();
         for (GameSet set : gameSets) {
@@ -402,7 +386,7 @@ public class RankingUtil {
         }
         return setMap;
     }
-    
+
     private List<Game> getGamesInLastYear(Gender gender) {
         LocalDate date = LocalDate.now();
         date = date.minusDays(ELO_MAX_DAYS);

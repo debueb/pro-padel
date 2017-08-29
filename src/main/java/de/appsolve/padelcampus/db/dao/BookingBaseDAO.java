@@ -1,23 +1,25 @@
 package de.appsolve.padelcampus.db.dao;
-;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
+
 import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAO;
-import java.util.List;
 import de.appsolve.padelcampus.db.model.Booking;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
+;
+
 /**
- *
  * @author dominik
  */
 @Component
-public class BookingBaseDAO extends BaseEntityDAO<Booking> implements BookingBaseDAOI{
+public class BookingBaseDAO extends BaseEntityDAO<Booking> implements BookingBaseDAOI {
 
     @Override
     @SuppressWarnings("unchecked")

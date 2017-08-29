@@ -15,16 +15,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/admin/eventgroups")
-public class AdminEventGroupsController extends AdminBaseController<EventGroup>{
-    
+public class AdminEventGroupsController extends AdminBaseController<EventGroup> {
+
     @Autowired
     EventGroupDAOI eventGroupDAO;
-    
+
     @Override
     public BaseEntityDAOI getDAO() {
         return eventGroupDAO;
@@ -34,6 +33,6 @@ public class AdminEventGroupsController extends AdminBaseController<EventGroup>{
     public String getModuleName() {
         return "admin/eventgroups";
     }
-    
-    
+
+
 }

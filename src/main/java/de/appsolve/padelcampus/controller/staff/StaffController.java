@@ -12,31 +12,31 @@ import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.dao.StaffMemberDAOI;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.StaffMember;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/staff")
 public class StaffController extends BaseController {
-    
+
     @Autowired
     StaffMemberDAOI staffMemberDAO;
-    
+
     @Autowired
     ModuleDAOI moduleDAO;
-    
+
     @RequestMapping
-    public ModelAndView getIndex(){
+    public ModelAndView getIndex() {
         List<Module> modules = moduleDAO.findByModuleType(ModuleType.Staff);
         Module module = null;
-        if (!modules.isEmpty()){
+        if (!modules.isEmpty()) {
             module = modules.get(0);
         }
         List<StaffMember> staffMembers = staffMemberDAO.findAll();

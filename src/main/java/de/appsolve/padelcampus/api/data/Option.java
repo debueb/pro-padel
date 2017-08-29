@@ -6,11 +6,10 @@
 package de.appsolve.padelcampus.api.data;
 
 /**
- *
  * @author dominik
  */
 public class Option {
-    
+
     private String value;
     private String text;
 

@@ -6,57 +6,60 @@
 
 package de.appsolve.padelcampus.data;
 
-import de.appsolve.padelcampus.db.model.*;
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
-import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Set;
+import de.appsolve.padelcampus.db.model.CustomerEntity;
+import de.appsolve.padelcampus.db.model.Offer;
+import de.appsolve.padelcampus.db.model.OfferOption;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Set;
+
+import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
+
 /**
- *
  * @author dominik
  */
-public class ReservationRequest extends CustomerEntity{
-    
+public class ReservationRequest extends CustomerEntity {
+
     private static final long serialVersionUID = 1L;
-    
+
     @NotEmpty(message = "{NotEmpty.calendarWeekDays}")
     private Set<CalendarWeekDay> calendarWeekDays;
-    
+
     private LocalDate startDate;
-    
+
     private LocalDate endDate;
-    
+
     private Integer startTimeHour;
-    
+
     private Integer startTimeMinute;
-    
+
     private Integer endTimeHour;
-    
+
     private Integer endTimeMinute;
-    
+
     private String holidayKey;
-    
+
     private Boolean paymentConfirmed;
-    
+
     private Boolean publicBooking;
-    
+
     @NotEmpty(message = "{NotEmpty.offers}")
     private Set<Offer> offers;
-    
+
     private Set<OfferOption> offerOptions;
-    
+
     @NotEmpty(message = "{NotEmpty.comment}")
     @Length(min = 3, max = 255, message = "{ReservationRequest.comment}")
     private String comment;
 
     public Set<CalendarWeekDay> getCalendarWeekDays() {
-        if (calendarWeekDays!=null && !calendarWeekDays.isEmpty()){
+        if (calendarWeekDays != null && !calendarWeekDays.isEmpty()) {
             return EnumSet.copyOf(calendarWeekDays);
         }
         return Collections.<CalendarWeekDay>emptySet();
@@ -97,9 +100,9 @@ public class ReservationRequest extends CustomerEntity{
     public void setStartTimeMinute(Integer startTimeMinute) {
         this.startTimeMinute = startTimeMinute;
     }
-    
-    public LocalTime getStartTime(){
-        return TIME_HUMAN_READABLE.parseLocalTime(getStartTimeHour()+":"+getStartTimeMinute());
+
+    public LocalTime getStartTime() {
+        return TIME_HUMAN_READABLE.parseLocalTime(getStartTimeHour() + ":" + getStartTimeMinute());
     }
 
     public Integer getEndTimeHour() {
@@ -117,9 +120,9 @@ public class ReservationRequest extends CustomerEntity{
     public void setEndTimeMinute(Integer endTimeMinute) {
         this.endTimeMinute = endTimeMinute;
     }
-    
-    public LocalTime getEndTime(){
-        return TIME_HUMAN_READABLE.parseLocalTime(getEndTimeHour()+":"+getEndTimeMinute());
+
+    public LocalTime getEndTime() {
+        return TIME_HUMAN_READABLE.parseLocalTime(getEndTimeHour() + ":" + getEndTimeMinute());
     }
 
     public String getHolidayKey() {
@@ -169,11 +172,11 @@ public class ReservationRequest extends CustomerEntity{
     public void setPublicBooking(Boolean publicBooking) {
         this.publicBooking = publicBooking;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (CalendarWeekDay weekDay: getCalendarWeekDays()){
+        for (CalendarWeekDay weekDay : getCalendarWeekDays()) {
             sb.append(weekDay.name()).append(" ");
         }
         sb.append(startDate).append(" - ").append(endDate);

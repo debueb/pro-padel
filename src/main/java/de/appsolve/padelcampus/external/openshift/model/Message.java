@@ -6,11 +6,10 @@
 package de.appsolve.padelcampus.external.openshift.model;
 
 /**
- *
  * @author dominik
  */
 public class Message {
-    
+
     private String severity;
     private String text;
 
@@ -29,9 +28,9 @@ public class Message {
     public void setText(String text) {
         this.text = text;
     }
-    
+
     @Override
-    public String toString(){
-        return "[severity: "+severity+", text:"+text+"]";
+    public String toString() {
+        return "[severity: " + severity + ", text:" + text + "]";
     }
 }

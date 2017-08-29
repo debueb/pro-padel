@@ -6,34 +6,17 @@
 
 package de.appsolve.padelcampus.controller.events;
 
-import static de.appsolve.padelcampus.constants.Constants.FIRST_SET;
 import de.appsolve.padelcampus.controller.BaseController;
 import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.GameDAOI;
 import de.appsolve.padelcampus.db.dao.GameSetDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
-import de.appsolve.padelcampus.db.model.Event;
-import de.appsolve.padelcampus.db.model.Game;
-import de.appsolve.padelcampus.db.model.GameSet;
-import de.appsolve.padelcampus.db.model.Participant;
-import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.db.model.*;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
-import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import de.appsolve.padelcampus.utils.GameUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
 import de.appsolve.padelcampus.utils.SessionUtil;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,88 +25,93 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+
+import static de.appsolve.padelcampus.constants.Constants.FIRST_SET;
+import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 /**
- *
  * @author dominik
  */
 @Controller()
 @RequestMapping("/games")
-public class GamesController extends BaseController{
-    
+public class GamesController extends BaseController {
+
     @Autowired
     EventDAOI eventDAO;
-    
+
     @Autowired
     TeamDAOI teamDAO;
-    
+
     @Autowired
     GameDAOI gameDAO;
-    
+
     @Autowired
     GameSetDAOI gameSetDAO;
-    
+
     @Autowired
     SessionUtil sessionUtil;
-    
+
     @Autowired
     RankingUtil rankingUtil;
-    
+
     @Autowired
     GameUtil gameUtil;
-    
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
     }
-    
+
     @RequestMapping
-    public ModelAndView getIndex(){
+    public ModelAndView getIndex() {
         ModelAndView mav = new ModelAndView("games/index");
         mav.addObject("Events", eventDAO.findAllActive());
         return mav;
     }
-    
+
     @RequestMapping("/game/{gameId}")
-    public ModelAndView getGame(@PathVariable("gameId") Long gameId){
+    public ModelAndView getGame(@PathVariable("gameId") Long gameId) {
         Game game = gameDAO.findByIdFetchWithTeamsAndScoreReporter(gameId);
         ModelAndView indexView = new ModelAndView("games/game", "Game", game);
         indexView.addObject("GameResultMap", gameUtil.getGameResultMap(game));
         return indexView;
     }
-    
+
     @RequestMapping("/game/{gameId}/edit")
-    public ModelAndView editGame(@PathVariable("gameId") Long gameId, HttpServletRequest request){
+    public ModelAndView editGame(@PathVariable("gameId") Long gameId, HttpServletRequest request) {
         Player user = sessionUtil.getUser(request);
-        if (user == null){
+        if (user == null) {
             return getLoginView(request);
         }
         return getEditView(gameId);
     }
-    
-    @RequestMapping(value="/game/{gameId}/edit", method=POST)
+
+    @RequestMapping(value = "/game/{gameId}/edit", method = POST)
     public ModelAndView postGame(
-            @PathVariable Long gameId, 
-            @RequestParam(required=false) String redirectUrl,
+            @PathVariable Long gameId,
+            @RequestParam(required = false) String redirectUrl,
             @RequestParam LocalDate startDate,
-            HttpServletRequest request){
+            HttpServletRequest request) {
         Player user = sessionUtil.getUser(request);
-        if (user == null){
+        if (user == null) {
             return getLoginView(request);
         }
         Game game = gameDAO.findByIdFetchWithEventAndNextGame(gameId);
         List<GameSet> gameSets = new ArrayList<>();
         Set<GameSet> gameSetsToRemove = new HashSet<>();
-        for (int set=FIRST_SET; set<=game.getEvent().getNumberOfSets(); set++){
-            for (Participant participant: game.getParticipants()){
+        for (int set = FIRST_SET; set <= game.getEvent().getNumberOfSets(); set++) {
+            for (Participant participant : game.getParticipants()) {
                 String setGames = request.getParameter(getKey(game, participant, set));
                 Integer numSetGames = Integer.parseInt(setGames);
                 GameSet gameSet = gameSetDAO.findBy(game, participant, set);
-                if (numSetGames>=0){
-                    if (gameSet == null){
+                if (numSetGames >= 0) {
+                    if (gameSet == null) {
                         gameSet = new GameSet();
                         gameSet.setGame(game);
                         gameSet.setParticipant(participant);
@@ -134,7 +122,7 @@ public class GamesController extends BaseController{
                     gameSets.add(gameSet);
                 } else {
                     //mark set for deletion in case it exists and user changed it to "-"
-                    if (gameSet!=null){
+                    if (gameSet != null) {
                         gameSetsToRemove.add(gameSet);
                     }
                 }
@@ -142,16 +130,16 @@ public class GamesController extends BaseController{
         }
 
         //save game sets
-        for (GameSet gameSet: gameSets){
+        for (GameSet gameSet : gameSets) {
             gameSetDAO.saveOrUpdate(gameSet);
         }
 
         //remove unwanted game sets
-        if (gameSetsToRemove.size()>0){
+        if (gameSetsToRemove.size() > 0) {
             game.getGameSets().removeAll(gameSetsToRemove);
             gameDAO.saveOrUpdate(game);
 
-            for (GameSet gameSet: gameSetsToRemove){
+            for (GameSet gameSet : gameSetsToRemove) {
                 //if we do not delete by ID, we get an "removing detached entity exception" presumably because the session object that the entity was retrieved by has been closed
                 gameSetDAO.deleteById(gameSet.getId());
             }
@@ -159,7 +147,7 @@ public class GamesController extends BaseController{
 
         //save game
         game.setGameSets(new LinkedHashSet<>(gameSets));
-        if (gameSets.isEmpty()){
+        if (gameSets.isEmpty()) {
             //we use score reporter as an indicator that the game has been played
             game.setScoreReporter(null);
         } else {
@@ -167,46 +155,45 @@ public class GamesController extends BaseController{
         }
         game.setStartDate(startDate);
         gameDAO.saveOrUpdate(game);
-        
+
         Game nextGame = game.getNextGame();
-        if (nextGame != null){
+        if (nextGame != null) {
             //update next game
-            
+
             //make sure next game does not contain any of the participants of the current game
             nextGame.getParticipants().removeAll(game.getParticipants());
-            
+
             //determine winner
             Participant winner = null;
-            for (Participant p: game.getParticipants()){
+            for (Participant p : game.getParticipants()) {
                 ScoreEntry score = rankingUtil.getScore(p, Arrays.asList(new Game[]{game}));
-                if (score.getMatchesWon() == 1){
+                if (score.getMatchesWon() == 1) {
                     winner = p;
                     break;
                 }
             }
-            if (winner != null){
+            if (winner != null) {
                 nextGame.getParticipants().add(winner);
             }
-            
+
             gameDAO.saveOrUpdate(nextGame);
         }
-        
-        if (StringUtils.isEmpty(redirectUrl))
-        {        
-            return new ModelAndView("redirect:/games/game/"+gameId);
+
+        if (StringUtils.isEmpty(redirectUrl)) {
+            return new ModelAndView("redirect:/games/game/" + gameId);
         }
-        return new ModelAndView("redirect:/"+redirectUrl);
+        return new ModelAndView("redirect:/" + redirectUrl);
     }
-    
+
     @RequestMapping("/event/{eventId}")
-    public ModelAndView getEvent(@PathVariable("eventId") Long eventId){
+    public ModelAndView getEvent(@PathVariable("eventId") Long eventId) {
         Event event = eventDAO.findByIdFetchWithParticipants(eventId);
         ModelAndView mav = new ModelAndView("games/event", "Model", event);
         return mav;
     }
- 
+
     @RequestMapping("/event/{eventId}/all")
-    public ModelAndView getAllGamesForEvent(@PathVariable("eventId") Long eventId){
+    public ModelAndView getAllGamesForEvent(@PathVariable("eventId") Long eventId) {
         Event event = eventDAO.findByIdFetchWithGames(eventId);
         Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(event.getGames(), false);
         ModelAndView mav = new ModelAndView("games/all", "ParticipantGameResultMap", participantGameResultMap);
@@ -214,18 +201,18 @@ public class GamesController extends BaseController{
         mav.addObject("Model", event);
         return mav;
     }
- 
+
     @RequestMapping("/event/{eventId}/team/{teamUUID}")
-    public ModelAndView getTeamEvents(@PathVariable("teamUUID") String teamUUID, @PathVariable("eventId") Long eventId){
+    public ModelAndView getTeamEvents(@PathVariable("teamUUID") String teamUUID, @PathVariable("eventId") Long eventId) {
         Event event = eventDAO.findById(eventId);
         Team team = teamDAO.findByUUID(teamUUID);
         List<Game> games = gameDAO.findByParticipantAndEvent(team, event);
-        
+
         Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(games, true);
         Iterator<Participant> iterator = participantGameResultMap.keySet().iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Participant p = iterator.next();
-            if (!p.equals(team)){
+            if (!p.equals(team)) {
                 iterator.remove();
             }
         }
@@ -234,9 +221,9 @@ public class GamesController extends BaseController{
         mav.addObject("Model", event);
         return mav;
     }
-    
+
     @RequestMapping("/team/{teamUUID}")
-    public ModelAndView getTeamGames(@PathVariable("teamUUID") String teamUUID){
+    public ModelAndView getTeamGames(@PathVariable("teamUUID") String teamUUID) {
         Team team = teamDAO.findByUUID(teamUUID);
         List<Game> games = gameDAO.findByParticipant(team);
         ModelAndView mav = new ModelAndView("games/games", "Games", games);
@@ -247,7 +234,7 @@ public class GamesController extends BaseController{
     }
 
     @RequestMapping("/team/{teamUUID}/event/{eventId}")
-    public ModelAndView getTeamGamesByEvent(@PathVariable("teamUUID") String teamUUID, @PathVariable("eventId") Long eventId){
+    public ModelAndView getTeamGamesByEvent(@PathVariable("teamUUID") String teamUUID, @PathVariable("eventId") Long eventId) {
         Event event = eventDAO.findById(eventId);
         Team team = teamDAO.findByUUID(teamUUID);
         List<Game> games = gameDAO.findByParticipantAndEvent(team, event);
@@ -258,6 +245,7 @@ public class GamesController extends BaseController{
         mav.addObject("GameResultMap", gameUtil.getGameResultMap(games));
         return mav;
     }
+
     private ModelAndView getEditView(Long gameId) {
         Game game = gameDAO.findByIdFetchWithEventAndTeamsAndScoreReporter(gameId);
         ModelAndView mav = new ModelAndView("games/edit", "Game", game);
@@ -266,15 +254,15 @@ public class GamesController extends BaseController{
     }
 
     private String getKey(Game game, Participant participant, int set) {
-        return "game-"+game.getId()+"-participant-"+participant.getId()+"-set-"+set;
+        return "game-" + game.getId() + "-participant-" + participant.getId() + "-set-" + set;
     }
 
     private Map<String, GameSet> getGamesMap(Game game) {
         Map<String, GameSet> gamesMap = new LinkedHashMap<>();
-        for (Participant participant: game.getParticipants()){
-            for (int set=FIRST_SET; set<=game.getEvent().getNumberOfSets(); set++){
+        for (Participant participant : game.getParticipants()) {
+            for (int set = FIRST_SET; set <= game.getEvent().getNumberOfSets(); set++) {
                 GameSet gameSet = gameSetDAO.findBy(game, participant, set);
-                if (gameSet!=null){
+                if (gameSet != null) {
                     gamesMap.put(getKey(game, participant, set), gameSet);
                 }
             }

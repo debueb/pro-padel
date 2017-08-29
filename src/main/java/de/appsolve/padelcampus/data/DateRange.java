@@ -6,17 +6,17 @@
 
 package de.appsolve.padelcampus.data;
 
-import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
 import org.joda.time.LocalDate;
 
+import static de.appsolve.padelcampus.constants.Constants.DEFAULT_TIMEZONE;
+
 /**
- *
  * @author dominik
  */
 public class DateRange {
-    
+
     private LocalDate startDate;
-    
+
     private LocalDate endDate;
 
     public LocalDate getStartDate() {

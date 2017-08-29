@@ -46,18 +46,6 @@ import java.util.concurrent.FutureTask;
 public class HtmlResourceUtil {
 
     private static final Logger LOG = Logger.getLogger(HtmlResourceUtil.class);
-
-    private LessCompiler lessCompiler;
-
-    @Autowired
-    CustomerDAOI customerDAO;
-
-    @Autowired
-    CssAttributeDAOI cssAttributeDAO;
-
-    @Autowired
-    CssAttributeBaseDAOI cssAttributeBaseDAO;
-
     private static final String VARIABLES_LESS = "/static/less/variables.less";
     private static final String PROJECT_LESS = "/static/less/90_project.less";
     private static final String PROJECT_CSS = "/static/css/90_project.css";
@@ -65,11 +53,16 @@ public class HtmlResourceUtil {
     private static final String LOADER_CSS = "/static/css/96_loader.css";
     private static final String BOOTSTRAP_LESS = "/static/less/10_bootstrap.less";
     private static final String BOOTSTRAP_CSS = "/static/css/10_bootstrap.css";
-
     private static final String FOLDER_CSS = "/static/css";
     private static final String FOLDER_LESS = "/static/less";
-
     private static final String ALL_MIN_CSS = "/static/css/all.min.css";
+    @Autowired
+    CustomerDAOI customerDAO;
+    @Autowired
+    CssAttributeDAOI cssAttributeDAO;
+    @Autowired
+    CssAttributeBaseDAOI cssAttributeBaseDAO;
+    private LessCompiler lessCompiler;
 
     public void updateCss(final ServletContext context) throws Exception {
         List<Customer> customers = customerDAO.findAll();

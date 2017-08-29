@@ -12,47 +12,48 @@ import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.ParticipantI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.utils.SessionUtil;
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 /**
- *
  * @author dominik
  */
 @Controller
 @RequestMapping("/api/participants")
-public class ApiParticipantsController{
-    
+public class ApiParticipantsController {
+
     @Autowired
     TeamDAOI teamDAO;
-    
+
     @Autowired
     PlayerDAOI playerDAO;
-    
+
     @Autowired
     SessionUtil sessionUtil;
 
     @RequestMapping(method = GET, value = "options", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public List<Option> getOptions(HttpServletRequest request, @RequestParam("q") String q, @RequestParam("type") EventType eventType){
+    public List<Option> getOptions(HttpServletRequest request, @RequestParam("q") String q, @RequestParam("type") EventType eventType) {
         Player user = sessionUtil.getUser(request);
-        if (user == null){
+        if (user == null) {
             return null;
         }
         List<Option> options = new ArrayList<>();
-        if (!StringUtils.isEmpty(q)){
+        if (!StringUtils.isEmpty(q)) {
             Page<? extends ParticipantI> page;
-            switch (eventType){
+            switch (eventType) {
                 case PullRoundRobin:
                     page = playerDAO.findAllByFuzzySearch(q);
                     break;
@@ -60,13 +61,13 @@ public class ApiParticipantsController{
                     page = teamDAO.findAllByFuzzySearch(q);
                     break;
             }
-            for (ParticipantI model: page.getContent()){
+            for (ParticipantI model : page.getContent()) {
                 options.add(getOption(model));
             }
         }
         return options;
     }
-    
+
     Option getOption(ParticipantI model) {
         Option option = new Option();
         option.setValue(model.getUUID());

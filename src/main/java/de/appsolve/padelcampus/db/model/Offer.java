@@ -6,44 +6,40 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.util.Set;
+
 /**
- *
  * @author dominik
  */
 @Entity
-public class Offer extends SortableEntity{
-    
+public class Offer extends SortableEntity {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.name}")
     private String name;
-    
+
     @Column(length = 3)
-    @Pattern(regexp = "^.{1,3}", message = "{RegExp.ShortName}") 
+    @Pattern(regexp = "^.{1,3}", message = "{RegExp.ShortName}")
     private String shortName;
-    
+
     @Column
     @NotNull(message = "{NotEmpty.maxConcurrentBookings}")
     private Long maxConcurrentBookings;
-    
+
     @Column
     private String hexColor;
-    
+
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<OfferOption> offerOptions;
-    
+
     public String getName() {
         return name;
     }
@@ -83,7 +79,7 @@ public class Offer extends SortableEntity{
     public void setOfferOptions(Set<OfferOption> offerOptions) {
         this.offerOptions = offerOptions;
     }
-    
+
     @Override
     public String toString() {
         return getName();

@@ -8,11 +8,10 @@ package de.appsolve.padelcampus.external.cloudflare.model;
 import java.util.List;
 
 /**
- *
  * @author dominik
  */
 public class CloudFlareApiResponse {
-    
+
     private Boolean success;
     private List<String> errors;
     private List<String> messages;

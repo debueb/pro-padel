@@ -8,11 +8,10 @@ package de.appsolve.padelcampus.external.cloudflare.model;
 import java.util.List;
 
 /**
- *
  * @author dominik
  */
-public class DnsRecordsResponse extends CloudFlareApiResponse{
-    
+public class DnsRecordsResponse extends CloudFlareApiResponse {
+
     private List<DnsRecord> result;
 
     public List<DnsRecord> getResult() {

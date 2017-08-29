@@ -10,10 +10,9 @@ import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Image;
 
 /**
- *
  * @author dominik
  */
-public interface ImageBaseDAOI extends BaseEntityDAOI<Image>{
-    
+public interface ImageBaseDAOI extends BaseEntityDAOI<Image> {
+
     Image findBySha256(String sha256);
 }
