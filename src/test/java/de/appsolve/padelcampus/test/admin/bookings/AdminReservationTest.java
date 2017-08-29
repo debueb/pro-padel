@@ -8,43 +8,43 @@ package de.appsolve.padelcampus.test.admin.bookings;
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.test.TestBase;
-import java.util.List;
 import org.joda.time.LocalTime;
 import org.junit.Test;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.util.Assert;
 
+import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 /**
- *
  * @author dominik
  */
-public class AdminReservationTest extends TestBase{
-    
+public class AdminReservationTest extends TestBase {
+
     @Test
-    public void testReservations() throws Exception{
-        
+    public void testReservations() throws Exception {
+
         createAdminAccount();
-        
+
         mockMvc.perform(get("/admin/bookings")
                 .session(session))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/login"));
-        
+
         login(ADMIN_EMAIL, ADMIN_PASSWORD);
-        
+
         mockMvc.perform(get("/admin/bookings/reservations")
                 .session(session))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasNoErrors());
-        
+
         mockMvc.perform(get("/admin/bookings/reservations/add")
                 .session(session))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasNoErrors());
-        
+
         LOG.info("reserving a court");
         mockMvc.perform(post("/admin/bookings/reservations/add")
                 .session(session)
@@ -57,13 +57,13 @@ public class AdminReservationTest extends TestBase{
                 .param("holidayKey", "NO_HOLIDAY")
                 .param("paymentConfirmed", "true")
                 .param("publicBooking", "true")
-                .param("offers", ""+offer1.getId())
+                .param("offers", "" + offer1.getId())
                 .param("comment", "Testreservierung")
                 .param("calendarWeekDays", CalendarWeekDay.Monday.toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().hasNoErrors())
                 .andExpect(redirectedUrl("/admin/bookings/reservations"));
-        
+
         LOG.info("reserving the same court twice should fail");
         mockMvc.perform(post("/admin/bookings/reservations/add")
                 .session(session)
@@ -76,12 +76,12 @@ public class AdminReservationTest extends TestBase{
                 .param("holidayKey", "NO_HOLIDAY")
                 .param("paymentConfirmed", "true")
                 .param("publicBooking", "true")
-                .param("offers", ""+offer1.getId())
+                .param("offers", "" + offer1.getId())
                 .param("comment", "Testreservierung")
                 .param("calendarWeekDays", CalendarWeekDay.Monday.toString()))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors());
-        
+
         LOG.info("reserving overlapping courts should fail");
         mockMvc.perform(post("/admin/bookings/reservations/add")
                 .session(session)
@@ -94,12 +94,12 @@ public class AdminReservationTest extends TestBase{
                 .param("holidayKey", "NO_HOLIDAY")
                 .param("paymentConfirmed", "true")
                 .param("publicBooking", "true")
-                .param("offers", ""+offer1.getId())
+                .param("offers", "" + offer1.getId())
                 .param("comment", "Testreservierung")
                 .param("calendarWeekDays", CalendarWeekDay.Monday.toString()))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors());
-        
+
         LOG.info("reserving a second court should work");
         mockMvc.perform(post("/admin/bookings/reservations/add")
                 .session(session)
@@ -112,20 +112,20 @@ public class AdminReservationTest extends TestBase{
                 .param("holidayKey", "NO_HOLIDAY")
                 .param("paymentConfirmed", "true")
                 .param("publicBooking", "true")
-                .param("offers", ""+offer2.getId())
+                .param("offers", "" + offer2.getId())
                 .param("comment", "Testreservierung")
                 .param("calendarWeekDays", CalendarWeekDay.Monday.toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().hasNoErrors())
                 .andExpect(redirectedUrl("/admin/bookings/reservations"));
-        
+
         List<Booking> bookings = bookingDAO.findAll();
         Assert.notNull(bookings);
         Assert.isTrue(bookings.size() == 2, "2 bookings should exist");
         Booking firstBooking = bookings.get(0);
-        
+
         LOG.info("modifying the first reservation in conflict with the second reservation should fail");
-        mockMvc.perform(post("/admin/bookings/reservations/booking/"+firstBooking.getId())
+        mockMvc.perform(post("/admin/bookings/reservations/booking/" + firstBooking.getId())
                 .session(session)
                 .param("startDate", getNextMonday().toString())
                 .param("startTimeHour", "10")
@@ -136,14 +136,14 @@ public class AdminReservationTest extends TestBase{
                 .param("holidayKey", "NO_HOLIDAY")
                 .param("paymentConfirmed", "true")
                 .param("publicBooking", "true")
-                .param("offers", ""+offer2.getId())
+                .param("offers", "" + offer2.getId())
                 .param("comment", "Testreservierung")
                 .param("calendarWeekDays", CalendarWeekDay.Monday.toString()))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors());
-        
+
         LOG.info("modifying the first reservation to a later time should work");
-        mockMvc.perform(post("/admin/bookings/reservations/booking/"+firstBooking.getId())
+        mockMvc.perform(post("/admin/bookings/reservations/booking/" + firstBooking.getId())
                 .session(session)
                 .param("startDate", getNextMonday().toString())
                 .param("startTimeHour", "11")
@@ -154,14 +154,14 @@ public class AdminReservationTest extends TestBase{
                 .param("holidayKey", "NO_HOLIDAY")
                 .param("paymentConfirmed", "true")
                 .param("publicBooking", "true")
-                .param("offers", ""+offer1.getId())
+                .param("offers", "" + offer1.getId())
                 .param("comment", "Testreservierung")
                 .param("calendarWeekDays", CalendarWeekDay.Monday.toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/bookings/reservations"));
-        
+
         LOG.info("modifying the first reservation to another offer should work");
-        mockMvc.perform(post("/admin/bookings/reservations/booking/"+firstBooking.getId())
+        mockMvc.perform(post("/admin/bookings/reservations/booking/" + firstBooking.getId())
                 .session(session)
                 .param("startDate", getNextMonday().toString())
                 .param("startTimeHour", "11")
@@ -172,14 +172,14 @@ public class AdminReservationTest extends TestBase{
                 .param("holidayKey", "NO_HOLIDAY")
                 .param("paymentConfirmed", "true")
                 .param("publicBooking", "true")
-                .param("offers", ""+offer2.getId())
+                .param("offers", "" + offer2.getId())
                 .param("comment", "Some other comment")
                 .param("calendarWeekDays", CalendarWeekDay.Monday.toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/bookings/reservations"));
-        
+
         LOG.info("modifying the first reservation to another date should fail as there is no booking setting");
-        mockMvc.perform(post("/admin/bookings/reservations/booking/"+firstBooking.getId())
+        mockMvc.perform(post("/admin/bookings/reservations/booking/" + firstBooking.getId())
                 .session(session)
                 .param("startDate", getNextMonday().plusDays(1).toString())
                 .param("startTimeHour", "11")
@@ -190,12 +190,12 @@ public class AdminReservationTest extends TestBase{
                 .param("holidayKey", "NO_HOLIDAY")
                 .param("paymentConfirmed", "true")
                 .param("publicBooking", "true")
-                .param("offers", ""+offer2.getId())
+                .param("offers", "" + offer2.getId())
                 .param("comment", "Some other comment")
                 .param("calendarWeekDays", CalendarWeekDay.Monday.toString()))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors());
-        
+
         bookings = bookingDAO.findAll();
         Assert.notNull(bookings);
         Assert.isTrue(bookings.size() == 2, "2 bookings should exist");
@@ -205,7 +205,7 @@ public class AdminReservationTest extends TestBase{
         Assert.isTrue(firstBooking.getDuration().equals(60L), "duration should be 60 min");
         Assert.isTrue(firstBooking.getComment().equals("Some other comment"), "comment should be updated");
         Assert.isTrue(firstBooking.getOffer().equals(offer2), "Offer 2 should be selected");
-        
+
         Booking secondBooking = bookings.get(1);
         Assert.isTrue(secondBooking.getBookingTime().equals(new LocalTime(10, 00)), "start time should be 10:00");
     }

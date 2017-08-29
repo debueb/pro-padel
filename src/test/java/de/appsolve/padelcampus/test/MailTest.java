@@ -17,16 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- *
  * @author dominik
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MailTest extends TestBase {
-    
-    @Autowired
-    MailUtils mailUtils;
 
     private static final Logger LOG = Logger.getLogger(MailTest.class);
+    @Autowired
+    MailUtils mailUtils;
 
     @Test
     public void sendMail() throws Exception {

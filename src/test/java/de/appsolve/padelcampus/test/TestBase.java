@@ -54,63 +54,43 @@ public abstract class TestBase {
 
     protected static final String USER_EMAIL = "user@pro-padel.de";
     protected static final String USER_PASSWORD = "test";
-
-    protected MockMvc mockMvc;
-
-    protected SortedSet<Offer> offers;
-
-    protected Offer offer1;
-
-    protected Offer offer2;
-
     protected static final Logger LOG = Logger.getLogger(TestBase.class);
-
+    protected MockMvc mockMvc;
+    protected SortedSet<Offer> offers;
+    protected Offer offer1;
+    protected Offer offer2;
     @Autowired
     protected WebApplicationContext wac;
 
     @Autowired
     protected MockHttpSession session;
-
-    @Autowired
-    private OfferDAOI offerDAO;
-
-    @Autowired
-    private CalendarConfigDAOI calendarConfigDAO;
-
     @Autowired
     protected BookingDAOI bookingDAO;
-
     @Autowired
     protected PlayerDAOI playerDAO;
-
     @Autowired
     protected TeamDAOI teamDAO;
-
     @Autowired
     protected VoucherDAOI voucherDAO;
-
     @Autowired
     protected AdminGroupDAOI adminGroupDAO;
-
     @Autowired
     protected EventDAOI eventDAO;
-
     @Autowired
     protected CustomerDAOI customerDAO;
-
     @Autowired
     protected SubscriptionDAOI subscriptionDAO;
-
     @Autowired
     protected MatchOfferDAOI matchOfferDAO;
-
     @Autowired
     protected SessionUtil sessionUtil;
-
     @Autowired
     protected Msg msg;
-
     protected Customer customer;
+    @Autowired
+    private OfferDAOI offerDAO;
+    @Autowired
+    private CalendarConfigDAOI calendarConfigDAO;
 
     @Before
     public void setUp() {

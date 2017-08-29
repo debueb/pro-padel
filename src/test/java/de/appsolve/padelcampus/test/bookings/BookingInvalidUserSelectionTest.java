@@ -10,46 +10,47 @@ import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.test.TestBase;
 import org.joda.time.LocalDate;
 import org.junit.Test;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- *
  * @author dominik
  */
 public class BookingInvalidUserSelectionTest extends TestBase {
-    
+
     @Test
     public void testBookingInvalidDate() throws Exception {
         LOG.info("Test booking workflow with invalid date [paymentMethod: CreditCard, bookingType: register]");
         LocalDate prevMonday = getLastMonday();
-        
-        mockMvc.perform(post("/bookings/" + prevMonday + "/10:00/offer/"+offer1.getId())
+
+        mockMvc.perform(post("/bookings/" + prevMonday + "/10:00/offer/" + offer1.getId())
                 .session(session)
                 .param("bookingTime", "10:00")
                 .param("offer", offer1.getId().toString())
                 .param("bookingType", BookingType.register.name())
                 .param("duration", "60")
                 .param("paymentMethod", PaymentMethod.CreditCard.name()))
-            .andExpect(status().is2xxSuccessful())
-            .andExpect(model().attributeExists("error"))
-            .andExpect(model().attribute("error", msg.get("RequestedTimeIsInThePast")));
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(model().attributeExists("error"))
+                .andExpect(model().attribute("error", msg.get("RequestedTimeIsInThePast")));
     }
-    
+
     @Test
     public void testBookingInvalidTime() throws Exception {
         LOG.info("Test booking workflow with invalid date [paymentMethod: CreditCard, bookingType: register]");
         LocalDate nextMonday = getNextMonday();
-        
-        mockMvc.perform(post("/bookings/" + nextMonday + "/10:11/offer/"+offer1.getId())
+
+        mockMvc.perform(post("/bookings/" + nextMonday + "/10:11/offer/" + offer1.getId())
                 .session(session)
                 .param("bookingTime", "10:00")
                 .param("offer", offer1.getId().toString())
                 .param("bookingType", BookingType.register.name())
                 .param("duration", "60")
                 .param("paymentMethod", PaymentMethod.CreditCard.name()))
-            .andExpect(status().is2xxSuccessful())
-            .andExpect(model().attributeExists("error"))
-            .andExpect(model().attribute("error", msg.get("NoFreeCourtsForSelectedTimeAndDate")));
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(model().attributeExists("error"))
+                .andExpect(model().attribute("error", msg.get("NoFreeCourtsForSelectedTimeAndDate")));
     }
 }

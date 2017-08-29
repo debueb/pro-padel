@@ -7,14 +7,14 @@ package de.appsolve.padelcampus.test;
 
 import org.joda.time.LocalDate;
 import org.junit.Test;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- *
  * @author dominik
  */
 public class CoreFunctionsTest extends TestBase {
@@ -42,7 +42,7 @@ public class CoreFunctionsTest extends TestBase {
     public void testBookingsDetailsPageHasDurations() throws Exception {
         LOG.info("Make sure bookings detail page contains duration when matching calendar config exists");
         LocalDate nextMonday = getNextMonday();
-        mockMvc.perform(get("/bookings/" + nextMonday + "/10:00/offer/"+offer1.getId()))
+        mockMvc.perform(get("/bookings/" + nextMonday + "/10:00/offer/" + offer1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bookings/booking"))
                 .andExpect(model().attribute("OfferDurationPrice", notNullValue()));

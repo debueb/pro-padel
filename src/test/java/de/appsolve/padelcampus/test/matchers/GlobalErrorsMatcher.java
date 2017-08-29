@@ -5,8 +5,6 @@
  */
 package de.appsolve.padelcampus.test.matchers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.ModelResultMatchers;
@@ -14,8 +12,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.ModelAndView;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
- *
  * @author dominik
  */
 public class GlobalErrorsMatcher extends ModelResultMatchers {
@@ -32,8 +32,8 @@ public class GlobalErrorsMatcher extends ModelResultMatchers {
             @Override
             public void match(MvcResult result) throws Exception {
                 BindingResult bindingResult = getBindingResult(result.getModelAndView(), modelName);
-                for (ObjectError oe: bindingResult.getGlobalErrors()){
-                    if (attribute.equals(oe.getObjectName())){
+                for (ObjectError oe : bindingResult.getGlobalErrors()) {
+                    if (attribute.equals(oe.getObjectName())) {
                         assertEquals("Expected default message", expectedMessage, oe.getDefaultMessage());
                     }
                 }

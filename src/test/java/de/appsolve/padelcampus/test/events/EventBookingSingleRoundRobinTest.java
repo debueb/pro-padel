@@ -12,38 +12,39 @@ import de.appsolve.padelcampus.constants.PaymentMethod;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Player;
-import static de.appsolve.padelcampus.test.matchers.GlobalErrorsMatcher.globalErrors;
 import org.joda.time.LocalDate;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.springframework.util.Assert;
 
+import static de.appsolve.padelcampus.test.matchers.GlobalErrorsMatcher.globalErrors;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 /**
- *
  * @author dominik
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EventBookingSingleRoundRobinTest extends EventBookingTestBase {
-    
+
     @Test
     public void test01AddPullEvent() throws Exception {
         createAdminAccount();
         login(ADMIN_EMAIL, ADMIN_PASSWORD);
-        
+
         Player player1 = createPlayer(1);
         Player player2 = createPlayer(2);
         Player player3 = createPlayer(3);
         Player player4 = createPlayer(4);
         Player player5 = createPlayer(5);
-        
+
         LocalDate nextMonday = getNextMonday();
-        
+
         LOG.info("POST /admin/events/add - add new SingleRoundRobin event");
         mockMvc.perform(post("/admin/events/add")
                 .session(session)
@@ -66,29 +67,29 @@ public class EventBookingSingleRoundRobinTest extends EventBookingTestBase {
                 .param("allowSignup", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/events"));
-    
+
         Event event = eventDAO.findByAttribute("name", "Test Booking Event 2");
         Assert.notNull(event, "Event has not been created");
-        
+
         login(player1, event);
         participate(player2, event);
         logout();
-        
+
         login(player3, event);
         participate(player4, event);
         logout();
-        
+
         login(player5, event);
-        LOG.info("POST /events/bookings/"+event.getId()+"/participate - prevent registering with partner who is already registered");        
-        mockMvc.perform(post("/events/bookings/"+event.getId()+"/participate")
+        LOG.info("POST /events/bookings/" + event.getId() + "/participate - prevent registering with partner who is already registered");
+        mockMvc.perform(post("/events/bookings/" + event.getId() + "/participate")
                 .session(session)
                 .param("paymentMethod", PaymentMethod.Cash.toString())
                 .param("UUID", player1.getUUID()))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors());
-        
-        LOG.info("POST /events/bookings/"+event.getId()+"/participate - prevent registering when event is booked out");        
-        mockMvc.perform(post("/events/bookings/"+event.getId()+"/participate")
+
+        LOG.info("POST /events/bookings/" + event.getId() + "/participate - prevent registering when event is booked out");
+        mockMvc.perform(post("/events/bookings/" + event.getId() + "/participate")
                 .session(session)
                 .param("paymentMethod", PaymentMethod.Cash.toString())
                 .param("firstName", "does not")
@@ -102,63 +103,63 @@ public class EventBookingSingleRoundRobinTest extends EventBookingTestBase {
     }
 
     private void participate(Player partner, Event event) throws Exception {
-        LOG.info("GET /events/bookings/"+event.getId()+"/participate");        
-        mockMvc.perform(get("/events/bookings/"+event.getId()+"/participate")
+        LOG.info("GET /events/bookings/" + event.getId() + "/participate");
+        mockMvc.perform(get("/events/bookings/" + event.getId() + "/participate")
                 .session(session))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("events/bookings/participate/index"))
                 .andExpect(model().hasNoErrors());
-        
-        LOG.info("POST /events/bookings/"+event.getId()+"/participate");        
-        mockMvc.perform(post("/events/bookings/"+event.getId()+"/participate")
+
+        LOG.info("POST /events/bookings/" + event.getId() + "/participate");
+        mockMvc.perform(post("/events/bookings/" + event.getId() + "/participate")
                 .session(session)
                 .param("paymentMethod", PaymentMethod.Cash.toString())
                 .param("UUID", partner.getUUID()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/events/bookings/"+event.getId()+"/confirm"));
-        
-        LOG.info("GET /events/bookings/"+event.getId()+"/confirm");
-        mockMvc.perform(get("/events/bookings/"+event.getId()+"/confirm")
+                .andExpect(redirectedUrl("/events/bookings/" + event.getId() + "/confirm"));
+
+        LOG.info("GET /events/bookings/" + event.getId() + "/confirm");
+        mockMvc.perform(get("/events/bookings/" + event.getId() + "/confirm")
                 .session(session))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().attributeDoesNotExist("error"));
-        
-        LOG.info("POST /events/bookings/"+event.getId()+"/confirm - make sure user accepts cancellation policy");
-        mockMvc.perform(post("/events/bookings/"+event.getId()+"/confirm")
+
+        LOG.info("POST /events/bookings/" + event.getId() + "/confirm - make sure user accepts cancellation policy");
+        mockMvc.perform(post("/events/bookings/" + event.getId() + "/confirm")
                 .session(session))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().attributeExists("error"));
-        
+
         Booking booking = (Booking) session.getAttribute(Constants.SESSION_BOOKING);
-        
-        LOG.info("POST /events/bookings/"+event.getId()+"/confirm");
-        mockMvc.perform(post("/events/bookings/"+event.getId()+"/confirm")
+
+        LOG.info("POST /events/bookings/" + event.getId() + "/confirm");
+        mockMvc.perform(post("/events/bookings/" + event.getId() + "/confirm")
                 .session(session)
                 .param("accept-cancellation-policy", "on"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/events/bookings/"+booking.getUUID()+"/success"));     
-    
-        LOG.info("GET /events/bookings/"+booking.getUUID()+"/success");
-        mockMvc.perform(get("/events/bookings/"+booking.getUUID()+"/success")
+                .andExpect(redirectedUrl("/events/bookings/" + booking.getUUID() + "/success"));
+
+        LOG.info("GET /events/bookings/" + booking.getUUID() + "/success");
+        mockMvc.perform(get("/events/bookings/" + booking.getUUID() + "/success")
                 .session(session))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().attributeDoesNotExist("error"));
-        
-        LOG.info("POST /events/bookings/"+event.getId()+"/participate - prevent duplicate participation");
-        mockMvc.perform(post("/events/bookings/"+event.getId()+"/participate")
+
+        LOG.info("POST /events/bookings/" + event.getId() + "/participate - prevent duplicate participation");
+        mockMvc.perform(post("/events/bookings/" + event.getId() + "/participate")
                 .session(session)
                 .param("paymentMethod", PaymentMethod.Cash.toString()))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors());
-        
-        LOG.info("GET /events/bookings/"+event.getId()+"/confirm - prevent duplicate participation");
-        mockMvc.perform(get("/events/bookings/"+event.getId()+"/confirm")
+
+        LOG.info("GET /events/bookings/" + event.getId() + "/confirm - prevent duplicate participation");
+        mockMvc.perform(get("/events/bookings/" + event.getId() + "/confirm")
                 .session(session))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().attributeExists("error"));
-        
-        LOG.info("POST /events/bookings/"+event.getId()+"/confirm - prevent duplicate participation");
-        mockMvc.perform(post("/events/bookings/"+event.getId()+"/confirm")
+
+        LOG.info("POST /events/bookings/" + event.getId() + "/confirm - prevent duplicate participation");
+        mockMvc.perform(post("/events/bookings/" + event.getId() + "/confirm")
                 .session(session)
                 .param("accept-cancellation-policy", "on"))
                 .andExpect(status().is2xxSuccessful())
