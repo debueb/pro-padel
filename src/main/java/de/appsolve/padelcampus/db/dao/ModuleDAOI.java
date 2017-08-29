@@ -9,17 +9,19 @@ package de.appsolve.padelcampus.db.dao;
 import de.appsolve.padelcampus.constants.ModuleType;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Module;
+
 import java.util.List;
 
 /**
- *
  * @author dominik
  */
-public interface ModuleDAOI extends BaseEntityDAOI<Module>{
-    
+public interface ModuleDAOI extends BaseEntityDAOI<Module> {
+
     public Module findByPosition(Long position);
+
     public Module findByUrlTitle(String title);
+
     public List<Module> findByModuleType(ModuleType moduleType);
+
     public List<Module> findAllRootModules();
-    public Module findParent(Module module);
 }

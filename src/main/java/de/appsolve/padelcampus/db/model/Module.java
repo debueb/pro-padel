@@ -6,81 +6,74 @@
 
 package de.appsolve.padelcampus.db.model;
 
-import static de.appsolve.padelcampus.constants.Constants.PATH_HOME;
 import de.appsolve.padelcampus.constants.ModuleType;
-import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-import javax.validation.constraints.Pattern;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.SortNatural;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import java.util.Set;
+import java.util.SortedSet;
+
+import static de.appsolve.padelcampus.constants.Constants.PATH_HOME;
+
 /**
- *
  * @author dominik
  */
 @Entity
-public class Module extends SortableEntity{
-    
+public class Module extends SortableEntity {
+
     @Transient
     private static final long serialVersionUID = 1L;
-    
+
     @Column
     @Enumerated(EnumType.STRING)
     private ModuleType moduleType;
-    
+
     @Column
     private String iconName;
-    
+
     @Column
     @NotEmpty(message = "{NotEmpty.title}")
-    @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}") 
+    @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}")
     private String title;
-    
+
     @Column
-    @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}") 
+    @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}")
     private String seoTitle;
-    
+
     @Column
-    @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}") 
+    @Pattern(regexp = "^[öÖäÄüÜßa-zA-Z0-9\\s]*$", message = "{RegExp.AlphaNum}")
     private String urlTitle;
-    
+
     @Column
     private String seoRobots;
-    
+
     @Column
     private Boolean showInMenu;
-    
+
     @Column
     private Boolean showInFooter;
-    
+
     @Column
     private Boolean showOnHomepage;
-    
-    @OneToMany(fetch = FetchType.EAGER)
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<EventGroup> eventGroups;
-    
+
     @Column
     private String shortDescription;
-    
+
     @Lob
     private String description;
-    
+
     @Column
     private String url;
-    
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @SortNatural
-    private Set<Module> subModules;
-    
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OrderBy("position")
+    private SortedSet<Module> subModules;
+
     public ModuleType getModuleType() {
         return moduleType;
     }
@@ -96,7 +89,7 @@ public class Module extends SortableEntity{
     public void setIconName(String iconName) {
         this.iconName = iconName;
     }
-    
+
     public String getTitle() {
         return title;
     }
@@ -160,16 +153,16 @@ public class Module extends SortableEntity{
     public void setEventGroups(Set<EventGroup> eventGroups) {
         this.eventGroups = eventGroups;
     }
-    
-    public String getUrl(){
-        if (moduleType == null){
+
+    public String getUrl() {
+        if (moduleType == null) {
             return null;
         }
-        switch (moduleType){
+        switch (moduleType) {
             case LandingPage:
                 return "/";
             case HomePage:
-                return "/"+PATH_HOME;
+                return "/" + PATH_HOME;
             case Bookings:
                 return "/bookings";
             case MatchOffers:
@@ -192,7 +185,7 @@ public class Module extends SortableEntity{
             default:
                 return "/";
         }
-        
+
     }
 
     public void setUrl(String url) {
@@ -215,11 +208,11 @@ public class Module extends SortableEntity{
         this.description = description;
     }
 
-    public Set<Module> getSubModules() {
+    public SortedSet<Module> getSubModules() {
         return subModules;
     }
 
-    public void setSubModules(Set<Module> subModules) {
+    public void setSubModules(SortedSet<Module> subModules) {
         this.subModules = subModules;
     }
 

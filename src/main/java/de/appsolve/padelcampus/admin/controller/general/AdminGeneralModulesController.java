@@ -160,21 +160,15 @@ public class AdminGeneralModulesController extends AdminBaseController<Module> {
     public ModelAndView postDelete(HttpServletRequest request, @PathVariable("id") Long id) {
         Module module = moduleDAO.findById(id);
         try {
-            Module parent = moduleDAO.findParent(module);
             List<PageEntry> modulePageEntries = pageEntryDAO.findByModule(module);
             if (!modulePageEntries.isEmpty()) {
                 pageEntryDAO.delete(modulePageEntries);
             }
-            if (parent != null) {
-                //load again from DB because findParent() does not load all submodules
-                parent = moduleDAO.findById(parent.getId());
-                //causes IllegalArgumentException: Removing a detached instance Module
-                //parent.getSubModules().remove(module);
-                //same goes for: removeIf predicate and removing via iterator
-
-                Set<Module> subModules = new TreeSet<>(parent.getSubModules());
-                subModules.remove(module);
-                parent.setSubModules(subModules);
+            List<Module> rootModules = moduleDAO.findAllRootModules();
+            Optional<Module> parentModule = rootModules.stream().filter(rootModule -> rootModule.getSubModules() != null && rootModule.getSubModules().contains(module)).findFirst();
+            if (parentModule.isPresent()) {
+                Module parent = parentModule.get();
+                parent.getSubModules().remove(module);
                 moduleDAO.saveOrUpdate(parent);
             }
             moduleDAO.deleteById(id);
@@ -212,7 +206,7 @@ public class AdminGeneralModulesController extends AdminBaseController<Module> {
         if (nestableItem.getChildren() == null) {
             module.setSubModules(null);
         } else {
-            Set<Module> subModules = new TreeSet<>();
+            SortedSet<Module> subModules = new TreeSet<>();
             for (NestableItem subItem : nestableItem.getChildren()) {
                 subModules.add(updateNestableItemPosition(subItem, position++));
             }

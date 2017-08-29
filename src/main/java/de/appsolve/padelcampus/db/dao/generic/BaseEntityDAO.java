@@ -9,30 +9,12 @@ import de.appsolve.padelcampus.db.model.BaseEntityI;
 import de.appsolve.padelcampus.db.model.Customer;
 import de.appsolve.padelcampus.utils.CustomerUtil;
 import de.appsolve.padelcampus.utils.GenericsUtils;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Property;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -40,17 +22,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.*;
+
 /**
- *
- * @author dominik
  * @param <T>
+ * @author dominik
  */
 @Repository
 @Transactional
-public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils<T> implements BaseEntityDAOI<T>  {
-   
+public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils<T> implements BaseEntityDAOI<T> {
+
     private static final Logger LOG = Logger.getLogger(BaseEntityDAO.class);
-    
+
     @PersistenceContext
     protected EntityManager entityManager;
 
@@ -69,72 +54,72 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         sort(list);
         return list;
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
-    public Page<T> findAllFetchEagerly(Pageable pageable, String... associations){
+    public Page<T> findAllFetchEagerly(Pageable pageable, String... associations) {
         return findAllFetchEagerly(pageable, null, associations);
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
-    public Page<T> findAllFetchEagerly(Pageable pageable, Set<Criterion> criterions, String... associations){
+    public Page<T> findAllFetchEagerly(Pageable pageable, Set<Criterion> criterions, String... associations) {
         //http://stackoverflow.com/questions/2183617/criteria-api-returns-a-too-small-resultset
-        
+
         //get the ids of every object that matches the pageable conditions
         //we cannot get the objects directly because we use FetchMode.JOIN which returns the scalar product of all rows in all affected tables
         //and CriteriaSpecification.DISTINCT_ROOT_ENTITY does not work on SQL Level but on in Java after the result is returned from SQL
         Criteria criteria = getPageableCriteria(pageable);
-        if (criterions != null){
-            for (Criterion c: criterions) {
+        if (criterions != null) {
+            for (Criterion c : criterions) {
                 criteria.add(c);
             }
         }
         criteria.setProjection(Projections.distinct(Projections.property("id")));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         List<Long> list = criteria.list();
-        
+
         //once we have the required ids we query for the complete objects
         Criteria objectCriteria = getCriteria();
-        for (String association: associations){
+        for (String association : associations) {
             objectCriteria.setFetchMode(association, FetchMode.JOIN);
         }
-        if (!list.isEmpty()){
+        if (!list.isEmpty()) {
             objectCriteria.add(Restrictions.in("id", list));
         }
         objectCriteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         addOrderBy(objectCriteria, pageable);
         List<T> objects = objectCriteria.list();
         sort(objects);
-        
+
         //we also need the total number of rows
         Criteria rowCountCritieria = getCriteria();
-        if (criterions != null){
-            for (Criterion c: criterions) {
+        if (criterions != null) {
+            for (Criterion c : criterions) {
                 rowCountCritieria.add(c);
             }
         }
         rowCountCritieria.setProjection(Projections.rowCount());
-        Long resultCount = (Long)rowCountCritieria.uniqueResult();
-        if (resultCount == null){
-            resultCount = objects.size()+0L;
+        Long resultCount = (Long) rowCountCritieria.uniqueResult();
+        if (resultCount == null) {
+            resultCount = objects.size() + 0L;
         }
         Collections.sort(objects);
         PageImpl<T> page = new PageImpl<>(new ArrayList<>(objects), pageable, resultCount);
         return page;
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
-    public Page<T> findAll(Pageable pageable){
+    public Page<T> findAll(Pageable pageable) {
         return findAllFetchEagerly(pageable, new String[0]);
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public List<T> findAll(List<Long> ids) {
         Criterion[] criterion = new Criterion[ids.size()];
-        for (int i=0; i<ids.size(); i++){
+        for (int i = 0; i < ids.size(); i++) {
             criterion[i] = Restrictions.eq("id", ids.get(i));
         }
         Disjunction or = Restrictions.or(criterion);
@@ -147,30 +132,30 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     }
 
     @Override
-    public Page<T> findAllByFuzzySearch(String search, String... associations){
+    public Page<T> findAllByFuzzySearch(String search, String... associations) {
         return findAllByFuzzySearch(search, null, associations);
     }
-    
+
     @Override
-    public Page<T> findAllByFuzzySearch(String search, Set<Criterion> criterions, String... associations){
+    public Page<T> findAllByFuzzySearch(String search, Set<Criterion> criterions, String... associations) {
         Criteria criteria = getCriteria();
-        for (String association: associations){
+        for (String association : associations) {
             criteria.setFetchMode(association, FetchMode.JOIN);
         }
         List<Criterion> predicates = new ArrayList<>();
-        for (String indexedPropery: getIndexedProperties()){
-            if (!StringUtils.isEmpty(search)){
+        for (String indexedPropery : getIndexedProperties()) {
+            if (!StringUtils.isEmpty(search)) {
                 String[] searchTerms = search.split(" ");
-                for (String searchTerm: searchTerms){
+                for (String searchTerm : searchTerms) {
                     predicates.add(Restrictions.ilike(indexedPropery, searchTerm, MatchMode.ANYWHERE));
                 }
             }
         }
-        if (!predicates.isEmpty()){
+        if (!predicates.isEmpty()) {
             criteria.add(Restrictions.or(predicates.toArray(new Criterion[predicates.size()])));
         }
-        if (criterions != null){
-            for (Criterion c: criterions){
+        if (criterions != null) {
+            for (Criterion c : criterions) {
                 criteria.add(c);
             }
         }
@@ -181,12 +166,12 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         PageImpl<T> page = new PageImpl<>(objects);
         return page;
     }
-    
+
     @Override
-    public Page<T> findAllByFuzzySearch(String search){
+    public Page<T> findAllByFuzzySearch(String search) {
         return findAllByFuzzySearch(search, new String[0]);
     }
-    
+
     @Override
     public T findFirst() {
         List<T> allConfigs = findAll();
@@ -199,16 +184,16 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     @Override
     public T saveOrUpdate(T entity) {
         Session session = entityManager.unwrap(Session.class);
-        session.saveOrUpdate(entity);
+        session.merge(entity);
         return entity;
     }
-    
+
     @Override
     public T saveOrUpdateWithMerge(T entity) {
         entity = entityManager.merge(entity);
         return saveOrUpdate(entity);
     }
-    
+
     @Override
     public void delete(T entity) {
         Session session = entityManager.unwrap(Session.class);
@@ -239,7 +224,7 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         sort(list);
         return list;
     }
-    
+
     @Override
     public T findByAttribute(String key, Object value) {
         Map<String, Object> attributeMap = new HashMap<>();
@@ -253,33 +238,33 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         }
         return objects.get(0);
     }
-    
+
     @Override
     @SuppressWarnings("unchecked")
     public T findByUUIDFetchEagerly(final String uuid, String... associations) {
         Criteria criteria = getCriteria();
-        for (String association: associations){
+        for (String association : associations) {
             criteria.setFetchMode(association, FetchMode.JOIN);
         }
         criteria.add(Property.forName("UUID").eq(uuid));
         return (T) criteria.uniqueResult();
     }
-    
+
     @Override
     @SuppressWarnings("unchecked")
     public T findByIdFetchEagerly(final long id, String... associations) {
         Criteria criteria = getCriteria();
-        for (String association: associations){
+        for (String association : associations) {
             criteria.setFetchMode(association, FetchMode.JOIN);
         }
         criteria.add(Property.forName("id").eq(id));
         return (T) criteria.uniqueResult();
     }
-    
+
     @Override
-    public List<T> findAllFetchEagerly(String... associations){
+    public List<T> findAllFetchEagerly(String... associations) {
         Criteria crit = getCriteria();
-        for (String association: associations){
+        for (String association : associations) {
             crit.setFetchMode(association, FetchMode.JOIN);
         }
         //we only want unique results
@@ -290,11 +275,11 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         sort(list);
         return list;
     }
-    
+
     @Override
-    public List<T> findAllFetchEagerlyWithAttributes(Map<String,Object> attributeMap, String... associations){
-        Criteria crit = getCriteria();      
-        for (String association: associations){
+    public List<T> findAllFetchEagerlyWithAttributes(Map<String, Object> attributeMap, String... associations) {
+        Criteria crit = getCriteria();
+        for (String association : associations) {
             crit.setFetchMode(association, FetchMode.JOIN);
         }
         for (Map.Entry<String, Object> entry : attributeMap.entrySet()) {
@@ -308,33 +293,33 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
         sort(list);
         return list;
     }
-    
+
     protected Criteria getCriteria() {
         Session session = entityManager.unwrap(Session.class);
         Criteria criteria = session.createCriteria(getGenericSuperClass(GenericDAO.class));
         return criteria;
     }
-    
-    protected Customer getCustomer(){
+
+    protected Customer getCustomer() {
         return CustomerUtil.getCustomer();
     }
 
     private Criteria getPageableCriteria(Pageable pageable) {
         Criteria criteria = getCriteria();
         addOrderBy(criteria, pageable);
-        criteria.setFirstResult(pageable.getPageNumber()*pageable.getPageSize());
+        criteria.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
         criteria.setMaxResults(pageable.getPageSize());
         return criteria;
     }
 
     private void addOrderBy(Criteria criteria, Pageable pageable) {
         Sort sort = pageable.getSort();
-        if (sort != null){
+        if (sort != null) {
             Iterator<Sort.Order> iterator = sort.iterator();
-            while (iterator.hasNext()){
+            while (iterator.hasNext()) {
                 Sort.Order order = iterator.next();
                 Order hibernateOrder;
-                switch (order.getDirection()){
+                switch (order.getDirection()) {
                     case ASC:
                         hibernateOrder = Order.asc(order.getProperty());
                         break;
@@ -346,12 +331,12 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
             }
         }
     }
-    
-    protected Set<String> getIndexedProperties(){
+
+    protected Set<String> getIndexedProperties() {
         return new HashSet<>();
     }
 
-    
+
     protected void sort(List<T> list) {
         //allow subclasses to sort
     }
