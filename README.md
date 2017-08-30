@@ -22,25 +22,17 @@ This repository contains the source code for the padel club managment software b
 
 ## setup instructions
 - clone this repo
-- install MySQL
-- create MySQL database. See pom.xml for details
-- install your favorite JDK v7 or higher (Oracle or OpenJDK)
-- install Maven
-- install your favorite J2EE IDE and import the Maven project
+- install MySQL v5.7 or higher
+- create a new MySQL user and db
+- install your favorite JDK v8 or higher (Oracle or OpenJDK)
+- install Maven v3.5.0 or higher
+- install your favorite Java IDE and import the Maven project
 - optional: install the JRebel plugin for your J2EE IDE to speed up JVM based development
-- install your favorite Java Servlet 3.0 Spec compatible web container and integrate it into your J2EE IDE
 - sign up with BugSnag
 - sign up with SparkPost
 - sign up with Cloudflare
-- setup environment variables
 
-
-## run tests
-```shell
-mvn clean test
-```
-
-## run app
+## setup environment variables
 ```shell
 export BUGSNAG_API_KEY=[BUGSNAG API KEY]
 export SPARKPOST_DEFAULT_SENDER=[SPARKPOST DEFAULT SENDER]
@@ -52,17 +44,22 @@ export SPRING_DATASOURCE_URL=[jdbc:mysql://host:port/dbName]
 export SPRING_DATASOURCE_USERNAME=[DB USER]
 ```
 
-### barebones
+### run tests
+```shell
+mvn clean test
+```
+
+### run on command line
 ```shell
 mvn clean package -DskipTests spring-boot:run
 ```
 
-### with JRebel
+### run on command line with JRebel
 ```shell
 mvn clean package -DskipTests spring-boot:run "-Drun.jvmArguments='-agentpath:/~/Library/Application Support/IdeaIC2017.2/jr-ide-idea/lib/jrebel6/lib/libjrebel64.dylib'"
 ```
 
-### with JRebel and IntelliJ
+### run in IntelliJ with JRebel
 
 as above, and [add IntelliJ macro and keymap](https://gist.github.com/debueb/50966c527ea443bb4cc7f455f5d833b6)
 
@@ -79,5 +76,19 @@ this will generate two war files in the target/ directory
 - ROOT.war - this is a runnable Spring Boot war file. Start it with java -jar ROOT.war
 - ROOT.war.original - this is a regular war file that you can deploy to an existing servlet container
 
-todo: describe CircleCI to AWS deployment process
+### AWS - manual deployment
+
+- due to an issue [[1](https://stackoverflow.com/questions/42769918/deploy-spring-boot-with-jsp-to-elastic-beanstalk), [2](https://stackoverflow.com/questions/41786136/spring-boot-unable-to-find-jsp-files-on-elasticbeanstalk-aws)] with jsp files in runnable jar Spring Boot (ROOT.war) apps on Amazon Web Services, the app must be deployed in a regular Tomcat instance (ROOT.war.original)
+- setting up AWS is fairly straighforward
+  - create an AWS account. you will need a credit card and a phone number
+  - on the [AWS console](console.aws.amazon.com) first change the region of the datacenter (top right)
+  - Elastic Beanstalk
+    - Create New Application -> Web Server Environment -> Platform: Tomcat -> Application code: Root.war.original -> Configure more options -> Database Modify -> Engine: mysql, Retention: Delete -> wait for AWS to provision machines
+    - All Applications / Application / Application Environment -> Configuration -> RDS Endpoint -> Details tab -> Security Groups -> Actions -> Edit inbound rules -> Type: Custom TCP, Port 3306, Source: My IP - Connect to MySQL using your favorite MySQL client and import DB as necessary
+    - All Applications / Application / Application Environment -> Configuration -> Software Configuration -> Setup Environment Properties as described above
+    - All Applications / Application / Application Environment -> Upload and Deploy new war.original file
+
+### AWS - automatic deployment
+
+todo: describe TravisCI to AWS deployment process
 
