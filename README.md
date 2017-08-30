@@ -90,5 +90,5 @@ this will generate two war files in the target/ directory
 
 ### AWS - automatic deployment
 
-todo: describe TravisCI to AWS deployment process
+- automatic deployment to AWS is done via [travis-ci.org](https://docs.travis-ci.com/user/deployment/elasticbeanstalk/)
 
