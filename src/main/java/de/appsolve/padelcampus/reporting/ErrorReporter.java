@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 @Component
 public class ErrorReporter {
 
-    private static final Pattern IGNORED_USER_AGENT_PATTERN = Pattern.compile(".*(tinfoilsecurity|Googlebot|bingbot|AhrefsBot|facebookexternalhit|seoscanners).*");
+    private static final Pattern IGNORED_USER_AGENT_PATTERN = Pattern.compile(".*(tinfoilsecurity|Googlebot|bingbot|AhrefsBot|facebookexternalhit|seoscanners|BDCbot).*");
     private static final Set<String> IGNORED_EXCEPTION_CLASS_NAMES = Sets.newHashSet("ClientAbortException");
 
     @Autowired
