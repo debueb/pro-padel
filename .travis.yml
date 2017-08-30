@@ -4,6 +4,7 @@ jdk:
 deploy:
   provider: elasticbeanstalk
   skip_cleanup: true
+  bucket_name: elasticbeanstalk-eu-central-1-758047121453
   zip_file: 'target/ROOT.war.original'
   access_key_id: AKIAJNFACB262VG3L3VA
   secret_access_key:
