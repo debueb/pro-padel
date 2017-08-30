@@ -1,3 +1,16 @@
 language: java
 jdk:
-  - oraclejdk8
+- oraclejdk8
+deploy:
+  provider: elasticbeanstalk
+  skip_cleanup: true
+  zip_file: 'target/ROOT.war.original'
+  access_key_id: AKIAJNFACB262VG3L3VA
+  secret_access_key:
+    secure: TQgYtEKSve7oOVqjFNNH7uMFI42IWbxWodTkFqr8Gokpuz6Ot3mNWpR2+3askGA83IT9LDaAQOsXYGi29pSmEniV0HjFNfFjEkokGgvLs2RJgytvo3NBZW/ygL7NsgNgQ6pYhCLyHhvuVqOD+S+c/hqyTK76G0+R3oCsPPyys2kKzwNYB2foGNSizxMCuoUL34MFz9OUImnI/Kn+tk8X2//QtCSUEopWWU31+pDZrFZaZc42dNfQCPr9uoe+djk8QMEVsZNcAwrUwRbiNcprQd1ramdHk4BiA+axgZT7FikJKbf80HfkENesW7jT+5KvD3x3/PGlHzTM/I2TOAMhnKO9KlXzFB3CWw+JJzrMOWhr/PUkj0vOp0jiS01HVlcSHUSuWOWHSYuIKTTHsyuhbNBqON+i3bLK9OJ/p97ub73e22COgAvbrhcIsKsuYO36MjhiIipZ3w1QzUBl1/T7+INgRTPoAsv4U2slgmzuMcNez6D2OunAihIo0QCdUxIxK4ZXGkIkyMHj4gPEeI3y/2g8j9V5KxsAsmEVLBEXUbvbZTuweHLOO2/otyxNs7LNSqae8lwI2r516rcjHolsaAN3LSwpkl0r8OC8ka3LQTa2eyEEZf2VkDEuJSTvuuE3bz4EK41U2DlvEUZn5Px51AhxstT5kuR0E201bXjLTmU=
+  region: eu-central-1
+  app: ProPadel
+  env: Propadel-Tomcat-MySQL
+  on:
+    repo: debueb/pro-padel
+    branch: aws
