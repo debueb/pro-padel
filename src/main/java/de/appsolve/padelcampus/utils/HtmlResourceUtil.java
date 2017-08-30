@@ -176,12 +176,16 @@ public class HtmlResourceUtil {
 
     private void copyResources(ServletContext context, String sourceFolder, File destinationFolder) throws MalformedURLException, IOException {
         Set<String> resourcePaths = context.getResourcePaths(sourceFolder);
-        for (String resourcePath : resourcePaths) {
-            if (resourcePath.endsWith("/")) { //must be a directory
-                copyResources(context, resourcePath, destinationFolder);
-            } else {
-                URL resource = context.getResource(resourcePath);
-                FileUtils.copyURLToFile(resource, new File(destinationFolder, resourcePath));
+        if (resourcePaths == null) {
+            LOG.warn(String.format("Unable to find folder %s", sourceFolder));
+        } else {
+            for (String resourcePath : resourcePaths) {
+                if (resourcePath.endsWith("/")) { //must be a directory
+                    copyResources(context, resourcePath, destinationFolder);
+                } else {
+                    URL resource = context.getResource(resourcePath);
+                    FileUtils.copyURLToFile(resource, new File(destinationFolder, resourcePath));
+                }
             }
         }
     }
