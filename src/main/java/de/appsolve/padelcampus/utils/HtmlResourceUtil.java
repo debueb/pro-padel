@@ -83,7 +83,7 @@ public class HtmlResourceUtil {
                         try {
                             updateCss(context, customer);
                         } catch (Exception ex) {
-                            LOG.error(ex);
+                            LOG.error(ex, ex);
                         }
                         return null;
                     }
