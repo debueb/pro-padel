@@ -91,4 +91,5 @@ this will generate two war files in the target/ directory
 ### AWS - automatic deployment
 
 - automatic deployment to AWS is done via [travis-ci.org](https://docs.travis-ci.com/user/deployment/elasticbeanstalk/)
+- in order to support SSL on the AWS instance, we use [letsencrypt](https://letsencrypt.org/) to [install and renew a valid SSL certificate in an automated way](https://github.com/debueb/pro-padel/blob/aws/src/main/webapp/.ebextensions/https-instance-securitygroup.config)
 
