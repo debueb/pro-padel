@@ -90,11 +90,11 @@ this will generate two war files in the target/ directory
 
 ### AWS - automatic deployment
 
-- automatic deployment to AWS is done via [travis-ci.org](https://docs.travis-ci.com/user/deployment/elasticbeanstalk/)
+- automatic deployment to AWS is done via [travis-ci.org elasticbeanstalk provider](https://docs.travis-ci.com/user/deployment/elasticbeanstalk/)
 - SSL on the AWS instance is required because the application uses the request URL to build URLS
 - if SSL is terminated on Cloudflare with Flexible SSL (essentially requesting the app via http://) the constructed http:// redirects will fail in the browser
 - in order to support SSL on the AWS single instance we could use letsencrypt with [certbot-auto](https://blog.lucasferreira.org/howto/2017/07/21/set-up-let-s-encrypt-ssl-certificate-with-aws-elastic-beanstalk-single-instance.html)
 - however, certbot-auto requires that a) it is accessible on port 80 in order to confirm domain ownership or b) using the `--webroot` that an existing Apache config can serve .well-known files
 - both a) and b) are [not compatible](https://support.cloudflare.com/hc/en-us/articles/214820528-How-to-Validate-a-Let-s-Encrypt-Certificate-on-a-Site-Already-Active-on-Cloudflare) with http:// to https:// page rule redirects on Cloudflare
 - therefore, we set Cloudflare to Full SSL (non strict), which allows self signed certificates
-- the self signed certificate is installed from environment variables (https://github.com/debueb/pro-padel/blob/aws/src/main/webapp/.ebextensions/https-instance-securitygroup.config)
+- the self signed certificate is [installed from environment variables](https://github.com/debueb/pro-padel/blob/aws/src/main/webapp/.ebextensions/https-instance-securitygroup.config)
