@@ -17,7 +17,7 @@
                     <spf:input path="email" type="hidden"/>
                     <fmt:message key="NewPassword" var="placeholder"/>
                     <spf:input path="password" type="password"  class="form-control" placeholder="${placeholder}"/>
-                    <button class="btn btn-primary btn-block unit" type="submit"><fmt:message key="ResetPassword"/></a>
+                    <button class="btn btn-primary btn-block unit-2" type="submit"><fmt:message key="ResetPassword"/></a>
                 </spf:form>
             </div>
         </div>
