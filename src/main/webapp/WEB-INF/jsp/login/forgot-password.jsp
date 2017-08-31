@@ -16,7 +16,7 @@
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
                     <fmt:message key="EmailAddress" var="placeholder"/>
                     <spf:input path="email" type="email" class="form-control" placeholder="${placeholder}"/>
-                    <button class="btn btn-primary btn-block unit" type="submit"><fmt:message key="ForgotPassword"/></button>
+                    <button class="btn btn-primary btn-block unit-2" type="submit"><fmt:message key="ForgotPassword"/></button>
                 </spf:form>
             </div>
         </div>

@@ -12,6 +12,12 @@
             <div class="panel-body">
                 <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
+                    <c:if test="${showResetPasswordLink}">
+                        <div class="alert alert-info">
+                            <a href="/login/forgot-password"><fmt:message key="ResetPassword"/></a>
+                        </div>
+                        <div class="unit-2"></div>
+                    </c:if>
                     <spf:input path="id" type="hidden"/>
                     <jsp:include page="/WEB-INF/jsp/include/player-input.jsp"/>
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="ContineWithBooking"/></button>

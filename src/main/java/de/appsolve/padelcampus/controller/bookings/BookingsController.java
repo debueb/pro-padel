@@ -229,6 +229,7 @@ public class BookingsController extends BaseController {
         if (existingPlayer != null) {
             if (!StringUtils.isEmpty(existingPlayer.getPasswordHash())) {
                 result.addError(new ObjectError("id", msg.get("EmailAlreadyRegistered")));
+                noLoginView.addObject("showResetPasswordLink", true);
                 return noLoginView;
             }
             player = existingPlayer;
