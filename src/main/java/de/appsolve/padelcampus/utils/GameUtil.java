@@ -128,14 +128,16 @@ public class GameUtil {
     }
     
     public void removeObsoleteGames(Event event, Set<? extends ParticipantI> newParticipants) {
-        List<Game> eventGames = gameDAO.findByEvent(event);
-        Iterator<Game> eventGameIterator = eventGames.iterator();
-        while (eventGameIterator.hasNext()){
-            Game game = eventGameIterator.next();
-            //only remove if game participant no longer participates in event
-            if (!newParticipants.containsAll(game.getParticipants())){
-                eventGameIterator.remove();
-                gameDAO.deleteById(game.getId());
+        if (event.getId() != null){
+            List<Game> eventGames = gameDAO.findByEvent(event);
+            Iterator<Game> eventGameIterator = eventGames.iterator();
+            while (eventGameIterator.hasNext()){
+                Game game = eventGameIterator.next();
+                //only remove if game participant no longer participates in event
+                if (!newParticipants.containsAll(game.getParticipants())){
+                    eventGameIterator.remove();
+                    gameDAO.deleteById(game.getId());
+                }
             }
         }
     }
