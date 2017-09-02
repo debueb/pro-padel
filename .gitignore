@@ -114,3 +114,5 @@ fabric.properties
 
 .idea/
 *.iml
+
+env.sh
