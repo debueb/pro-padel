@@ -13,10 +13,11 @@ import de.appsolve.padelcampus.db.dao.ParticipantDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.Participant;
+import de.appsolve.padelcampus.db.model.Ranking;
 import de.appsolve.padelcampus.utils.ModuleUtil;
 import de.appsolve.padelcampus.utils.RankingUtil;
-import de.appsolve.padelcampus.utils.SortUtil;
 import org.apache.commons.lang.NotImplementedException;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
-import java.util.Map;
+import java.util.List;
 
 /**
  * @author dominik
@@ -54,21 +54,26 @@ public class RankingController extends BaseController {
 
     @RequestMapping("{gender}/{category}")
     public ModelAndView getRanking(@PathVariable("gender") Gender gender, @PathVariable("category") String category) {
-        return getRanking(gender, category, null);
+        return getRanking(gender, category, null, null);
     }
 
-    @RequestMapping("{gender}/{category}/{participant}")
-    public ModelAndView getRanking(@PathVariable("gender") Gender gender, @PathVariable("category") String category, @PathVariable("participant") String participantUUID) {
+    @RequestMapping("{gender}/{category}/{participant}/{date}")
+    public ModelAndView getRanking(
+            @PathVariable() Gender gender,
+            @PathVariable() String category,
+            @PathVariable() String participantUUID,
+            @PathVariable(required = false) LocalDate date
+    ) {
         ModelAndView mav = new ModelAndView("ranking/ranking");
         mav.addObject("gender", gender);
         mav.addObject("category", category);
-        Map<Participant, BigDecimal> rankings = null;
+        List<Ranking> rankings = null;
         switch (category) {
             case "individual":
-                rankings = rankingUtil.getRanking(gender);
+                rankings = rankingUtil.getRanking(gender, date);
                 break;
             case "team":
-                rankings = rankingUtil.getTeamRanking(gender);
+                rankings = rankingUtil.getTeamRanking(gender, date);
                 break;
             default:
                 throw new NotImplementedException("unsupported category");
@@ -77,7 +82,7 @@ public class RankingController extends BaseController {
             Participant participant = participantDAO.findByUUID(participantUUID);
             mav.addObject("SelectedParticipant", participant);
         }
-        mav.addObject("Rankings", SortUtil.sortMap(rankings));
+        mav.addObject("Rankings", rankings);
         mav.addObject("path", getPath());
         return mav;
     }

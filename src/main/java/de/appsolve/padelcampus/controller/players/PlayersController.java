@@ -19,6 +19,7 @@ import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import de.appsolve.padelcampus.utils.*;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +30,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -151,9 +151,9 @@ public class PlayersController extends BaseController {
     }
 
     private ModelAndView getPlayersView(Event event, Collection<Player> players, String title) {
-        Map<Participant, BigDecimal> ranking = rankingUtil.getPlayerRanking(players);
+        List<Ranking> ranking = rankingUtil.getPlayerRanking(players, new LocalDate());
         ModelAndView mav = new ModelAndView("players/players");
-        mav.addObject("RankingMap", SortUtil.sortMap(ranking));
+        mav.addObject("RankingMap", ranking);
         mav.addObject("title", title);
         mav.addObject("Model", event);
         return mav;
@@ -163,9 +163,12 @@ public class PlayersController extends BaseController {
         if (player == null) {
             throw new ResourceNotFoundException();
         }
-        Map<Participant, BigDecimal> ranking = rankingUtil.getRanking(player.getGender());
+        List<Ranking> ranking = rankingUtil.getRanking(player.getGender(), new LocalDate());
         ModelAndView mav = new ModelAndView("players/player", "Player", player);
-        mav.addObject("RankingValue", ranking.get(player));
+        Optional<Ranking> playerRanking = ranking.stream().filter(r -> r.getParticipant().equals(player)).findFirst();
+        if (playerRanking.isPresent()) {
+            mav.addObject("RankingValue", playerRanking.get().getValue());
+        }
         return mav;
     }
 }

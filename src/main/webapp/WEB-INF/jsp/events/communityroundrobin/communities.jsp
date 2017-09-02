@@ -29,7 +29,7 @@
                                     <div class="list-group">
                                         <c:set var="RankedParticipantMap" value="${CommunityMapEntry.value}"/>
                                         <c:forEach var="RankedParticipantEntry" items="${RankedParticipantMap}">
-                                            <c:set var="Participant" value="${RankedParticipantEntry.key}"/>
+                                            <c:set var="Participant" value="${RankedParticipantEntry.participant}"/>
                                             <jsp:include page="/WEB-INF/jsp/include/list-badge-item.jsp">
                                                 <jsp:param name="url" value="${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}"/>
                                                 <jsp:param name="msg" value="${Participant}"/>
