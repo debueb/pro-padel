@@ -287,8 +287,11 @@ public class AdminEventsController extends AdminBaseController<Event>{
                 getDAO().saveOrUpdate(model);
                 return redirectToIndex(request);
             
-            case GroupKnockout:
             case GroupTwoRounds:
+                //remove games that have not been played yet
+                gameUtil.removeObsoleteGames(model);
+                //no break
+            case GroupKnockout:
                 model = getDAO().saveOrUpdate(model);
                 if (!model.getParticipants().isEmpty()){
                     return redirectToGroupDraws(model);
@@ -405,9 +408,11 @@ public class AdminEventsController extends AdminBaseController<Event>{
         }
         
         //prevent modification of group draws if knockout round games have already begun
-        SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGameMap(event);
-        if (!roundGames.isEmpty()){
-            bindingResult.reject("CannotModifyEventAfterGroupPhaseHasEnded");
+        if (event.getEventType().equals(EventType.Knockout)){
+            SortedMap<Integer, List<Game>> roundGames = eventsUtil.getRoundGameMap(event);
+            if (!roundGames.isEmpty()){
+                bindingResult.reject("CannotModifyEventAfterGroupPhaseHasEnded");
+            }
         }
         
         if (bindingResult.hasErrors()){
