@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.appsolve</groupId>
@@ -15,7 +16,7 @@
         <org.hibernate.version>4.3.11.Final</org.hibernate.version>
         <tomcat.version>7.0.79</tomcat.version>
     </properties>
-    
+
     <dependencies>
         <!-- Basic language additions -->
         <dependency>
@@ -134,7 +135,7 @@
             <artifactId>bugsnag</artifactId>
             <version>3.0.2</version>
         </dependency>
-        
+
         <!-- OWASP ESAPI needed for XSS Filter -->
         <dependency>
             <groupId>org.owasp.esapi</groupId>
@@ -167,7 +168,7 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.2</version>
         </dependency>
-        
+
         <!-- support for suppressing findbugs warnings -->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
@@ -175,7 +176,7 @@
             <version>3.0.1u2</version>
             <type>jar</type>
         </dependency>
-        
+
         <!-- Hibernate ORM -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -187,7 +188,7 @@
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${org.hibernate.version}</version>
         </dependency>
-        
+
         <!-- Form validation -->
         <dependency>
             <groupId>javax.validation</groupId>
@@ -200,7 +201,7 @@
             <version>5.2.4.Final</version>
             <type>jar</type>
         </dependency>
-        
+
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -237,14 +238,14 @@
             <artifactId>spring-data-commons</artifactId>
             <version>1.12.1.RELEASE</version>
         </dependency>
-        
+
         <!-- MySQL -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.38</version>
         </dependency>
-        
+
         <!-- compress LESS CSS at runtime -->
         <dependency>
             <groupId>org.lesscss</groupId>
@@ -257,7 +258,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -283,7 +284,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- javax.el-api somehow required by hibernate-validator -->
         <dependency>
             <groupId>javax.el</groupId>
@@ -313,7 +314,7 @@
                     <compilerArgument>-Xlint:unchecked</compilerArgument>
                 </configuration>
             </plugin>
-            
+
             <!-- create war file -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -335,7 +336,7 @@
                     </webResources>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -344,7 +345,7 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.zeroturnaround</groupId>
                 <artifactId>jrebel-maven-plugin</artifactId>
@@ -402,7 +403,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        
+
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -413,7 +414,7 @@
             </resource>
         </resources>
     </build>
-    
+
     <profiles>
         <profile>
             <id>dev</id>
@@ -424,15 +425,15 @@
                 <profile.id>dev</profile.id>
                 <!-- reload messages on every request -->
                 <messagesReloadInterval>0</messagesReloadInterval>
-                
+
                 <!-- do not cache static files -->
                 <httpResponseCacheDuration>0</httpResponseCacheDuration>
-                
-                 <!-- log4j log level -->
+
+                <!-- log4j log level -->
                 <log4j.loglevel>DEBUG</log4j.loglevel>
                 <log4j.logger.org.hibernate.type>INFO</log4j.logger.org.hibernate.type>
                 <log4j.logger.org.hibernate.SQL>INFO</log4j.logger.org.hibernate.SQL>
-                
+
                 <OPENSHIFT_MYSQL_DB_HOST>localhost</OPENSHIFT_MYSQL_DB_HOST>
                 <OPENSHIFT_MYSQL_DB_PORT>3306</OPENSHIFT_MYSQL_DB_PORT>
                 <OPENSHIFT_MYSQL_DB_USERNAME>padelcampus</OPENSHIFT_MYSQL_DB_USERNAME>
@@ -457,8 +458,8 @@
                                     <goal>install-node-and-npm</goal>
                                 </goals>
                                 <configuration>
-                                    <nodeVersion>v6.9.4</nodeVersion>
-                                    <npmVersion>4.1.2</npmVersion>
+                                    <nodeVersion>v8.1.4</nodeVersion>
+                                    <npmVersion>5.3.0</npmVersion>
                                 </configuration>
                             </execution>
                             <execution>
@@ -510,10 +511,10 @@
                 <profile.id>openshift</profile.id>
                 <!-- cache static files for 1 day -->
                 <httpResponseCacheDuration>86400</httpResponseCacheDuration>
-                
+
                 <!-- do not reload messages -->
                 <messagesReloadInterval>-1</messagesReloadInterval>
-                
+
                 <!-- log4j log level -->
                 <log4j.loglevel>INFO</log4j.loglevel>
                 <log4j.logger.org.hibernate.type>WARN</log4j.logger.org.hibernate.type>
