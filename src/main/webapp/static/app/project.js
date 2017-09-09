@@ -615,6 +615,19 @@ var project = {
                 storage.setItem("lastPage", window.location.href);
             });
         }
+    },
+    
+    exportEmails(){
+        $('.export-emails').livequery(function(){
+            $(this).on('click tap', function () {
+                let $form = $(this).closest('form');
+                let action = $form.attr('action');
+                action = action.indexOf('/export') === -1 ? action + '/export' : action;
+                $form.attr('action', action);
+                $form.addClass('no-ajaxify');
+                return true;
+            });
+        });
     }
 };
 
@@ -668,6 +681,7 @@ if (project.isNative() && lastPage && lastPage !== window.location.href){
         project.enableSubmodules();
         project.enableSlick();
         project.saveLastPage();
+        project.exportEmails();
     });
 }
 

@@ -12,6 +12,7 @@ import com.sparkpost.model.TemplateItem;
 import com.sparkpost.model.responses.TemplateListResponse;
 import com.sparkpost.resources.ResourceTemplates;
 import com.sparkpost.transport.RestConnection;
+import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
@@ -24,9 +25,19 @@ import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
 import de.appsolve.padelcampus.utils.MailUtils;
 import de.appsolve.padelcampus.utils.Msg;
 import de.appsolve.padelcampus.utils.RequestUtil;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -36,11 +47,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.List;
-import java.util.Set;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -116,6 +122,20 @@ public class AdminMailController {
             result.addError(new ObjectError("*", e.getMessage()));
             return getMailView(mail);
         }
+    }
+
+    @RequestMapping(value="export", method=POST)
+    public HttpEntity<byte[]> exportEmails(HttpServletRequest request, @ModelAttribute("Model") Mail mail, BindingResult result){
+        List<String> emails = new ArrayList<>();
+        for (EmailContact player: mail.getRecipients()){
+            emails.add(player.getEmailAddress());
+        }
+        byte[] data = StringUtils.join(emails, ",").getBytes(StandardCharsets.UTF_8);
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(new MediaType("text", "csv"));
+        header.set("Content-Disposition", "attachment; filename=email-export.csv");
+        header.setContentLength(data.length);
+        return new HttpEntity<>(data, header);
     }
 
     private ModelAndView getMailView(Set<Player> players, HttpServletRequest request) {
