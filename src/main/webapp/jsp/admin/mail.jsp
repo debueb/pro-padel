@@ -75,6 +75,7 @@
                     </div>
 
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Send"/></button>
+                    <button class="btn btn-primary btn-block btn-form-submit unit-2 export-emails" type="submit"><fmt:message key="ExportEmailAddresses"/></button>
                 </spf:form>
             </div>
         </div>
