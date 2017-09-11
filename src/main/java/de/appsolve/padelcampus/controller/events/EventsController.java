@@ -441,6 +441,7 @@ public class EventsController extends BaseController {
         game.setGameSets(gameSets);
         game.setStartDate(new LocalDate());
         gameDAO.saveOrUpdate(game);
+        rankingUtil.updateRanking();
     }
 
     private ModelAndView getGroupGameView(Long eventId, Integer roundNumber) {

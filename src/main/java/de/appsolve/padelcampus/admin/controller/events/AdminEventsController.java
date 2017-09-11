@@ -535,6 +535,7 @@ public class AdminEventsController extends AdminBaseController<Event> {
             eventDAO.saveOrUpdate(event);
 
             eventDAO.deleteById(event.getId());
+            rankingUtil.updateRanking();
         } catch (DataIntegrityViolationException e) {
             Event model = (Event) getDAO().findById(id);
             LOG.warn("Attempt to delete " + model + " failed due to " + e);
@@ -613,6 +614,7 @@ public class AdminEventsController extends AdminBaseController<Event> {
     public ModelAndView postDeleteGameView(HttpServletRequest request, @PathVariable("gameId") Long gameId, @RequestParam(value = "redirectUrl", required = false) String redirectUrl) {
         try {
             gameDAO.deleteById(gameId);
+            rankingUtil.updateRanking();
         } catch (DataIntegrityViolationException e) {
             Game model = gameDAO.findById(gameId);
             LOG.warn("Attempt to delete " + model + " failed due to " + e);

@@ -179,6 +179,7 @@ public class GamesController extends BaseController {
             gameDAO.saveOrUpdate(nextGame);
         }
 
+        rankingUtil.updateRanking();
         if (StringUtils.isEmpty(redirectUrl)) {
             return new ModelAndView("redirect:/games/game/" + gameId);
         }

@@ -1,12 +1,10 @@
 package de.appsolve.padelcampus.db.model;
 
+import de.appsolve.padelcampus.constants.Gender;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
@@ -19,14 +17,19 @@ public class Ranking extends CustomerEntity {
         //empty
     }
 
-    public Ranking(Participant participant, BigDecimal value, LocalDate date) {
+    public Ranking(Participant participant, Gender gender, BigDecimal value, LocalDate date) {
         this.participant = participant;
+        this.gender = gender;
         this.value = value;
         this.date = date;
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Participant participant;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Column
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
@@ -41,6 +44,14 @@ public class Ranking extends CustomerEntity {
 
     public void setParticipant(Participant participant) {
         this.participant = participant;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     public LocalDate getDate() {

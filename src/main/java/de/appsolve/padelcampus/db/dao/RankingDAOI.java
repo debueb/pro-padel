@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.db.dao;
 
+import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.Ranking;
 import org.joda.time.LocalDate;
@@ -17,5 +18,5 @@ import java.util.List;
  */
 public interface RankingDAOI extends BaseEntityDAOI<Ranking> {
 
-    public List<Ranking> findByDate(LocalDate date);
+    public List<Ranking> findByGenderAndDate(Gender gender, LocalDate date);
 }

@@ -43,6 +43,8 @@ public interface BaseEntityDAOI<T extends BaseEntityI> {
 
     T saveOrUpdate(T entity);
 
+    void saveOrUpdate(Collection<T> entities);
+
     T saveOrUpdateWithMerge(T entity);
 
     void delete(T entity);

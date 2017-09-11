@@ -215,6 +215,13 @@ public abstract class BaseEntityDAO<T extends BaseEntityI> extends GenericsUtils
     }
 
     @Override
+    public void saveOrUpdate(Collection<T> entities) {
+        entities.forEach(entity -> {
+            saveOrUpdate(entity);
+        });
+    }
+
+    @Override
     public T saveOrUpdateWithMerge(T entity) {
         entity = entityManager.merge(entity);
         return saveOrUpdate(entity);

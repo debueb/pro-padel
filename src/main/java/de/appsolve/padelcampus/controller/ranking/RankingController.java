@@ -53,11 +53,23 @@ public class RankingController extends BaseController {
     }
 
     @RequestMapping("{gender}/{category}")
-    public ModelAndView getRanking(@PathVariable("gender") Gender gender, @PathVariable("category") String category) {
+    public ModelAndView getRanking(
+            @PathVariable Gender gender,
+            @PathVariable String category
+    ) {
         return getRanking(gender, category, null, null);
     }
 
-    @RequestMapping("{gender}/{category}/{participant}/{date}")
+    @RequestMapping("{gender}/{category}/{participantUUID}")
+    public ModelAndView getRanking(
+            @PathVariable() Gender gender,
+            @PathVariable() String category,
+            @PathVariable() String participantUUID
+    ) {
+        return getRanking(gender, category, participantUUID, null);
+    }
+
+    @RequestMapping("{gender}/{category}/{participantUUID}/{date}")
     public ModelAndView getRanking(
             @PathVariable() Gender gender,
             @PathVariable() String category,
