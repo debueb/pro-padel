@@ -98,3 +98,10 @@ this will generate two war files in the target/ directory
 - both a) and b) are [not compatible](https://support.cloudflare.com/hc/en-us/articles/214820528-How-to-Validate-a-Let-s-Encrypt-Certificate-on-a-Site-Already-Active-on-Cloudflare) with http:// to https:// page rule redirects on Cloudflare
 - therefore, we set Cloudflare to Full SSL (non strict), which allows self signed certificates
 - the self signed certificate is [installed from environment variables](https://github.com/debueb/pro-padel/blob/aws/src/main/webapp/.ebextensions/https-instance-securitygroup.config)
+
+
+### Backup
+
+- A MySQL backup script is [installed during AWS deploy](https://github.com/debueb/pro-padel/blob/aws/src/main/webapp/.ebextensions/mysql-backup.config)
+- the script uploads the generated .sql into a Dropbox folder using [Dropbox-Uploader](https://github.com/andreafabrizi/Dropbox-Uploader)
+- Dropbox-Uploader Token must be stored in an environment variable named DROPBOX_UPLOADER_TOKEN
