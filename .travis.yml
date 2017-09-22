@@ -4,14 +4,14 @@ jdk:
 deploy:
   provider: elasticbeanstalk
   skip_cleanup: true
-  bucket_name: elasticbeanstalk-eu-central-1-758047121453
-  zip_file: 'target/ROOT.war.original'
-  access_key_id: AKIAJNFACB262VG3L3VA
+  bucket_name: elasticbeanstalk-eu-central-1-887663466140
+  zip_file: target/ROOT.war.original
+  access_key_id: AKIAJBH2Q4N74TWYJMTA
   secret_access_key:
-    secure: TQgYtEKSve7oOVqjFNNH7uMFI42IWbxWodTkFqr8Gokpuz6Ot3mNWpR2+3askGA83IT9LDaAQOsXYGi29pSmEniV0HjFNfFjEkokGgvLs2RJgytvo3NBZW/ygL7NsgNgQ6pYhCLyHhvuVqOD+S+c/hqyTK76G0+R3oCsPPyys2kKzwNYB2foGNSizxMCuoUL34MFz9OUImnI/Kn+tk8X2//QtCSUEopWWU31+pDZrFZaZc42dNfQCPr9uoe+djk8QMEVsZNcAwrUwRbiNcprQd1ramdHk4BiA+axgZT7FikJKbf80HfkENesW7jT+5KvD3x3/PGlHzTM/I2TOAMhnKO9KlXzFB3CWw+JJzrMOWhr/PUkj0vOp0jiS01HVlcSHUSuWOWHSYuIKTTHsyuhbNBqON+i3bLK9OJ/p97ub73e22COgAvbrhcIsKsuYO36MjhiIipZ3w1QzUBl1/T7+INgRTPoAsv4U2slgmzuMcNez6D2OunAihIo0QCdUxIxK4ZXGkIkyMHj4gPEeI3y/2g8j9V5KxsAsmEVLBEXUbvbZTuweHLOO2/otyxNs7LNSqae8lwI2r516rcjHolsaAN3LSwpkl0r8OC8ka3LQTa2eyEEZf2VkDEuJSTvuuE3bz4EK41U2DlvEUZn5Px51AhxstT5kuR0E201bXjLTmU=
+    secure: wryZkWT8/qduZB8wMhbGXHI0Irj+7nKFJsg5Wg/l1t+OVJjio+JeVGC137uoujCzPdbd3Kb06ssXdUFyHyMTbqJTG1AFaPn6venLJELeRJohQPPwSjLcuQjrNXt7gC9czWT0Au8bCTZpu0F6D93zx8byeguaBltulOvci5By2q8hzCnaUeiGBM9mqJR6LMIr+rICrHhgPi9qc/mJ4UhlSjHWdZ7sBvTOJejxJrNzwJXksOHGqXmIJ/c93BysrNa9INHnzG1+rSIiyhY24+y1yFzMmxQebUysfukYYmWWxjVD6KRzDwZC66IvOTIcB0AP/o9c/I8KTWJCMmKBXjfSFwQEcJ5iTHyPxWlnUSd68EQcfoJUilJg+5C4KTrP9P25cIhEdZd5gonHIGMjQeLtGPZat6ilNI+eDIDNSf7fMWTgCWBGYAIz1pEpwa3LloJYrBDchhyOVrNVqL/MwfbX0mFMH0kgIy3PhMnbADvhaIIUJqP2PxeEtC6U5s4xGIOFYmWsq3F6tDCWxfK1K6kThvXOonalmBjgNmFG+wB0blDPYBNgk/2e66bpbYGCO0jG7MM6u7D6w1apZb+EhoIdVSQs2Jx7x2tECMQiszghx7hl2YTNj2Fk5bAlVepV2R0US5ljk48Ypi7P7rJT3gR20YRg91nG3XzrvKlh1AXH0CI=
   region: eu-central-1
-  app: ProPadel
-  env: Propadel-Tomcat-MySQL
+  app: walls.de
+  env: Wallsde-env
   on:
     repo: debueb/pro-padel
     branch: aws
