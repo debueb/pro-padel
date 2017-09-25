@@ -26,7 +26,7 @@
                                 <tbody>
                                     <c:set var="req" value="${pageContext.request}" />
                                     <c:forEach var="Ranking" items="${Rankings}" varStatus="status">
-                                        <c:set var="Participant" value="${Ranking.key}"/>
+                                        <c:set var="Participant" value="${Ranking.participant}"/>
                                         <c:set var="RowClass" value="${not empty SelectedParticipant and Participant eq SelectedParticipant ? 'selected-participant' : ''}"/>
                                         <c:if test="${empty sessionScope.customer}">
                                             <c:set var="hostPrefix" value="${req.scheme}://${Participant.customer.domainName}:${req.serverPort}"/>

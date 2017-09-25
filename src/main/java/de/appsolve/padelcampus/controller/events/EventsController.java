@@ -16,7 +16,10 @@ import de.appsolve.padelcampus.db.dao.*;
 import de.appsolve.padelcampus.db.model.*;
 import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
-import de.appsolve.padelcampus.utils.*;
+import de.appsolve.padelcampus.utils.EventsUtil;
+import de.appsolve.padelcampus.utils.GameUtil;
+import de.appsolve.padelcampus.utils.RankingUtil;
+import de.appsolve.padelcampus.utils.SessionUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
@@ -30,7 +33,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -129,41 +131,42 @@ public class EventsController extends BaseController {
                 }
             }
         }
-        Map<Participant, BigDecimal> rankingMap = new HashMap<>();
+        List<Ranking> rankingMap = new ArrayList<>();
         if (!event.getParticipants().isEmpty()) {
             Participant participant = event.getParticipants().iterator().next();
             if (participant instanceof Player) {
-                rankingMap = rankingUtil.getPlayerRanking(event.getPlayers());
+                rankingMap = rankingUtil.getPlayerRanking(event.getPlayers(), LocalDate.now());
             } else {
-                rankingMap = rankingUtil.getTeamRanking(event.getTeams());
+                rankingMap = rankingUtil.getTeamRanking(event.getTeams(), LocalDate.now());
             }
         }
         ModelAndView mav = new ModelAndView("events/participants");
         mav.addObject("Model", event);
-        mav.addObject("RankingMap", SortUtil.sortMap(rankingMap));
+        mav.addObject("RankingMap", rankingMap);
         return mav;
     }
 
     @RequestMapping("event/{eventId}/communities")
     public ModelAndView getEventCommunities(@PathVariable("eventId") Long eventId) {
         Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
-        Map<Participant, BigDecimal> participants = rankingUtil.getRankedParticipants(event);
-        Map<Participant, BigDecimal> rankedParticipants = SortUtil.sortMap(participants);
-        Map<Community, SortedMap<Participant, BigDecimal>> communityMap = new HashMap<>();
-        for (Participant participant : rankedParticipants.keySet()) {
+        List<Ranking> rankedParticipants = rankingUtil.getRankedParticipants(event);
+        Map<Community, List<Ranking>> communityMap = new HashMap<>();
+        rankedParticipants.forEach(ranking -> {
+            Participant participant = ranking.getParticipant();
             if (participant instanceof Team) {
                 Team team = (Team) participant;
                 if (team.getCommunity() != null) {
-                    SortedMap<Participant, BigDecimal> communityParticipantMap = communityMap.get(team.getCommunity());
-                    if (communityParticipantMap == null) {
-                        communityParticipantMap = new TreeMap<>();
+                    List<Ranking> communityRanking = communityMap.get(team.getCommunity());
+                    if (communityRanking == null) {
+                        communityRanking = new ArrayList<>();
                     }
-                    communityParticipantMap.put(team, rankedParticipants.get(team));
-                    SortedMap<Participant, BigDecimal> sortedMap = SortUtil.sortMap(communityParticipantMap);
-                    communityMap.put(team.getCommunity(), sortedMap);
+                    Ranking teamRanking = rankedParticipants.stream().filter(r -> r.getParticipant().equals(team)).findFirst().get();
+                    communityRanking.add(teamRanking);
+                    Collections.sort(communityRanking);
+                    communityMap.put(team.getCommunity(), communityRanking);
                 }
             }
-        }
+        });
         ModelAndView mav = new ModelAndView("events/communityroundrobin/communities", "Model", event);
         mav.addObject("CommunityMap", communityMap);
         return mav;
@@ -438,6 +441,7 @@ public class EventsController extends BaseController {
         game.setGameSets(gameSets);
         game.setStartDate(new LocalDate());
         gameDAO.saveOrUpdate(game);
+        rankingUtil.updateRanking();
     }
 
     private ModelAndView getGroupGameView(Long eventId, Integer roundNumber) {

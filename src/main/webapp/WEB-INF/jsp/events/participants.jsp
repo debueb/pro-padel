@@ -16,7 +16,7 @@
                         <div class="alert alert-info"><fmt:message key="NoParticipants"/></div>
                     </c:if>
                     <c:forEach var="RankingMapEntry" items="${RankingMap}">
-                        <c:set var="Participant" value="${RankingMapEntry.key}"/>
+                        <c:set var="Participant" value="${RankingMapEntry.participant}"/>
                         <c:set var="Ranking" value="${RankingMapEntry.value}"/>
                         <a href="${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}" class="list-group-item">
                             <div class="list-item-text">${Participant}</div>

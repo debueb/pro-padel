@@ -37,7 +37,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.util.*;
 
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
@@ -307,10 +306,13 @@ public class AdminEventsController extends AdminBaseController<Event> {
             }
 
             //determine ranking
-            Map<Participant, BigDecimal> ranking = rankingUtil.getRankedParticipants(model);
-            SortedMap<Participant, BigDecimal> sortedRanking = SortUtil.sortMap(ranking);
+            List<Ranking> ranking = rankingUtil.getRankedParticipants(model);
+            List<Participant> rankedParticipants = new ArrayList<>();
+            ranking.stream().forEach(r -> {
+                rankedParticipants.add(r.getParticipant());
+            });
 
-            eventsUtil.createKnockoutGames(model, new ArrayList<>(sortedRanking.keySet()));
+            eventsUtil.createKnockoutGames(model, rankedParticipants);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
             ModelAndView mav = getDrawsView(eventId);
@@ -533,6 +535,7 @@ public class AdminEventsController extends AdminBaseController<Event> {
             eventDAO.saveOrUpdate(event);
 
             eventDAO.deleteById(event.getId());
+            rankingUtil.updateRanking();
         } catch (DataIntegrityViolationException e) {
             Event model = (Event) getDAO().findById(id);
             LOG.warn("Attempt to delete " + model + " failed due to " + e);
@@ -611,6 +614,7 @@ public class AdminEventsController extends AdminBaseController<Event> {
     public ModelAndView postDeleteGameView(HttpServletRequest request, @PathVariable("gameId") Long gameId, @RequestParam(value = "redirectUrl", required = false) String redirectUrl) {
         try {
             gameDAO.deleteById(gameId);
+            rankingUtil.updateRanking();
         } catch (DataIntegrityViolationException e) {
             Game model = gameDAO.findById(gameId);
             LOG.warn("Attempt to delete " + model + " failed due to " + e);

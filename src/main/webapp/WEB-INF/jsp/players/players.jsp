@@ -12,7 +12,7 @@
             <div class="panel-body">
                 <div class="list-group">
                     <c:forEach var="RankingMapEntry" items="${RankingMap}">
-                        <c:set var="Player" value="${RankingMapEntry.key}"/>
+                        <c:set var="Player" value="${RankingMapEntry.participant}"/>
                         <c:set var="Ranking" value="${RankingMapEntry.value}"/>
                         <a href="/players/player/${Player.UUID}" class="list-group-item">
                             <div class="list-item-text">${Player}</div>
