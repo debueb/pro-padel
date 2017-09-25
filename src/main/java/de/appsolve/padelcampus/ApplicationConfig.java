@@ -190,7 +190,8 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
     }
 
     /*
-        make sure css files are served with utf-8 encoding
+        make sure css files are served with utf-8 encoding for Spring Boot deployment
+        see web.xml for traditional war file deployment
      */
     @Bean
     public EmbeddedServletContainerCustomizer customizeServletContainer() {
