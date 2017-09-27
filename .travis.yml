@@ -14,4 +14,4 @@ deploy:
   env: Wallsde-env
   on:
     repo: debueb/pro-padel
-    branch: aws
+    branch: master
