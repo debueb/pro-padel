@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.stream.StreamSupport;
 
 /**
  * @author dominik
@@ -113,8 +114,8 @@ public class RankingUtil {
         }
     }
 
-    public List<Ranking> getPlayerRanking(Gender category, Collection<Player> participants) {
-        return getPlayerRanking(category, participants, LocalDate.now());
+    public List<Ranking> getPlayerRanking(Gender gender, Collection<Player> participants) {
+        return getPlayerRanking(gender, participants, LocalDate.now());
     }
 
     public List<Ranking> getPlayerRanking(Gender gender, Collection<Player> participants, final LocalDate date) {
@@ -130,7 +131,8 @@ public class RankingUtil {
             }
         });
         participants.forEach(participant -> {
-            if (!eventRanking.contains(participant)) {
+            boolean participantRankingExists = StreamSupport.stream(eventRanking.spliterator(), false).anyMatch(ranking -> ranking.getParticipant().equals(participant));
+            if (!participantRankingExists) {
                 Ranking ranking = new Ranking(participant, gender, participant.getInitialRankingAsBigDecimal(), date);
                 eventRanking.add(ranking);
             }
@@ -150,7 +152,7 @@ public class RankingUtil {
             }
         }
         List<Ranking> rankings = getPlayerRanking(Gender.male, malePlayers, date);
-        rankings.addAll(getPlayerRanking(Gender.female, femalePlayers));
+        rankings.addAll(getPlayerRanking(Gender.female, femalePlayers, date));
         Collections.sort(rankings);
         return rankings;
     }
