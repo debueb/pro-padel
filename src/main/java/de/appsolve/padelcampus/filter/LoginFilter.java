@@ -66,7 +66,8 @@ public class LoginFilter implements Filter {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-            if (httpRequest.getRequestURI().startsWith(PATH_START_PAGE)) {
+            String requestURI = httpRequest.getRequestURI();
+            if (requestURI.startsWith(PATH_START_PAGE) || requestURI.startsWith("/WEB-INF/jsp/pro")) {
                 sessionUtil.setCustomer(httpRequest, null);
                 chain.doFilter(request, response);
                 return;
