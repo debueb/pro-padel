@@ -23,6 +23,7 @@ import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.spring.OfferOptionCollectionEditor;
 import de.appsolve.padelcampus.utils.BookingUtil;
+import de.appsolve.padelcampus.utils.FormatUtils;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import jersey.repackaged.com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
@@ -101,21 +102,35 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
 
     @Override
     public ModelAndView showIndex(HttpServletRequest request, Pageable pageable, String search) {
+        String startDateStr = request.getParameter("startDate");
+        String endDateStr = request.getParameter("endDate");
         LocalDate startDate = sessionUtil.getBookingListStartDate(request);
         if (startDate == null) {
             startDate = new LocalDate();
         }
+        if (!StringUtils.isEmpty(startDateStr)) {
+            try {
+                startDate = LocalDate.parse(startDateStr, FormatUtils.DATE_HUMAN_READABLE);
+            } catch (IllegalArgumentException e) {
+                //ignore
+            }
+        }
+        sessionUtil.setBookingListStartDate(request, startDate);
+        LocalDate endDate = new LocalDate(startDate);
+        if (!StringUtils.isEmpty(endDateStr)) {
+            try {
+                endDate = LocalDate.parse(endDateStr, FormatUtils.DATE_HUMAN_READABLE);
+            } catch (IllegalArgumentException e) {
+                //ignore
+            }
+        }
+        if (endDate.isBefore(startDate)) {
+            endDate = new LocalDate(startDate);
+        }
+
         DateRange dateRange = new DateRange();
         dateRange.setStartDate(startDate);
-        return getIndexView(dateRange);
-    }
-
-    @RequestMapping(method = POST)
-    public ModelAndView postIndex(HttpServletRequest request, @Valid @ModelAttribute("DateRange") DateRange dateRange) {
-        sessionUtil.setBookingListStartDate(request, dateRange.getStartDate());
-        if (dateRange.getEndDate().isBefore(dateRange.getStartDate())) {
-            dateRange.setEndDate(dateRange.getStartDate());
-        }
+        dateRange.setEndDate(endDate);
         return getIndexView(dateRange);
     }
 
@@ -352,7 +367,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
     }
 
     private ModelAndView getIndexView(DateRange dateRange) {
-        List<Booking> bookings = bookingDAO.findActiveBookingsBetween(dateRange.getStartDate(), dateRange.getStartDate());
+        List<Booking> bookings = bookingDAO.findActiveBookingsBetween(dateRange.getStartDate(), dateRange.getEndDate());
 
         BigDecimal total = new BigDecimal(0);
         for (Booking booking : bookings) {

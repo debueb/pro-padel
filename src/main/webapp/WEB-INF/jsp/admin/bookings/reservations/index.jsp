@@ -18,7 +18,7 @@
                 <h4><fmt:message key="BookingsAndReservations"/></h4>
             </div>
             <div class="panel-body">
-                <spf:form method="POST" modelAttribute="DateRange">
+                <spf:form method="GET" modelAttribute="DateRange">
                     <%-- Start Datum --%>
                     <div class="datepicker-container">
                         <div class="datepicker-text-container">
