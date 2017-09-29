@@ -22,13 +22,25 @@
                     <%-- Start Datum --%>
                     <div class="datepicker-container">
                         <div class="datepicker-text-container">
-                            <div class="datepicker-label"><fmt:message key="GameDate"/> <fmt:message key="GameDate"/></div>
+                            <div class="datepicker-label"><fmt:message key="StartDate"/></div>
                             <span class="fa fa-calendar datepicker-icon"></span>
                             <div class="datepicker-text"></div>
                         </div>
                         <spf:input type="hidden" path="startDate" class="datepicker-input form-control auto-submit" value="${DateRange.startDate}"/>
                         <div class="datepicker" data-show-on-init="false" data-allow-past="true"></div>
                     </div>
+                    <%-- End Datum --%>
+                    <c:if test="${DateRange.startDate ne DateRange.endDate}">
+                        <div class="datepicker-container">
+                            <div class="datepicker-text-container">
+                                <div class="datepicker-label"><fmt:message key="EndDate"/></div>
+                                <span class="fa fa-calendar datepicker-icon"></span>
+                                <div class="datepicker-text"></div>
+                            </div>
+                            <spf:input type="hidden" path="endDate" class="datepicker-input form-control auto-submit" value="${DateRange.endDate}"/>
+                            <div class="datepicker" data-show-on-init="false" data-allow-past="true"></div>
+                        </div>
+                    </c:if>
                 </spf:form>
 
                 <div class="table-responsive" style="margin-top: 40px;">
