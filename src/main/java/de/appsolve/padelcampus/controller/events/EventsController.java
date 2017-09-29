@@ -124,11 +124,9 @@ public class EventsController extends BaseController {
         }
         //for friendly games get the participants from the games
         if (event.getEventType().equals(EventType.FriendlyGames)) {
-            Event eventWithGames = eventDAO.findByIdFetchWithParticipantsAndGamesAndGameParticipantsAndGamePlayers(eventId);
-            if (eventWithGames.getGames() != null) {
-                for (Game game : eventWithGames.getGames()) {
-                    event.getParticipants().addAll(game.getParticipants());
-                }
+            List<Game> eventGames = gameDAO.findByEventWithPlayers(event);
+            for (Game game : eventGames) {
+                event.getParticipants().addAll(game.getParticipants());
             }
         }
         List<Ranking> rankingMap = new ArrayList<>();

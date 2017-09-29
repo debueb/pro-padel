@@ -77,11 +77,6 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI {
     }
 
     @Override
-    public Event findByIdFetchWithParticipantsAndGamesAndGameParticipantsAndGamePlayers(Long id) {
-        return super.findByIdFetchEagerly(id, "participants", "games", "games.participants", "games.participants.players");
-    }
-
-    @Override
     public List<Event> findAllFetchWithParticipants() {
         return super.findAllFetchEagerly("participants");
     }
@@ -94,11 +89,6 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI {
     @Override
     public Page<Event> findAllFetchWithParticipantsAndPlayers(Pageable pageable, Set<Criterion> criterions) {
         return super.findAllFetchEagerly(pageable, criterions, "participants", "participants.players");
-    }
-
-    @Override
-    public List<Event> findAllFetchWithParticipantsAndPlayers() {
-        return super.findAllFetchEagerly("participants", "participants.players");
     }
 
     @Override

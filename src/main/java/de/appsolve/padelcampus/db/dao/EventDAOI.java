@@ -30,8 +30,6 @@ public interface EventDAOI extends BaseEntityDAOI<Event> {
 
     Event findByIdFetchWithParticipantsAndPlayers(Long id);
 
-    Event findByIdFetchWithParticipantsAndGamesAndGameParticipantsAndGamePlayers(Long id);
-
     List<Event> findByParticipant(Participant participant);
 
     List<Event> findAllFetchWithParticipants();
@@ -39,8 +37,6 @@ public interface EventDAOI extends BaseEntityDAOI<Event> {
     Page<Event> findAllFetchWithParticipantsAndPlayers(Pageable pageable);
 
     Page<Event> findAllFetchWithParticipantsAndPlayers(Pageable pageable, Set<Criterion> criterions);
-
-    List<Event> findAllFetchWithParticipantsAndPlayers();
 
     List<Event> findAllUpcomingWithParticipant(Team team);
 
