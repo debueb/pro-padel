@@ -92,15 +92,15 @@ var project = require('./project');
                     $('#offline-msg').show();
                     return false;
                 }
-                
+
                 // Prepare
                 var $this       = $(this),
                     url         = this.href,
                     title       = $this.attr('title') || null,
                     anchorId    = $(this).attr('data-anchor');
-                    
-                //only ajaxify internal links
-                if (!isInternalURL(url) || $this.hasClass('no-ajaxify')){
+
+                // do not ajaxify external links or specially marked links or links within a datepicker calendar
+                if (!isInternalURL(url) || $this.hasClass('no-ajaxify') || $this.parents('.ui-datepicker-calendar').length){
                     return true;
                 }
                 
@@ -131,8 +131,6 @@ var project = require('./project');
                 }
                 
                 var $this       = $(this),
-                    //using location.origin + location.pathname instead of location.href, as location.href may GET contains parameters
-                    //which interfere with the GET parameters that we set below
                     url         = $(this).prop('action') || document.location.origin + document.location.pathname,
                     method      = $this.attr('method'),
                     contentType = $this.attr('enctype') || undefined,
@@ -151,7 +149,11 @@ var project = require('./project');
                 //in order to update the URL in the browser, we construct the URL here
                 //to avoid the ajax call from duplicating all parameters we set the data to null
                 if (method === 'GET'){
-                    url = url + '?' + decodeURIComponent(payload);
+                    // removing parameters as form.action attribute contains parameters by default
+                    if (url.indexOf('?') > 0){
+                        url = url.substr(0, url.indexOf('?'));
+                    }
+                    url += '?' + decodeURIComponent(payload);
                     payload = null;
                 }
                 // Ajaxify this link
