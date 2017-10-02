@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.concurrent.Executor;
 import java.util.stream.StreamSupport;
 
 /**
@@ -51,6 +52,9 @@ public class RankingUtil {
 
     @Autowired
     RankingDAOI rankingDAO;
+
+    @Autowired
+    Executor executor;
 
     public List<Ranking> getTeamRanking(Gender gender, LocalDate date) {
         if (date == null) {
