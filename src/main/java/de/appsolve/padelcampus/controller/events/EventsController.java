@@ -270,7 +270,7 @@ public class EventsController extends BaseController {
         if (user == null) {
             return getLoginView(request, request.getRequestURI());
         }
-        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
         return getAddPullGameView(event, new AddPullGame());
     }
 
@@ -285,7 +285,7 @@ public class EventsController extends BaseController {
         if (user == null) {
             return getLoginView(request, request.getRequestURI());
         }
-        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
         validator.validate(addPullGame, bindingResult);
         if (bindingResult.hasErrors()) {
             return getAddPullGameView(event, addPullGame);
@@ -297,7 +297,8 @@ public class EventsController extends BaseController {
         List<Participant> teams = new ArrayList<>();
         teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam1()));
         teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam2()));
-        for (Game game : event.getGames()) {
+        List<Game> eventGames = gameDAO.findByEventWithPlayers(event);
+        for (Game game : eventGames) {
             if (game.getParticipants().containsAll(teams)) {
                 bindingResult.addError(new ObjectError("id", msg.get("GameAlreadyExists")));
                 return getAddPullGameView(event, addPullGame);
@@ -317,7 +318,7 @@ public class EventsController extends BaseController {
         if (user == null) {
             return getLoginView(request, request.getRequestURI());
         }
-        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
         return getAddFriendlyGameView(event, new AddPullGame());
     }
 
@@ -332,7 +333,7 @@ public class EventsController extends BaseController {
         if (user == null) {
             return getLoginView(request, request.getRequestURI());
         }
-        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
+        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
         validator.validate(addPullGame, bindingResult);
         if (bindingResult.hasErrors()) {
             return getAddFriendlyGameView(event, addPullGame);
