@@ -16,10 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -53,18 +49,24 @@ public class ImagesController extends BaseController {
     @Autowired
     ImageBaseDAOI imageBaseDAO;
 
-    @RequestMapping(value = "image/{sha256}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> showImage(@PathVariable("sha256") String sha256, HttpServletResponse response) {
+    @RequestMapping(value = "image/{sha256}")
+    public ResponseEntity<byte[]> showImage(@PathVariable("sha256") String sha256) {
         Image image = imageBaseDAO.findBySha256(sha256);
         if (image != null && image.getContent() != null) {
             byte[] byteArray = image.getContent();
             ResponseEntity.BodyBuilder builder = ResponseEntity
                     .ok()
                     .cacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
-                    .contentLength(byteArray.length);
+                    .contentLength(byteArray.length)
+                    .contentType(MediaType.IMAGE_PNG);
 
             if (!StringUtils.isEmpty(image.getContentType())) {
-                builder = builder.header("Content-Type", image.getContentType());
+                try {
+                    MediaType mediaType = MediaType.parseMediaType(image.getContentType());
+                    builder.contentType(mediaType);
+                } catch (InvalidMediaTypeException e) {
+                    LOG.warn(e.getMessage(), e);
+                }
             }
             return builder.body(byteArray);
         }

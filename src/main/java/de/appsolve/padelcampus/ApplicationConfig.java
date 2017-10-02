@@ -14,10 +14,7 @@ import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.data.CustomerI;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.external.cloudflare.CloudFlareApiRequestInterceptor;
-import de.appsolve.padelcampus.filter.AdminFilter;
-import de.appsolve.padelcampus.filter.LoginFilter;
-import de.appsolve.padelcampus.filter.WhitespaceFilter;
-import de.appsolve.padelcampus.filter.XSSFilter;
+import de.appsolve.padelcampus.filter.*;
 import de.appsolve.padelcampus.listener.SessionEventListener;
 import de.appsolve.padelcampus.spring.RedirectInterceptor;
 import de.appsolve.padelcampus.spring.SubDomainLocaleResolver;
@@ -29,6 +26,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -200,6 +198,15 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
             mappings.add("css", "text/css;charset=UTF-8");
             container.setMimeMappings(mappings);
         };
+    }
+
+    @Bean
+    public FilterRegistrationBean filterRegistrationBean() {
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        Utf8CharacterEncodingFilter characterEncodingFilter = new Utf8CharacterEncodingFilter();
+        registrationBean.setFilter(characterEncodingFilter);
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return registrationBean;
     }
 
     private Filter xssFilter() {
