@@ -49,7 +49,16 @@ public class ImagesController extends BaseController {
     @Autowired
     ImageBaseDAOI imageBaseDAO;
 
-    @RequestMapping(value = "image/{sha256}")
+    /*
+    Firefox on iOS sends "Accept: image/*;q=0.8" for <link rel="apple-touch-icon" />
+    We need to list all possible Content-Types response headers explicitly
+    Otherwise Spring throws HttpMediaTypeNotAcceptableException
+    Unfortunately, Spring does not look at ResponseEntity Content-Type
+     */
+    @RequestMapping(
+            value = "image/{sha256}",
+            consumes = MediaType.ALL_VALUE,
+            produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, "image/svg+xml"})
     public ResponseEntity<byte[]> showImage(@PathVariable("sha256") String sha256) {
         Image image = imageBaseDAO.findBySha256(sha256);
         if (image != null && image.getContent() != null) {
