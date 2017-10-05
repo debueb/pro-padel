@@ -285,22 +285,11 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
             while (iterator.hasNext()) {
                 CalendarConfig calendarConfig = iterator.next();
                 if (!bookingUtil.isHoliday(model.getStartDate(), calendarConfig)) {
-                    booking.setBlockingTime(new LocalDateTime());
-                    booking.setBookingDate(model.getStartDate());
-                    booking.setBookingTime(model.getStartTime());
-                    booking.setComment(model.getComment());
-                    booking.setDuration(getDuration(model, calendarConfig));
-                    booking.setOffer(offer);
-                    booking.setOfferOptions(model.getOfferOptions());
-                    booking.setPaymentConfirmed(model.getPaymentConfirmed());
-                    booking.setPaymentMethod(PaymentMethod.Reservation);
-                    booking.setPublicBooking(model.getPublicBooking());
-
-                    List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(booking.getBookingDate());
+                    List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(model.getStartDate());
                     //remove the current booking as we want to update it
                     confirmedBookings.remove(booking);
 
-                    OfferDurationPrice offerDurationPrice = bookingUtil.getOfferDurationPrice(calendarConfigs, confirmedBookings, booking.getBookingDate(), booking.getBookingTime(), offer);
+                    OfferDurationPrice offerDurationPrice = bookingUtil.getOfferDurationPrice(calendarConfigs, confirmedBookings, model.getStartDate(), model.getStartTime(), offer);
                     if (offerDurationPrice != null) {
                         BigDecimal price = offerDurationPrice.getDurationPriceMap().get(booking.getDuration().intValue());
                         booking.setAmount(price);
@@ -313,6 +302,16 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
                         Long bookingSlotsLeft = bookingUtil.getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
 
                         if (bookingSlotsLeft >= 1) {
+                            booking.setBlockingTime(new LocalDateTime());
+                            booking.setBookingDate(model.getStartDate());
+                            booking.setBookingTime(model.getStartTime());
+                            booking.setComment(model.getComment());
+                            booking.setDuration(getDuration(model, calendarConfig));
+                            booking.setOffer(offer);
+                            booking.setOfferOptions(model.getOfferOptions());
+                            booking.setPaymentConfirmed(model.getPaymentConfirmed());
+                            booking.setPaymentMethod(PaymentMethod.Reservation);
+                            booking.setPublicBooking(model.getPublicBooking());
                             bookingDAO.saveOrUpdate(booking);
                             return redirectToIndex();
                         }
