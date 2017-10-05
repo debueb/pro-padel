@@ -278,6 +278,8 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
 
             /* only one offer possible */
             Offer offer = model.getOffers().iterator().next();
+
+            /* make sure to not modify booking before we know it can be changed b/c auf auto transaction commit */
             Booking booking = bookingDAO.findById(bookingId);
 
             List<CalendarConfig> calendarConfigs = calendarConfigDAO.findFor(model.getStartDate()); //throws CalendarConfigException
@@ -291,17 +293,16 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
 
                     OfferDurationPrice offerDurationPrice = bookingUtil.getOfferDurationPrice(calendarConfigs, confirmedBookings, model.getStartDate(), model.getStartTime(), offer);
                     if (offerDurationPrice != null) {
-                        BigDecimal price = offerDurationPrice.getDurationPriceMap().get(booking.getDuration().intValue());
-                        booking.setAmount(price);
-
                         TimeSlot timeSlot = new TimeSlot();
-                        timeSlot.setDate(booking.getBookingDate());
-                        timeSlot.setStartTime(booking.getBookingTime());
-                        timeSlot.setEndTime(booking.getBookingEndTime());
+                        timeSlot.setDate(model.getStartDate());
+                        timeSlot.setStartTime(model.getStartTime());
+                        timeSlot.setEndTime(model.getEndTime());
                         timeSlot.setConfig(calendarConfig);
                         Long bookingSlotsLeft = bookingUtil.getBookingSlotsLeft(timeSlot, offer, confirmedBookings);
 
                         if (bookingSlotsLeft >= 1) {
+                            BigDecimal price = offerDurationPrice.getDurationPriceMap().get(booking.getDuration().intValue());
+                            booking.setAmount(price);
                             booking.setBlockingTime(new LocalDateTime());
                             booking.setBookingDate(model.getStartDate());
                             booking.setBookingTime(model.getStartTime());
