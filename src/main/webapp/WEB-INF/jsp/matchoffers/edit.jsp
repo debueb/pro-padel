@@ -11,10 +11,10 @@
             <div class="panel-heading"><h4><fmt:message key="${empty Model.id ? 'NewMatchOffer' : 'EditMatchOffer'}"/></h4></div>
             <div class="panel-body">
                 <c:if test="${empty Model.id}"><p>
-                        <fmt:message key="NewMatchOfferDesc"/></p>
-                    </c:if>
-                    <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
-                        <spf:input type="hidden" path="id"/>
+                    <fmt:message key="NewMatchOfferDesc"/></p>
+                </c:if>
+                <spf:form method="POST" class="form-signin" role="form" modelAttribute="Model">
+                    <spf:input type="hidden" path="id"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
 
                     <%-- Datum --%>
@@ -126,7 +126,7 @@
                             data-abs-locale-search-no-results='${SearchNoResults}'
                             data-abs-locale-status-searching='${StatusSearching}'
                             data-container="body">
-                            <spf:options items="${Model.players}" itemValue="id"/>
+                            <spf:options items="${Model.players}" itemValue="UUID"/>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Participants"/></span>
                     </div>

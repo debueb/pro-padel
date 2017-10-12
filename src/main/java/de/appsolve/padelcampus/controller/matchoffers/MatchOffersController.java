@@ -80,8 +80,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
         binder.registerCustomEditor(Set.class, "players", new CustomCollectionEditor(Set.class) {
             @Override
             protected Object convertElement(Object element) {
-                Long id = Long.parseLong((String) element);
-                return playerDAO.findById(id);
+                return playerDAO.findByUUID((String) element);
             }
         });
     }
