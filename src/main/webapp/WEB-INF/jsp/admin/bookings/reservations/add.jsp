@@ -55,11 +55,11 @@
                             <div class="datepicker-text"></div>
                         </div>
                         <spf:input type="hidden" path="startDate" class="datepicker-input form-control" />
-                        <div class="datepicker" data-show-on-init="false"></div>
+                        <div class="datepicker" data-show-on-init="false" data-dependent-datepicker="#datepicker-enddate"></div>
                     </div>
 
                     <%-- End Datum --%>
-                    <div class="datepicker-container">
+                    <div class="datepicker-container" id="datepicker-enddate">
                         <div class="datepicker-text-container form-center-element">
                             <div class="datepicker-label"><fmt:message key="End"/></div>
                             <span class="fa fa-calendar datepicker-icon"></span>

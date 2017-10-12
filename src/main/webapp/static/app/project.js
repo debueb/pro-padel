@@ -86,16 +86,17 @@ var project = {
         };
 
         $('.datepicker-container').livequery(function () {
-            var datepicker      = $(this).find('.datepicker'),
-                altField        = $(this).find('.datepicker-input'),
-                datePickerIcon  = $(this).find('.datepicker-icon'),
-                textField       = $(this).find('.datepicker-text'),
-                textContainer   = $(this).find('.datepicker-text-container'),
-                maxDate         = $(datepicker).attr('data-max-date'),
-                allowPast       = $(datepicker).attr('data-allow-past'),
-                allowFuture     = $(datepicker).attr('data-allow-future'),
-                dayConfigs      = $(datepicker).attr('data-day-config');
-                
+            var datepicker              = $(this).find('.datepicker'),
+                altField                = $(this).find('.datepicker-input'),
+                datePickerIcon          = $(this).find('.datepicker-icon'),
+                textField               = $(this).find('.datepicker-text'),
+                textContainer           = $(this).find('.datepicker-text-container'),
+                maxDate                 = $(datepicker).attr('data-max-date'),
+                allowPast               = $(datepicker).attr('data-allow-past'),
+                allowFuture             = $(datepicker).attr('data-allow-future'),
+                dayConfigs              = $(datepicker).attr('data-day-config'),
+                dependentDatePickerId   = $(datepicker).attr('data-dependent-datepicker');
+
             if (!maxDate) {
                 //no maximum date by default
                 maxDate = null;
@@ -123,13 +124,26 @@ var project = {
                 prevText: "",
                 minDate: allowPast ? null : new Date(),
                 maxDate: allowFuture === 'false' ? new Date(): maxDate,
-                onSelect: function (dateText) {
+                onSelect: function (dateText, sourceDatePicker) {
                     textField.text(dateText);
                     datepicker.slideUp();
                     /* changes on hidden input fields do not fire automatically, 
                      * MutationObserver does not work on old Androids */
                     if (altField){
                         $(altField).trigger('change');
+                    }
+                    if (dependentDatePickerId) {
+                        var targetDatePickerContainer    = $(dependentDatePickerId),
+                            targetDatePicker             = targetDatePickerContainer.find('.datepicker'),
+                            targetDatePickerFormat       = targetDatePicker.datepicker("option", "dateFormat"),
+                            targetTextField              = targetDatePickerContainer.find('.datepicker-text'),
+                            sourceDate                   = new Date(sourceDatePicker.selectedYear, sourceDatePicker.selectedMonth, sourceDatePicker.selectedDay),
+                            sourceDateAltFieldValue      = sourceDatePicker.settings.altField.val();
+
+                            targetDatePicker.datepicker("setDate", dateText);
+                            targetDatePicker.datepicker("option", "altField", sourceDateAltFieldValue);
+                            targetTextField.text($.datepicker.formatDate(targetDatePickerFormat, sourceDate));
+
                     }
                 },
                 beforeShowDay: function (date) {
