@@ -289,6 +289,13 @@ var project = {
             if (!!$select.attr('data-selected-text-format')){
                 options.selectedTextFormat = 'count > 2';
             }
+            if (!!$select.attr('data-dependent-select')){
+                $select.on('changed.bs.select', function(event, clickedIndex){
+                    var $targetSelect = $($select.attr('data-dependent-select'));
+                    var index = Math.min(clickedIndex + 1, $targetSelect.find('option').length - 1);
+                    $targetSelect.selectpicker('val', $targetSelect.find('option').get(index).value);
+                });
+            }
             $select.selectpicker(options);
         });
         

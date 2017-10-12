@@ -71,7 +71,7 @@
 
                     <%-- Von --%>
                     <span class="relative input-hour">
-                        <spf:select path="startTimeHour" class="select-simple form-left-element form-center-element" data-container="body">
+                        <spf:select path="startTimeHour" class="select-simple form-left-element form-center-element" data-dependent-select="#endTimeHour" data-container="body">
                             <c:forEach var="hour" begin="0" end="23">
                                 <fmt:formatNumber value="${hour}" minIntegerDigits="2" var="hour"/>
                                 <spf:option value="${hour}"/>
