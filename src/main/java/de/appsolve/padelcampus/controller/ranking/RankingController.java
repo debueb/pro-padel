@@ -76,7 +76,7 @@ public class RankingController extends BaseController {
             @PathVariable() String participantUUID,
             @PathVariable(required = false) LocalDate date
     ) {
-        ModelAndView mav = new ModelAndView("ranking/ranking");
+        ModelAndView mav = new ModelAndView(getPath() + "ranking/ranking");
         mav.addObject("gender", gender);
         mav.addObject("category", category);
         List<Ranking> rankings = null;
@@ -100,7 +100,7 @@ public class RankingController extends BaseController {
     }
 
     protected ModelAndView getIndexView(String title, String description) {
-        ModelAndView mav = new ModelAndView("ranking/index");
+        ModelAndView mav = new ModelAndView(getPath() + "ranking/index");
         mav.addObject("path", getPath());
         mav.addObject("title", title);
         mav.addObject("description", description);

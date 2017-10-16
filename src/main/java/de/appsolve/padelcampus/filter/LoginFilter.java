@@ -23,13 +23,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import static de.appsolve.padelcampus.constants.Constants.COOKIE_LOGIN_TOKEN;
 
 @Component("loginFilter")
 public class LoginFilter implements Filter {
 
-    private static final String PATH_START_PAGE = "/pro";
     @Autowired
     CustomerDAOI customerDAO;
     @Autowired
@@ -40,6 +40,13 @@ public class LoginFilter implements Filter {
     ModuleUtil moduleUtil;
     @Autowired
     LoginUtil loginUtil;
+
+    private static final String PATH_START_PAGE = "/pro";
+
+    private final Pattern[] NO_FILTER_LIST = new Pattern[]{
+            Pattern.compile("^/pro.*"),
+            Pattern.compile("^/WEB-INF/jsp/pro/.*\\.jsp")
+    };
 
     /**
      * @param config
@@ -65,12 +72,13 @@ public class LoginFilter implements Filter {
         if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             HttpServletResponse httpResponse = (HttpServletResponse) response;
-
             String requestURI = httpRequest.getRequestURI();
-            if (requestURI.startsWith(PATH_START_PAGE) || requestURI.startsWith("/WEB-INF/jsp/pro")) {
-                sessionUtil.setCustomer(httpRequest, null);
-                chain.doFilter(request, response);
-                return;
+            for (Pattern pattern : NO_FILTER_LIST) {
+                if (pattern.matcher(requestURI).matches()) {
+                    sessionUtil.setCustomer(httpRequest, null);
+                    chain.doFilter(request, response);
+                    return;
+                }
             }
 
             CustomerI customer = sessionUtil.getCustomer(httpRequest);
