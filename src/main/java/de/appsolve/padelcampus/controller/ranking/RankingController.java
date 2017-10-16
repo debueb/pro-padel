@@ -30,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -92,9 +93,8 @@ public class RankingController extends BaseController {
         return mav;
     }
 
-    @RequestMapping("{gender}/{participantUUID}/history")
+    @RequestMapping("{participantUUID}/history")
     public ModelAndView getRankingHistory(
-            @PathVariable() Gender gender,
             @PathVariable() String participantUUID
     ) throws JsonProcessingException {
         Participant participant = participantDAO.findByUUID(participantUUID);
@@ -103,30 +103,24 @@ public class RankingController extends BaseController {
         }
 
         LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.minusMonths(3);
-        List<Ranking> playerRankings = rankingUtil.getPlayerRanking(gender, participant, startDate, endDate);
-        ModelAndView mav = new ModelAndView(getPath() + "ranking/history");
-        mav.addObject("Rankings", playerRankings);
-        mav.addObject("Participant", participant);
-        Map<Long, BigDecimal> map = new TreeMap<>();
-        BigDecimal min = null;
-        BigDecimal max = null;
-        for (Ranking ranking : playerRankings) {
-            LocalDate date = ranking.getDate();
-            Long millis = date.toDateTimeAtStartOfDay().getMillis();
-            BigDecimal value = ranking.getValue().setScale(0, RoundingMode.HALF_UP);
-            if (min == null) {
-                min = value;
-                max = value;
-            } else {
-                min = value.min(min);
-                max = value.max(max);
+        LocalDate startDate = endDate.minusDays(365);
+        Map<Gender, Map<Long, BigDecimal>> genderDateRankingMap = new TreeMap<>();
+        for (Gender gender : EnumSet.of(Gender.male, Gender.female, Gender.unisex)) {
+            List<Ranking> rankings = rankingUtil.getPlayerRanking(gender, participant, startDate, endDate);
+            if (rankings != null && !rankings.isEmpty()) {
+                Map<Long, BigDecimal> dateRankingMap = new TreeMap<>();
+                for (Ranking ranking : rankings) {
+                    LocalDate date = ranking.getDate();
+                    Long millis = date.toDateTimeAtStartOfDay().getMillis();
+                    dateRankingMap.put(millis, ranking.getValue().setScale(0, RoundingMode.HALF_UP));
+                }
+                genderDateRankingMap.put(gender, dateRankingMap);
             }
-            map.put(millis, value);
         }
-        mav.addObject("chartData", objectMapper.writeValueAsString(map));
-        mav.addObject("min", min.intValue());
-        mav.addObject("max", max.intValue());
+        ModelAndView mav = new ModelAndView(getPath() + "ranking/history");
+        mav.addObject("Participant", participant);
+        mav.addObject("GenderDateRankingMap", genderDateRankingMap);
+        mav.addObject("ChartMap", objectMapper.writeValueAsString(genderDateRankingMap));
         return mav;
     }
 
