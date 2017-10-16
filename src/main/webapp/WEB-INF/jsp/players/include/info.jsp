@@ -31,7 +31,7 @@
             </c:when>
             <c:otherwise>
                 <div class="list-group unit-2">
-                    <a href="/ranking/${Player.gender}/individual/${Player.UUID}" class="list-group-item" data-anchor="#player-${Player.UUID}">
+                    <a href="/ranking/${Player.gender}/${Player.UUID}/history" class="list-group-item" data-anchor="#player-${Player.UUID}">
                         <div class="list-item-text"><fmt:message key="Ranking"/></div>
                         <div class="list-group-item-icon"><c:choose>
                             <c:when test="${not empty RankingValue}">

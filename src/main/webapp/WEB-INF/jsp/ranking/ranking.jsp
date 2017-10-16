@@ -35,7 +35,7 @@
                                             <c:set var="rank" value="${Ranking.value == lastRanking ? rank : status.index+1}"/>
                                             <td class="text-center ${RowClass}">${rank}</td>
                                             <td class="${RowClass}"><a href="${hostPrefix}${Participant.discriminatorValue == 'Player' ? '/players/player/' : '/teams/team/'}${Participant.UUID}">${Participant}</a></td>
-                                            <td class="text-center ${RowClass}">${Ranking.value}</td>
+                                            <td class="text-center ${RowClass}"><a href="${hostPrefix}/ranking/${gender}/${Participant.UUID}/history">${Ranking.value}</a></td>
                                         </tr>
                                         <c:set var="lastRanking" value="${Ranking.value}"/>
                                     </c:forEach>

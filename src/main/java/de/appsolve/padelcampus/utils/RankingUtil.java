@@ -25,7 +25,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.concurrent.Executor;
 import java.util.stream.StreamSupport;
 
 /**
@@ -52,9 +51,6 @@ public class RankingUtil {
 
     @Autowired
     RankingDAOI rankingDAO;
-
-    @Autowired
-    Executor executor;
 
     public List<Ranking> getTeamRanking(Gender gender, LocalDate date) {
         if (date == null) {
@@ -118,10 +114,6 @@ public class RankingUtil {
         }
     }
 
-    public List<Ranking> getPlayerRanking(Gender gender, Collection<Player> participants) {
-        return getPlayerRanking(gender, participants, LocalDate.now());
-    }
-
     public List<Ranking> getPlayerRanking(Gender gender, Collection<Player> participants, final LocalDate date) {
         List<Ranking> rankings = getRanking(gender, date);
         List<Ranking> eventRanking = new ArrayList<>();
@@ -159,6 +151,10 @@ public class RankingUtil {
         rankings.addAll(getPlayerRanking(Gender.female, femalePlayers, date));
         Collections.sort(rankings);
         return rankings;
+    }
+
+    public List<Ranking> getPlayerRanking(Gender gender, Participant participant, LocalDate startDate, LocalDate endDate) {
+        return rankingDAO.findByParticipantBetweenDates(participant, gender, startDate, endDate);
     }
 
     public List<Ranking> getTeamRanking(Collection<Team> teams, LocalDate date) {
