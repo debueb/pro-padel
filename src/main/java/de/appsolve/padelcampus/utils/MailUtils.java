@@ -2,12 +2,10 @@ package de.appsolve.padelcampus.utils;
 
 import com.sparkpost.Client;
 import com.sparkpost.exception.SparkPostException;
-import com.sparkpost.model.AddressAttributes;
-import com.sparkpost.model.RecipientAttributes;
-import com.sparkpost.model.TemplateContentAttributes;
-import com.sparkpost.model.TransmissionWithRecipientArray;
+import com.sparkpost.model.*;
 import com.sparkpost.resources.ResourceTransmissions;
 import com.sparkpost.transport.RestConnection;
+import de.appsolve.padelcampus.data.Attachment;
 import de.appsolve.padelcampus.data.CustomerI;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
@@ -21,7 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author dominik
@@ -74,6 +74,9 @@ public class MailUtils {
                 contentAttributes.setSubject(mail.getSubject());
                 contentAttributes.setHtml(getHTML(mail.getBody()));
                 contentAttributes.setText(mail.getBody());
+                if (mail.getAttachments() != null) {
+                    contentAttributes.setAttachments(getAttachmentAttributes(mail.getAttachments()));
+                }
             } else {
                 contentAttributes.setTemplateId(mail.getTemplateId());
             }
@@ -85,6 +88,16 @@ public class MailUtils {
         } catch (SparkPostException e) {
             throw new MailException(e.getMessage(), e);
         }
+    }
+
+    private List<AttachmentAttributes> getAttachmentAttributes(Set<Attachment> attachments) {
+        return attachments.stream().map(attachment -> {
+            AttachmentAttributes attributes = new AttachmentAttributes();
+            attributes.setName(attachment.getName());
+            attributes.setType(attachment.getType());
+            attributes.setData(attachment.getData());
+            return attributes;
+        }).collect(Collectors.toList());
     }
 
     private String getHTML(String string) {
