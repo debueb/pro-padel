@@ -8,6 +8,7 @@ package de.appsolve.padelcampus.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
+import com.paypal.base.codec.binary.Base64;
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.PaymentMethod;
@@ -21,6 +22,7 @@ import de.jollyday.HolidayManager;
 import de.jollyday.ManagerParameters;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
@@ -33,6 +35,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static de.appsolve.padelcampus.constants.Constants.*;
@@ -43,7 +46,7 @@ import static de.appsolve.padelcampus.constants.Constants.*;
 @Component
 public class BookingUtil {
 
-    private static final Logger log = Logger.getLogger(BookingUtil.class);
+    private static final Logger LOG = Logger.getLogger(BookingUtil.class);
 
     @Autowired
     Msg msg;
@@ -381,6 +384,7 @@ public class BookingUtil {
                 RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
                 RequestUtil.getBaseURL(request)}));
         mail.addRecipient(booking.getPlayer());
+        mail.setAttachments(getAttachments(booking));
         mailUtils.send(mail, request);
     }
 
@@ -399,6 +403,7 @@ public class BookingUtil {
                 RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
                 RequestUtil.getBaseURL(request)}));
         mail.addRecipient(booking.getPlayer());
+        mail.setAttachments(getAttachments(booking));
         mailUtils.send(mail, request);
     }
 
@@ -607,4 +612,43 @@ public class BookingUtil {
         }
         return paymentMethods;
     }
+
+    private Set<Attachment> getAttachments(Booking booking) {
+        Set<Attachment> attachments = new HashSet<>();
+        Attachment attachment = getCalendarAttachment(booking);
+        if (attachment != null) {
+            attachments.add(attachment);
+        }
+        return attachments;
+    }
+
+    private Attachment getCalendarAttachment(Booking booking) {
+        try {
+            LocalDate startLocalDate = booking.getEvent() == null ? booking.getBookingDate() : booking.getEvent().getStartDate();
+            //DateTime startUtcDate = startLocalDate.toDateTimeAtStartOfDay(Constants.DEFAULT_TIMEZONE);
+            LocalTime startTime = booking.getEvent() == null ? booking.getBookingTime() : booking.getEvent().getStartTime();
+            LocalTime endTime = booking.getEvent() == null ? booking.getBookingEndTime() : booking.getEvent().getStartTime().plusHours(2);
+            String calendarEntryName = booking.getEvent() == null ? booking.getOffer().getName() : booking.getEvent().getName();
+
+            String organizerName = booking.getPlayer().toString();
+            String organizerEmail = booking.getPlayer().getEmail();
+            String summary = String.format("%s - %s", calendarEntryName, booking.getCustomer().getName());
+            String dtstamp = FormatUtils.DATE_TIME_MACHINE_READABLE.print(DateTime.now(Constants.DEFAULT_TIMEZONE));
+            String dtstart = FormatUtils.DATE_MACHINE_READABLE.print(startLocalDate) + FormatUtils.TIME_MACHINE_READABLE.print(startTime);
+            String dtend = FormatUtils.DATE_MACHINE_READABLE.print(startLocalDate) + FormatUtils.TIME_MACHINE_READABLE.print(endTime);
+            String uid = booking.getUUID().toString();
+            String calendarTemplate = FileUtil.getFileContents("calendar_template.ics");
+            String data = String.format(calendarTemplate, organizerName, organizerName, organizerEmail, summary, summary, dtstamp, DEFAULT_TIMEZONE_STRING, dtstart, DEFAULT_TIMEZONE_STRING, dtend, uid);
+
+            Attachment attachment = new Attachment();
+            attachment.setType("text/calendar");
+            attachment.setName(String.format("%s %s.ics", booking.getCustomer().getDomainName(), calendarEntryName.replace(" ", "_")));
+            attachment.setData(Base64.encodeBase64String(data.getBytes(StandardCharsets.UTF_8)));
+            return attachment;
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return null;
+    }
+
 }

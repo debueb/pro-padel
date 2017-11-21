@@ -26,6 +26,11 @@
                         <jsp:param name="icon" value="soccer-ball-o"/>
                     </jsp:include>
                     <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/ranking/${user.UUID}/history"/>
+                        <jsp:param name="key" value="MyRanking"/>
+                        <jsp:param name="icon" value="line-chart"/>
+                    </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/account/changepassword"/>
                         <jsp:param name="key" value="ChangePassword"/>
                         <jsp:param name="icon" value="lock"/>

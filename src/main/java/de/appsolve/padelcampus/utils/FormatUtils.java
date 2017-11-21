@@ -28,6 +28,10 @@ public class FormatUtils {
     public static final DateTimeFormatter TIME_HUMAN_READABLE = DateTimeFormat.forPattern("HH:mm").withZone(DEFAULT_TIMEZONE);
     public static final DateTimeFormatter DATE_TIME_HUMAN_READABLE = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm").withZone(DEFAULT_TIMEZONE);
 
+    public static final DateTimeFormatter DATE_MACHINE_READABLE = DateTimeFormat.forPattern("yyyyMMdd");
+    public static final DateTimeFormatter TIME_MACHINE_READABLE = DateTimeFormat.forPattern("'T'HHmmss");
+    public static final DateTimeFormatter DATE_TIME_MACHINE_READABLE = DateTimeFormat.forPattern("yyyyMMdd'T'HHmmss");
+
     public static final DecimalFormat TWO_FRACTIONAL_DIGITS_FORMAT;
 
     static {
