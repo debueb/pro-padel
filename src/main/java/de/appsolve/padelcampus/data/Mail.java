@@ -28,6 +28,8 @@ public class Mail {
 
     private Set<EmailContact> recipients;
 
+    private Set<Attachment> attachments;
+
     public String getFrom() {
         return from;
     }
@@ -81,6 +83,14 @@ public class Mail {
         Set<EmailContact> contacts = getRecipients();
         contacts.add(contact);
         setRecipients(contacts);
+    }
+
+    public Set<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(Set<Attachment> attachments) {
+        this.attachments = attachments;
     }
 
     @Override

@@ -88,7 +88,7 @@
                             <div class="datepicker-text"></div>
                         </div>
                         <spf:input type="hidden" path="startDate" class="datepicker-input form-control" value="${Model.startDate}" />
-                        <div class="datepicker" data-show-on-init="false" data-allow-past="true"></div>
+                        <div class="datepicker" data-show-on-init="false" data-allow-past="true" data-dependent-datepicker="#datepicker-enddate"></div>
                     </div>
 
                     <%-- Von --%>
@@ -113,7 +113,7 @@
 
                     <div class="clearfix"></div>
 
-                    <div class="datepicker-container">
+                    <div class="datepicker-container" id="datepicker-enddate">
                         <div class="datepicker-text-container form-center-element">
                             <div class="datepicker-label"><fmt:message key="End"/></div>
                             <span class="fa fa-calendar datepicker-icon"></span>
