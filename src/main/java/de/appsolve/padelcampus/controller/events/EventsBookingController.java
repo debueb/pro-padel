@@ -139,6 +139,9 @@ public class EventsBookingController extends BaseController {
                         if (partner == null) {
                             throw new Exception(msg.get("ChoosePartner"));
                         }
+                        if (partner.equals(user)) {
+                            throw new Exception(msg.get("ChooseDifferentPartner"));
+                        }
                     }
 
                     Set<Player> participants = new HashSet<>();
@@ -265,7 +268,7 @@ public class EventsBookingController extends BaseController {
                         team = new Team();
                         team.setPlayers(players);
                         team.setName(TeamUtil.getTeamName(team));
-                        teamDAO.saveOrUpdate(team);
+                        team = teamDAO.saveOrUpdate(team);
                     }
 
                     //add team to participant list
