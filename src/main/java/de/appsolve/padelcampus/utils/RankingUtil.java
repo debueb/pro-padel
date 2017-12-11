@@ -8,18 +8,14 @@ package de.appsolve.padelcampus.utils;
 import de.appsolve.padelcampus.comparators.GameByStartDateComparator;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.data.ScoreEntry;
-import de.appsolve.padelcampus.db.dao.GameDAOI;
-import de.appsolve.padelcampus.db.dao.RankingDAOI;
-import de.appsolve.padelcampus.db.dao.TeamDAOI;
+import de.appsolve.padelcampus.db.dao.*;
 import de.appsolve.padelcampus.db.model.*;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -51,6 +47,15 @@ public class RankingUtil {
 
     @Autowired
     RankingDAOI rankingDAO;
+
+    @Autowired
+    CustomerDAOI customerDAO;
+
+    @Autowired
+    GameBaseDAOI gameBaseDAO;
+
+    @Autowired
+    RankingBaseDAOI rankingBaseDAO;
 
     public List<Ranking> getTeamRanking(Gender gender, LocalDate date) {
         if (date == null) {
@@ -89,12 +94,25 @@ public class RankingUtil {
         return rankings;
     }
 
-    @Async
-    @Transactional
     public void updateRanking() {
-        LocalDate date = LocalDate.now();
-        for (Gender gender : Gender.values()) {
-            updateRanking(gender, date);
+        for (Customer customer : customerDAO.findAll()) {
+            LocalDate date = LocalDate.now();
+            for (Gender gender : Gender.values()) {
+                try {
+                    List<Ranking> existingRankings = rankingBaseDAO.findByGenderAndDate(gender, date, customer);
+                    LOG.info(String.format("updating ranking for [customer: %s, gender: %s, date: %s, ranking count: %s] - start", customer, gender, date.toString(), existingRankings.size()));
+                    List<Game> games = getGamesInLastYearSince(gender, date, customer);
+                    List<Ranking> rankings = getRanking(games, gender, date);
+                    rankings.forEach(r -> r.setCustomer(customer));
+                    rankingBaseDAO.delete(existingRankings);
+                    rankingBaseDAO.saveOrUpdate(rankings);
+                    LOG.info(String.format("updating ranking for [customer: %s, gender: %s, date: %s, ranking count: %s] - end", customer, gender, date.toString(), rankings.size()));
+                } catch (Exception e) {
+                    LOG.error(e, e);
+                }
+                System.gc();
+            }
+            System.gc();
         }
     }
 
@@ -443,6 +461,12 @@ public class RankingUtil {
     private List<Game> getGamesInLastYearSince(Gender gender, LocalDate date) {
         LocalDate since = date.minusDays(ELO_MAX_DAYS);
         List<Game> games = gameDAO.findAllYoungerThanForGenderWithPlayers(since, gender);
+        return games;
+    }
+
+    private List<Game> getGamesInLastYearSince(Gender gender, LocalDate date, Customer customer) {
+        LocalDate since = date.minusDays(ELO_MAX_DAYS);
+        List<Game> games = gameBaseDAO.findAllYoungerThanForGenderWithPlayers(since, gender, customer);
         return games;
     }
 }

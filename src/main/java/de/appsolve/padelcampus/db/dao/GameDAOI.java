@@ -38,5 +38,5 @@ public interface GameDAOI extends BaseEntityDAOI<Game> {
 
     List<Game> findByParticipantAndEventWithScoreOnly(Participant participant, Event event);
 
-    public List<Game> findAllYoungerThanForGenderWithPlayers(LocalDate date, Gender gender);
+    List<Game> findAllYoungerThanForGenderWithPlayers(LocalDate date, Gender gender);
 }
