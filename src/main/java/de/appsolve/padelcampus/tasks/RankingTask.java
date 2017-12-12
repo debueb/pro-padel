@@ -27,8 +27,7 @@ public class RankingTask {
     @Autowired
     ErrorReporter errorReporter;
 
-    //@Scheduled(cron = "0 4 4 * * *") //second minute hour day month year, * = any, */5 = every 5
-    @Scheduled(cron = "0 * * * * *") //second minute hour day month year, * = any, */5 = every 5
+    @Scheduled(cron = "0 2 2 * * *") //second minute hour day month year, * = any, */5 = every 5
     public void updateRanking() {
         try {
             rankingUtil.updateRanking();
