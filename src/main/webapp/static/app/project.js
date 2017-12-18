@@ -127,7 +127,7 @@ var project = {
                 onSelect: function (dateText, sourceDatePicker) {
                     textField.text(dateText);
                     datepicker.slideUp();
-                    /* changes on hidden input fields do not fire automatically, 
+                    /* changes on hidden input fields do not fire automatically,
                      * MutationObserver does not work on old Androids */
                     if (altField){
                         $(altField).trigger('change');
@@ -140,10 +140,8 @@ var project = {
                             sourceDate                   = new Date(sourceDatePicker.selectedYear, sourceDatePicker.selectedMonth, sourceDatePicker.selectedDay),
                             sourceDateAltFieldValue      = sourceDatePicker.settings.altField.val();
 
-                            targetDatePicker.datepicker("setDate", dateText);
-                            targetDatePicker.datepicker("option", "altField", sourceDateAltFieldValue);
-                            targetTextField.text($.datepicker.formatDate(targetDatePickerFormat, sourceDate));
-
+                        targetDatePicker.datepicker("setDate", dateText);
+                        targetTextField.text($.datepicker.formatDate(targetDatePickerFormat, sourceDate));
                     }
                 },
                 beforeShowDay: function (date) {
