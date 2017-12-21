@@ -22,11 +22,11 @@
                             </c:forEach>
                         </thead>
                         <tbody>
-                            <c:forEach begin="1" end="2" var="teamNumber" varStatus="teamStatus">
+                            <c:forEach items="${Model.teams}" varStatus="teamStatus">
                                 <tr>
                                     <td>
                                         <spf:select 
-                                            path="team${teamNumber}.players"
+                                            path="teams[${teamStatus.index}].players"
                                             class="select-multiple form-control ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'} form-left-element" 
                                             data-container="body"
                                             data-live-search="true"
@@ -36,7 +36,7 @@
                                     </td>
                                     <c:forEach begin="1" end="${Event.numberOfSets}" var="setNumber" varStatus="status">
                                         <td>
-                                            <c:set var="paramName" value="set-${setNumber}-team-${teamNumber}"/>
+                                            <c:set var="paramName" value="set-${setNumber}-team-${teamStatus.index}"/>
                                             <select name="${paramName}" class="select-simple form-control ${status.last ? 'form-right-element' : 'form-center-element'} ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'}" data-container="body" data-live-search="false">
                                                 <option value="-1">-</option>
                                                 <c:choose>

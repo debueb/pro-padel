@@ -8,31 +8,26 @@ package de.appsolve.padelcampus.data;
 import de.appsolve.padelcampus.db.model.Team;
 
 import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author dominik
  */
 public class AddTeamGame {
 
+    public AddTeamGame() {
+        this.teams = Arrays.asList(new Team(), new Team());
+    }
+
     @Valid
-    private Team team1;
+    List<Team> teams;
 
-    @Valid
-    private Team team2;
-
-    public Team getTeam1() {
-        return team1;
+    public List<Team> getTeams() {
+        return teams;
     }
 
-    public void setTeam1(Team team1) {
-        this.team1 = team1;
-    }
-
-    public Team getTeam2() {
-        return team2;
-    }
-
-    public void setTeam2(Team team2) {
-        this.team2 = team2;
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
     }
 }

@@ -29,12 +29,12 @@
                             <fmt:message key="StatusInitialized" var="StatusInitialized"/>
                             <fmt:message key="SearchNoResults" var="SearchNoResults"/>
                             <fmt:message key="StatusSearching" var="StatusSearching"/>
-                            <c:forEach begin="1" end="2" var="teamNumber" varStatus="teamStatus">
+                            <c:forEach items="${Model.teams}" varStatus="teamStatus">
                                 <tr>
                                     <td>
                                         <div class="relative">
-                                        <spf:select 
-                                            path="team${teamNumber}.players"
+                                        <spf:select
+                                            path="teams[${teamStatus.index}].players"
                                             class="form-control form-left-element ${teamStatus.first ? 'form-top-element' : 'form-bottom-element'} select-ajax-search" 
                                             data-container="body" 
                                             data-live-search="true"
@@ -47,13 +47,13 @@
                                             data-abs-locale-search-no-results='${SearchNoResults}'
                                             data-abs-locale-status-searching='${StatusSearching}'
                                             data-abs-ajax-url="/api/players/options">
-                                            <spf:options items="${Model.team1}" itemValue="UUID"/>
+                                            <spf:options items="${Model.teams[teamStatus.index].players}" itemValue="UUID"/>
                                         </spf:select>
                                     </div>
                                     </td>
                                     <c:forEach begin="1" end="${Event.numberOfSets}" var="setNumber" varStatus="status">
                                         <td>
-                                            <c:set var="paramName" value="set-${setNumber}-team-${teamNumber}"/>
+                                            <c:set var="paramName" value="set-${setNumber}-team-${teamStatus.index}"/>
                                             <select name="${paramName}" class="select-simple form-control ${status.last ? 'form-right-element' : 'form-center-element'} ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'}" data-container="body" data-live-search="false">
                                                 <option value="-1">-</option>
                                                 <c:choose>

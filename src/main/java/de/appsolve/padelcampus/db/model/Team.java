@@ -42,7 +42,7 @@ public class Team extends Participant {
     }
 
     public Set<Player> getPlayers() {
-        return players == null ? new HashSet<Player>() : players;
+        return players == null ? new HashSet<>() : players;
     }
 
     public void setPlayers(Set<Player> players) {

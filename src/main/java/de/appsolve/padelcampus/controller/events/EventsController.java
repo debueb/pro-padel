@@ -16,7 +16,7 @@ import de.appsolve.padelcampus.db.dao.*;
 import de.appsolve.padelcampus.db.model.*;
 import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import de.appsolve.padelcampus.spring.CommunityPropertyEditor;
-import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
+import de.appsolve.padelcampus.spring.PlayerPropertyEditor;
 import de.appsolve.padelcampus.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -67,14 +67,13 @@ public class EventsController extends BaseController {
     @Autowired
     SessionUtil sessionUtil;
     @Autowired
-    PlayerCollectionEditor playerCollectionEditor;
+    PlayerPropertyEditor playerPropertyEditorEditor;
     @Autowired
     CommunityPropertyEditor communityPropertyEditor;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(Set.class, "team1.players", playerCollectionEditor);
-        binder.registerCustomEditor(Set.class, "team2.players", playerCollectionEditor);
+        binder.registerCustomEditor(Player.class, playerPropertyEditorEditor);
         binder.registerCustomEditor(Community.class, communityPropertyEditor);
     }
 
@@ -279,13 +278,13 @@ public class EventsController extends BaseController {
         if (bindingResult.hasErrors()) {
             return getAddPullGameView(event, addTeamGame);
         }
-        if (!Collections.disjoint(addTeamGame.getTeam1().getPlayers(), addTeamGame.getTeam2().getPlayers())) {
+        if (!Collections.disjoint(addTeamGame.getTeams().get(0).getPlayers(), addTeamGame.getTeams().get(1).getPlayers())) {
             bindingResult.addError(new ObjectError("id", msg.get("ChooseDistinctPlayers")));
             return getAddPullGameView(event, addTeamGame);
         }
         List<Participant> teams = new ArrayList<>();
-        teams.add(teamDAO.findOrCreateTeam(addTeamGame.getTeam1().getPlayers()));
-        teams.add(teamDAO.findOrCreateTeam(addTeamGame.getTeam2().getPlayers()));
+        teams.add(teamDAO.findOrCreateTeam(addTeamGame.getTeams().get(0).getPlayers()));
+        teams.add(teamDAO.findOrCreateTeam(addTeamGame.getTeams().get(1).getPlayers()));
         List<Game> eventGames = gameDAO.findByEventWithPlayers(event);
         for (Game game : eventGames) {
             if (game.getParticipants().containsAll(teams)) {
@@ -327,13 +326,13 @@ public class EventsController extends BaseController {
         if (bindingResult.hasErrors()) {
             return getAddFriendlyGameView(event, addTeamGame);
         }
-        if (!Collections.disjoint(addTeamGame.getTeam1().getPlayers(), addTeamGame.getTeam2().getPlayers())) {
+        if (!Collections.disjoint(addTeamGame.getTeams().get(0).getPlayers(), addTeamGame.getTeams().get(1).getPlayers())) {
             bindingResult.addError(new ObjectError("id", msg.get("ChooseDistinctPlayers")));
             return getAddFriendlyGameView(event, addTeamGame);
         }
         List<Participant> teams = new ArrayList<>();
-        teams.add(teamDAO.findOrCreateTeam(addTeamGame.getTeam1().getPlayers()));
-        teams.add(teamDAO.findOrCreateTeam(addTeamGame.getTeam2().getPlayers()));
+        teams.add(teamDAO.findOrCreateTeam(addTeamGame.getTeams().get(0).getPlayers()));
+        teams.add(teamDAO.findOrCreateTeam(addTeamGame.getTeams().get(1).getPlayers()));
 
         saveGame(event, teams, request);
 
@@ -373,15 +372,15 @@ public class EventsController extends BaseController {
             if (bindingResult.hasErrors()) {
                 return getAddCommunityGameView(event, addTeamGame);
             }
-            if (!Collections.disjoint(addTeamGame.getTeam1().getPlayers(), addTeamGame.getTeam2().getPlayers())) {
+            if (!Collections.disjoint(addTeamGame.getTeams().get(0).getPlayers(), addTeamGame.getTeams().get(1).getPlayers())) {
                 throw new Exception(msg.get("ChooseDistinctPlayers"));
             }
-            if (addTeamGame.getTeam1().getCommunity().equals(addTeamGame.getTeam2().getCommunity())) {
+            if (addTeamGame.getTeams().get(0).getCommunity().equals(addTeamGame.getTeams().get(1).getCommunity())) {
                 throw new Exception(msg.get("ChooseDistinctCommunities"));
             }
             List<Participant> teams = new ArrayList<>();
-            teams.add(findOrUpdateTeam(addTeamGame.getTeam1()));
-            teams.add(findOrUpdateTeam(addTeamGame.getTeam2()));
+            teams.add(findOrUpdateTeam(addTeamGame.getTeams().get(0)));
+            teams.add(findOrUpdateTeam(addTeamGame.getTeams().get(1)));
             List<Game> eventGames = gameDAO.findByEventWithPlayers(event);
             for (Game game : eventGames) {
                 if (game.getParticipants().containsAll(teams)) {
@@ -472,9 +471,9 @@ public class EventsController extends BaseController {
 
         Set<GameSet> gameSets = new HashSet<>();
         for (int setNumber = 1; setNumber <= event.getNumberOfSets(); setNumber++) {
-            for (int teamNumber = 1; teamNumber <= teams.size(); teamNumber++) {
+            for (int teamNumber = 0; teamNumber < teams.size(); teamNumber++) {
                 try {
-                    LOG.info("set-" + setNumber + "-team-" + teamNumber + 1);
+                    LOG.info("set-" + setNumber + "-team-" + teamNumber);
                     Integer setGames = Integer.parseInt(request.getParameter("set-" + setNumber + "-team-" + teamNumber));
                     if (setGames != -1) {
                         GameSet gameSet = new GameSet();
@@ -482,7 +481,7 @@ public class EventsController extends BaseController {
                         gameSet.setGame(game);
                         gameSet.setSetGames(setGames);
                         gameSet.setSetNumber(setNumber);
-                        gameSet.setParticipant(teams.get(teamNumber - 1));
+                        gameSet.setParticipant(teams.get(teamNumber));
                         gameSet = gameSetDAO.saveOrUpdate(gameSet);
                         gameSets.add(gameSet);
                     }
