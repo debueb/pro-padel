@@ -123,14 +123,6 @@
                         </c:when>
 
                         <c:when test="${Model.eventType eq 'CommunityRoundRobin'}">
-                            <c:if test="${Model.showParticipants}">
-                                <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
-                                    <jsp:param name="href" value="/events/event/${Model.id}/communities"/>
-                                    <jsp:param name="anchor" value="#after-info"/>
-                                    <jsp:param name="key" value="Communities"/>
-                                    <jsp:param name="icon" value="signing"/>
-                                </jsp:include>
-                            </c:if>
                             <c:if test="${Model.showGames}">
                                 <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
                                     <jsp:param name="href" value="/events/event/${Model.id}/communitygames"/>

@@ -14,12 +14,10 @@ import de.appsolve.padelcampus.controller.bookings.BookingsPayDirektController;
 import de.appsolve.padelcampus.controller.bookings.BookingsPayMillController;
 import de.appsolve.padelcampus.controller.bookings.BookingsPayPalController;
 import de.appsolve.padelcampus.controller.bookings.BookingsVoucherController;
-import de.appsolve.padelcampus.db.dao.BookingDAOI;
-import de.appsolve.padelcampus.db.dao.EventDAOI;
-import de.appsolve.padelcampus.db.dao.PlayerDAOI;
-import de.appsolve.padelcampus.db.dao.TeamDAOI;
+import de.appsolve.padelcampus.db.dao.*;
 import de.appsolve.padelcampus.db.model.*;
 import de.appsolve.padelcampus.exceptions.MailException;
+import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
 import de.appsolve.padelcampus.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -29,15 +27,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -61,6 +66,9 @@ public class EventsBookingController extends BaseController {
     PlayerDAOI playerDAO;
 
     @Autowired
+    CommunityDAOI communityDAO;
+
+    @Autowired
     Validator validator;
 
     @Autowired
@@ -82,13 +90,18 @@ public class EventsBookingController extends BaseController {
     BookingUtil bookingUtil;
 
     @Autowired
-    EventsUtil eventsUtil;
-
-    @Autowired
     TeamDAOI teamDAO;
 
     @Autowired
     GameUtil gameUtil;
+
+    @Autowired
+    PlayerCollectionEditor playerCollectionEditor;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Set.class, "players", playerCollectionEditor);
+    }
 
     @RequestMapping(method = GET, value = "/{eventId}/participate")
     public ModelAndView participate(@PathVariable("eventId") Long eventId, HttpServletRequest request) {
@@ -96,12 +109,23 @@ public class EventsBookingController extends BaseController {
         if (user == null) {
             return getLoginRequiredView(request, msg.get("Participate"));
         }
-        return participateView(eventId, new Player());
+        Event event = eventDAO.findById(eventId);
+        EventBookingRequest eventBookingRequest = new EventBookingRequest();
+        if (event.getEventType().equals(EventType.CommunityRoundRobin)) {
+            Integer maxNumberOfNewPlayers = Math.max(0, event.getMaxNumberOfParticipants() - event.getParticipants().size());
+            List<Player> newPlayers = new ArrayList<>();
+            for (int i = 0; i < maxNumberOfNewPlayers; i++) {
+                newPlayers.add(new Player());
+            }
+            eventBookingRequest.setNewPlayers(newPlayers);
+        }
+        return participateView(eventId, eventBookingRequest);
     }
 
     @RequestMapping(method = POST, value = "/{eventId}/participate")
-    public ModelAndView postParticipate(@PathVariable("eventId") Long eventId, HttpServletRequest request, final @ModelAttribute("Player") Player player, BindingResult bindingResult) {
-        ModelAndView participateView = participateView(eventId, player);
+    @Transactional
+    public ModelAndView postParticipate(@PathVariable("eventId") Long eventId, HttpServletRequest request, final @ModelAttribute("EventBookingRequest") EventBookingRequest eventBookingRequest, BindingResult bindingResult) {
+        ModelAndView participateView = participateView(eventId, eventBookingRequest);
         try {
             Player user = sessionUtil.getUser(request);
             if (user == null) {
@@ -116,14 +140,55 @@ public class EventsBookingController extends BaseController {
             booking.setBookingTime(event.getStartTime());
             booking.setAmount(event.getPrice());
             booking.setCurrency(event.getCurrency());
-            booking.setPaymentMethod(PaymentMethod.valueOf(request.getParameter("paymentMethod")));
+            booking.setPaymentMethod(eventBookingRequest.getPaymentMethod());
             booking.setBookingType(BookingType.loggedIn);
             booking.setEvent(event);
 
             switch (event.getEventType()) {
                 case PullRoundRobin:
                     break;
+                case CommunityRoundRobin:
+                    // remove players without any information
+                    List<Player> newPlayers = StreamSupport.stream(eventBookingRequest.getNewPlayers().spliterator(), false).filter(player ->
+                            !(StringUtils.isEmpty(player.getFirstName())
+                                    && StringUtils.isEmpty(player.getLastName())
+                                    && StringUtils.isEmpty(player.getEmail())
+                                    && StringUtils.isEmpty(player.getPhone())))
+                            .collect(Collectors.toList());
+
+                    // if at least one field is given, validate all data
+                    newPlayers.forEach(player -> validator.validate(player, bindingResult));
+                    if (bindingResult.hasErrors()) {
+                        return participateView;
+                    }
+
+                    // check if email already exists
+                    for (Player player : newPlayers) {
+                        if (playerDAO.findByEmail(player.getEmail()) != null) {
+                            throw new Exception(msg.get("EmailAlreadyRegistered"));
+                        }
+                    }
+
+                    // make sure community exists
+                    Community community = eventBookingRequest.getCommunity();
+                    if (community.getId() == null) {
+                        if (StringUtils.isEmpty(community.getName())) {
+                            throw new Exception(msg.get("SelectExistingCommunityOrCreateNewOne"));
+                        } else if (communityDAO.findByName(community.getName()) == null) {
+                            communityDAO.saveOrUpdate(community);
+                        }
+
+                    }
+
+                    Set<Player> allPlayers = new HashSet<>(eventBookingRequest.getPlayers());
+                    newPlayers.forEach(newPlayer -> allPlayers.add(playerDAO.saveOrUpdate(newPlayer)));
+
+                    //do not add user as this would cause duplicate key (player and players go into the same table)
+                    allPlayers.remove(user);
+                    booking.setPlayers(allPlayers);
+                    break;
                 default:
+                    Player player = eventBookingRequest.getPlayer();
                     Player partner;
                     if (player.getUUID() == null) {
                         validator.validate(player, bindingResult);
@@ -252,10 +317,15 @@ public class EventsBookingController extends BaseController {
             switch (event.getEventType()) {
                 case PullRoundRobin:
                     event.getParticipants().add(booking.getPlayer());
-                    event = eventDAO.saveOrUpdate(event);
-
-                    //eventsUtil.createPullGames(event);
+                    eventDAO.saveOrUpdate(event);
                     break;
+
+                case CommunityRoundRobin:
+                    event.getParticipants().add(booking.getPlayer());
+                    event.getParticipants().addAll(booking.getPlayers());
+                    eventDAO.saveOrUpdate(event);
+                    break;
+
                 default:
                     Set<Player> players = new HashSet<>();
                     players.add(booking.getPlayer());
@@ -308,18 +378,22 @@ public class EventsBookingController extends BaseController {
         return new ModelAndView("redirect:/events/event/" + booking.getEvent().getId());
     }
 
-    private ModelAndView participateView(Long eventId, Player player) {
+    private ModelAndView participateView(Long eventId, EventBookingRequest eventBookingRequest) {
         Event event = eventDAO.findById(eventId);
         ModelAndView mav;
         switch (event.getEventType()) {
             case PullRoundRobin:
                 mav = new ModelAndView("events/bookings/participate/pull");
                 break;
+            case CommunityRoundRobin:
+                mav = new ModelAndView("events/bookings/participate/community");
+                mav.addObject("Communities", communityDAO.findAll());
+                break;
             default:
                 mav = new ModelAndView("events/bookings/participate/index");
         }
         mav.addObject("Model", event);
-        mav.addObject("Player", player);
+        mav.addObject("EventBookingRequest", eventBookingRequest);
         return mav;
     }
 

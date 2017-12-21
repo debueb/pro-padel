@@ -18,7 +18,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static de.appsolve.padelcampus.test.matchers.GlobalErrorsMatcher.globalErrors;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -30,28 +34,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class EventBookingSingleRoundRobinTest extends EventBookingTestBase {
+public class EventBookingCommunityRoundRobinTest extends EventBookingTestBase {
+
+    private static final String TEST_EVENT_NAME = "CommunityRoundRobin Event";
+    private static final Integer NUMBER_OF_PLAYERS = 7;
 
     @Test
-    public void test01AddSingleRoundRobinEvent() throws Exception {
+    public void test01CommunityEvent() throws Exception {
         createAdminAccount();
         login(ADMIN_EMAIL, ADMIN_PASSWORD);
 
-        Player player1 = createPlayer(1);
-        Player player2 = createPlayer(2);
-        Player player3 = createPlayer(3);
-        Player player4 = createPlayer(4);
-        Player player5 = createPlayer(5);
+        List<Player> players = new ArrayList<>();
+        for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
+            players.add(createPlayer(i));
+        }
 
         LocalDate nextMonday = getNextMonday();
 
-        LOG.info("POST /admin/events/add - add new SingleRoundRobin event");
+        LOG.info("POST /admin/events/add - add new CommunityRoundRobin event");
         mockMvc.perform(post("/admin/events/add")
                 .session(session)
-                .param("name", "Test Booking Event 2")
+                .param("name", TEST_EVENT_NAME)
                 .param("description", "Test Event description")
                 .param("gender", Gender.male.toString())
-                .param("eventType", EventType.SingleRoundRobin.toString())
+                .param("eventType", EventType.CommunityRoundRobin.toString())
                 .param("startDate", nextMonday.toString())
                 .param("startTimeHour", "10")
                 .param("startTimeMinute", "00")
@@ -60,7 +66,7 @@ public class EventBookingSingleRoundRobinTest extends EventBookingTestBase {
                 .param("numberOfSets", "3")
                 .param("numberOfGamesPerSet", "7")
                 .param("numberOfGamesInFinalSet", "1")
-                .param("maxNumberOfParticipants", "2")
+                .param("maxNumberOfParticipants", "" + (NUMBER_OF_PLAYERS - 1))
                 .param("paymentMethods", PaymentMethod.Cash.toString(), PaymentMethod.PayPal.toString())
                 .param("price", "20.00")
                 .param("active", "true")
@@ -68,53 +74,49 @@ public class EventBookingSingleRoundRobinTest extends EventBookingTestBase {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/events"));
 
-        Event event = eventDAO.findByAttribute("name", "Test Booking Event 2");
-        Assert.notNull(event, "Event has not been created");
+        Event event = eventDAO.findByAttribute("name", TEST_EVENT_NAME);
+        Assert.notNull(event, "Event has been created");
 
-        login(player1, event);
-        participate(player2, event);
+        login(players.get(0), event);
+        participate(players.subList(1, 3), event);
         logout();
 
-        login(player3, event);
-        participate(player4, event);
+        login(players.get(3), event);
+        participate(players.subList(4, 6), event);
         logout();
 
-        login(player5, event);
+        login(players.get(6), event);
         LOG.info("POST /events/bookings/" + event.getId() + "/participate - prevent registering with partner who is already registered");
         mockMvc.perform(post("/events/bookings/" + event.getId() + "/participate")
                 .session(session)
                 .param("paymentMethod", PaymentMethod.Cash.toString())
-                .param("player.UUID", player1.getUUID()))
+                .param("community.name", "Team XYZ")
+                .param("players", players.get(0).getUUID())
+                .param("_players", "1")
+                .param("_newPlayers", "0"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors())
-                .andExpect(globalErrors().hasGlobalError("EventBookingRequest", "*", msg.get("AlreadyParticipatesInThisEvent", new Object[]{player1})));
-
-        LOG.info("POST /events/bookings/" + event.getId() + "/participate - prevent registering when event is booked out");
-        mockMvc.perform(post("/events/bookings/" + event.getId() + "/participate")
-                .session(session)
-                .param("paymentMethod", PaymentMethod.Cash.toString())
-                .param("player.firstName", "does not")
-                .param("player.lastName", "exist")
-                .param("player.email", "just@yet.com")
-                .param("player.phone", "004917482478294"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(model().hasErrors())
-                .andExpect(globalErrors().hasGlobalError("EventBookingRequest", "*", msg.get("EventBookedOut")));
+                .andExpect(globalErrors().hasGlobalError("EventBookingRequest", "*", msg.get("AlreadyParticipatesInThisEvent", new Object[]{players.get(0)})));
     }
 
-    private void participate(Player partner, Event event) throws Exception {
+    private void participate(List<Player> players, Event event) throws Exception {
         LOG.info("GET /events/bookings/" + event.getId() + "/participate");
         mockMvc.perform(get("/events/bookings/" + event.getId() + "/participate")
                 .session(session))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("events/bookings/participate/index"))
+                .andExpect(view().name("events/bookings/participate/community"))
                 .andExpect(model().hasNoErrors());
 
         LOG.info("POST /events/bookings/" + event.getId() + "/participate");
-        mockMvc.perform(post("/events/bookings/" + event.getId() + "/participate")
+        MockHttpServletRequestBuilder requestBuilder = post("/events/bookings/" + event.getId() + "/participate")
                 .session(session)
                 .param("paymentMethod", PaymentMethod.Cash.toString())
-                .param("player.UUID", partner.getUUID()))
+                .param("community.name", "Team XYZ")
+                .param("_players", "" + players.size())
+                .param("_newPlayers", "0");
+        players.forEach(player -> requestBuilder.param("players", player.getUUID()));
+
+        mockMvc.perform(requestBuilder)
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/events/bookings/" + event.getId() + "/confirm"));
 
@@ -148,7 +150,10 @@ public class EventBookingSingleRoundRobinTest extends EventBookingTestBase {
         LOG.info("POST /events/bookings/" + event.getId() + "/participate - prevent duplicate participation");
         mockMvc.perform(post("/events/bookings/" + event.getId() + "/participate")
                 .session(session)
-                .param("paymentMethod", PaymentMethod.Cash.toString()))
+                .param("paymentMethod", PaymentMethod.Cash.toString())
+                .param("community.name", "Team XYZ")
+                .param("_players", "0")
+                .param("_newPlayers", "0"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors());
 

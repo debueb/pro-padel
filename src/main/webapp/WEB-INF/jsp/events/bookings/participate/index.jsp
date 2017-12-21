@@ -10,18 +10,16 @@
                 <h4><fmt:message key="ParticipateChoosePartner"/></h4>
             </div>
             <div class="panel-body">
-                <spf:form class="form-signin" method="POST" modelAttribute="Player">
-                <div class="alert alert-info"><fmt:message key="ParticipateChoosePartnerDesc"/></div>
-                <div class="alert alert-danger unit"><spf:errors path="*"/></div>
-                
-                <div class="relative unit-2">
-                        <select class="form-control select-simple" name="paymentMethod">
-                    <c:forEach var="PaymentMethod" items="${Model.paymentMethods}">
-                        <option value="${PaymentMethod}"><fmt:message key="${PaymentMethod}"/></option>
-                    </c:forEach>
-                </select>
-                    <span class="explanation-select"><fmt:message key="PaymentMethod"/></span>
-                </div>
+                <spf:form class="form-signin" method="POST" modelAttribute="EventBookingRequest">
+                    <div class="alert alert-info"><fmt:message key="ParticipateChoosePartnerDesc"/></div>
+                    <div class="alert alert-danger unit"><spf:errors path="*"/></div>
+
+                    <div class="relative unit-2">
+                        <spf:select class="form-control select-simple" path="paymentMethod">
+                            <spf:options items="${Model.paymentMethods}" />
+                        </spf:select>
+                        <span class="explanation-select"><fmt:message key="PaymentMethod"/></span>
+                    </div>
                 
                     <div class="accordion unit-2">
                         <div><fmt:message key="ChooseExistingPlayer"/></div>
@@ -35,7 +33,7 @@
                             <fmt:message key="StatusSearching" var="StatusSearching"/>
                             <div class="relative">
                                 <spf:select 
-                                    path="UUID" 
+                                    path="player.UUID"
                                     class="form-control select-ajax-search" 
                                     data-container="body" 
                                     data-live-search="true"
@@ -55,7 +53,7 @@
 
                         <div><fmt:message key="CreateNewPlayer"/></div>
                         <div>
-                            <jsp:include page="/WEB-INF/jsp/include/player-input.jsp"/>
+                            <jsp:include page="player-input.jsp"/>
                         </div>
                     </div>
                     <div>

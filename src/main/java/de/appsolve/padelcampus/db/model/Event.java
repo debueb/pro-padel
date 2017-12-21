@@ -207,7 +207,7 @@ public class Event extends ComparableEntity {
     }
 
     public Set<Participant> getParticipants() {
-        return participants == null ? new LinkedHashSet<Participant>() : participants;
+        return participants == null ? new LinkedHashSet<>() : participants;
     }
 
     public void setParticipants(Set<Participant> participant) {

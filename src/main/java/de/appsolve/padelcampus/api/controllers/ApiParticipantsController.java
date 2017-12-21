@@ -55,6 +55,7 @@ public class ApiParticipantsController {
             Page<? extends ParticipantI> page;
             switch (eventType) {
                 case PullRoundRobin:
+                case CommunityRoundRobin:
                     page = playerDAO.findAllByFuzzySearch(q);
                     break;
                 default:

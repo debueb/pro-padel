@@ -14,4 +14,6 @@ import de.appsolve.padelcampus.db.model.Community;
  */
 public interface CommunityDAOI extends BaseEntityDAOI<Community> {
 
+    Community findByName(String name);
+
 }

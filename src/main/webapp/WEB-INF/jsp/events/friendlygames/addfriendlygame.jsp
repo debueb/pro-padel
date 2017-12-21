@@ -34,7 +34,7 @@
                                     <td>
                                         <div class="relative">
                                         <spf:select 
-                                            path="team${teamNumber}"
+                                            path="team${teamNumber}.players"
                                             class="form-control form-left-element ${teamStatus.first ? 'form-top-element' : 'form-bottom-element'} select-ajax-search" 
                                             data-container="body" 
                                             data-live-search="true"
