@@ -17,8 +17,12 @@ import java.util.TreeMap;
 public class SortUtil {
 
     public static <K extends Comparable, V extends Comparable> SortedMap<K, V> sortMap(Map<K, V> map) {
+        return sortMap(map, Boolean.FALSE);
+    }
+
+    public static <K extends Comparable, V extends Comparable> SortedMap<K, V> sortMap(Map<K, V> map, Boolean reverse) {
         @SuppressWarnings("unchecked")
-        SortedMap<K, V> sortedMap = new TreeMap<>(new MapValueComparator<>(map));
+        SortedMap<K, V> sortedMap = new TreeMap<>(new MapValueComparator<>(map, reverse));
         sortedMap.putAll(map);
         return sortedMap;
     }

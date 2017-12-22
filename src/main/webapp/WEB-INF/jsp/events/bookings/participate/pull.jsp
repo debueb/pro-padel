@@ -10,16 +10,14 @@
                 <h4><fmt:message key="ParticipateChoosePaymentMethod"/></h4>
             </div>
             <div class="panel-body">
-                <spf:form class="form-signin" method="POST" modelAttribute="Player">
+                <spf:form class="form-signin" method="POST" modelAttribute="EventBookingRequest">
                     <div class="alert alert-info"><fmt:message key="ParticipateChoosePaymentMethodDesc"/></div>
                     <div class="alert alert-danger unit"><spf:errors path="*"/></div>
 
                     <div class="relative unit-2">
-                        <select class="form-control select-simple" name="paymentMethod" data-container="body">
-                        <c:forEach var="PaymentMethod" items="${Model.paymentMethods}">
-                            <option value="${PaymentMethod}"><fmt:message key="${PaymentMethod}"/></option>
-                        </c:forEach>
-                        </select>
+                        <spf:select class="form-control select-simple" path="paymentMethod">
+                            <spf:options items="${Model.paymentMethods}" />
+                        </spf:select>
                         <span class="explanation-select"><fmt:message key="PaymentMethod"/></span>
                     </div>
                     

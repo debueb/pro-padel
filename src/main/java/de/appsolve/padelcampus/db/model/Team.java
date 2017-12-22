@@ -23,7 +23,6 @@ public class Team extends Participant {
     private static final long serialVersionUID = 1L;
 
     @Column
-    @NotEmpty(message = "{NotEmpty.teamName}")
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -43,7 +42,7 @@ public class Team extends Participant {
     }
 
     public Set<Player> getPlayers() {
-        return players == null ? new HashSet<Player>() : players;
+        return players == null ? new HashSet<>() : players;
     }
 
     public void setPlayers(Set<Player> players) {

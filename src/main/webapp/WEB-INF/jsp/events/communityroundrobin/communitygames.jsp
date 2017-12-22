@@ -13,72 +13,42 @@
                 <h4><fmt:message key="Games"/></h4>
             </div>
             <div class="panel-body">
-                <div class="list-group">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover table-condensed">
+                <c:set var="redirectUrl" value="events/event/${Model.id}/communitygames"/>
+                <a href="/events/edit/${Model.id}/addcommunitygame?redirectUrl=${redirectUrl}" class="btn btn-primary btn-block unit-2"><fmt:message key="AddGame"/></a>
+                <c:forEach var="CommunityGameMapEntry" items="${CommunityGameMap}">
+                    <c:set var="Communities" value="${CommunityGameMapEntry.key}"/>
+                    <c:set var="GamesResultMap" value="${CommunityGameMapEntry.value}"/>
+                    <div class="table-responsive unit-4">
+                        <table class="table table-fixed table-bordered table-striped table-hover table-condensed">
                             <thead>
-                            <th></th>
-                                <c:forEach var="GroupParticipantGameResultMapEntry" items="${GroupParticipantGameResultMap}" begin="1" end="1">
-                                    <c:forEach var="ParticipantGameResultMapEntry" items="${GroupParticipantGameResultMapEntry.value}">
-                                    <th class="text-center normal">
-                                        <div class="small">${GroupParticipantGameResultMapEntry.key}</div>
-                                        <div>${ParticipantGameResultMapEntry.key}</div>
-                                    </th>
-                                </c:forEach>
-                            </c:forEach>
+                                <th class="text-center">${Communities[0]}</th>
+                                <th class="text-center"><fmt:message key="GameResult"/></th>
+                                <th class="text-center">${Communities[1]}</th>
+                                <th class="delete"><fmt:message key="Delete"/></th>
                             </thead>
                             <tbody>
-                                <c:forEach var="GroupParticipantGameResultMapEntry" items="${GroupParticipantGameResultMap}" begin="0" end="0">
-                                    <c:forEach var="ParticipantGameResultMapEntry" items="${GroupParticipantGameResultMapEntry.value}">
-                                        <c:set var="Participant" value="${ParticipantGameResultMapEntry.key}"/>
-                                        <c:set var="GameResultMap" value="${ParticipantGameResultMapEntry.value}"/>
-                                        <tr>
-                                            <td class="vertical-align-middle">
-                                                <div class="small">${GroupParticipantGameResultMapEntry.key}</div>
-                                                <div>${Participant}</div>
-                                            </td>
-                                            <c:forEach var="GroupParticipantGameResultMapEntry2" items="${GroupParticipantGameResultMap}" begin="1" end="1">
-                                                <c:forEach var="ParticipantGameResultMapEntry2" items="${GroupParticipantGameResultMapEntry2.value}">
-                                                    <c:set var="Opponent" value="${ParticipantGameResultMapEntry2.key}"/>
-                                                    <c:if test="${Participant.community ne Opponent.community}">
-                                                        <td class="text-center vertical-align-middle">
-                                                            <c:choose>
-                                                                <c:when test="${Participant == Opponent}">
-                                                                    -
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <c:forEach var="GameResultMapEntry" items="${GameResultMap}">
-                                                                        <c:set var="Game" value="${GameResultMapEntry.key}"/>
-                                                                        <c:set var="Result" value="${GameResultMapEntry.value}"/>
-                                                                        <c:if test="${fn:contains(Game.participants, Participant) and fn:contains(Game.participants, Opponent)}">
-                                                                            <a href="/games/game/${Game.id}/edit?redirectUrl=events/event/${Model.id}/communitygames">
-                                                                                <c:choose>
-                                                                                    <c:when test="${not empty Result}">
-                                                                                        ${Result}
-                                                                                    </c:when>
-                                                                                    <c:when test="${Game.startTime ne null}">
-                                                                                        <joda:format value="${Game.startDate}" pattern="dd. MMM" /><joda:format value="${Game.startTime}" pattern="HH:mm" /> <fmt:message key="oClock"/>
-                                                                                    </c:when>
-                                                                                    <c:otherwise>
-                                                                                        -:- -:-
-                                                                                    </c:otherwise>
-                                                                                </c:choose>
-                                                                            </c:if>
-                                                                        </a>
-                                                                    </c:forEach>
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </td>
-                                                    </c:if>
-                                                </c:forEach>
-                                            </c:forEach>
-                                        </tr>
-                                    </c:forEach>
+                                <c:forEach var="GameResultMapEntry" items="${GamesResultMap}">
+                                    <c:set var="Game" value="${GameResultMapEntry.key}"/>
+                                    <c:set var="GameResult" value="${GameResultMapEntry.value}"/>
+                                    <tr>
+                                        <c:forEach var="Participant" items="${Game.participants}">
+                                            <c:if test="${Participant.community eq Communities[0]}">
+                                                <td class="text-center">${Participant}</td>
+                                            </c:if>
+                                        </c:forEach>
+                                        <td class="text-center">${GameResult}</td>
+                                        <c:forEach var="Participant" items="${Game.participants}">
+                                            <c:if test="${Participant.community eq Communities[1]}">
+                                                <td class="text-center">${Participant}</td>
+                                            </c:if>
+                                        </c:forEach>
+                                        <td class="text-center"><a href="/admin/events/${Model.id}/game/${Game.id}/delete?redirectUrl=${redirectUrl}"><i class="fa fa-minus-circle"></i></a></td>
+                                    </tr>
                                 </c:forEach>
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </c:forEach>
             </div>
         </div>
     </div>

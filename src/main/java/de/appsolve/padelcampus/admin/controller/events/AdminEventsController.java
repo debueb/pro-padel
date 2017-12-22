@@ -203,55 +203,6 @@ public class AdminEventsController extends AdminBaseController<Event> {
                 gameUtil.createMissingGames(model, model.getParticipants());
                 return redirectToIndex(request);
 
-            case CommunityRoundRobin:
-                if (!model.getParticipants().isEmpty()) {
-                    Map<Community, Set<Team>> communityTeamMap = new HashMap<>();
-                    List<Team> teamsWithoutCommunity = new ArrayList<>();
-                    for (Team team : model.getTeams()) {
-                        if (team.getCommunity() == null) {
-                            teamsWithoutCommunity.add(team);
-                        } else {
-                            Set<Team> teams = communityTeamMap.get(team.getCommunity());
-                            if (teams == null) {
-                                teams = new HashSet<>();
-                            }
-                            teams.add(team);
-                            communityTeamMap.put(team.getCommunity(), teams);
-                        }
-                    }
-                    if (!teamsWithoutCommunity.isEmpty()) {
-                        result.addError(new ObjectError("id", msg.get("TheFollowingTeamsMustBePartOfACommunity", new Object[]{teamsWithoutCommunity})));
-                        return editView;
-                    }
-                    if (communityTeamMap.keySet().size() != 2) {
-                        result.reject("ChooseTeamsFromTwoDifferentCommunities");
-                        return editView;
-                    }
-                    model = getDAO().saveOrUpdate(model);
-
-                    //clean
-                    gameUtil.removeObsoleteGames(model);
-
-                    //generate games
-                    Collection<Set<Team>> teamSets = communityTeamMap.values();
-                    for (Set<Team> teamSet : teamSets) { //one community
-                        for (Team team : teamSet) {
-                            for (Set<Team> teamSet2 : teamSets) { //other community
-                                if (!teamSet2.contains(team)) {
-                                    for (Team team2 : teamSet2) {
-                                        Set<Participant> participants = new HashSet<>();
-                                        participants.add(team);
-                                        participants.add(team2);
-                                        gameUtil.createMissingGames(model, participants);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                getDAO().saveOrUpdate(model);
-                return redirectToIndex(request);
-
             case GroupTwoRounds:
                 //remove games that have not been played yet
                 gameUtil.removeObsoleteGames(model);
@@ -271,9 +222,8 @@ public class AdminEventsController extends AdminBaseController<Event> {
                 } else {
                     return redirectToIndex(request);
                 }
+            case CommunityRoundRobin:
             case PullRoundRobin:
-                getDAO().saveOrUpdate(model);
-                return redirectToIndex(request);
             case FriendlyGames:
                 getDAO().saveOrUpdate(model);
                 return redirectToIndex(request);

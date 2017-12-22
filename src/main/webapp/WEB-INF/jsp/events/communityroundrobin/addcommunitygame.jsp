@@ -14,20 +14,29 @@
             <div class="panel-body">
                 <spf:form method="POST" modelAttribute="Model">
                     <div class="alert alert-danger"><spf:errors path="*"/></div>
-                    <table class="table-full-width table-add-pull-game">
+                    <table class="table-full-width">
                         <thead>
-                            <th style="padding-left: 10px;"><fmt:message key="Team"/></th>
+                            <th style="padding-left: 10px; width: 20%"><fmt:message key="Community"/></th>
+                            <th style="padding-left: 10px; width: 65%"><fmt:message key="Team"/></th>
                             <c:forEach begin="1" end="${Event.numberOfSets}" var="setNumber" varStatus="status">
-                                <th class="text-center">${setNumber}.</th>
+                                <th class="text-center" style="5%">${setNumber}.</th>
                             </c:forEach>
                         </thead>
                         <tbody>
                             <c:forEach items="${Model.teams}" varStatus="teamStatus">
                                 <tr>
                                     <td>
+                                        <spf:select
+                                            path="teams[${teamStatus.index}].community"
+                                            class="select-simple form-control ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'} form-left-element"
+                                            data-container="body">
+                                            <spf:options items="${Communities}" itemValue="id"/>
+                                        </spf:select>
+                                    </td>
+                                    <td>
                                         <spf:select 
                                             path="teams[${teamStatus.index}].players"
-                                            class="select-multiple form-control ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'} form-left-element" 
+                                            class="select-multiple form-control form-center-element ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'}"
                                             data-container="body"
                                             data-live-search="true"
                                             data-max-options="2">
@@ -58,7 +67,7 @@
                         </tbody>
                     </table>
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
-                    <a class="btn btn-primary btn-block btn-back unit-2"><fmt:message key="Cancel"/></a>
+                    <a class="btn btn-primary btn-block unit-2" href="/events/event/${Event.id}/communitygames"><fmt:message key="Cancel"/></a>
                 </spf:form>
             </div>
         </div>    

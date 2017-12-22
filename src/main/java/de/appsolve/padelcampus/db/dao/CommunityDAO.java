@@ -18,4 +18,9 @@ public class CommunityDAO extends SortedBaseDAO<Community> implements CommunityD
     protected Set<String> getIndexedProperties() {
         return new HashSet<>(Arrays.asList("name"));
     }
+
+    @Override
+    public Community findByName(String name) {
+        return super.findByAttribute("name", name);
+    }
 }

@@ -19,9 +19,11 @@ public class MapValueComparator<K extends Comparable<K>, V extends Comparable<V>
     private static final long serialVersionUID = 1L;
 
     Map<K, V> map;
+    Integer factor;
 
-    public MapValueComparator(Map<K, V> map) {
+    public MapValueComparator(Map<K, V> map, Boolean reverse) {
         this.map = map;
+        this.factor = reverse ? -1 : 1;
     }
 
     @Override
@@ -30,19 +32,19 @@ public class MapValueComparator<K extends Comparable<K>, V extends Comparable<V>
         V valueB = (V) map.get(keyB);
         int result = 0;
         if (valueA == null && valueB == null) {
-            return result;
+            return result * factor;
         }
         if (valueA == null) {
-            return -1;
+            return -1 * factor;
         }
         if (valueB == null) {
-            return 1;
+            return 1 * factor;
         }
         result = valueB.compareTo(valueA);
         //in case the values of a map entry are identical, the key decides
         if (result == 0) {
             result = keyA.compareTo(keyB);
         }
-        return result;
+        return result * factor;
     }
 }

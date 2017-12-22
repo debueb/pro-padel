@@ -647,6 +647,20 @@ var project = {
                 return true;
             });
         });
+    },
+
+    enableInputGroups(){
+        $('.enableInputGroup').livequery(function(){
+            const $this = $(this);
+            $this.on('click tap', function(){
+                const target = $this.attr('data-target');
+                const targetSplit = target.split('-');
+                const $target = $(target);
+                $target.show();
+                $this.attr('data-target', `${targetSplit[0]}-${parseInt(targetSplit[1])+1}`);
+                return false;
+           });
+        });
     }
 };
 
@@ -701,6 +715,7 @@ if (project.isNative() && lastPage && lastPage !== window.location.href){
         project.enableSlick();
         project.saveLastPage();
         project.exportEmails();
+        project.enableInputGroups();
     });
 }
 

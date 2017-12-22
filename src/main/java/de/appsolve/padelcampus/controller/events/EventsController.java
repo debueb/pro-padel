@@ -10,16 +10,14 @@ import de.appsolve.padelcampus.comparators.EventByStartDateComparator;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.controller.BaseController;
-import de.appsolve.padelcampus.data.AddPullGame;
+import de.appsolve.padelcampus.data.AddTeamGame;
 import de.appsolve.padelcampus.data.ScoreEntry;
 import de.appsolve.padelcampus.db.dao.*;
 import de.appsolve.padelcampus.db.model.*;
 import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
-import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
-import de.appsolve.padelcampus.utils.EventsUtil;
-import de.appsolve.padelcampus.utils.GameUtil;
-import de.appsolve.padelcampus.utils.RankingUtil;
-import de.appsolve.padelcampus.utils.SessionUtil;
+import de.appsolve.padelcampus.spring.CommunityPropertyEditor;
+import de.appsolve.padelcampus.spring.PlayerPropertyEditor;
+import de.appsolve.padelcampus.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
@@ -34,7 +32,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.Map.Entry;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -60,6 +57,8 @@ public class EventsController extends BaseController {
     @Autowired
     TeamDAOI teamDAO;
     @Autowired
+    CommunityDAOI communityDAO;
+    @Autowired
     EventsUtil eventsUtil;
     @Autowired
     GameUtil gameUtil;
@@ -68,12 +67,14 @@ public class EventsController extends BaseController {
     @Autowired
     SessionUtil sessionUtil;
     @Autowired
-    PlayerCollectionEditor playerCollectionEditor;
+    PlayerPropertyEditor playerPropertyEditorEditor;
+    @Autowired
+    CommunityPropertyEditor communityPropertyEditor;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(Set.class, "team1", playerCollectionEditor);
-        binder.registerCustomEditor(Set.class, "team2", playerCollectionEditor);
+        binder.registerCustomEditor(Player.class, playerPropertyEditorEditor);
+        binder.registerCustomEditor(Community.class, communityPropertyEditor);
     }
 
     @RequestMapping("{moduleTitle}")
@@ -144,58 +145,42 @@ public class EventsController extends BaseController {
         return mav;
     }
 
-    @RequestMapping("event/{eventId}/communities")
-    public ModelAndView getEventCommunities(@PathVariable("eventId") Long eventId) {
-        Event event = eventDAO.findByIdFetchWithParticipantsAndGames(eventId);
-        List<Ranking> rankedParticipants = rankingUtil.getRankedParticipants(event);
-        Map<Community, List<Ranking>> communityMap = new HashMap<>();
-        rankedParticipants.forEach(ranking -> {
-            Participant participant = ranking.getParticipant();
-            if (participant instanceof Team) {
-                Team team = (Team) participant;
-                if (team.getCommunity() != null) {
-                    List<Ranking> communityRanking = communityMap.get(team.getCommunity());
-                    if (communityRanking == null) {
-                        communityRanking = new ArrayList<>();
-                    }
-                    Ranking teamRanking = rankedParticipants.stream().filter(r -> r.getParticipant().equals(team)).findFirst().get();
-                    communityRanking.add(teamRanking);
-                    Collections.sort(communityRanking);
-                    communityMap.put(team.getCommunity(), communityRanking);
-                }
-            }
-        });
-        ModelAndView mav = new ModelAndView("events/communityroundrobin/communities", "Model", event);
-        mav.addObject("CommunityMap", communityMap);
-        return mav;
-    }
-
     @RequestMapping("event/{eventId}/communitygames")
     public ModelAndView getEventCommunityGames(@PathVariable("eventId") Long eventId) {
         Event event = eventDAO.findByIdFetchWithGames(eventId);
         if (event == null) {
             throw new ResourceNotFoundException();
         }
-        ModelAndView mav = new ModelAndView("events/communityroundrobin/communitygames", "Model", event);
-
-        //Community // Participant // Game // GameResult
-        SortedMap<Community, Map<Participant, Map<Game, String>>> communityParticipantGameResultMap = new TreeMap<>();
-
-        Map<Participant, Map<Game, String>> participantGameResultMap = gameUtil.getParticipantGameResultMap(event.getGames(), false);
-        for (Entry<Participant, Map<Game, String>> entry : participantGameResultMap.entrySet()) {
-            Participant p = entry.getKey();
-            if (p instanceof Team) {
-                Team team = (Team) p;
-                Map<Participant, Map<Game, String>> participantMap = communityParticipantGameResultMap.get(team.getCommunity());
-                if (participantMap == null) {
-                    participantMap = new HashMap<>();
+        Map<List<Community>, Map<Game, String>> communityGameMap = new HashMap<>();
+        List<Game> allGames = gameDAO.findByEvent(event);
+        allGames.forEach(game -> {
+            Set<Participant> participants = game.getParticipants();
+            List<Community> communities = new ArrayList<>();
+            participants.forEach(participant -> {
+                if (participant instanceof Team) {
+                    Team team = (Team) participant;
+                    if (team.getCommunity() != null) {
+                        communities.add(team.getCommunity());
+                    }
                 }
-                participantMap.put(p, entry.getValue());
-                communityParticipantGameResultMap.put(team.getCommunity(), participantMap);
+            });
+            if (communities.size() == 2) {
+                Optional<List<Community>> existingCommunityList = communityGameMap.keySet().stream().filter(communities1 -> communities1.containsAll(communities)).findFirst();
+                if (existingCommunityList.isPresent()) {
+                    List<Community> communityList = existingCommunityList.get();
+                    Map<Game, String> games = communityGameMap.get(communityList);
+                    games.put(game, gameUtil.getGameResult(game, findFirstParticipant(participants, communityList), false));
+                    communityGameMap.put(communityList, games);
+                } else {
+                    Map<Game, String> gameMap = new HashMap<>();
+                    gameMap.put(game, gameUtil.getGameResult(game, findFirstParticipant(participants, communities), false));
+                    communityGameMap.put(communities, gameMap);
+                }
             }
-        }
-        mav.addObject("GroupParticipantGameResultMap", communityParticipantGameResultMap);
-        mav.addObject("GameResultMap", gameUtil.getGameResultMap(event.getGames()));
+        });
+        ModelAndView mav = new ModelAndView("events/communityroundrobin/communitygames");
+        mav.addObject("Model", event);
+        mav.addObject("CommunityGameMap", communityGameMap);
         return mav;
     }
 
@@ -244,23 +229,26 @@ public class EventsController extends BaseController {
             throw new ResourceNotFoundException();
         }
         SortedMap<Community, ScoreEntry> communityScoreMap = new TreeMap<>();
-        List<ScoreEntry> scores = rankingUtil.getScores(event.getParticipants(), event.getGames());
-        for (ScoreEntry scoreEntry : scores) {
-            Participant p = scoreEntry.getParticipant();
-            if (p instanceof Team) {
-                Team team = (Team) p;
-                ScoreEntry communityScore = communityScoreMap.get(team.getCommunity());
-                if (communityScore == null) {
-                    communityScore = new ScoreEntry();
-                }
-                communityScore.add(scoreEntry);
-                communityScoreMap.put(team.getCommunity(), communityScore);
+        Set<Participant> teams = new HashSet<>();
+        event.getGames().forEach(game -> game.getParticipants().forEach(participant -> {
+            if (participant instanceof Team) {
+                teams.add(participant);
             }
+        }));
+        List<ScoreEntry> scores = rankingUtil.getScores(teams, event.getGames());
+        for (ScoreEntry scoreEntry : scores) {
+            Team team = (Team) scoreEntry.getParticipant();
+            ScoreEntry communityScore = communityScoreMap.get(team.getCommunity());
+            if (communityScore == null) {
+                communityScore = new ScoreEntry();
+            }
+            communityScore.add(scoreEntry);
+            communityScoreMap.put(team.getCommunity(), communityScore);
         }
-
+        SortedMap<Community, ScoreEntry> communityScoreMapSorted = SortUtil.sortMap(communityScoreMap, true);
         ModelAndView scoreView = new ModelAndView("events/communityroundrobin/score");
         scoreView.addObject("Model", event);
-        scoreView.addObject("CommunityScoreMap", communityScoreMap);
+        scoreView.addObject("CommunityScoreMap", communityScoreMapSorted);
         return scoreView;
     }
 
@@ -271,14 +259,14 @@ public class EventsController extends BaseController {
             return getLoginView(request, request.getRequestURI());
         }
         Event event = eventDAO.findByIdFetchWithParticipants(eventId);
-        return getAddPullGameView(event, new AddPullGame());
+        return getAddPullGameView(event, new AddTeamGame());
     }
 
     @RequestMapping(value = {"edit/{eventId}/addpullgame"}, method = POST)
     public ModelAndView postAddPullGame(
             HttpServletRequest request,
             @PathVariable("eventId") Long eventId,
-            @ModelAttribute("Model") AddPullGame addPullGame,
+            @ModelAttribute("Model") AddTeamGame addTeamGame,
             @RequestParam(value = "redirectUrl", required = false) String redirectUrl,
             BindingResult bindingResult) {
         Player user = sessionUtil.getUser(request);
@@ -286,22 +274,22 @@ public class EventsController extends BaseController {
             return getLoginView(request, request.getRequestURI());
         }
         Event event = eventDAO.findByIdFetchWithParticipants(eventId);
-        validator.validate(addPullGame, bindingResult);
+        validator.validate(addTeamGame, bindingResult);
         if (bindingResult.hasErrors()) {
-            return getAddPullGameView(event, addPullGame);
+            return getAddPullGameView(event, addTeamGame);
         }
-        if (!Collections.disjoint(addPullGame.getTeam1(), addPullGame.getTeam2())) {
+        if (!Collections.disjoint(addTeamGame.getTeams().get(0).getPlayers(), addTeamGame.getTeams().get(1).getPlayers())) {
             bindingResult.addError(new ObjectError("id", msg.get("ChooseDistinctPlayers")));
-            return getAddPullGameView(event, addPullGame);
+            return getAddPullGameView(event, addTeamGame);
         }
         List<Participant> teams = new ArrayList<>();
-        teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam1()));
-        teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam2()));
+        teams.add(teamDAO.findOrCreateTeam(addTeamGame.getTeams().get(0).getPlayers()));
+        teams.add(teamDAO.findOrCreateTeam(addTeamGame.getTeams().get(1).getPlayers()));
         List<Game> eventGames = gameDAO.findByEventWithPlayers(event);
         for (Game game : eventGames) {
             if (game.getParticipants().containsAll(teams)) {
                 bindingResult.addError(new ObjectError("id", msg.get("GameAlreadyExists")));
-                return getAddPullGameView(event, addPullGame);
+                return getAddPullGameView(event, addTeamGame);
             }
         }
         saveGame(event, teams, request);
@@ -319,13 +307,13 @@ public class EventsController extends BaseController {
             return getLoginView(request, request.getRequestURI());
         }
         Event event = eventDAO.findByIdFetchWithParticipants(eventId);
-        return getAddFriendlyGameView(event, new AddPullGame());
+        return getAddFriendlyGameView(event, new AddTeamGame());
     }
 
     @RequestMapping(value = {"edit/{eventId}/addfriendlygame"}, method = POST)
     public ModelAndView postAddFriendlyGame(
             @PathVariable("eventId") Long eventId,
-            @ModelAttribute("Model") AddPullGame addPullGame,
+            @ModelAttribute("Model") AddTeamGame addTeamGame,
             @RequestParam(value = "redirectUrl", required = false) String redirectUrl,
             BindingResult bindingResult,
             HttpServletRequest request) {
@@ -334,17 +322,17 @@ public class EventsController extends BaseController {
             return getLoginView(request, request.getRequestURI());
         }
         Event event = eventDAO.findByIdFetchWithParticipants(eventId);
-        validator.validate(addPullGame, bindingResult);
+        validator.validate(addTeamGame, bindingResult);
         if (bindingResult.hasErrors()) {
-            return getAddFriendlyGameView(event, addPullGame);
+            return getAddFriendlyGameView(event, addTeamGame);
         }
-        if (!Collections.disjoint(addPullGame.getTeam1(), addPullGame.getTeam2())) {
+        if (!Collections.disjoint(addTeamGame.getTeams().get(0).getPlayers(), addTeamGame.getTeams().get(1).getPlayers())) {
             bindingResult.addError(new ObjectError("id", msg.get("ChooseDistinctPlayers")));
-            return getAddFriendlyGameView(event, addPullGame);
+            return getAddFriendlyGameView(event, addTeamGame);
         }
         List<Participant> teams = new ArrayList<>();
-        teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam1()));
-        teams.add(teamDAO.findOrCreateTeam(addPullGame.getTeam2()));
+        teams.add(teamDAO.findOrCreateTeam(addTeamGame.getTeams().get(0).getPlayers()));
+        teams.add(teamDAO.findOrCreateTeam(addTeamGame.getTeams().get(1).getPlayers()));
 
         saveGame(event, teams, request);
 
@@ -352,6 +340,70 @@ public class EventsController extends BaseController {
             return new ModelAndView("redirect:/" + redirectUrl);
         }
         return new ModelAndView("redirect:/events/event/" + event.getId() + "/pullgames");
+    }
+
+    @RequestMapping(value = {"edit/{eventId}/addcommunitygame"}, method = GET)
+    public ModelAndView getAddCommunityGame(@PathVariable Long eventId, HttpServletRequest request) {
+        Player user = sessionUtil.getUser(request);
+        if (user == null) {
+            return getLoginView(request, request.getRequestURI());
+        }
+        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
+        return getAddCommunityGameView(event, new AddTeamGame());
+    }
+
+    @RequestMapping(value = {"edit/{eventId}/addcommunitygame"}, method = POST)
+    public ModelAndView postAddCommunityGame(
+            HttpServletRequest request,
+            @PathVariable("eventId") Long eventId,
+            @ModelAttribute("Model") AddTeamGame addTeamGame,
+            @RequestParam(value = "redirectUrl", required = false) String redirectUrl,
+            BindingResult bindingResult) {
+        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
+        if (event == null) {
+            throw new ResourceNotFoundException();
+        }
+        try {
+            Player user = sessionUtil.getUser(request);
+            if (user == null) {
+                return getLoginView(request, request.getRequestURI());
+            }
+            validator.validate(addTeamGame, bindingResult);
+            if (bindingResult.hasErrors()) {
+                return getAddCommunityGameView(event, addTeamGame);
+            }
+            if (!Collections.disjoint(addTeamGame.getTeams().get(0).getPlayers(), addTeamGame.getTeams().get(1).getPlayers())) {
+                throw new Exception(msg.get("ChooseDistinctPlayers"));
+            }
+            if (addTeamGame.getTeams().get(0).getCommunity().equals(addTeamGame.getTeams().get(1).getCommunity())) {
+                throw new Exception(msg.get("ChooseDistinctCommunities"));
+            }
+            List<Participant> teams = new ArrayList<>();
+            teams.add(findOrUpdateTeam(addTeamGame.getTeams().get(0)));
+            teams.add(findOrUpdateTeam(addTeamGame.getTeams().get(1)));
+            List<Game> eventGames = gameDAO.findByEventWithPlayers(event);
+            for (Game game : eventGames) {
+                if (game.getParticipants().containsAll(teams)) {
+                    bindingResult.addError(new ObjectError("id", msg.get("GameAlreadyExists")));
+                    return getAddCommunityGameView(event, addTeamGame);
+                }
+            }
+            saveGame(event, teams, request);
+
+            if (!StringUtils.isEmpty(redirectUrl)) {
+                return new ModelAndView("redirect:/" + redirectUrl);
+            }
+            return new ModelAndView("redirect:/events/event/" + event.getId() + "/communitygames");
+        } catch (Exception e) {
+            bindingResult.addError(new ObjectError("id", e.getMessage()));
+            return getAddCommunityGameView(event, addTeamGame);
+        }
+    }
+
+    private Participant findOrUpdateTeam(Team team) {
+        Team newOrExistingTeam = teamDAO.findOrCreateTeam(team.getPlayers());
+        newOrExistingTeam.setCommunity(team.getCommunity());
+        return teamDAO.saveOrUpdate(newOrExistingTeam);
     }
 
     private ModelAndView getKnockoutView(Event event, SortedMap<Integer, List<Game>> roundGameMap) {
@@ -389,17 +441,25 @@ public class EventsController extends BaseController {
         return participantGameGameSetMap;
     }
 
-    private ModelAndView getAddFriendlyGameView(Event event, AddPullGame game) {
+    private ModelAndView getAddFriendlyGameView(Event event, AddTeamGame game) {
         ModelAndView mav = new ModelAndView("events/friendlygames/addfriendlygame");
         mav.addObject("Event", event);
         mav.addObject("Model", game);
         return mav;
     }
 
-    private ModelAndView getAddPullGameView(Event event, AddPullGame game) {
+    private ModelAndView getAddPullGameView(Event event, AddTeamGame game) {
         ModelAndView mav = new ModelAndView("events/pullroundrobin/addpullgame");
         mav.addObject("Event", event);
         mav.addObject("Model", game);
+        return mav;
+    }
+
+    private ModelAndView getAddCommunityGameView(Event event, AddTeamGame game) {
+        ModelAndView mav = new ModelAndView("events/communityroundrobin/addcommunitygame");
+        mav.addObject("Event", event);
+        mav.addObject("Model", game);
+        mav.addObject("Communities", communityDAO.findAll());
         return mav;
     }
 
@@ -411,9 +471,9 @@ public class EventsController extends BaseController {
 
         Set<GameSet> gameSets = new HashSet<>();
         for (int setNumber = 1; setNumber <= event.getNumberOfSets(); setNumber++) {
-            for (int teamNumber = 1; teamNumber <= teams.size(); teamNumber++) {
+            for (int teamNumber = 0; teamNumber < teams.size(); teamNumber++) {
                 try {
-                    LOG.info("set-" + setNumber + "-team-" + teamNumber + 1);
+                    LOG.info("set-" + setNumber + "-team-" + teamNumber);
                     Integer setGames = Integer.parseInt(request.getParameter("set-" + setNumber + "-team-" + teamNumber));
                     if (setGames != -1) {
                         GameSet gameSet = new GameSet();
@@ -421,7 +481,7 @@ public class EventsController extends BaseController {
                         gameSet.setGame(game);
                         gameSet.setSetGames(setGames);
                         gameSet.setSetNumber(setNumber);
-                        gameSet.setParticipant(teams.get(teamNumber - 1));
+                        gameSet.setParticipant(teams.get(teamNumber));
                         gameSet = gameSetDAO.saveOrUpdate(gameSet);
                         gameSets.add(gameSet);
                     }
@@ -474,5 +534,14 @@ public class EventsController extends BaseController {
         mav.addObject("Round", roundNumber);
         mav.addObject("GameResultMap", gameUtil.getGameResultMap(event.getGames()));
         return mav;
+    }
+
+    private Participant findFirstParticipant(Set<Participant> participants, List<Community> communities) {
+        for (Participant participant : participants) {
+            if (((Team) participant).getCommunity().equals(communities.get(0))) {
+                return participant;
+            }
+        }
+        return null;
     }
 }

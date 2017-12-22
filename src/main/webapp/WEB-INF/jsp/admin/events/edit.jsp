@@ -155,28 +155,26 @@
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Participants"/></span>
                     </div>
-                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-GroupTwoRounds select-toggle-Knockout select-toggle-PullRoundRobin">
-                        <%-- Zahlungsmethoden --%>
-                        <div class="relative">
-                            <spf:select path="paymentMethods" class="select-multiple form-control" data-style="form-center-element" data-container="body">
-                                <c:forEach var="PaymentMethod" items="${PaymentMethods}">
-                                    <fmt:message key="${PaymentMethod}" var="Label"/>
-                                    <spf:option value="${PaymentMethod}" label="${Label}"/>
-                                </c:forEach>
-                            </spf:select>
-                            <span class="explanation-select"><fmt:message key="PaymentMethods"/></span>
-                        </div>
+                    <%-- Zahlungsmethoden --%>
+                    <div class="relative">
+                        <spf:select path="paymentMethods" class="select-multiple form-control" data-style="form-center-element" data-container="body">
+                            <c:forEach var="PaymentMethod" items="${PaymentMethods}">
+                                <fmt:message key="${PaymentMethod}" var="Label"/>
+                                <spf:option value="${PaymentMethod}" label="${Label}"/>
+                            </c:forEach>
+                        </spf:select>
+                        <span class="explanation-select"><fmt:message key="PaymentMethods"/></span>
+                    </div>
 
-                        <%-- Price --%>
-                        <div class="relative"> 
-                            <spf:input path="price" type="text" class="form-control form-center-element" placeholder="20.00" data-valid-chars="[0-9\.]"/>
-                            <span class="explanation"><fmt:message key="PricePerBooking"/></span>
-                        </div>
-                        
-                        <div class="relative"> 
-                            <spf:input path="confirmationMailRemark" type="text" class="form-control form-center-element" placeholder=""/>
-                            <span class="explanation"><fmt:message key="ConfirmationMailRemark"/></span>
-                        </div>
+                    <%-- Price --%>
+                    <div class="relative">
+                        <spf:input path="price" type="text" class="form-control form-center-element" placeholder="20.00" data-valid-chars="[0-9\.]"/>
+                        <span class="explanation"><fmt:message key="PricePerBooking"/></span>
+                    </div>
+
+                    <div class="relative">
+                        <spf:input path="confirmationMailRemark" type="text" class="form-control form-center-element" placeholder=""/>
+                        <span class="explanation"><fmt:message key="ConfirmationMailRemark"/></span>
                     </div>
                     <spf:input type="hidden" path="currency" value="EUR"/>
 

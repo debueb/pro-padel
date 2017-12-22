@@ -39,7 +39,7 @@ public abstract class EventBookingTestBase extends TestBase {
         Player player = new Player();
         player.setEmail("padelcampus-unittest-eventbooking" + i + "@pro-padel.de");
         player.setFirstName("dummy " + RandomStringUtils.random(3, "abcdefghijklmnopqrstuvwxyz".toCharArray()));
-        player.setLastName("dummy lastname");
+        player.setLastName("dummy lastname " + i);
         player.setPassword("test");
         player.setPhone("004917497568349");
         return playerDAO.saveOrUpdate(player);
