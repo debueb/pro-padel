@@ -36,7 +36,18 @@
                                                 <td class="text-center">${Participant}</td>
                                             </c:if>
                                         </c:forEach>
-                                        <td class="text-center">${GameResult}</td>
+                                        <td class="text-center">
+                                            <a href="/games/game/${Game.id}/edit?redirectUrl=${redirectUrl}">
+                                            <c:choose>
+                                                <c:when test="${empty GameResult}">
+                                                    <fmt:message key="AddGameResult"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${GameResult}
+                                                </c:otherwise>
+                                            </c:choose>
+                                            </a>
+                                        </td>
                                         <c:forEach var="Participant" items="${Game.participants}">
                                             <c:if test="${Participant.community eq Communities[1]}">
                                                 <td class="text-center">${Participant}</td>
