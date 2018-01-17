@@ -19,7 +19,7 @@
                 <h4>${Title}</h4>
             </div>
             <div class="panel-body">
-                <spf:form method="POST" class="form-signin unit" modelAttribute="Model">
+                <spf:form method="POST" class="unit" modelAttribute="Model">
                     <spf:input type="hidden" path="id"/>
                     <div class="alert alert-danger" role="alert"><spf:errors path="*"/></div>
 
@@ -236,11 +236,5 @@
     </div>
 </div>
 
-<%-- include summernote in body when requested via ajax, otherwise after footer (where jquery is added) --%>
-<c:if test="${not empty header['x-requested-with']}">
-    <jsp:include page="/WEB-INF/jsp/admin/include/text-editor.jsp"/>
-</c:if>
+<jsp:include page="/WEB-INF/jsp/admin/include/text-editor.jsp"/>
 <jsp:include page="/WEB-INF/jsp/include/footer.jsp"/>
-<c:if test="${empty header['x-requested-with']}">
-    <jsp:include page="/WEB-INF/jsp/admin/include/text-editor.jsp"/>
-</c:if>

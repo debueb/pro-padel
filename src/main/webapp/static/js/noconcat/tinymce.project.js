@@ -1,11 +1,14 @@
-var destroyTinyMce = function(){
+var projectEditor = window.projectEditor || {};
+
+projectEditor.destroyTinyMce = function(){
     for (var i = tinymce.editors.length - 1 ; i > -1 ; i--) {
         var ed_id = tinymce.editors[i].id;
+        console.log(ed_id);
         tinymce.execCommand("mceRemoveEditor", true, ed_id);
     }
 };
 
-var initTinyMce = function () {
+projectEditor.initTinyMce = function () {
     
     var cssLinks =  $('link[title="project_css"]').map(function(i, link) {
                         return $(link).attr('href');
@@ -121,6 +124,7 @@ var initTinyMce = function () {
     });
 };
 
-$(window).on('statechange', destroyTinyMce);
-$(window).on('statechangecomplete', initTinyMce);
-$(document).ready(initTinyMce()); 
+$(window).on('statechange', projectEditor.destroyTinyMce);
+$(window).off('statechangecomplete', 'projectEditorInitTinyMce');
+$(window).on('statechangecomplete', 'projectEditorInitTinyMce', projectEditor.initTinyMce);
+$(document).ready(projectEditor.initTinyMce());
