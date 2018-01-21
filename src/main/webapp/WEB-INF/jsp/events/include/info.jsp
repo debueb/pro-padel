@@ -1,9 +1,18 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 
 <c:if test="${not empty Model}">
+     <c:if test="${not empty Model.description and Model.description ne '<p><br></p>'}">
+        <div class="row">
+            <div class="col-xs-12">
+                <a class="no-ajaxify edit-page" href="/admin/events/edit/${Model.id}"><i class="fa fa-edit"></i></a>
+                ${Model.description}
+            </div>
+        </div>
+    </c:if>
+
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h4> ${Model.name}</h4>
+            <h4>${Model.name}</h4>
         </div>
         <div class="panel-body">
             <div class="container-fluid">
@@ -68,17 +77,6 @@
                         </div>
                         <div class="col-xs-8">
                             <a href="https://www.google.com/maps/search/${Model.location}" target="blank">${Model.location}</a>
-                        </div>
-                    </div>
-                </c:if>
-                
-                <c:if test="${not empty Model.description and Model.description ne '<p><br></p>'}">
-                    <div class="row">
-                        <div class="col-xs-4 text-right">
-                            <fmt:message key="Description"/>
-                        </div>
-                        <div class="col-xs-8">
-                            ${Model.description}
                         </div>
                     </div>
                 </c:if>
