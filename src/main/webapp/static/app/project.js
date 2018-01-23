@@ -510,7 +510,6 @@ var project = {
             $(document).find('.select-toggle').each(function(){
                 selectedValues.push($(this).val());
             });
-            
             for (var i=0; i<selectedValues.length; i++){
                 $(document).find('[class~="select-toggle-' + selectedValues[i] + '"]').fadeIn();
             }
@@ -520,6 +519,30 @@ var project = {
             showSelect.apply(this);
             
             $('select.select-toggle').on('change', function () {
+                showSelect.apply(this);
+            });
+        });
+    },
+
+     enableSelectToggleRestrict: function () {
+
+        var showSelect = function(){
+            $(document).find('.select-toggle-restrict').each(function(){
+                var containerClass = $(this).attr('data-select-toggle-restrict-container');
+                if (containerClass){
+                    $container = $(containerClass);
+                    //hide all select-toggle-restrict- elements
+                    $container.find("[class*='select-toggle-restrict-']").prop('disabled', true).hide();
+                    //show only selected ones
+                    $container.find("[class*='select-toggle-restrict-"+$(this).val()+"']").prop('disabled', false).show();
+                }
+            });
+        };
+
+        $('select.select-toggle-restrict').livequery(function(){
+            showSelect.apply(this);
+
+            $('select.select-toggle-restrict').on('change', function () {
                 showSelect.apply(this);
             });
         });
@@ -709,6 +732,7 @@ if (project.isNative() && lastPage && lastPage !== window.location.href){
         project.enablePayMill();
         project.enableAdvancedProfile();
         project.enableSelectToggle();
+        project.enableSelectToggleRestrict();
         project.enableAutoSearch();
         project.enableTooltips();
         project.enableSubmodules();

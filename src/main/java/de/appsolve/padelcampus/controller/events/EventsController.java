@@ -57,8 +57,6 @@ public class EventsController extends BaseController {
     @Autowired
     TeamDAOI teamDAO;
     @Autowired
-    CommunityDAOI communityDAO;
-    @Autowired
     EventsUtil eventsUtil;
     @Autowired
     GameUtil gameUtil;
@@ -123,8 +121,8 @@ public class EventsController extends BaseController {
         if (event == null) {
             throw new ResourceNotFoundException();
         }
-        //for friendly games get the participants from the games
         if (event.getEventType().equals(EventType.FriendlyGames)) {
+            //for friendly games get the participants from the games
             List<Game> eventGames = gameDAO.findByEventWithPlayers(event);
             for (Game game : eventGames) {
                 event.getParticipants().addAll(game.getParticipants());
@@ -142,6 +140,17 @@ public class EventsController extends BaseController {
         ModelAndView mav = new ModelAndView("events/participants");
         mav.addObject("Model", event);
         mav.addObject("RankingMap", rankingMap);
+        return mav;
+    }
+
+    @RequestMapping("event/{eventId}/communities")
+    public ModelAndView getEventCommunities(@PathVariable("eventId") Long eventId) {
+        Event event = eventDAO.findByIdFetchWithParticipantsAndCommunities(eventId);
+        if (event == null) {
+            throw new ResourceNotFoundException();
+        }
+        ModelAndView mav = new ModelAndView("events/communityroundrobin/participants");
+        mav.addObject("Model", event);
         return mav;
     }
 
@@ -348,7 +357,7 @@ public class EventsController extends BaseController {
         if (user == null) {
             return getLoginView(request, request.getRequestURI());
         }
-        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
+        Event event = eventDAO.findByIdFetchWithParticipantsAndCommunities(eventId);
         return getAddCommunityGameView(event, new AddTeamGame());
     }
 
@@ -372,15 +381,20 @@ public class EventsController extends BaseController {
             if (bindingResult.hasErrors()) {
                 return getAddCommunityGameView(event, addTeamGame);
             }
-            if (!Collections.disjoint(addTeamGame.getTeams().get(0).getPlayers(), addTeamGame.getTeams().get(1).getPlayers())) {
+            Team team0 = addTeamGame.getTeams().get(0);
+            Team team1 = addTeamGame.getTeams().get(1);
+            if (team0.getPlayers().size() != 2 || team1.getPlayers().size() != 2){
+                throw new Exception(msg.get("ChooseTwoPlayersPerTeam"));
+            }
+            if (!Collections.disjoint(team0.getPlayers(), team1.getPlayers())) {
                 throw new Exception(msg.get("ChooseDistinctPlayers"));
             }
-            if (addTeamGame.getTeams().get(0).getCommunity().equals(addTeamGame.getTeams().get(1).getCommunity())) {
+            if (team0.getCommunity().equals(team1.getCommunity())) {
                 throw new Exception(msg.get("ChooseDistinctCommunities"));
             }
             List<Participant> teams = new ArrayList<>();
-            teams.add(findOrUpdateTeam(addTeamGame.getTeams().get(0)));
-            teams.add(findOrUpdateTeam(addTeamGame.getTeams().get(1)));
+            teams.add(findOrUpdateTeam(team0));
+            teams.add(findOrUpdateTeam(team1));
             List<Game> eventGames = gameDAO.findByEventWithPlayers(event);
             for (Game game : eventGames) {
                 if (game.getParticipants().containsAll(teams)) {
@@ -459,7 +473,6 @@ public class EventsController extends BaseController {
         ModelAndView mav = new ModelAndView("events/communityroundrobin/addcommunitygame");
         mav.addObject("Event", event);
         mav.addObject("Model", game);
-        mav.addObject("Communities", communityDAO.findAll());
         return mav;
     }
 

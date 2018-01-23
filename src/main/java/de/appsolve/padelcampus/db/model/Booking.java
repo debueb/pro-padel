@@ -106,6 +106,12 @@ public class Booking extends CustomerEntity {
     @Column
     private String paypalPaymentId;
 
+    @OneToOne
+    private Community community;
+
+    @Transient
+    private Boolean playerParticipates;
+
     public Player getPlayer() {
         return player;
     }
@@ -310,6 +316,22 @@ public class Booking extends CustomerEntity {
 
     public void setPaypalPaymentId(String paypalPaymentId) {
         this.paypalPaymentId = paypalPaymentId;
+    }
+
+    public Community getCommunity() {
+        return community;
+    }
+
+    public void setCommunity(Community community) {
+        this.community = community;
+    }
+
+    public Boolean getPlayerParticipates() {
+        return playerParticipates;
+    }
+
+    public void setPlayerParticipates(Boolean playerParticipates) {
+        this.playerParticipates = playerParticipates;
     }
 
     @Override

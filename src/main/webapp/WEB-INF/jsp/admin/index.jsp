@@ -43,11 +43,6 @@
                         <jsp:param name="icon" value="users"/>
                     </jsp:include>
                     <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
-                        <jsp:param name="href" value="/admin/communities"/>
-                        <jsp:param name="key" value="Communities"/>
-                        <jsp:param name="icon" value="signing"/>
-                    </jsp:include>
-                    <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/subscriptions"/>
                         <jsp:param name="key" value="Subscriptions"/>
                         <jsp:param name="icon" value="money"/>

@@ -37,11 +37,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -66,13 +64,13 @@ public class EventsBookingController extends BaseController {
     PlayerDAOI playerDAO;
 
     @Autowired
-    CommunityDAOI communityDAO;
-
-    @Autowired
     Validator validator;
 
     @Autowired
     BookingDAOI bookingDAO;
+
+    @Autowired
+    CommunityDAOI communityDAO;
 
     @Autowired
     BookingsPayPalController bookingsPayPalController;
@@ -118,6 +116,7 @@ public class EventsBookingController extends BaseController {
                 newPlayers.add(new Player());
             }
             eventBookingRequest.setNewPlayers(newPlayers);
+            eventBookingRequest.setPlayers(Stream.of(user).collect(Collectors.toSet()));
         }
         return participateView(eventId, eventBookingRequest);
     }
@@ -132,7 +131,7 @@ public class EventsBookingController extends BaseController {
                 return getLoginRequiredView(request, msg.get("Participate"));
             }
 
-            Event event = eventDAO.findByIdFetchWithParticipants(eventId);
+            Event event = eventDAO.findByIdFetchWithParticipantsAndCommunities(eventId);
 
             Booking booking = new Booking();
             booking.setPlayer(user);
@@ -162,6 +161,11 @@ public class EventsBookingController extends BaseController {
                         return participateView;
                     }
 
+                    // make sure at least one person participates
+                    if (newPlayers.isEmpty() && (eventBookingRequest.getPlayers() == null || eventBookingRequest.getPlayers().isEmpty())) {
+                        throw new Exception(msg.get("PleaseAddParticipants"));
+                    }
+
                     // check if email already exists
                     for (Player player : newPlayers) {
                         if (playerDAO.findByEmail(player.getEmail()) != null) {
@@ -169,23 +173,20 @@ public class EventsBookingController extends BaseController {
                         }
                     }
 
-                    // make sure community exists
+                    // make sure community name exists
                     Community community = eventBookingRequest.getCommunity();
-                    if (community.getId() == null) {
-                        if (StringUtils.isEmpty(community.getName())) {
-                            throw new Exception(msg.get("SelectExistingCommunityOrCreateNewOne"));
-                        } else if (communityDAO.findByName(community.getName()) == null) {
-                            communityDAO.saveOrUpdate(community);
-                        }
-
+                    if (StringUtils.isEmpty(community.getName())) {
+                        throw new Exception(msg.get("PleaseAddCommunityName"));
                     }
+                    booking.setCommunity(community);
 
                     Set<Player> allPlayers = new HashSet<>(eventBookingRequest.getPlayers());
                     newPlayers.forEach(newPlayer -> allPlayers.add(playerDAO.saveOrUpdate(newPlayer)));
 
-                    //do not add user as this would cause duplicate key (player and players go into the same table)
+                    //do not add user as this would cause duplicate key (player and players go into the same table), instead use transient boolean value
                     allPlayers.remove(user);
                     booking.setPlayers(allPlayers);
+                    booking.setPlayerParticipates(eventBookingRequest.getPlayers() != null && eventBookingRequest.getPlayers().contains(user));
                     break;
                 default:
                     Player player = eventBookingRequest.getPlayer();
@@ -270,6 +271,15 @@ public class EventsBookingController extends BaseController {
 
             booking.setBlockingTime(new LocalDateTime());
             booking.setUUID(BookingUtil.generateUUID());
+            if (booking.getCommunity() != null) {
+                SortedSet<Player> communityPlayers = new TreeSet<>();
+                if (booking.getPlayerParticipates()) {
+                    communityPlayers.add(booking.getPlayer());
+                }
+                communityPlayers.addAll(booking.getPlayers());
+                booking.getCommunity().setPlayers(communityPlayers);
+                booking.setCommunity(communityDAO.saveOrUpdate(booking.getCommunity()));
+            }
             bookingDAO.saveOrUpdate(booking);
 
             switch (booking.getPaymentMethod()) {
@@ -321,8 +331,7 @@ public class EventsBookingController extends BaseController {
                     break;
 
                 case CommunityRoundRobin:
-                    event.getParticipants().add(booking.getPlayer());
-                    event.getParticipants().addAll(booking.getPlayers());
+                    event.getCommunities().add(booking.getCommunity());
                     eventDAO.saveOrUpdate(event);
                     break;
 
@@ -387,7 +396,6 @@ public class EventsBookingController extends BaseController {
                 break;
             case CommunityRoundRobin:
                 mav = new ModelAndView("events/bookings/participate/community");
-                mav.addObject("Communities", communityDAO.findAll());
                 break;
             default:
                 mav = new ModelAndView("events/bookings/participate/index");
@@ -409,20 +417,36 @@ public class EventsBookingController extends BaseController {
 
     private void isEventBookingPossible(Booking booking) throws Exception {
         Event event = booking.getEvent();
-        Event eventWithPlayers = eventDAO.findByIdFetchWithParticipantsAndPlayers(event.getId());
-        checkPlayerNotParticipating(eventWithPlayers, booking.getPlayer());
+        Set<Participant> participants = new HashSet<>();
+        switch (event.getEventType()) {
+            case CommunityRoundRobin:
+                event = eventDAO.findByIdFetchWithParticipantsAndCommunities(event.getId());
+                for (Community community : event.getCommunities()) {
+                    if (community.getPlayers() != null) {
+                        participants.addAll(community.getPlayers());
+                    }
+                }
+                if (booking.getPlayerParticipates() != null && booking.getPlayerParticipates()) {
+                    checkPlayerNotParticipating(participants, booking.getPlayer());
+                }
+                break;
+            default:
+                Event eventWithPlayers = eventDAO.findByIdFetchWithParticipantsAndPlayers(event.getId());
+                participants = eventWithPlayers.getParticipants();
+                checkPlayerNotParticipating(participants, booking.getPlayer());
+        }
         if (booking.getPlayers() != null) {
             for (Player player : booking.getPlayers()) {
-                checkPlayerNotParticipating(eventWithPlayers, player);
+                checkPlayerNotParticipating(participants, player);
             }
         }
-        if (event.getParticipants().size() >= event.getMaxNumberOfParticipants()) {
+        if (participants.size() >= event.getMaxNumberOfParticipants()) {
             throw new Exception(msg.get("EventBookedOut"));
         }
     }
 
-    private void checkPlayerNotParticipating(Event event, Player user) throws Exception {
-        for (Participant p : event.getParticipants()) {
+    private void checkPlayerNotParticipating(Collection<Participant> participants, Player user) throws Exception {
+        for (Participant p : participants) {
             if (p instanceof Team) {
                 Team team = (Team) p;
                 if (team.getPlayers().contains(user)) {

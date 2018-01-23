@@ -127,7 +127,8 @@
                         <spf:input path="maxNumberOfParticipants" type="number" class="form-control form-center-element"/>
                         <div class="explanation-select"><fmt:message key="MaxNumberOfParticipants"/></div>
                     </div>
-                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-GroupTwoRounds select-toggle-Knockout select-toggle-CommunityRoundRobin select-toggle-PullRoundRobin relative" data-style="form-center-element">
+                    <%-- Teilnehmer --%>
+                    <div class="select-toggle-SingleRoundRobin select-toggle-GroupKnockout select-toggle-GroupTwoRounds select-toggle-Knockout select-toggle-PullRoundRobin relative" data-style="form-center-element">
                         <fmt:message key="CurrentlySelected" var="CurrentlySelected"/>
                         <fmt:message key="PleaseChoose" var="EmptyTitle"/>
                         <fmt:message key="ErrorText" var="ErrorText"/>
@@ -155,6 +156,17 @@
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="Participants"/></span>
                     </div>
+                    <%-- Mannschaften --%>
+                    <div class="select-toggle-CommunityRoundRobin relative" data-style="form-center-element">
+                        <spf:select
+                            path="communities"
+                            class="form-control select-multiple form-center-element"
+                            multiple="multiple"
+                            data-container="body" >
+                            <spf:options items="${Model.communities}" itemValue="id" selected="true"/>
+                        </spf:select>
+                        <span class="explanation-select"><fmt:message key="Communities"/></span>
+                    </div>
                     <%-- Zahlungsmethoden --%>
                     <div class="relative">
                         <spf:select path="paymentMethods" class="select-multiple form-control" data-style="form-center-element" data-container="body">
@@ -165,7 +177,6 @@
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="PaymentMethods"/></span>
                     </div>
-
                     <%-- Price --%>
                     <div class="relative">
                         <spf:input path="price" type="text" class="form-control form-center-element" placeholder="20.00" data-valid-chars="[0-9\.]"/>
