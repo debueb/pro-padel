@@ -8,6 +8,7 @@ package de.appsolve.padelcampus.reporting;
 import com.bugsnag.Bugsnag;
 import jersey.repackaged.com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,8 @@ import java.util.regex.Pattern;
 @Component
 public class ErrorReporter {
 
+    private static final Logger LOG = Logger.getLogger(ErrorReporter.class);
+
     private static final Pattern IGNORED_USER_AGENT_PATTERN = Pattern.compile(".*(tinfoilsecurity|Googlebot|bingbot|AhrefsBot|facebookexternalhit|seoscanners|BDCbot|DomainCrawler).*");
     private static final Set<String> IGNORED_EXCEPTION_CLASS_NAMES = Sets.newHashSet("ClientAbortException");
 
@@ -34,17 +37,22 @@ public class ErrorReporter {
         if (!isDebug) {
             if (ex != null && !IGNORED_EXCEPTION_CLASS_NAMES.contains(ex.getClass().getSimpleName())) {
                 if (ex.getCause() == null || !IGNORED_EXCEPTION_CLASS_NAMES.contains(ex.getCause().getClass().getSimpleName())) {
-                    ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-                    //log all errors when we don't have a request context, e.g. for scheduled tasks etc
-                    if (attr == null || attr.getRequest() == null) {
-                        bugsnag.notify(ex);
-                    } else {
-                        //if we have a request context, ignore bot requests
-                        String userAgent = attr.getRequest().getHeader(HttpHeaders.USER_AGENT);
-                        if (!StringUtils.isEmpty(userAgent) && !IGNORED_USER_AGENT_PATTERN.matcher(userAgent).matches()) {
-                            bugsnag.notify(ex);
+                    try {
+                        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+                        //log all errors when we don't have a request context, e.g. for scheduled tasks etc
+                        if (attr == null || attr.getRequest() == null) {
+                            LOG.error(ex.getMessage(), ex);
+                        } else {
+                            //if we have a request context, ignore bot requests
+                            String userAgent = attr.getRequest().getHeader(HttpHeaders.USER_AGENT);
+                            if (!StringUtils.isEmpty(userAgent) && !IGNORED_USER_AGENT_PATTERN.matcher(userAgent).matches()) {
+                                bugsnag.notify(ex);
+                            }
                         }
+                    } catch (IllegalStateException e) {
+                        LOG.error(ex.getMessage(), ex);
                     }
+
                 }
             }
         }

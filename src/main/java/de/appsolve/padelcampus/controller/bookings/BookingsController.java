@@ -115,6 +115,9 @@ public class BookingsController extends BaseController {
     @Autowired
     OfferPropertyEditor offerPropertyEditor;
 
+    @Autowired
+    BookingMonitorUtil bookingMonitorUtil;
+
     public static ModelAndView getBookingConfirmView(Booking booking) {
         ModelAndView mav = new ModelAndView("bookings/confirm");
         mav.addObject("Booking", booking);
@@ -445,6 +448,7 @@ public class BookingsController extends BaseController {
             }
 
             bookingUtil.sendBookingCancellationNotification(request, booking);
+            bookingMonitorUtil.notifyUsers(request, booking);
         } catch (Exception e) {
             LOG.error("Error during booking cancellation", e);
             ModelAndView cancellationView = getCancellationView(booking);

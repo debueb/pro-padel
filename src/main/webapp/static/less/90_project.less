@@ -1875,6 +1875,19 @@ a.menu-item:hover, a.menu-item:active, a.menu-item.active {
     content: "\f051";
     opacity: 0.75;
 }
+.webui-popover{
+    max-width: 200px;
+    word-break: break-word;
+    overflow: hidden;
+}
+@media (max-width: @screen-xs) {
+    .webui-popover {
+        max-width: 140px;
+    }
+}
+.webui-popover-title {
+    text-align: center;
+}
 .webui-popover .webui-popover-content{
     padding: 5px;
     font-size: 12px;
@@ -1928,6 +1941,9 @@ a.menu-item:hover, a.menu-item:active, a.menu-item.active {
 }
 .btn-pagination{
     min-width: 44px;
+}
+.btn-tooltip {
+    white-space: normal;
 }
 /*dayscheduler start*/
 
