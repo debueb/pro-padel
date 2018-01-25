@@ -6,6 +6,7 @@ import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.Player;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -89,6 +90,9 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI {
         criteria.add(Restrictions.or(Restrictions.eq("paymentMethod", PaymentMethod.Subscription), Restrictions.eq("paymentMethod", PaymentMethod.Cash), Restrictions.eq("paymentMethod", PaymentMethod.Reservation), Restrictions.eq("paymentMethod", PaymentMethod.Voucher), Restrictions.eq("paymentConfirmed", true)));
         criteria.add(Restrictions.or(Restrictions.isNull("cancelled"), Restrictions.eq("cancelled", false)));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        criteria.addOrder(Order.asc("bookingDate"));
+        criteria.addOrder(Order.asc("bookingTime"));
+        criteria.addOrder(Order.asc("offer"));
         return (List<Booking>) criteria.list();
     }
 
