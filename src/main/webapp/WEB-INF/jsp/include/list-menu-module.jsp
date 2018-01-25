@@ -10,9 +10,11 @@
                     <div class="menu-separator"></div>
                 </c:if>
                 <c:set var="CustomerModule" value="${SubModule}" scope="request"/>
-                <div class="subModule" style="position: relative">
-                    <jsp:include page="/WEB-INF/jsp/include/list-menu-module.jsp"/>
-                </div>
+                <c:if test="${CustomerModule.showInMenu}">
+                    <div class="subModule" style="position: relative">
+                        <jsp:include page="/WEB-INF/jsp/include/list-menu-module.jsp"/>
+                    </div>
+                </c:if>
                 <c:if test="${SubModule.showInMenu}">
                      <c:set var="firstSubmodule" value="false"/>
                 </c:if>
