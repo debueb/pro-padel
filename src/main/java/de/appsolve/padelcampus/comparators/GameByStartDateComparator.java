@@ -17,6 +17,17 @@ public class GameByStartDateComparator implements Comparator<Game>, Serializable
 
     private static final long serialVersionUID = 1L;
 
+    private Integer reverse = 1;
+
+    public GameByStartDateComparator() {
+    }
+
+    public GameByStartDateComparator(Boolean reverse) {
+        if (reverse) {
+            this.reverse = -1;
+        }
+    }
+
     @Override
     public int compare(Game o1, Game o2) {
         int result = 0;
@@ -35,11 +46,11 @@ public class GameByStartDateComparator implements Comparator<Game>, Serializable
                     if (result == 0) {
                         result = o1.getId().compareTo(o2.getId());
                     }
-                    return result;
+                    return result * reverse;
                 }
             }
             result = o1.getId().compareTo(o2.getId());
         }
-        return result;
+        return result * reverse;
     }
 }

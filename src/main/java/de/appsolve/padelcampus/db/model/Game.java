@@ -8,7 +8,6 @@ package de.appsolve.padelcampus.db.model;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
 import javax.persistence.*;
@@ -121,10 +120,6 @@ public class Game extends CustomerEntity {
     public LocalDate getStartDate() {
         if (startDate != null) {
             return startDate;
-        }
-        LocalDateTime lastUpdated = getLastUpdated();
-        if (lastUpdated != null) {
-            return lastUpdated.toLocalDate();
         }
         if (event != null) {
             if (event.getStartDate() != null) {

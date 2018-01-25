@@ -23,32 +23,45 @@
                         </c:when>
                     </c:choose>
                 </div>
-                <table class="table table-responsive table-striped table-fixed unit-2">
-                    <tbody>
-                    <c:forEach var="GameResult" items="${GameResultMap}">
-                        <c:set var="Game" value="${GameResult.key}"/>
-                        <c:set var="Result" value="${GameResult.value}"/>
-                        <tr>
-                            <td class="text-right vertical-align-middle">${Game}</td>
-                            <td class="vertical-align-middle">
-                                <c:choose>
-                                    <c:when test="${empty Result}">
-                                        <a href="/games/game/${Game.id}/edit?redirectUrl=${redirectUrl}"><fmt:message key="AddGameResult"/></a>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <a href="/games/game/${Game.id}/edit?redirectUrl=${redirectUrl}">${Result}</a>
-                                    </c:otherwise>
-                                </c:choose>
-                                    |
-                                    <a href="/admin/events/${Model.id}/game/${Game.id}/delete?redirectUrl=${redirectUrl}"><fmt:message key="Delete"/></a>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+                <div class="table-responsive unit-2">
+                    <table class="table table-striped">
+                        <thead>
+                            <th><fmt:message key="Team"/></th>
+                            <th><fmt:message key="GameResult"/></th>
+                            <th class="text-center"><fmt:message key="GameDate"/></th>
+                            <th class="text-center"><fmt:message key="Delete"/></th>
+                        </thead>
+                        <tbody>
+                        <c:forEach var="GameResult" items="${GameResultMap}">
+                            <c:set var="Game" value="${GameResult.key}"/>
+                            <c:set var="Result" value="${GameResult.value}"/>
+                            <tr>
+                                <td class="vertical-align-middle">${Game}</td>
+                                <td class="vertical-align-middle">
+                                    <c:choose>
+                                        <c:when test="${empty Result}">
+                                            <a href="/games/game/${Game.id}/edit?redirectUrl=${redirectUrl}"><fmt:message key="AddGameResult"/></a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="/games/game/${Game.id}/edit?redirectUrl=${redirectUrl}">${Result}</a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td class="vertical-align-middle text-center">
+                                    <c:if test="${not empty Game.startDate}">
+                                        <joda:format value="${Game.startDate}" pattern="EEE, dd. MMM yyyy"/>
+                                    </c:if>
+                                </td>
+                                <td class="text-center">
+                                    <a href="/admin/events/${Model.id}/game/${Game.id}/delete?redirectUrl=${redirectUrl}"><i class="fa fa-minus-circle"></i></a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 <jsp:include page="/WEB-INF/jsp/include/footer.jsp"/>

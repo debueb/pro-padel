@@ -7,6 +7,7 @@
 package de.appsolve.padelcampus.controller.events;
 
 import de.appsolve.padelcampus.comparators.EventByStartDateComparator;
+import de.appsolve.padelcampus.comparators.GameByStartDateComparator;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.controller.BaseController;
@@ -201,7 +202,7 @@ public class EventsController extends BaseController {
         }
         ModelAndView mav = new ModelAndView("events/pullroundrobin/pullgames");
         mav.addObject("Model", event);
-        mav.addObject("GameResultMap", gameUtil.getGameResultMap(event.getGames()));
+        mav.addObject("GameResultMap", gameUtil.getGameResultMap(event.getGames(), new GameByStartDateComparator(true)));
         return mav;
     }
 
@@ -383,7 +384,7 @@ public class EventsController extends BaseController {
             }
             Team team0 = addTeamGame.getTeams().get(0);
             Team team1 = addTeamGame.getTeams().get(1);
-            if (team0.getPlayers().size() != 2 || team1.getPlayers().size() != 2){
+            if (team0.getPlayers().size() != 2 || team1.getPlayers().size() != 2) {
                 throw new Exception(msg.get("ChooseTwoPlayersPerTeam"));
             }
             if (!Collections.disjoint(team0.getPlayers(), team1.getPlayers())) {
