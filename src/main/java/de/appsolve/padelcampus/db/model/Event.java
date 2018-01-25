@@ -126,6 +126,9 @@ public class Event extends ComparableEntity {
     @Column(length = 8000)
     private String confirmationMailRemark;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Community> communities;
+
     public String getName() {
         return name;
     }
@@ -355,6 +358,14 @@ public class Event extends ComparableEntity {
 
     public void setConfirmationMailRemark(String confirmationMailRemark) {
         this.confirmationMailRemark = confirmationMailRemark;
+    }
+
+    public Set<Community> getCommunities() {
+        return communities == null ? new TreeSet<>() : communities;
+    }
+
+    public void setCommunities(Set<Community> communities) {
+        this.communities = communities;
     }
 
     public Set<Team> getTeams() {

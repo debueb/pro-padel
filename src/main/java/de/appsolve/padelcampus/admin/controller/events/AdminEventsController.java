@@ -93,6 +93,9 @@ public class AdminEventsController extends AdminBaseController<Event> {
     ParticipantCollectionEditor participantCollectionEditor;
 
     @Autowired
+    CommunitiesCollectionEditor communitiesCollectionEditor;
+
+    @Autowired
     CalendarConfigPropertyEditor calendarConfigPropertyEditor;
 
     @Autowired
@@ -104,6 +107,7 @@ public class AdminEventsController extends AdminBaseController<Event> {
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor(DATE_HUMAN_READABLE_PATTERN, false));
+        binder.registerCustomEditor(Set.class, "communities", communitiesCollectionEditor);
         binder.registerCustomEditor(Set.class, "participants", participantCollectionEditor);
         binder.registerCustomEditor(Set.class, "groupParticipants", participantCollectionEditor);
         binder.registerCustomEditor(Set.class, "team1", playerCollectionEditor);
@@ -148,88 +152,89 @@ public class AdminEventsController extends AdminBaseController<Event> {
     @Override
     @RequestMapping(value = {"add", "edit/{modelId}"}, method = POST)
     public ModelAndView postEditView(@ModelAttribute("Model") Event model, HttpServletRequest request, BindingResult result) {
-        validator.validate(model, result);
         ModelAndView editView = getEditView(model);
-
-        if (model.getId() != null) {
-
-            //prevent removal of a team if it has already played a game
-            Event existingEvent = eventDAO.findByIdFetchWithParticipants(model.getId());
-            if (!existingEvent.getParticipants().equals(model.getParticipants())) {
-                for (Participant participant : existingEvent.getParticipants()) {
-                    if (!model.getParticipants().contains(participant)) {
-                        List<Game> existingGames = gameDAO.findByParticipantAndEventWithScoreOnly(participant, model);
-                        if (!existingGames.isEmpty()) {
-                            result.reject("TeamHasAlreadyPlayedInEvent", new Object[]{participant.toString(), existingGames.size(), model.toString()}, null);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            //prevent switching from one event type to another
-            if (!existingEvent.getEventType().equals(model.getEventType())) {
-                result.reject("CannotModifyEventTypeOfExistingEvent");
-            }
-        }
-
-        //make sure end date is not before start date
-        if (model.getEndDate().isBefore(model.getStartDate())) {
-            model.setEndDate(model.getStartDate());
-        }
-
-        //if participants can sign up online, make sure price and payment methods are set
-        if (model.getAllowSignup()) {
-            if (model.getPaymentMethods() == null || model.getPaymentMethods().isEmpty()) {
-                result.reject("SelectAPaymentMethod");
-            }
-            if (model.getPrice() == null) {
-                result.reject("SetAPrice");
-            }
-        }
-
+        validator.validate(model, result);
         if (result.hasErrors()) {
             return editView;
         }
+        try {
+            if (model.getId() != null) {
 
-        switch (model.getEventType()) {
-
-            case SingleRoundRobin:
-                model = getDAO().saveOrUpdate(model);
-
-                //remove games that have not been played yet
-                gameUtil.removeObsoleteGames(model);
-
-                gameUtil.createMissingGames(model, model.getParticipants());
-                return redirectToIndex(request);
-
-            case GroupTwoRounds:
-                //remove games that have not been played yet
-                gameUtil.removeObsoleteGames(model);
-                //no break
-            case GroupKnockout:
-                model = getDAO().saveOrUpdate(model);
-                if (!model.getParticipants().isEmpty()) {
-                    return redirectToGroupDraws(model);
-                } else {
-                    return redirectToIndex(request);
+                //prevent removal of a team if it has already played a game
+                Event existingEvent = eventDAO.findByIdFetchWithParticipants(model.getId());
+                if (!existingEvent.getParticipants().equals(model.getParticipants())) {
+                    for (Participant participant : existingEvent.getParticipants()) {
+                        if (!model.getParticipants().contains(participant)) {
+                            List<Game> existingGames = gameDAO.findByParticipantAndEventWithScoreOnly(participant, model);
+                            if (!existingGames.isEmpty()) {
+                                throw new Exception(msg.get("TeamHasAlreadyPlayedInEvent", new Object[]{participant.toString(), existingGames.size(), model.toString()}), null);
+                            }
+                        }
+                    }
                 }
 
-            case Knockout:
-                model = getDAO().saveOrUpdate(model);
-                if (!model.getParticipants().isEmpty()) {
-                    return redirectToDraws(model);
-                } else {
-                    return redirectToIndex(request);
+                //prevent switching from one event type to another
+                if (!existingEvent.getEventType().equals(model.getEventType())) {
+                    throw new Exception(msg.get("CannotModifyEventTypeOfExistingEvent"));
                 }
-            case CommunityRoundRobin:
-            case PullRoundRobin:
-            case FriendlyGames:
-                getDAO().saveOrUpdate(model);
-                return redirectToIndex(request);
-            default:
-                result.addError(new ObjectError("id", "Unsupported event type " + model.getEventType()));
-                return editView;
+            }
+
+            //make sure end date is not before start date
+            if (model.getEndDate().isBefore(model.getStartDate())) {
+                model.setEndDate(model.getStartDate());
+            }
+
+            //if participants can sign up online, make sure price and payment methods are set
+            if (model.getAllowSignup()) {
+                if (model.getPaymentMethods() == null || model.getPaymentMethods().isEmpty()) {
+                    throw new Exception(msg.get("SelectAPaymentMethod"));
+                }
+                if (model.getPrice() == null) {
+                    throw new Exception(msg.get("SetAPrice"));
+                }
+            }
+
+            switch (model.getEventType()) {
+
+                case SingleRoundRobin:
+                    model = getDAO().saveOrUpdate(model);
+
+                    //remove games that have not been played yet
+                    gameUtil.removeObsoleteGames(model);
+
+                    gameUtil.createMissingGames(model, model.getParticipants());
+                    return redirectToIndex(request);
+
+                case GroupTwoRounds:
+                    //remove games that have not been played yet
+                    gameUtil.removeObsoleteGames(model);
+                    //no break
+                case GroupKnockout:
+                    model = getDAO().saveOrUpdate(model);
+                    if (!model.getParticipants().isEmpty()) {
+                        return redirectToGroupDraws(model);
+                    } else {
+                        return redirectToIndex(request);
+                    }
+
+                case Knockout:
+                    model = getDAO().saveOrUpdate(model);
+                    if (!model.getParticipants().isEmpty()) {
+                        return redirectToDraws(model);
+                    } else {
+                        return redirectToIndex(request);
+                    }
+                case CommunityRoundRobin:
+                case PullRoundRobin:
+                case FriendlyGames:
+                    getDAO().saveOrUpdate(model);
+                    return redirectToIndex(request);
+                default:
+                    throw new Exception("Unsupported event type " + model.getEventType());
+            }
+        } catch (Exception e) {
+            result.addError(new ObjectError("id", e.getMessage()));
+            return editView;
         }
     }
 

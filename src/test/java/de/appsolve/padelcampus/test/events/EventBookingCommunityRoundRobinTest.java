@@ -78,11 +78,11 @@ public class EventBookingCommunityRoundRobinTest extends EventBookingTestBase {
         Assert.notNull(event, "Event has been created");
 
         login(players.get(0), event);
-        participate(players.subList(1, 3), event);
+        participate(players.subList(0, 3), event);
         logout();
 
         login(players.get(3), event);
-        participate(players.subList(4, 6), event);
+        participate(players.subList(3, 6), event);
         logout();
 
         login(players.get(6), event);
@@ -152,7 +152,8 @@ public class EventBookingCommunityRoundRobinTest extends EventBookingTestBase {
                 .session(session)
                 .param("paymentMethod", PaymentMethod.Cash.toString())
                 .param("community.name", "Team XYZ")
-                .param("_players", "0")
+                .param("_players", "1")
+                .param("players", players.get(0).getUUID())
                 .param("_newPlayers", "0"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors());

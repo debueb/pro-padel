@@ -12,7 +12,7 @@
                 <div class="alert alert-info unit">
                     <fmt:message key="LoginRequiredForThisFeature"/>
                 </div>
-                <a class="btn btn-primary btn-block unit" href="/login?redirect=${redirectURL}"><fmt:message key="Login"/></a>
+                <a class="btn btn-primary btn-block unit-2" href="/login?redirect=${redirectURL}"><fmt:message key="Login"/></a>
                 <a class="btn btn-primary btn-block" href="/login/register?redirect=${redirectURL}"><fmt:message key="Register"/></a>
                 <a class="btn btn-primary btn-block btn-back"><fmt:message key="Cancel"/></a>
             </div>

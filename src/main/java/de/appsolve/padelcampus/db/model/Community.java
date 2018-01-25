@@ -6,11 +6,11 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import org.hibernate.annotations.SortNatural;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import java.util.SortedSet;
 
 /**
  * @author dominik
@@ -25,12 +25,24 @@ public class Community extends ComparableEntity {
     @NotEmpty(message = "{NotEmpty.communityName}")
     private String name;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @SortNatural
+    private SortedSet<Player> players;
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public SortedSet<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(SortedSet<Player> players) {
+        this.players = players;
     }
 
     @Override

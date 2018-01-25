@@ -15,36 +15,18 @@
                     <div class="alert alert-danger unit"><spf:errors path="*"/></div>
 
                     <div class="relative unit-4">
-                        <spf:select class="form-control select-simple" path="paymentMethod">
-                            <spf:options items="${Model.paymentMethods}" />
+                        <spf:select class="form-control select-simple form-top-element" path="paymentMethod">
+                            <c:forEach var="PaymentMethod" items="${Model.paymentMethods}">
+                                <spf:option value="${PaymentMethod}"><fmt:message key="${PaymentMethod}"/></spf:option>
+                            </c:forEach>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="PaymentMethod"/></span>
                     </div>
 
-                    <div class="accordion unit-4">
-                        <div><fmt:message key="ChooseExistingCommunity"/></div>
-                        <div>
-                            <div class="relative">
-                                <fmt:message key="PleaseChoose" var="PleaseChoose" />
-                                <spf:select
-                                    path="community.id"
-                                    data-container="body"
-                                    class="form-control select-simple">
-                                    <spf:option label="${PleaseChoose}" value=""/>
-                                    <spf:options items="${Communities}" itemLabel="name" itemValue="id"/>
-                                </spf:select>
-                                <span class="explanation-select"><fmt:message key="Community"/></span>
-                            </div>
-                        </div>
-                        <div><fmt:message key="CreateNewCommunity"/></div>
-                        <div>
-                            <div class="relative">
-                                <spf:input path="community.name" type="text" class="form-control"/>
-                                <div class="explanation"><fmt:message key="Name"/></div>
-                            </div>
-                        </div>
+                    <div class="relative">
+                        <spf:input path="community.name" type="text" class="form-control form-bottom-element"/>
+                        <div class="explanation"><fmt:message key="CommunityName"/></div>
                     </div>
-
                     <div class="unit-4">
                         <fmt:message key="CurrentlySelected" var="CurrentlySelected"/>
                         <fmt:message key="Search" var="SearchPlaceholder"/>
@@ -52,6 +34,7 @@
                         <fmt:message key="StatusInitialized" var="StatusInitialized"/>
                         <fmt:message key="SearchNoResults" var="SearchNoResults"/>
                         <fmt:message key="StatusSearching" var="StatusSearching"/>
+                        <div>${ChooseExistingPlayers}</div>
                         <div class="relative">
                             <spf:select
                                 path="players"

@@ -90,6 +90,8 @@ public abstract class TestBase {
     @Autowired
     private OfferDAOI offerDAO;
     @Autowired
+    private CommunityDAOI communityDAO;
+    @Autowired
     private CalendarConfigDAOI calendarConfigDAO;
 
     @Before
@@ -99,8 +101,9 @@ public abstract class TestBase {
 
             bookingDAO.delete(bookingDAO.findAll());
 
-            List<Event> events = eventDAO.findAllFetchWithParticipants();
+            List<Event> events = eventDAO.findAllFetchWithParticipantsAndCommunities();
             for (Event event : events) {
+                event.getCommunities().clear();
                 event.getParticipants().clear();
                 event = eventDAO.saveOrUpdate(event);
             }
@@ -113,6 +116,8 @@ public abstract class TestBase {
             teamDAO.delete(teamDAO.findAll());
 
             matchOfferDAO.delete(matchOfferDAO.findAll());
+
+            communityDAO.delete(communityDAO.findAll());
 
             playerDAO.delete(playerDAO.findAll());
 

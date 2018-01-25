@@ -28,20 +28,24 @@
                                     <td>
                                         <spf:select
                                             path="teams[${teamStatus.index}].community"
-                                            class="select-simple form-control ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'} form-left-element"
+                                            class="select-toggle-restrict select-simple form-control ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'} form-left-element"
+                                            data-select-toggle-restrict-container=".team-${teamStatus.index}-select"
                                             data-container="body">
-                                            <spf:options items="${Communities}" itemValue="id"/>
+                                            <spf:options items="${Event.communities}" itemValue="id"/>
                                         </spf:select>
                                     </td>
                                     <td>
-                                        <spf:select 
-                                            path="teams[${teamStatus.index}].players"
-                                            class="select-multiple form-control form-center-element ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'}"
-                                            data-container="body"
-                                            data-live-search="true"
-                                            data-max-options="2">
-                                            <spf:options items="${Event.participants}" itemValue="UUID"/>
-                                        </spf:select>
+                                        <c:forEach var="Community" items="${Event.communities}">
+                                            <span class="team-${teamStatus.index}-select">
+                                                <spf:select
+                                                    path="teams[${teamStatus.index}].players"
+                                                    class="select-toggle-restrict-${Community.id} select-multiple form-control form-center-element ${teamStatus.last ? 'form-bottom-element' : 'form-top-element'}"
+                                                    data-container="body"
+                                                    data-max-options="2">
+                                                    <spf:options items="${Community.players}" itemValue="UUID"/>
+                                                </spf:select>
+                                            </span>
+                                        </c:forEach>
                                     </td>
                                     <c:forEach begin="1" end="${Event.numberOfSets}" var="setNumber" varStatus="status">
                                         <td>
