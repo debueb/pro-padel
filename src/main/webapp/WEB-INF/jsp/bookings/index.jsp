@@ -1,6 +1,7 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <jsp:include page="/WEB-INF/jsp/include/head.jsp"/>
 <fmt:message key="Booking" var="BookingMsg"/>
+<fmt:message key="NotifyWhenAvailable" var="NotifyWhenAvailable"/>
 <div class="row">
     <div class="col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
         <div class="page-header"></div>
@@ -102,7 +103,11 @@
                                                                         <c:if test="${Booking.offer eq Offer}">
                                                                             <c:choose>
                                                                                 <c:when test="${TimeSlot.startTime ge Booking.bookingTime}">
-                                                                                    <div data-toggle="tooltip" data-placement="top" data-container="body" data-content="${Booking.publicBooking ? empty Booking.comment ? Booking.player : Booking.comment : BookingMsg}<br /> <joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/>${Booking.confirmed ? '' : BookingPendingMsg}">
+                                                                                    <div data-toggle="booking-tooltip"
+                                                                                         data-booking="${Booking.UUID}"
+                                                                                         data-placement="top"
+                                                                                         data-container="body"
+                                                                                         data-title="${Booking.publicBooking ? empty Booking.comment ? Booking.player : Booking.comment : BookingMsg}<br /> <joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/>">
                                                                                         <i class="fa fa-info-circle text-center"></i>
                                                                                     </div>
                                                                                     <c:set var="timeSlotFilled" value="true"/>

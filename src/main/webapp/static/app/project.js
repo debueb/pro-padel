@@ -593,13 +593,50 @@ var project = {
     enableTooltips: function(){
         $('[data-toggle="tooltip"]').livequery(function(){
             $(this).webuiPopover({
-                animation: 'pop',
-                maxWidth: '200px'
+                animation: 'pop'
             });
         });
         $(window).on('statechange', function(){
            $('[data-toggle="tooltip"]').webuiPopover('destroy'); 
         });
+    },
+
+    enableBookingTooltips: function(){
+        $('[data-toggle="booking-tooltip"]').livequery(function(){
+            var $this = $(this),
+                booking = $this.attr('data-booking');
+
+            $this.webuiPopover({
+                animation: 'pop',
+                cache: false,
+                type:'async',
+                url:`/bookings/monitor/${booking}`,
+                content:function(data){
+                    return data;
+                }
+            });
+        });
+        $(window).on('statechange', function(){
+           $('[data-toggle="booking-tooltip"]').webuiPopover('destroy');
+        });
+
+        $('.btn-notify').livequery(function(){
+            var $this = $(this),
+                booking = $this.attr('data-booking');
+            $this.on('click', function() {
+                $.ajax({
+                    type: 'POST',
+                    url: `/bookings/monitor/${booking}/watch`,
+                    dataType: 'html',
+                    cache: false,
+                    processData: false,
+                }).done(function (data) {
+                    $this.replaceWith(data);
+                }).fail(function () {
+                    $this.replaceWith('error');
+                });
+            });
+        })
     },
     
     enableSubmodules: function(){
@@ -735,6 +772,7 @@ if (project.isNative() && lastPage && lastPage !== window.location.href){
         project.enableSelectToggleRestrict();
         project.enableAutoSearch();
         project.enableTooltips();
+        project.enableBookingTooltips();
         project.enableSubmodules();
         project.enableSlick();
         project.saveLastPage();

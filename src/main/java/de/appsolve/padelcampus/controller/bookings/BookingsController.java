@@ -17,6 +17,7 @@ import de.appsolve.padelcampus.data.OfferDurationPrice;
 import de.appsolve.padelcampus.db.dao.*;
 import de.appsolve.padelcampus.db.model.*;
 import de.appsolve.padelcampus.exceptions.MailException;
+import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import de.appsolve.padelcampus.spring.OfferOptionCollectionEditor;
 import de.appsolve.padelcampus.spring.OfferPropertyEditor;
 import de.appsolve.padelcampus.utils.*;
@@ -114,6 +115,9 @@ public class BookingsController extends BaseController {
 
     @Autowired
     OfferPropertyEditor offerPropertyEditor;
+
+    @Autowired
+    BookingMonitorUtil bookingMonitorUtil;
 
     public static ModelAndView getBookingConfirmView(Booking booking) {
         ModelAndView mav = new ModelAndView("bookings/confirm");
@@ -365,6 +369,16 @@ public class BookingsController extends BaseController {
     @RequestMapping(value = "booking/{UUID}/cancel")
     public ModelAndView showCancellationView(@PathVariable("UUID") String UUID, HttpServletRequest request) {
         Booking booking = bookingDAO.findByUUID(UUID);
+        if (booking == null) {
+            throw new ResourceNotFoundException();
+        }
+        Player user = sessionUtil.getUser(request);
+        if (user == null) {
+            return new ModelAndView("redirect:/login?redirect=" + request.getRequestURI());
+        }
+        if (!booking.getPlayer().equals(user)) {
+            return new ModelAndView("error/403");
+        }
         ModelAndView cancellationView = getCancellationView(booking);
         try {
             validateBookingCancellation(booking);
@@ -387,6 +401,16 @@ public class BookingsController extends BaseController {
     @RequestMapping(value = "booking/{UUID}/cancel", method = POST)
     public ModelAndView cancelBooking(@PathVariable("UUID") String UUID, HttpServletRequest request) {
         Booking booking = bookingDAO.findByUUID(UUID);
+        if (booking == null) {
+            throw new ResourceNotFoundException();
+        }
+        Player user = sessionUtil.getUser(request);
+        if (user == null) {
+            return new ModelAndView("/login?redirect=" + request.getRequestURI());
+        }
+        if (!booking.getPlayer().equals(user)) {
+            return new ModelAndView("error/403");
+        }
         try {
             validateBookingCancellation(booking);
 
@@ -445,6 +469,7 @@ public class BookingsController extends BaseController {
             }
 
             bookingUtil.sendBookingCancellationNotification(request, booking);
+            bookingMonitorUtil.notifyUsers(request, booking);
         } catch (Exception e) {
             LOG.error("Error during booking cancellation", e);
             ModelAndView cancellationView = getCancellationView(booking);

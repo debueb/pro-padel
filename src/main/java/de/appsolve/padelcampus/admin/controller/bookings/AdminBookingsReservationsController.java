@@ -22,6 +22,7 @@ import de.appsolve.padelcampus.db.model.*;
 import de.appsolve.padelcampus.exceptions.CalendarConfigException;
 import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.spring.OfferOptionCollectionEditor;
+import de.appsolve.padelcampus.utils.BookingMonitorUtil;
 import de.appsolve.padelcampus.utils.BookingUtil;
 import de.appsolve.padelcampus.utils.FormatUtils;
 import de.appsolve.padelcampus.utils.SessionUtil;
@@ -34,6 +35,7 @@ import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -71,6 +73,9 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
 
     @Autowired
     BookingUtil bookingUtil;
+
+    @Autowired
+    BookingMonitorUtil bookingMonitorUtil;
 
     @Autowired
     CalendarConfigDAOI calendarConfigDAO;
@@ -344,7 +349,29 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
             return getNotFoundView();
         }
         List<Booking> commentBookings = bookingDAO.findByBlockingTimeAndComment(booking.getBlockingTime(), booking.getComment());
-        bookingDAO.delete(commentBookings);
+        for (Booking commentBooking : commentBookings) {
+            bookingDAO.deleteById(commentBooking.getId());
+            bookingMonitorUtil.notifyUsers(request, commentBooking);
+        }
+        return redirectToIndex(request);
+    }
+
+    @RequestMapping(value = "/{id}/delete", method = POST)
+    public ModelAndView postDelete(HttpServletRequest request, @PathVariable("id") Long id) {
+        @SuppressWarnings("unchecked")
+        Booking model = (Booking) getDAO().findById(id);
+        try {
+            if (model == null) {
+                return getNotFoundView();
+            }
+            getDAO().deleteById(id);
+            bookingMonitorUtil.notifyUsers(request, model);
+        } catch (DataIntegrityViolationException e) {
+            LOG.warn("Attempt to delete " + model + " failed due to " + e);
+            ModelAndView deleteView = new ModelAndView("include/delete", "Model", model);
+            deleteView.addObject("error", msg.get("CannotDeleteDueToRefrence", new Object[]{model.toString()}));
+            return deleteView;
+        }
         return redirectToIndex(request);
     }
 
