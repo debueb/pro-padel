@@ -34,7 +34,7 @@
                         <fmt:message key="StatusInitialized" var="StatusInitialized"/>
                         <fmt:message key="SearchNoResults" var="SearchNoResults"/>
                         <fmt:message key="StatusSearching" var="StatusSearching"/>
-                        <div><fmt:message key="ChooseExistingPlayers"/></div>
+                        <div>${ChooseExistingPlayers}</div>
                         <div class="relative">
                             <spf:select
                                 path="players"
