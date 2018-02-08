@@ -5,3 +5,9 @@
 <div id="file-manager"></div>
 <script src="/static/js/noconcat/tinymce/tinymce.min.js"></script>
 <script src="/static/js/noconcat/tinymce.project.js"></script>
+<style>
+.mce-tinymce{
+    box-shadow:none;
+    box-sizing:border-box;
+}
+</style>
