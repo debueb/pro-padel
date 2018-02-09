@@ -13,6 +13,7 @@
             </div>
             <div class="panel-body">
                 <div class="alert alert-success"><fmt:message key="RegistrationSuccessfulMessage"/></div>
+                <a class="btn btn-primary btn-block unit-2" href="/home"><fmt:message key="GoToHomepage"/></a>
             </div>
         </div>
     </div>

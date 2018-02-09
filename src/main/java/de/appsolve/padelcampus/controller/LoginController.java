@@ -29,6 +29,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,10 +73,15 @@ public class LoginController extends BaseController {
     }
 
     @RequestMapping(method = POST)
-    public ModelAndView doLogin(@Valid @ModelAttribute("Model") Credentials credentials, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView doLogin(
+            @Valid @ModelAttribute("Model") Credentials credentials,
+            @RequestParam(value = "stay-logged-in", defaultValue = "false", required = false) Boolean stayLoggedIn,
+            BindingResult bindingResult,
+            HttpServletRequest request,
+            HttpServletResponse response) {
         ModelAndView loginView = getLoginView(credentials, request);
         try {
-            doLogin(credentials, request, response);
+            doLogin(credentials, stayLoggedIn, request, response);
         } catch (Exception e) {
             bindingResult.addError(new ObjectError("email", e.getMessage()));
             return loginView;
@@ -102,22 +108,79 @@ public class LoginController extends BaseController {
         }
         player.setEmail(credentials.getEmail());
         player.setPassword(credentials.getPassword());
-        return getRegisterView(player, request);
+        return getRegisterView(player, request, Boolean.FALSE, Boolean.FALSE);
     }
 
     @RequestMapping(value = "register")
     public ModelAndView getRegister(HttpServletRequest request) {
-        return getRegisterView(new Player(), request);
+        return getRegisterView(new Player(), request, Boolean.FALSE, Boolean.FALSE);
     }
 
     @RequestMapping(value = "register", method = POST)
-    public ModelAndView doRegister(@Valid @ModelAttribute("Model") Player player, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView mav = getRegisterView(player, request);
+    public ModelAndView doRegister(
+            @Valid @ModelAttribute("Model") Player player,
+            BindingResult bindingResult,
+            @RequestParam(value = "stay-logged-in", defaultValue = "false", required = false) Boolean stayLoggedIn,
+            @RequestParam(value = "accept-tac", defaultValue = "false", required = false) Boolean acceptTAC,
+            @RequestParam(value = "accept-pp", defaultValue = "false", required = false) Boolean acceptPP,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        ModelAndView mav = getRegisterView(player, request, acceptTAC, acceptPP);
         if (bindingResult.hasErrors()) {
             return mav;
         }
         try {
-            doRegister(player, request, response);
+            if (!acceptTAC) {
+                throw new Exception(msg.get("PleaseAcceptTAC"));
+            }
+
+            if (!acceptPP) {
+                throw new Exception(msg.get("PleaseAcceptPP"));
+            }
+
+            if (StringUtils.isEmpty(player.getPassword())) {
+                throw new Exception(msg.get("PasswordMayNotBeEmpty"));
+            }
+
+            Player persistedPlayer = playerDAO.findByEmail(player.getEmail());
+            if (persistedPlayer != null && !StringUtils.isEmpty(persistedPlayer.getPasswordHash())) {
+                throw new Exception(msg.get("EmailAlreadyRegistered"));
+            }
+
+            Player playerToPersist;
+            if (persistedPlayer == null) {
+                playerToPersist = player;
+            } else {
+                //update existing player instead of generating a new one
+                playerToPersist = persistedPlayer;
+                playerToPersist.setFirstName(player.getFirstName());
+                playerToPersist.setLastName(player.getLastName());
+                playerToPersist.setPhone(player.getPhone());
+                playerToPersist.setGender(player.getGender());
+                playerToPersist.setPassword(player.getPassword());
+                playerToPersist.setAllowEmailContact(player.getAllowEmailContact());
+            }
+
+            //create player object which also generates a UUID
+            playerToPersist = playerDAO.saveOrUpdate(playerToPersist);
+
+            String accountVerificationLink = PlayerUtil.getAccountVerificationLink(request, playerToPersist);
+
+            Mail mail = new Mail();
+            mail.addRecipient(player);
+            mail.setSubject(msg.get("RegistrationMailSubject"));
+            mail.setBody(StringEscapeUtils.unescapeJava(msg.get("RegistrationMailBody", new Object[]{playerToPersist.toString(), accountVerificationLink, RequestUtil.getBaseURL(request)})));
+            try {
+                mailUtils.send(mail, request);
+            } catch (IOException | MailException e) {
+                LOG.error(e.getMessage(), e);
+            }
+
+            //login user
+            sessionUtil.setUser(request, playerToPersist);
+
+            //set auto login cookie if user has requested so
+            setLoginCookie(stayLoggedIn, request, response);
 
             String redirectPath = sessionUtil.getLoginRedirectPath(request);
             if (!StringUtils.isEmpty(redirectPath)) {
@@ -233,9 +296,12 @@ public class LoginController extends BaseController {
         return mav;
     }
 
-    private ModelAndView getRegisterView(Player player, HttpServletRequest request) {
+    private ModelAndView getRegisterView(Player player, HttpServletRequest request, Boolean acceptTAC, Boolean acceptPP) {
         checkForRedirectParam(request);
-        ModelAndView mav = new ModelAndView("login/register", "Model", player);
+        ModelAndView mav = new ModelAndView("login/register");
+        mav.addObject("Model", player);
+        mav.addObject("AcceptTAC", acceptTAC);
+        mav.addObject("AcceptPP", acceptPP);
         return mav;
     }
 
@@ -252,7 +318,7 @@ public class LoginController extends BaseController {
     }
 
 
-    private Player doLogin(Credentials credentials, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    private Player doLogin(Credentials credentials, Boolean stayLoggedIn, HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (StringUtils.isEmpty(credentials.getEmail())) {
             throw new Exception(msg.get("EmailMayNotBeEmpty"));
         }
@@ -271,59 +337,12 @@ public class LoginController extends BaseController {
         }
 
         sessionUtil.setUser(request, player);
-        setLoginCookie(request, response);
+        setLoginCookie(stayLoggedIn, request, response);
         return player;
     }
 
-    private void doRegister(Player player, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (StringUtils.isEmpty(player.getPassword())) {
-            throw new Exception(msg.get("PasswordMayNotBeEmpty"));
-        }
-
-        Player persistedPlayer = playerDAO.findByEmail(player.getEmail());
-        if (persistedPlayer != null && !StringUtils.isEmpty(persistedPlayer.getPasswordHash())) {
-            throw new Exception(msg.get("EmailAlreadyRegistered"));
-        }
-
-        Player playerToPersist;
-        if (persistedPlayer == null) {
-            playerToPersist = player;
-        } else {
-            //update existing player instead of generating a new one
-            playerToPersist = persistedPlayer;
-            playerToPersist.setFirstName(player.getFirstName());
-            playerToPersist.setLastName(player.getLastName());
-            playerToPersist.setPhone(player.getPhone());
-            playerToPersist.setGender(player.getGender());
-            playerToPersist.setPassword(player.getPassword());
-            playerToPersist.setAllowEmailContact(player.getAllowEmailContact());
-        }
-
-        //create player object which also generates a UUID
-        playerToPersist = playerDAO.saveOrUpdate(playerToPersist);
-
-        String accountVerificationLink = PlayerUtil.getAccountVerificationLink(request, playerToPersist);
-
-        Mail mail = new Mail();
-        mail.addRecipient(player);
-        mail.setSubject(msg.get("RegistrationMailSubject"));
-        mail.setBody(StringEscapeUtils.unescapeJava(msg.get("RegistrationMailBody", new Object[]{playerToPersist.toString(), accountVerificationLink, RequestUtil.getBaseURL(request)})));
-        try {
-            mailUtils.send(mail, request);
-        } catch (IOException | MailException e) {
-            LOG.error(e.getMessage(), e);
-        }
-
-        //login user
-        sessionUtil.setUser(request, playerToPersist);
-
-        //set auto login cookie if user has requested so
-        setLoginCookie(request, response);
-    }
-
-    private void setLoginCookie(HttpServletRequest request, HttpServletResponse response) {
-        String stayLoggedIn = request.getParameter("stay-logged-in");
-        if (!StringUtils.isEmpty(stayLoggedIn) && stayLoggedIn.equals("on")) {
+    private void setLoginCookie(Boolean stayLoggedIn, HttpServletRequest request, HttpServletResponse response) {
+        if (stayLoggedIn != null && stayLoggedIn) {
             loginUtil.updateLoginCookie(request, response);
         } else {
             loginUtil.deleteLoginCookie(request, response);
