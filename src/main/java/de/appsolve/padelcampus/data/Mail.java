@@ -21,8 +21,9 @@ public class Mail {
     @NotEmpty(message = "{NotEmpty.subject}")
     private String subject;
 
-    @NotEmpty(message = "{NotEmpty.body}")
     private String body;
+
+    private String htmlBody;
 
     private String templateId;
 
@@ -60,6 +61,14 @@ public class Mail {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getHtmlBody() {
+        return htmlBody;
+    }
+
+    public void setHtmlBody(String htmlBody) {
+        this.htmlBody = htmlBody;
     }
 
     public String getTemplateId() {

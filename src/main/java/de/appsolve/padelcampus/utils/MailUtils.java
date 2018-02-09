@@ -3,12 +3,10 @@ package de.appsolve.padelcampus.utils;
 import com.sparkpost.Client;
 import com.sparkpost.exception.SparkPostException;
 import com.sparkpost.model.*;
+import com.sparkpost.model.responses.TransmissionCreateResponse;
 import com.sparkpost.resources.ResourceTransmissions;
 import com.sparkpost.transport.RestConnection;
-import de.appsolve.padelcampus.data.Attachment;
-import de.appsolve.padelcampus.data.CustomerI;
-import de.appsolve.padelcampus.data.EmailContact;
-import de.appsolve.padelcampus.data.Mail;
+import de.appsolve.padelcampus.data.*;
 import de.appsolve.padelcampus.exceptions.MailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -34,8 +32,10 @@ public class MailUtils {
     SessionUtil sessionUtil;
     @Autowired
     Environment environment;
+    @Autowired
+    Msg msg;
 
-    public void send(Mail mail, HttpServletRequest request) throws MailException, IOException {
+    public MailResult send(Mail mail, HttpServletRequest request) throws MailException, IOException {
 
         String from = environment.getProperty("SPARKPOST_DEFAULT_SENDER");
         if (request != null) {
@@ -70,21 +70,50 @@ public class MailUtils {
             contentAttributes.setFrom(new AddressAttributes(from));
             contentAttributes.setReplyTo(replyTo);
 
-            if (StringUtils.isEmpty(mail.getTemplateId()) || mail.getTemplateId().equals("TextEmail")) {
-                contentAttributes.setSubject(mail.getSubject());
-                contentAttributes.setHtml(getHTML(mail.getBody()));
-                contentAttributes.setText(mail.getBody());
-                if (mail.getAttachments() != null) {
-                    contentAttributes.setAttachments(getAttachmentAttributes(mail.getAttachments()));
-                }
-            } else {
-                contentAttributes.setTemplateId(mail.getTemplateId());
+            String templateId = mail.getTemplateId();
+            if (StringUtils.isEmpty(templateId)) {
+                templateId = "TextEmail";
             }
-
+            switch (templateId) {
+                case "TextEmail":
+                case "HTMLEmail":
+                    if (StringUtils.isEmpty(mail.getSubject())) {
+                        throw new MailException(msg.get("EmailSubjectMustNotBeEmpty"));
+                    }
+                    contentAttributes.setSubject(mail.getSubject());
+                    if (mail.getAttachments() != null) {
+                        contentAttributes.setAttachments(getAttachmentAttributes(mail.getAttachments()));
+                    }
+                    switch (templateId) {
+                        case "TextEmail":
+                            if (StringUtils.isEmpty(mail.getBody())) {
+                                throw new MailException(msg.get("EmailBodyMustNotBeEmpty"));
+                            }
+                            contentAttributes.setHtml(getHTML(mail.getBody()));
+                            contentAttributes.setText(mail.getBody());
+                            break;
+                        case "HTMLEmail":
+                            if (StringUtils.isEmpty(mail.getHtmlBody())) {
+                                throw new MailException(msg.get("EmailBodyMustNotBeEmpty"));
+                            }
+                            contentAttributes.setHtml(mail.getHtmlBody());
+                            break;
+                    }
+                    break;
+                default:
+                    contentAttributes.setTemplateId(mail.getTemplateId());
+                    break;
+            }
             transmission.setContentAttributes(contentAttributes);
 
             RestConnection connection = new RestConnection(client);
-            ResourceTransmissions.create(connection, 0, transmission);
+            TransmissionCreateResponse transmissionCreateResponse = ResourceTransmissions.create(connection, 0, transmission);
+            MailResult mailResult = new MailResult();
+            if (transmissionCreateResponse != null && transmissionCreateResponse.getResults() != null) {
+                mailResult.setAcceptedCount(transmissionCreateResponse.getResults().getTotalAcceptedRecipients());
+                mailResult.setRejectedCount(transmissionCreateResponse.getResults().getTotalRejectedRecipients());
+            }
+            return mailResult;
         } catch (SparkPostException e) {
             throw new MailException(e.getMessage(), e);
         }

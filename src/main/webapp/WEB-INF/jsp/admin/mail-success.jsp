@@ -10,8 +10,11 @@
             <div class="panel-heading"><h4><fmt:message key="Email"/></h4></div>
             <div class="panel-body">
                 <div class="alert alert-success">
-                    <fmt:message key="EmailWasSentSuccessfully"/>
+                    <div><fmt:message key="EmailWasSentSuccessfully"/></div>
+                    <div><fmt:message key="EmailAcceptedCount"/>: ${MailResult.acceptedCount}</div>
+                    <div><fmt:message key="EmailRejectedCount"/>: ${MailResult.rejectedCount}</div>
                 </div>
+                <a class="btn btn-primary btn-block unit-2" href="/home"><fmt:message key="GoToHomepage"/></a>
             </div>
         </div>
     </div>
