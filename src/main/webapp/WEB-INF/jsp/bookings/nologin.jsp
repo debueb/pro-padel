@@ -20,6 +20,8 @@
                     </c:if>
                     <spf:input path="id" type="hidden"/>
                     <jsp:include page="/WEB-INF/jsp/include/player-input.jsp"/>
+                    <div><input type="checkbox" name="accept-tac" id="accept-tac" ${AcceptTAC ? 'checked' : ''}/><label class="checkbox" for="accept-tac"><fmt:message key="AcceptTAC"><fmt:param value="/agb"/></fmt:message></label></div>
+                    <div><input type="checkbox" name="accept-pp" id="accept-pp" ${AcceptPP ? 'checked' : ''}/><label class="checkbox" for="accept-pp"><fmt:message key="AcceptPP"><fmt:param value="/datenschutz"/></fmt:message></label></div>
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="ContineWithBooking"/></button>
                 </spf:form>
             </div>

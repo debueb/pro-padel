@@ -215,35 +215,49 @@ public class BookingsController extends BaseController {
 
     @RequestMapping(value = "/nologin")
     public ModelAndView showNoLoginView(HttpServletRequest request) {
-        return getNoLoginView(new Player());
+        return getNoLoginView(new Player(), Boolean.FALSE, Boolean.FALSE);
     }
 
     @RequestMapping(value = "/nologin", method = POST)
-    public ModelAndView processNoLoginView(@Valid @ModelAttribute("Model") Player player, BindingResult result, HttpServletRequest request) {
-        ModelAndView noLoginView = getNoLoginView(player);
+    public ModelAndView processNoLoginView(
+            @Valid @ModelAttribute("Model") Player player,
+            BindingResult result,
+            HttpServletRequest request,
+            @RequestParam(value = "accept-tac", defaultValue = "false", required = false) Boolean acceptTAC,
+            @RequestParam(value = "accept-pp", defaultValue = "false", required = false) Boolean acceptPP) {
+        ModelAndView noLoginView = getNoLoginView(player, acceptTAC, acceptPP);
         if (result.hasErrors()) {
             return noLoginView;
         }
-        Booking booking = sessionUtil.getBooking(request);
-        if (booking == null) {
-            result.addError(new ObjectError("id", msg.get("SessionTimeout")));
+        try {
+            if (!acceptTAC) {
+                throw new Exception(msg.get("PleaseAcceptTAC"));
+            }
+            if (!acceptPP) {
+                throw new Exception(msg.get("PleaseAcceptPP"));
+            }
+            Booking booking = sessionUtil.getBooking(request);
+            if (booking == null) {
+                throw new Exception(msg.get("SessionTimeout"));
+            }
+            Player existingPlayer = playerDAO.findByEmail(player.getEmail());
+            if (existingPlayer != null) {
+                if (!StringUtils.isEmpty(existingPlayer.getPasswordHash())) {
+                    noLoginView.addObject("showResetPasswordLink", true);
+                    throw new Exception(msg.get("EmailAlreadyRegistered"));
+                }
+                player = existingPlayer;
+            }
+            player = playerDAO.saveOrUpdate(player);
+            sessionUtil.setUser(request, player);
+            sessionUtil.setBooking(request, booking);
+            String day = booking.getBookingDate().toString(FormatUtils.DATE_HUMAN_READABLE);
+            String time = booking.getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE);
+            return getRedirectToUrl(getOfferURL(day, time, booking.getOffer()));
+        } catch (Exception e) {
+            result.addError(new ObjectError("id", e.getMessage()));
             return noLoginView;
         }
-        Player existingPlayer = playerDAO.findByEmail(player.getEmail());
-        if (existingPlayer != null) {
-            if (!StringUtils.isEmpty(existingPlayer.getPasswordHash())) {
-                result.addError(new ObjectError("id", msg.get("EmailAlreadyRegistered")));
-                noLoginView.addObject("showResetPasswordLink", true);
-                return noLoginView;
-            }
-            player = existingPlayer;
-        }
-        player = playerDAO.saveOrUpdate(player);
-        sessionUtil.setUser(request, player);
-        sessionUtil.setBooking(request, booking);
-        String day = booking.getBookingDate().toString(FormatUtils.DATE_HUMAN_READABLE);
-        String time = booking.getBookingTime().toString(FormatUtils.TIME_HUMAN_READABLE);
-        return getRedirectToUrl(getOfferURL(day, time, booking.getOffer()));
     }
 
     @RequestMapping(value = "{day}/{time}/confirm")
@@ -609,8 +623,12 @@ public class BookingsController extends BaseController {
         return new ModelAndView("redirect:/bookings/nologin");
     }
 
-    private ModelAndView getNoLoginView(Player player) {
-        return new ModelAndView("bookings/nologin", "Model", player);
+    private ModelAndView getNoLoginView(Player player, Boolean acceptTAC, Boolean acceptPP) {
+        ModelAndView mav = new ModelAndView("bookings/nologin");
+        mav.addObject("Model", player);
+        mav.addObject("AcceptTAC", acceptTAC);
+        mav.addObject("AcceptPP", acceptPP);
+        return mav;
     }
 
     private ModelAndView getRedirectToUrl(String confirmURL) {
