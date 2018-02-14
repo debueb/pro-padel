@@ -163,6 +163,9 @@ public class PlayersController extends BaseController {
         if (player == null) {
             throw new ResourceNotFoundException();
         }
+        if (player.getDeleted()) {
+            return new ModelAndView("players/player-deleted");
+        }
         List<Ranking> ranking = rankingUtil.getRanking(player.getGender(), new LocalDate());
         ModelAndView mav = new ModelAndView("players/player", "Player", player);
         Optional<Ranking> playerRanking = ranking.stream().filter(r -> r.getParticipant().equals(player)).findFirst();

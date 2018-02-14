@@ -35,6 +35,11 @@
                         <jsp:param name="key" value="ChangePassword"/>
                         <jsp:param name="icon" value="lock"/>
                     </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/account/delete"/>
+                        <jsp:param name="key" value="DeleteAccount"/>
+                        <jsp:param name="icon" value="minus-circle"/>
+                    </jsp:include>
                 </div>
             </div>
         </div>
