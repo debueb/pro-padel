@@ -3,7 +3,7 @@
 <fmt:message key="NonPublicBooking" var="BookingMsg"/>
 <fmt:message key="NotifyWhenAvailable" var="NotifyWhenAvailable"/>
 <div class="row">
-    <div class="col-xs-12 col-md-10 col-md-offset-1">
+    <div class="col-xs-12 col-lg-10 col-lg-offset-1">
         <div class="page-header"></div>
 
         <jsp:include page="/WEB-INF/jsp/include/module-description.jsp"/>
@@ -42,7 +42,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-xs-12 col-md-10 col-md-offset-1">
+    <div class="col-xs-12 col-lg-10 col-lg-offset-1">
     <c:choose>
         <c:when test="${empty RangeMap}">
             <div class="alert alert-info">
