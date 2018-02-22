@@ -19,11 +19,6 @@
             <div class="panel-body">
                 <div class="list-group">
                     <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
-                        <jsp:param name="href" value="/admin/reports/allocations"/>
-                        <jsp:param name="key" value="Allocations"/>
-                        <jsp:param name="icon" value="cubes"/>
-                    </jsp:include>
-                    <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/reports/players"/>
                         <jsp:param name="key" value="TopPlayers"/>
                         <jsp:param name="icon" value="user"/>

@@ -90,6 +90,9 @@ public class TimeSlot implements Comparable<TimeSlot> {
     //jstl
     public List<Offer> getAvailableOffers() {
         List<Offer> sortedOffers = new ArrayList<>();
+        if (getPricePerMinDuration() == null) {
+            return sortedOffers;
+        }
         if (config != null) {
             sortedOffers.addAll(config.getOffers());
         }
