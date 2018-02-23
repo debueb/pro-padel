@@ -78,13 +78,15 @@ public class BookingSubscriptionTest extends TestBase {
                 .param("offer", offer1.getId().toString())
                 .param("bookingType", BookingType.login.name())
                 .param("duration", "60")
-                .param("paymentMethod", PaymentMethod.Subscription.name()))
+                .param("paymentMethod", PaymentMethod.Subscription.name())
+                .param("accept-tac", "on")
+                .param("accept-pp", "on"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().hasNoErrors())
                 .andExpect(redirectedUrl("/login"));
 
         Booking booking = (Booking) session.getAttribute(SESSION_BOOKING);
-        Assert.notNull(booking);
+        Assert.notNull(booking, "Booking must not be null");
 
         mockMvc.perform(post("/login")
                 .session(session)
@@ -116,7 +118,7 @@ public class BookingSubscriptionTest extends TestBase {
                 .andExpect(model().hasNoErrors());
 
         booking = (Booking) session.getAttribute(SESSION_BOOKING);
-        Assert.notNull(booking.getPlayer());
+        Assert.notNull(booking.getPlayer(), "Player must not be null");
 
         mockMvc.perform(post("/bookings/" + getNextMonday() + "/10:00/confirm")
                 .session(session)
@@ -125,9 +127,9 @@ public class BookingSubscriptionTest extends TestBase {
                 .andExpect(model().hasNoErrors());
 
         List<Booking> bookings = bookingDAO.findAll();
-        Assert.notNull(bookings);
-        Assert.notEmpty(bookings);
-        Assert.isTrue(bookings.contains(booking));
+        Assert.notNull(bookings, "Bookings must not be null");
+        Assert.notEmpty(bookings, "Bookings must not be empty");
+        Assert.isTrue(bookings.contains(booking), "Bookings must contain booking");
     }
 
     @Test
@@ -177,14 +179,16 @@ public class BookingSubscriptionTest extends TestBase {
                 .andExpect(redirectedUrl("/bookings/nologin"));
 
         Booking booking = (Booking) session.getAttribute(SESSION_BOOKING);
-        Assert.notNull(booking);
+        Assert.notNull(booking, "Booking must not be null");
 
         mockMvc.perform(post("/bookings/nologin")
                 .session(session)
                 .param("firstName", NO_LOGIN_USER_FIRST_NAME)
                 .param("lastName", NO_LOGIN_USER_LAST_NAME)
                 .param("email", NO_LOGIN_USER_EMAIL)
-                .param("phone", "01739398758"))
+                .param("phone", "01739398758")
+                .param("accept-tac", "on")
+                .param("accept-pp", "on"))
                 .andExpect(redirectedUrl("/bookings/" + getNextMonday() + "/10:00/offer/" + offer1.getId()));
 
         Player user = (Player) session.getAttribute(SESSION_USER);
@@ -223,7 +227,7 @@ public class BookingSubscriptionTest extends TestBase {
                 .andExpect(redirectedUrl("/login/register"));
 
         Booking booking = (Booking) session.getAttribute(SESSION_BOOKING);
-        Assert.notNull(booking);
+        Assert.notNull(booking, "Booking must not be null");
 
         mockMvc.perform(post("/login/register")
                 .session(session)
@@ -231,7 +235,9 @@ public class BookingSubscriptionTest extends TestBase {
                 .param("lastName", REGISTER_USER_LAST_NAME)
                 .param("email", REGISTER_USER_EMAIL)
                 .param("phone", "01739398758")
-                .param("password", REGISTER_USER_PASSWORD))
+                .param("password", REGISTER_USER_PASSWORD)
+                .param("accept-tac", "on")
+                .param("accept-pp", "on"))
                 .andExpect(redirectedUrl("/bookings/" + getNextMonday() + "/10:00/offer/" + offer1.getId()));
 
         Player user = (Player) session.getAttribute(SESSION_USER);

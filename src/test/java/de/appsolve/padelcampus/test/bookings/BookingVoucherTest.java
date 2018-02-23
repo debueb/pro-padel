@@ -56,7 +56,9 @@ public abstract class BookingVoucherTest extends TestBase {
                 .param("firstName", "test")
                 .param("lastName", "bucher")
                 .param("email", "padelcampus-unittest-1@pro-padel.de")
-                .param("phone", "01739398758"))
+                .param("phone", "01739398758")
+                .param("accept-tac", "on")
+                .param("accept-pp", "on"))
                 .andExpect(redirectedUrl("/bookings/" + nextMonday + "/10:00/offer/" + offer.getId()));
 
         mockMvc.perform(post("/bookings/" + nextMonday + "/10:00/offer/" + offer.getId())

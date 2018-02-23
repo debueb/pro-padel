@@ -42,7 +42,7 @@ public class BookingCreditCardRegisterTest extends TestBase {
                 .andExpect(redirectedUrl("/login/register"));
 
         Booking booking = (Booking) session.getAttribute(SESSION_BOOKING);
-        Assert.notNull(booking);
+        Assert.notNull(booking, "Booking must not be null");
 
         mockMvc.perform(post("/login/register")
                 .session(session)
@@ -50,7 +50,9 @@ public class BookingCreditCardRegisterTest extends TestBase {
                 .param("lastName", "bucher")
                 .param("email", "padelcampus-unittest-3@pro-padel.de")
                 .param("phone", "01739398758")
-                .param("password", "test"))
+                .param("password", "test")
+                .param("accept-tac", "on")
+                .param("accept-pp", "on"))
                 .andExpect(redirectedUrl("/bookings/" + nextMonday + "/10:00/offer/" + offer1.getId()));
 
         Player user = (Player) session.getAttribute(SESSION_USER);
@@ -74,7 +76,7 @@ public class BookingCreditCardRegisterTest extends TestBase {
                 .andExpect(model().hasNoErrors());
 
         booking = (Booking) session.getAttribute(SESSION_BOOKING);
-        Assert.notNull(booking.getPlayer());
+        Assert.notNull(booking.getPlayer(), "Player must not be null");
 
         mockMvc.perform(post("/bookings/" + nextMonday + "/10:00/confirm")
                 .session(session)
