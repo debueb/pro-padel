@@ -107,6 +107,10 @@ public class TimeSlot implements Comparable<TimeSlot> {
         return sortedOffers;
     }
 
+    public boolean getPast() {
+        return getDate().isBefore(LocalDate.now()) || (getDate().equals(LocalDate.now()) && getStartTime().isBefore(LocalTime.now()));
+    }
+
     private Long getFreeCourtCount(Offer offer) {
         Long freeCourtCount = offer.getMaxConcurrentBookings();
         for (Booking booking : getBookings()) {

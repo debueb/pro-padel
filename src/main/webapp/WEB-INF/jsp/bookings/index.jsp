@@ -76,17 +76,20 @@
                                             ${Offer.shortName}
                                         </div>
                                         <c:forEach var="TimeRange" items="${RangeMap}">
+                                            <c:set var="hourFilled" value="false" />
                                             <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
                                                 <c:if test="${TimeSlot.date.dayOfWeek eq WeekDay.dayOfWeek}">
+                                                    <c:set var="bgColor" value="${TimeSlot.past ? '#e7e7e7' : Offer.hexColor}"/>
                                                     <c:choose>
                                                         <c:when test="${fn:contains(TimeSlot.availableOffers, Offer)}">
                                                             <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
                                                             <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
                                                             <div class="booking-gallery-offer">
-                                                                <a href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${Offer.hexColor};">
+                                                                <a href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${bgColor};${TimeSlot.past ? 'color: #ccc;' : ''}">
                                                                     ${TimeSlot.pricePerMinDuration}
                                                                 </a>
                                                             </div>
+                                                            <c:set var="hourFilled" value="true" />
                                                         </c:when>
                                                         <c:when test="${not empty TimeSlot.bookings}">
                                                             <c:set var="timeSlotFilled" value="false"/>
@@ -112,18 +115,24 @@
                                                                             <c:set var="timeSlotFilled" value="true"/>
                                                                         </c:when>
                                                                         <c:when test="${not timeSlotFilled}">
-                                                                            <div class="booking-gallery-offer" style="background-color: ${Offer.hexColor};"></div>
+                                                                            <div class="booking-gallery-offer" style="background-color: ${bgColor};"></div>
+                                                                            <c:set var="timeSlotFilled" value="true"/>
                                                                         </c:when>
                                                                     </c:choose>
                                                                 </c:if>
+                                                                <c:set var="hourFilled" value="${timeSlotFilled}" />
                                                             </c:forEach>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <div class="booking-gallery-offer" style="background-color: ${Offer.hexColor};"></div>
+                                                            <div class="booking-gallery-offer" style="background-color: ${bgColor};"></div>
+                                                            <c:set var="hourFilled" value="true" />
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </c:if>
                                             </c:forEach>
+                                         <c:if test="${not hourFilled}">
+                                            <div class="booking-gallery-offer booking-gallery-offer-taken"></div>
+                                         </c:if>
                                     </c:forEach>
                                     <div class="booking-gallery-header" style="background-color: ${Offer.hexColor};">
                                         <div    data-toggle="tooltip"
