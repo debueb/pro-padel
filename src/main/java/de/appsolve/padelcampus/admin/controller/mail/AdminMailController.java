@@ -15,9 +15,11 @@ import com.sparkpost.transport.RestConnection;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.data.MailResult;
+import de.appsolve.padelcampus.db.dao.CommunityDAOI;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
+import de.appsolve.padelcampus.db.model.Community;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
@@ -69,6 +71,9 @@ public class AdminMailController {
     TeamDAOI teamDAO;
 
     @Autowired
+    CommunityDAOI communityDAO;
+
+    @Autowired
     EventDAOI eventDAO;
 
     @Autowired
@@ -98,6 +103,12 @@ public class AdminMailController {
     public ModelAndView mailTeam(HttpServletRequest request, @PathVariable("teamId") Long teamId) {
         Team team = teamDAO.findByIdFetchWithPlayers(teamId);
         return getMailView(team.getPlayers(), request);
+    }
+
+    @RequestMapping(method = GET, value = "/community/{communityId}")
+    public ModelAndView mailCommunity(HttpServletRequest request, @PathVariable("communityId") Long communityId) {
+        Community community = communityDAO.findById(communityId);
+        return getMailView(community.getPlayers(), request);
     }
 
     @RequestMapping(method = GET, value = "/event/{eventId}")

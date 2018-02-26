@@ -17,7 +17,7 @@
                     <c:forEach var="Community" items="${Model.communities}">
                         <table class="table table-fixed table-bordered table-striped table-hover table-condensed">
                             <thead>
-                                <th>${Community.name}</th>
+                                <th class="text-center"><a href="/admin/communities/edit/${Community.id}?redirectUrl=/events/event/${Model.id}/communities">${Community.name}</a></th>
                             </thead>
                             <tbody>
                                 <c:forEach var="Player" items="${Community.players}">
