@@ -131,7 +131,7 @@
                                                 </c:if>
                                             </c:forEach>
                                          <c:if test="${not hourFilled}">
-                                            <div class="booking-gallery-offer booking-gallery-offer-taken"></div>
+                                            <div class="booking-gallery-offer booking-gallery-offer" style="background-color: ${Offer.hexColor};"></div>
                                          </c:if>
                                     </c:forEach>
                                     <div class="booking-gallery-header" style="background-color: ${Offer.hexColor};">
