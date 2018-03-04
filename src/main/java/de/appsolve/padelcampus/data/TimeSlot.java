@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.data;
 
+import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.db.model.Booking;
 import de.appsolve.padelcampus.db.model.CalendarConfig;
 import de.appsolve.padelcampus.db.model.Offer;
@@ -108,7 +109,9 @@ public class TimeSlot implements Comparable<TimeSlot> {
     }
 
     public boolean getPast() {
-        return getDate().isBefore(LocalDate.now()) || (getDate().equals(LocalDate.now()) && getStartTime().isBefore(LocalTime.now()));
+        LocalDate today = LocalDate.now(Constants.DEFAULT_TIMEZONE);
+        LocalTime now = LocalTime.now(Constants.DEFAULT_TIMEZONE);
+        return getDate().isBefore(today) || (getDate().equals(today) && getStartTime().isBefore(now));
     }
 
     private Long getFreeCourtCount(Offer offer) {
