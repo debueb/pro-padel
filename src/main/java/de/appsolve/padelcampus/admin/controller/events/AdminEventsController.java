@@ -353,8 +353,8 @@ public class AdminEventsController extends AdminBaseController<Event> {
             if (groupNumber != null) {
                 Set<Participant> groupParticipants = eventGroups.getGroupParticipants().get(groupNumber);
                 if (!groupParticipants.containsAll(game.getParticipants())) {
-                    gameIterator.remove();
                     gameDAO.deleteById(game.getId());
+                    gameIterator.remove();
                 }
             }
         }
