@@ -273,8 +273,8 @@ public class RankingUtil {
     }
 
     private void updateRanking(List<Ranking> rankingMap, Game game, Gender gender, Team team1, Team team2, LocalDate date) {
-        BigDecimal r1 = getTeamRanking(rankingMap, (Team) team1);
-        BigDecimal r2 = getTeamRanking(rankingMap, (Team) team2);
+        BigDecimal r1 = getTeamRanking(rankingMap, team1);
+        BigDecimal r2 = getTeamRanking(rankingMap, team2);
 
         for (Player player : team1.getPlayers()) {
             BigDecimal r1p1 = getRanking(rankingMap, player);
