@@ -284,7 +284,7 @@ public class RankingUtil {
             BigDecimal e1 = getExpectedScore(tr1, tr2);
             BigDecimal s1 = getScore(game, team1);
             BigDecimal newR1 = ELO_K_FACTOR.multiply((s1.subtract(e1))).add(r1p1);
-            rankingMap.removeIf(r -> r.getParticipant().equals(player));
+            rankingMap.removeIf(r -> r.getParticipant().getId().equals(player.getId()));
             rankingMap.add(new Ranking(player, gender, newR1, date));
         }
 
@@ -296,7 +296,7 @@ public class RankingUtil {
             BigDecimal e1 = getExpectedScore(tr1, tr2);
             BigDecimal s1 = getScore(game, team2);
             BigDecimal newR1 = ELO_K_FACTOR.multiply((s1.subtract(e1))).add(r2p1);
-            rankingMap.removeIf(r -> r.getParticipant().equals(player));
+            rankingMap.removeIf(r -> r.getParticipant().getId().equals(player.getId()));
             rankingMap.add(new Ranking(player, gender, newR1, date));
         }
     }
@@ -317,14 +317,14 @@ public class RankingUtil {
         BigDecimal newR1 = ELO_K_FACTOR.multiply((s1.subtract(e1))).add(r1);
         BigDecimal newR2 = ELO_K_FACTOR.multiply((s2.subtract(e2))).add(r2);
 
-        rankingMap.removeIf(ranking -> ranking.getParticipant().equals(p1));
-        rankingMap.removeIf(ranking -> ranking.getParticipant().equals(p2));
+        rankingMap.removeIf(ranking -> ranking.getParticipant().getId().equals(p1.getId()));
+        rankingMap.removeIf(ranking -> ranking.getParticipant().getId().equals(p2.getId()));
         rankingMap.add(new Ranking(p1, gender, newR1, date));
         rankingMap.add(new Ranking(p2, gender, newR2, date));
     }
 
     private BigDecimal getRanking(List<Ranking> rankings, Participant participant) {
-        Optional<Ranking> ranking = rankings.stream().filter(r -> r.getParticipant().equals(participant)).findFirst();
+        Optional<Ranking> ranking = rankings.stream().filter(r -> r.getParticipant().getId().equals(participant.getId())).findFirst();
         if (ranking.isPresent()) {
             return ranking.get().getValue();
         }

@@ -5,6 +5,7 @@
  */
 package de.appsolve.padelcampus.utils;
 
+import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
 
@@ -36,5 +37,19 @@ public class TeamUtil {
             i++;
         }
         return name.toString();
+    }
+
+    public static Gender getGender(Team team) {
+        Gender teamGender = null;
+        if (team.getPlayers() != null) {
+            for (Player player : team.getPlayers()) {
+                if (teamGender == null) {
+                    teamGender = player.getGender();
+                } else if (!teamGender.equals(player.getGender())) {
+                    teamGender = Gender.mixed;
+                }
+            }
+        }
+        return teamGender;
     }
 }
