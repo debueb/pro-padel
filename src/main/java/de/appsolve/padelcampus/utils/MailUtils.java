@@ -37,16 +37,7 @@ public class MailUtils {
 
     public MailResult send(Mail mail, HttpServletRequest request) throws MailException, IOException {
 
-        String from = environment.getProperty("SPARKPOST_DEFAULT_SENDER");
-        if (request != null) {
-            CustomerI customer = sessionUtil.getCustomer(request);
-            if (customer != null) {
-                if (!StringUtils.isEmpty(customer.getDefaultEmail())) {
-                    from = customer.getDefaultEmail();
-                }
-            }
-        }
-        String replyTo = StringUtils.isEmpty(mail.getFrom()) ? from : mail.getFrom();
+        String from = StringUtils.isEmpty(mail.getFrom()) ? getDefaultSender(request) : mail.getFrom();
 
         Client client = new Client(environment.getProperty("SPARKPOST_API_KEY"));
 
@@ -68,7 +59,7 @@ public class MailUtils {
 
             TemplateContentAttributes contentAttributes = new TemplateContentAttributes();
             contentAttributes.setFrom(new AddressAttributes(from));
-            contentAttributes.setReplyTo(replyTo);
+            contentAttributes.setReplyTo(from);
 
             String templateId = mail.getTemplateId();
             if (StringUtils.isEmpty(templateId)) {
@@ -132,5 +123,18 @@ public class MailUtils {
     private String getHTML(String string) {
         string = string.replaceAll("(\r\n|\n)", "<br />");
         return string;
+    }
+
+    public String getDefaultSender(HttpServletRequest request) {
+        String from = environment.getProperty("SPARKPOST_DEFAULT_SENDER");
+        if (request != null) {
+            CustomerI customer = sessionUtil.getCustomer(request);
+            if (customer != null) {
+                if (!StringUtils.isEmpty(customer.getDefaultEmail())) {
+                    from = customer.getDefaultEmail();
+                }
+            }
+        }
+        return from;
     }
 }

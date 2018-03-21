@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -124,7 +125,7 @@ public class AdminMailController {
     }
 
     @RequestMapping(method = POST)
-    public ModelAndView postMailAll(HttpServletRequest request, @ModelAttribute("Model") Mail mail, BindingResult result) {
+    public ModelAndView postMailAll(HttpServletRequest request, @Valid @ModelAttribute("Model") Mail mail, BindingResult result) {
         if (result.hasErrors()) {
             return getMailView(mail);
         }
@@ -138,7 +139,7 @@ public class AdminMailController {
     }
 
     @RequestMapping(value = "export", method = POST)
-    public HttpEntity<byte[]> exportEmails(HttpServletRequest request, @ModelAttribute("Model") Mail mail) {
+    public HttpEntity<byte[]> exportEmails(@ModelAttribute("Model") Mail mail) {
         List<String> emails = new ArrayList<>();
         for (EmailContact player : mail.getRecipients()) {
             emails.add(player.getEmailAddress());
@@ -153,6 +154,7 @@ public class AdminMailController {
 
     private ModelAndView getMailView(Set<Player> players, HttpServletRequest request) {
         Mail mail = new Mail();
+        mail.setFrom(mailUtils.getDefaultSender(request));
         mail.setRecipients(players);
         mail.setBody(msg.get("MailAllPlayersBody", new Object[]{RequestUtil.getBaseURL(request) + "/account/profile"}));
         mail.setHtmlBody(msg.get("MailAllPlayersBody", new Object[]{RequestUtil.getBaseURL(request) + "/account/profile"}));

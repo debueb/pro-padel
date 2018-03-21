@@ -3,6 +3,7 @@ package de.appsolve.padelcampus.data;
 import de.appsolve.padelcampus.annotations.EmailWithTld;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.AssertTrue;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +22,7 @@ public class Mail {
     @NotEmpty(message = "{NotEmpty.subject}")
     private String subject;
 
+    @NotEmpty(message = "{NotEmpty.body}")
     private String body;
 
     private String htmlBody;
@@ -30,6 +32,9 @@ public class Mail {
     private Set<EmailContact> recipients;
 
     private Set<Attachment> attachments;
+
+    @AssertTrue(message = "{AssertTrue.Mail.ready}")
+    private Boolean ready;
 
     public String getFrom() {
         return from;
@@ -100,6 +105,14 @@ public class Mail {
 
     public void setAttachments(Set<Attachment> attachments) {
         this.attachments = attachments;
+    }
+
+    public Boolean getReady() {
+        return ready;
+    }
+
+    public void setReady(Boolean ready) {
+        this.ready = ready;
     }
 
     @Override
