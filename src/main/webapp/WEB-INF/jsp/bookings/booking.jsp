@@ -10,6 +10,9 @@
             <div class="panel-body">
                 <c:if test="${not empty error}">
                     <div class="alert alert-danger">${error}</div>
+                    <c:if test="${empty Booking}">
+                        <a href="/bookings" class="btn btn-primary btn-block"><fmt:message key="Cancel"/></a>
+                    </c:if>
                 </c:if>
                 <c:if test="${not empty Booking}">
                     <spf:form method="POST" modelAttribute="Booking">

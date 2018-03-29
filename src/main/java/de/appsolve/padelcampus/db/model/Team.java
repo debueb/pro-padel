@@ -6,6 +6,7 @@
 
 package de.appsolve.padelcampus.db.model;
 
+import de.appsolve.padelcampus.constants.Gender;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -33,6 +34,9 @@ public class Team extends Participant {
     @ManyToOne
     private Community community;
 
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     public String getName() {
         return name;
     }
@@ -55,6 +59,14 @@ public class Team extends Participant {
 
     public void setCommunity(Community community) {
         this.community = community;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     @Override

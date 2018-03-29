@@ -36,7 +36,9 @@ public class MatchOffersTest extends TestBase {
                 .param("lastName", "test")
                 .param("email", USER_EMAIL)
                 .param("phone", "01739398758")
-                .param("password", USER_PASSWORD))
+                .param("password", USER_PASSWORD)
+                .param("accept-tac", "on")
+                .param("accept-pp", "on"))
                 .andExpect(status().isOk());
         logout();
 

@@ -11,7 +11,7 @@
             <li><a href="/admin"><fmt:message key="Administration"/></a></li>
             <li><a href="/admin/general"><fmt:message key="General"/></a></li>
             <li><a href="/admin/general/modules"><fmt:message key="Modules"/></a></li>
-            <li><a class="no-ajaxify" href="/admin/general/modules/edit/${Parent.id}">${Parent.title}</a></li>
+            <li><a href="/admin/general/modules/edit/${Parent.id}">${Parent.title}</a></li>
             <li><a href="/admin/general/modules/page/${Parent.id}"><fmt:message key="Entries"/></a></li>
             <li class="active">${empty Model.id ? AddEntry : EditEntry}</li>
         </ol>
@@ -56,3 +56,4 @@
     </div>
 </div>
 <jsp:include page="/WEB-INF/jsp/admin/include/text-editor.jsp"/>
+<jsp:include page="/WEB-INF/jsp/include/footer.jsp"/>

@@ -16,7 +16,9 @@
 
                     <div class="relative unit-2">
                         <spf:select class="form-control select-simple" path="paymentMethod">
-                            <spf:options items="${Model.paymentMethods}" />
+                            <c:forEach var="PaymentMethod" items="${Model.paymentMethods}">
+                                <spf:option value="${PaymentMethod}"><fmt:message key="${PaymentMethod}"/></spf:option>
+                            </c:forEach>
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="PaymentMethod"/></span>
                     </div>

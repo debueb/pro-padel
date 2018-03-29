@@ -179,7 +179,7 @@
                                 <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
                                     <jsp:param name="href" value="/events/event/${Model.id}/participants"/>
                                     <jsp:param name="anchor" value="#after-info"/>
-                                    <jsp:param name="key" value="Participants"/>
+                                    <jsp:param name="key" value="ParticipatingTeams"/>
                                     <jsp:param name="icon" value="group"/>
                                 </jsp:include>
                             </c:if>
@@ -198,7 +198,7 @@
                                 <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
                                     <jsp:param name="href" value="/events/event/${Model.id}/participants"/>
                                     <jsp:param name="anchor" value="#after-info"/>
-                                    <jsp:param name="key" value="Participants"/>
+                                    <jsp:param name="key" value="ParticipatingTeams"/>
                                     <jsp:param name="icon" value="group"/>
                                 </jsp:include>
                             </c:if>
@@ -217,13 +217,13 @@
                                 </jsp:include>
                             </c:if>
                         </c:when>
-                        
+
                         <c:when test="${Model.eventType eq 'GroupTwoRounds'}">
                             <c:if test="${Model.showParticipants}">
                                 <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
                                     <jsp:param name="href" value="/events/event/${Model.id}/participants"/>
                                     <jsp:param name="anchor" value="#after-info"/>
-                                    <jsp:param name="key" value="Participants"/>
+                                    <jsp:param name="key" value="ParticipatingTeams"/>
                                     <jsp:param name="icon" value="group"/>
                                 </jsp:include>
                             </c:if>
@@ -242,13 +242,13 @@
                                 </jsp:include>
                             </c:if>
                         </c:when>
-                        
+
                          <c:when test="${Model.eventType eq 'FriendlyGames'}">
                             <c:if test="${Model.showParticipants}">
                                 <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
                                     <jsp:param name="href" value="/events/event/${Model.id}/participants"/>
                                     <jsp:param name="anchor" value="#after-info"/>
-                                    <jsp:param name="key" value="Participants"/>
+                                    <jsp:param name="key" value="ParticipatingTeams"/>
                                     <jsp:param name="icon" value="group"/>
                                 </jsp:include>
                             </c:if>

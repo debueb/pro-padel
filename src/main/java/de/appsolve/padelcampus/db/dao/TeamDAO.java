@@ -1,5 +1,6 @@
 package de.appsolve.padelcampus.db.dao;
 
+import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.db.dao.generic.SortedBaseDAO;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
@@ -92,6 +93,7 @@ public class TeamDAO extends SortedBaseDAO<Team> implements TeamDAOI {
         if (StringUtils.isEmpty(team.getUUID())) {
             team.setUUID(UUID.randomUUID().toString());
         }
+        team.setGender(TeamUtil.getGender(team));
         return super.saveOrUpdate(team);
     }
 

@@ -13,6 +13,7 @@
             </div>
             <div class="panel-body">
                 <spf:form method="POST" action="/admin/mail" modelAttribute="Model">
+                    <spf:input type="hidden" path="from"/>
                     <div class="alert alert-info">
                         <fmt:message key="MailAllPlayersWarning"/>
                     </div>
@@ -76,6 +77,11 @@
                                     <spf:textarea path="htmlBody" class="form-control form-bottom-element text-editor" rows="20"/>
                                     <div class="explanation"><fmt:message key="Message"/></div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="select-toggle-TextEmail select-toggle-HTMLEmail unit-2">
+                             <div class="relative">
+                                <spf:checkbox path="ready" /><label for="ready1"><fmt:message key="EmailIsReady"/></label>
                             </div>
                         </div>
                     </div>

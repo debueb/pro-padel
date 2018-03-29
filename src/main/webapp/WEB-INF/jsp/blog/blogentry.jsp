@@ -32,7 +32,7 @@
             <div class="blog-body">
                 <c:if test="${fn:contains(sessionScope.privileges,'ManageGeneral')}">
                     <%-- do not ajaxify edit link because tinymce breaks --%>
-                    <a class="no-ajaxify edit-page" href="/admin/general/modules/blog/${Module.id}/edit/${PageEntry.id}"><i class="fa fa-edit"></i></a>
+                    <a class="edit-page" href="/admin/general/modules/blog/${Module.id}/edit/${PageEntry.id}"><i class="fa fa-edit"></i></a>
                 </c:if>
                 ${PageEntry.message}
             </div>

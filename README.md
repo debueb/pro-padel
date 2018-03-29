@@ -17,7 +17,6 @@ This repository contains the source code for the padel club managment software b
 - [Cloudflare](https://cloudflare.com) - CDN with excellent API
 - [Node](http://nodejs.org) - JS Runtime used during build process
 - [NPM](https://www.npmjs.com) - Node Package Manager
-- [JRebel](https://zeroturnaround.com/software/jrebel/) - JVM Hot Code replacement
 
 
 ## setup instructions
@@ -27,7 +26,6 @@ This repository contains the source code for the padel club managment software b
 - install your favorite JDK v8 or higher (Oracle or OpenJDK)
 - install Maven v3.5.0 or higher
 - install your favorite Java IDE and import the Maven project
-- optional: install the JRebel plugin for your J2EE IDE to speed up JVM based development
 - sign up with BugSnag
 - sign up with SparkPost
 - sign up with Cloudflare
@@ -53,15 +51,6 @@ mvn clean test
 ```shell
 mvn clean package -DskipTests spring-boot:run
 ```
-
-### run on command line with JRebel
-```shell
-mvn clean package -DskipTests spring-boot:run "-Drun.jvmArguments='-agentpath:/~/Library/Application Support/IdeaIC2017.2/jr-ide-idea/lib/jrebel6/lib/libjrebel64.dylib'"
-```
-
-### run in IntelliJ with JRebel
-
-as above, and [add IntelliJ macro and keymap](https://gist.github.com/debueb/50966c527ea443bb4cc7f455f5d833b6)
 
 ### keeping js up to date during development
 - install node

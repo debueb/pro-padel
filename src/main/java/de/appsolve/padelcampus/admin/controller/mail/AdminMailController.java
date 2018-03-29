@@ -15,9 +15,11 @@ import com.sparkpost.transport.RestConnection;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.data.MailResult;
+import de.appsolve.padelcampus.db.dao.CommunityDAOI;
 import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
 import de.appsolve.padelcampus.db.dao.TeamDAOI;
+import de.appsolve.padelcampus.db.model.Community;
 import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Team;
@@ -44,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -67,6 +70,9 @@ public class AdminMailController {
 
     @Autowired
     TeamDAOI teamDAO;
+
+    @Autowired
+    CommunityDAOI communityDAO;
 
     @Autowired
     EventDAOI eventDAO;
@@ -100,6 +106,12 @@ public class AdminMailController {
         return getMailView(team.getPlayers(), request);
     }
 
+    @RequestMapping(method = GET, value = "/community/{communityId}")
+    public ModelAndView mailCommunity(HttpServletRequest request, @PathVariable("communityId") Long communityId) {
+        Community community = communityDAO.findById(communityId);
+        return getMailView(community.getPlayers(), request);
+    }
+
     @RequestMapping(method = GET, value = "/event/{eventId}")
     public ModelAndView mailEvent(HttpServletRequest request, @PathVariable("eventId") Long eventId) {
         Event event = eventDAO.findByIdFetchWithParticipantsAndPlayers(eventId);
@@ -113,7 +125,7 @@ public class AdminMailController {
     }
 
     @RequestMapping(method = POST)
-    public ModelAndView postMailAll(HttpServletRequest request, @ModelAttribute("Model") Mail mail, BindingResult result) {
+    public ModelAndView postMailAll(HttpServletRequest request, @Valid @ModelAttribute("Model") Mail mail, BindingResult result) {
         if (result.hasErrors()) {
             return getMailView(mail);
         }
@@ -127,7 +139,7 @@ public class AdminMailController {
     }
 
     @RequestMapping(value = "export", method = POST)
-    public HttpEntity<byte[]> exportEmails(HttpServletRequest request, @ModelAttribute("Model") Mail mail) {
+    public HttpEntity<byte[]> exportEmails(@ModelAttribute("Model") Mail mail) {
         List<String> emails = new ArrayList<>();
         for (EmailContact player : mail.getRecipients()) {
             emails.add(player.getEmailAddress());
@@ -142,6 +154,7 @@ public class AdminMailController {
 
     private ModelAndView getMailView(Set<Player> players, HttpServletRequest request) {
         Mail mail = new Mail();
+        mail.setFrom(mailUtils.getDefaultSender(request));
         mail.setRecipients(players);
         mail.setBody(msg.get("MailAllPlayersBody", new Object[]{RequestUtil.getBaseURL(request) + "/account/profile"}));
         mail.setHtmlBody(msg.get("MailAllPlayersBody", new Object[]{RequestUtil.getBaseURL(request) + "/account/profile"}));

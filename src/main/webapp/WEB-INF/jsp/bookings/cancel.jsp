@@ -12,14 +12,14 @@
             <div class="panel-body">
                 <spf:form method="POST" class="form-signin" role="form" modelAttribute="Booking">
                     <div class="alert alert-danger">${error}</div>
-                    <h4><fmt:message key="BookingData"/></h4>
 
                     <jsp:include page="include/booking-data.jsp"/>
 
                     <c:if test="${empty error}">
                         <div class="row">
-                            <div class="col-xs-offset-4 col-xs-8 booking-cell unit">
-                                <button class="btn btn-primary" type="submit"><fmt:message key="CancelBooking2"/></button>
+                            <div class="col-xs-12 unit">
+                                <button class="btn btn-primary btn-block" type="submit"><fmt:message key="CancelBooking2"/></button>
+                                <a class="btn btn-primary btn-block btn-back"><fmt:message key="Cancel"/></a>
                             </div>
                         </div>
                     </c:if>

@@ -4,7 +4,6 @@ import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
 import de.appsolve.padelcampus.db.model.*;
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
@@ -25,7 +24,6 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI {
     public List<Game> findAllYoungerThanForGenderWithPlayers(LocalDate date, Gender gender) {
 
         Criteria criteria = getCriteria();
-        criteria.setFetchMode("participants.players", FetchMode.JOIN);
         criteria.createAlias("event", "e");
         criteria.add(Restrictions.gt("e.endDate", date));
         criteria.add(Restrictions.isNotEmpty("gameSets"));
@@ -39,16 +37,8 @@ public class GameDAO extends GenericDAO<Game> implements GameDAOI {
             for (Participant participant : game.getParticipants()) {
                 if (participant instanceof Team) {
                     Team t = (Team) participant;
-                    Gender teamGender = null;
-                    for (Player player : t.getPlayers()) {
-                        if (teamGender == null) {
-                            teamGender = player.getGender();
-                        } else if (!teamGender.equals(player.getGender())) {
-                            teamGender = Gender.mixed;
-                        }
-                    }
                     //check if game has been removed before to avoid IllegalStateException
-                    if (games.contains(game) && !gender.equals(Gender.unisex) && (teamGender == null || !teamGender.equals(gender))) {
+                    if (games.contains(game) && !gender.equals(Gender.unisex) && (t.getGender() == null || !t.getGender().equals(gender))) {
                         iterator.remove();
                         break;
                     }

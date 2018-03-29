@@ -111,20 +111,17 @@ public class BookingUtil {
             LocalDateTime now = new LocalDateTime(DEFAULT_TIMEZONE);
 
             //generate list of bookable time slots
+            int i = 0;
             for (CalendarConfig config : calendarConfigs) {
+                i++;
                 LocalDateTime startDateTime = getLocalDateTime(selectedDate, config.getStartTime());
                 if (time == null) {
                     //on first iteration
                     time = startDateTime;
-                } else {
-                    if (time.plusMinutes(previousConfig.getMinInterval()).equals(startDateTime)) {
-                        //contiguous bookings possible
-                        //time = time;
-                    } else {
-                        //reset basePriceLastConfig as this is a non contiguous offer
-                        previousConfig = null;
-                        time = startDateTime;
-                    }
+                } else if (!time.plusMinutes(previousConfig.getMinInterval()).equals(startDateTime)) {
+                    //reset basePriceLastConfig as this is a non contiguous offer
+                    previousConfig = null;
+                    time = startDateTime;
                 }
                 LocalDateTime endDateTime = getLocalDateTime(selectedDate, config.getEndTime());
                 while (time.plusMinutes(config.getMinDuration()).compareTo(endDateTime) <= 0) {
@@ -147,6 +144,12 @@ public class BookingUtil {
                         addTimeSlot(timeSlots, time, config, pricePerMinDuration);
                     }
                     time = time.plusMinutes(config.getMinInterval());
+                }
+                //make sure to display the last min interval of the day
+                if (config.getMinInterval() < config.getMinDuration() && i == calendarConfigs.size()) {
+                    if (time.plusMinutes(config.getMinInterval()).compareTo(endDateTime) <= 0) {
+                        addTimeSlot(timeSlots, time, config, null);
+                    }
                 }
                 previousConfig = config;
             }

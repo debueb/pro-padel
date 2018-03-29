@@ -201,7 +201,9 @@ public abstract class TestBase {
                 .param("lastName", "test")
                 .param("email", ADMIN_EMAIL)
                 .param("phone", "01739398758")
-                .param("password", ADMIN_PASSWORD))
+                .param("password", ADMIN_PASSWORD)
+                .param("accept-tac", "on")
+                .param("accept-pp", "on"))
                 .andExpect(status().isOk());
         logout(); //registering a new account also logs the user in automatically
 

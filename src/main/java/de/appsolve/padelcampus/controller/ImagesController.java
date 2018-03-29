@@ -26,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -38,6 +37,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class ImagesController extends BaseController {
 
     private static final Logger LOG = Logger.getLogger(ImagesController.class);
+
+    private static final int ONE_YEAR = 365 * 24 * 60 * 60;
 
     @Autowired
     FileUtil fileUtil;
@@ -65,7 +66,7 @@ public class ImagesController extends BaseController {
             byte[] byteArray = image.getContent();
             ResponseEntity.BodyBuilder builder = ResponseEntity
                     .ok()
-                    .cacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
+                    .header(HttpHeaders.CACHE_CONTROL, String.format("public,max-age=%s,immutable", ONE_YEAR))
                     .contentLength(byteArray.length)
                     .contentType(MediaType.IMAGE_PNG);
 
