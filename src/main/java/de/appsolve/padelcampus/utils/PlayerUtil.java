@@ -6,7 +6,9 @@
 package de.appsolve.padelcampus.utils;
 
 import de.appsolve.padelcampus.db.dao.PlayerDAOI;
+import de.appsolve.padelcampus.db.dao.TeamDAOI;
 import de.appsolve.padelcampus.db.model.Player;
+import de.appsolve.padelcampus.db.model.Team;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author dominik
@@ -22,10 +25,10 @@ import javax.servlet.http.HttpServletRequest;
 public class PlayerUtil {
 
     @Autowired
-    Msg msg;
+    PlayerDAOI playerDAO;
 
     @Autowired
-    PlayerDAOI playerDAO;
+    TeamDAOI teamDAO;
 
     public static String getAccountVerificationLink(HttpServletRequest request, Player player) {
         return RequestUtil.getBaseURL(request) + "/login/confirm/" + player.getUUID();
@@ -41,5 +44,18 @@ public class PlayerUtil {
         } else {
             return BCrypt.checkpw(password, player.getPasswordHash());
         }
+    }
+
+    public void markAsDeleted(Player user) {
+        user.setDeleted(Boolean.TRUE);
+        user.setAllowEmailContact(Boolean.FALSE);
+        List<Team> teams = teamDAO.findByPlayer(user);
+        if (teams != null) {
+            for (Team team : teams) {
+                team.setName(TeamUtil.getTeamName(team));
+                teamDAO.saveOrUpdate(team);
+            }
+        }
+        playerDAO.saveOrUpdate(user);
     }
 }

@@ -98,17 +98,22 @@ public class LoginController extends BaseController {
         if (bindingResult.hasErrors()) {
             return loginView;
         }
-        Player player = playerDAO.findByEmail(credentials.getEmail());
-        if (player == null) {
-            player = new Player();
-        }
-        if (!StringUtils.isEmpty(player.getPasswordHash())) {
-            bindingResult.addError(new ObjectError("email", msg.get("EmailAlreadyRegistered")));
+        try {
+            Player player = playerDAO.findByEmail(credentials.getEmail());
+            if (player == null) {
+                player = new Player();
+            } else if (player.getDeleted()) {
+                throw new Exception(msg.get("CannotUseDeletedAccountEmail", new Object[]{player.getEmail()}));
+            } else if (!player.getGuest()) {
+                throw new Exception(msg.get("EmailAlreadyRegistered"));
+            }
+            player.setEmail(credentials.getEmail());
+            player.setPassword(credentials.getPassword());
+            return getRegisterView(player, request, Boolean.FALSE, Boolean.FALSE);
+        } catch (Exception e) {
+            bindingResult.addError(new ObjectError("email", e.getMessage()));
             return loginView;
         }
-        player.setEmail(credentials.getEmail());
-        player.setPassword(credentials.getPassword());
-        return getRegisterView(player, request, Boolean.FALSE, Boolean.FALSE);
     }
 
     @RequestMapping(value = "register")
@@ -140,6 +145,10 @@ public class LoginController extends BaseController {
 
             if (StringUtils.isEmpty(player.getPassword())) {
                 throw new Exception(msg.get("PasswordMayNotBeEmpty"));
+            }
+
+            if (player.getDeleted()) {
+                throw new Exception(msg.get("CannotUseDeletedAccountEmail", new Object[]{player.getEmail()}));
             }
 
             Player persistedPlayer = playerDAO.findByEmail(player.getEmail());
@@ -216,37 +225,38 @@ public class LoginController extends BaseController {
         if (bindingResult.hasErrors()) {
             return forgotPasswordView;
         }
-
-        if (StringUtils.isEmpty(credentials.getEmail())) {
-            bindingResult.addError(new ObjectError("email", msg.get("EmailMayNotBeEmpty")));
-            return forgotPasswordView;
-        }
-
-        Player player = playerDAO.findByEmail(credentials.getEmail());
-        if (player == null) {
-            bindingResult.addError(new ObjectError("email", msg.get("EmailAddressNotRegistered")));
-            return forgotPasswordView;
-        }
-        UUID randomUUID = UUID.randomUUID();
-        String resetPasswordURL = RequestUtil.getBaseURL(request) + "/login/reset-password/" + randomUUID.toString();
-
-        player.setPasswordResetUUID(randomUUID.toString());
-        DateTime expiryDate = new DateTime(Constants.DEFAULT_TIMEZONE).plusDays(1);
-        player.setPasswordResetExpiryDate(expiryDate);
-        playerDAO.saveOrUpdate(player);
-
-        Mail mail = new Mail();
-        Contact contact = new Contact();
-        contact.setEmailAddress(player.getEmail());
-        contact.setEmailDisplayName(player.toString());
-        mail.addRecipient(contact);
-        mail.setSubject(msg.get("ForgotPasswordMailSubject"));
-        mail.setBody(StringEscapeUtils.unescapeJava(msg.get("ForgotPasswordMailBody", new Object[]{player.toString(), resetPasswordURL, RequestUtil.getBaseURL(request)})));
         try {
+            if (StringUtils.isEmpty(credentials.getEmail())) {
+                throw new Exception(msg.get("EmailMayNotBeEmpty"));
+            }
+
+            Player player = playerDAO.findByEmail(credentials.getEmail());
+            if (player == null) {
+                throw new Exception(msg.get("EmailAddressNotRegistered"));
+            }
+            if (player.getDeleted()) {
+                throw new Exception(msg.get("CannotUseDeletedAccountEmail", new Object[]{credentials.getEmail()}));
+            }
+
+            UUID randomUUID = UUID.randomUUID();
+            String resetPasswordURL = RequestUtil.getBaseURL(request) + "/login/reset-password/" + randomUUID.toString();
+
+            player.setPasswordResetUUID(randomUUID.toString());
+            DateTime expiryDate = new DateTime(Constants.DEFAULT_TIMEZONE).plusDays(1);
+            player.setPasswordResetExpiryDate(expiryDate);
+            playerDAO.saveOrUpdate(player);
+
+            Mail mail = new Mail();
+            Contact contact = new Contact();
+            contact.setEmailAddress(player.getEmail());
+            contact.setEmailDisplayName(player.toString());
+            mail.addRecipient(contact);
+            mail.setSubject(msg.get("ForgotPasswordMailSubject"));
+            mail.setBody(StringEscapeUtils.unescapeJava(msg.get("ForgotPasswordMailBody", new Object[]{player.toString(), resetPasswordURL, RequestUtil.getBaseURL(request)})));
             mailUtils.send(mail, request);
-        } catch (MailException | IOException e) {
-            LOG.warn("Error while sending reset password instructions", e);
-            bindingResult.addError(new ObjectError("email", e.toString()));
+        } catch (Exception e) {
+            LOG.warn(e.getMessage(), e);
+            bindingResult.addError(new ObjectError("email", e.getMessage()));
             return forgotPasswordView;
         }
         return new ModelAndView("login/forgot-password-success", "Email", credentials.getEmail());
@@ -327,6 +337,10 @@ public class LoginController extends BaseController {
         }
 
         Player player = playerDAO.findByEmail(credentials.getEmail());
+
+        if (player.getDeleted()) {
+            throw new Exception(msg.get("CannotUseDeletedAccountEmail", new Object[]{credentials.getEmail()}));
+        }
 
         if (!playerUtil.isPasswordValid(player, credentials.getPassword())) {
             throw new Exception(msg.get("UnknownEmailAddressOrPassword"));

@@ -23,6 +23,11 @@
                     <div class="alert alert-danger"><spf:errors path="*" cssClass="error"/></div>
                     <spf:input path="id" type="hidden"/>
                     <jsp:include page="/WEB-INF/jsp/include/player-input.jsp"/>
+                    <c:if test="${Model.deleted}">
+                        <div class="relative">
+                            <spf:checkbox path="deleted" readonly="readonly"/><label for="deleted"><fmt:message key="DeactivatedAccount"/></label>
+                        </div>
+                    </c:if>
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
                 </spf:form>
             </div>

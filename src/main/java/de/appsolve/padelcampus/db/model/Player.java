@@ -114,6 +114,9 @@ public class Player extends Participant implements EmailContact, Validatable {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DaySchedule> daySchedules;
 
+    @Column
+    private Boolean deleted;
+
     public String getFirstName() {
         return firstName;
     }
@@ -139,7 +142,7 @@ public class Player extends Participant implements EmailContact, Validatable {
     }
 
     public Boolean getAllowEmailContact() {
-        return allowEmailContact == null ? Boolean.TRUE : allowEmailContact;
+        return getDeleted() ? Boolean.FALSE : allowEmailContact == null ? Boolean.TRUE : allowEmailContact;
     }
 
     public void setAllowEmailContact(Boolean allowEmailContact) {
@@ -234,11 +237,6 @@ public class Player extends Participant implements EmailContact, Validatable {
         this.notificationSkillLevels = notificationSkillLevels;
     }
 
-    @Override
-    public String toString() {
-        return firstName + " " + lastName;
-    }
-
     public String getObfuscatedPhone() {
         return CryptUtil.rot47(phone);
     }
@@ -273,6 +271,14 @@ public class Player extends Participant implements EmailContact, Validatable {
         this.daySchedules = daySchedules;
     }
 
+    public Boolean getDeleted() {
+        return deleted == null ? Boolean.FALSE : deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @Transient
     public boolean getGuest() {
         return StringUtils.isEmpty(getPasswordHash());
@@ -284,5 +290,13 @@ public class Player extends Participant implements EmailContact, Validatable {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        if (getDeleted()) {
+            return "Deleted Account";
+        }
+        return firstName + " " + lastName;
     }
 }
