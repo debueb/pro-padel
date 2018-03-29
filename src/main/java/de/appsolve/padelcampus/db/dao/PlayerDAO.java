@@ -77,6 +77,7 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI {
     @Override
     public List<Player> findPlayersInterestedIn(MatchOffer offer) {
         Criteria criteria = getCriteria();
+        criteria.add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted", false)));
         criteria.add(Restrictions.isNotNull("enableMatchNotifications"));
         criteria.add(Restrictions.eq("enableMatchNotifications", true));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
@@ -124,6 +125,7 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI {
     @SuppressWarnings("unchecked")
     public List<Player> findPlayersRegisteredForEmails() {
         Criteria criteria = getCriteria();
+        criteria.add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted", false)));
         criteria.add(Restrictions.isNotNull("passwordHash"));
         criteria.add(Restrictions.isNotNull("allowEmailContact"));
         criteria.add(Restrictions.eq("allowEmailContact", true));

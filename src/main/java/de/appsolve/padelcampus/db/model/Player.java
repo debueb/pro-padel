@@ -142,7 +142,7 @@ public class Player extends Participant implements EmailContact, Validatable {
     }
 
     public Boolean getAllowEmailContact() {
-        return allowEmailContact == null ? Boolean.TRUE : allowEmailContact;
+        return getDeleted() ? Boolean.FALSE : allowEmailContact == null ? Boolean.TRUE : allowEmailContact;
     }
 
     public void setAllowEmailContact(Boolean allowEmailContact) {
