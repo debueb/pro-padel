@@ -166,7 +166,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
             LocalDate endDate = reservationRequest.getEndDate();
 
             List<Booking> bookings = new ArrayList<>();
-            Set<Booking> failedBookings = new HashSet<>();
+            List<Booking> failedBookings = new ArrayList<>();
             LocalDateTime blockingTime = new LocalDateTime();
 
             while (date.compareTo(endDate) <= 0) {
