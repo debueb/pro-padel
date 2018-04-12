@@ -374,7 +374,7 @@ public class BookingsController extends BaseController {
             LOG.error("Error while sending booking confirmation email", ex);
             mav.addObject("error", msg.get("FailedToSendBookingConfirmationEmail", new Object[]{FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()), FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime())}));
         } catch (Exception e) {
-            LOG.error(e);
+            LOG.error(e.getMessage(), e);
             mav.addObject("error", e.getMessage());
         }
         return mav;
