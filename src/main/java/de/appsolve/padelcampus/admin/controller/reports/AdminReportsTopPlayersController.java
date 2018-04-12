@@ -48,13 +48,15 @@ public class AdminReportsTopPlayersController extends BaseController {
         Map<Player, Integer> map = new HashMap<>();
         for (Booking booking : bookings) {
             Player player = booking.getPlayer();
-            Integer count = map.get(player);
-            if (count == null) {
-                count = 1;
-            } else {
-                count++;
+            if (player != null) {
+                Integer count = map.get(player);
+                if (count == null) {
+                    count = 1;
+                } else {
+                    count++;
+                }
+                map.put(player, count);
             }
-            map.put(player, count);
         }
 
         Map<Player, Integer> sortedMap = SortUtil.sortMap(map);
