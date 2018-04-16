@@ -49,15 +49,17 @@
                         <fmt:message key="Mode_${Model.gender}"/>
                     </div>
                 </div>
-                
-                <div class="row">
-                    <div class="col-xs-4 text-right">
-                        <fmt:message key="Mode"/>
+
+                <c:if test="${Model.showEventType}">
+                    <div class="row">
+                        <div class="col-xs-4 text-right">
+                            <fmt:message key="Mode"/>
+                        </div>
+                        <div class="col-xs-8">
+                            <fmt:message key="${Model.eventType}"/>
+                        </div>
                     </div>
-                    <div class="col-xs-8">
-                        <fmt:message key="${Model.eventType}"/>
-                    </div>
-                </div>
+                </c:if>
                 
                 <c:if test="${not empty Model.maxNumberOfParticipants and Model.maxNumberOfParticipants ne 0}">
                     <div class="row">

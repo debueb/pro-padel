@@ -123,6 +123,9 @@ public class Event extends ComparableEntity {
     @Column
     private Boolean showScores;
 
+    @Column
+    private Boolean showEventType;
+
     @Column(length = 8000)
     private String confirmationMailRemark;
 
@@ -350,6 +353,14 @@ public class Event extends ComparableEntity {
 
     public void setShowScores(Boolean showScores) {
         this.showScores = showScores;
+    }
+
+    public Boolean getShowEventType() {
+        return showEventType == null ? Boolean.TRUE : showEventType;
+    }
+
+    public void setShowEventType(Boolean showEventType) {
+        this.showEventType = showEventType;
     }
 
     public String getConfirmationMailRemark() {
