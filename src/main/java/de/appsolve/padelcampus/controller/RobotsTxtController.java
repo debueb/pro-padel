@@ -20,17 +20,19 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping(("/robots.txt"))
 public class RobotsTxtController {
 
-    @RequestMapping(produces = MediaType.TEXT_PLAIN_VALUE)
-    @ResponseBody
-    public String getRobotsTxt(HttpServletRequest request) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("User-Agent: *\n");
-        builder.append("Disallow: /players/\n");
-        builder.append("Disallow: /teams/\n");
-        builder.append("Disallow: /scores/\n");
-        builder.append("Disallow: /games/\n");
-        builder.append("Disallow: /matchoffers/\n");
-        builder.append("Sitemap: ").append(RequestUtil.getBaseURL(request)).append("/sitemap.xml");
-        return builder.toString();
-    }
+  @RequestMapping(produces = MediaType.TEXT_PLAIN_VALUE)
+  @ResponseBody
+  public String getRobotsTxt(HttpServletRequest request) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("User-Agent: *\n");
+    builder.append("Disallow: /players/\n");
+    builder.append("Disallow: /teams/\n");
+    builder.append("Disallow: /scores/\n");
+    builder.append("Disallow: /games/\n");
+    builder.append("Disallow: /matchoffers/\n");
+    builder.append("Disallow: /ranking/\n");
+    builder.append("Disallow: /pro/ranking/\n");
+    builder.append("Sitemap: ").append(RequestUtil.getBaseURL(request)).append("/sitemap.xml");
+    return builder.toString();
+  }
 }
