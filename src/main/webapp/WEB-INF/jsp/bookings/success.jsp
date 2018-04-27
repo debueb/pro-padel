@@ -23,6 +23,7 @@
                                 <fmt:message key="ShareVia"/>
                             </span>
                             <jsp:include page="/WEB-INF/jsp/include/share.jsp"/>
+                            <a class="btn btn-primary btn-block unit-2" href="/home"><fmt:message key="GoToHomepage"/></a>
                         </div>
                     </c:otherwise>
                 </c:choose>
