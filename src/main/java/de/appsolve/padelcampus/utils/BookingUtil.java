@@ -374,7 +374,8 @@ public class BookingUtil {
     public void sendBookingConfirmation(HttpServletRequest request, Booking booking) throws MailException, IOException {
         Mail mail = new Mail();
         mail.setSubject(msg.get("BookingSuccessfulMailSubject"));
-        mail.setBody(msg.get("BookingSuccessfulMailBody", new Object[]{
+        mail.setTemplateId("HTMLEmail");
+        mail.setHtmlBody(msg.get("BookingSuccessfulMailBodyHtml", new Object[]{
                 booking.getPlayer().toString(),
                 FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()),
                 FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
