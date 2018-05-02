@@ -84,7 +84,10 @@
                     </fmt:message>
                 </div>
                 <div class="unit-2">
-                    <a class="btn btn-primary btn-block" href="/admin/bookings/reservations/add"><fmt:message key="AddReservation"/></a>
+                    <a class="btn btn-primary btn-block" href="/admin/bookings/reservations/add?date=${DateRange.startDate}"><fmt:message key="AddReservation"/></a>
+                </div>
+                <div class="unit">
+                    <a class="btn btn-primary btn-block" href="/bookings?date=${DateRange.startDate}"><fmt:message key="UserViewOfBookings"/></a>
                 </div>
                 <div class="unit">
                     <a class="btn btn-primary btn-block" href="/admin/bookings/reservations/print/${DateRange.startDate}/${DateRange.endDate}"><fmt:message key="PrintAll"/></a>

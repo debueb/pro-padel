@@ -24,7 +24,6 @@ import de.appsolve.padelcampus.spring.LocalDateEditor;
 import de.appsolve.padelcampus.spring.OfferOptionCollectionEditor;
 import de.appsolve.padelcampus.utils.BookingMonitorUtil;
 import de.appsolve.padelcampus.utils.BookingUtil;
-import de.appsolve.padelcampus.utils.FormatUtils;
 import de.appsolve.padelcampus.utils.SessionUtil;
 import jersey.repackaged.com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
@@ -52,6 +51,7 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE;
 import static de.appsolve.padelcampus.utils.FormatUtils.DATE_HUMAN_READABLE_PATTERN;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -115,7 +115,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         }
         if (!StringUtils.isEmpty(startDateStr)) {
             try {
-                startDate = LocalDate.parse(startDateStr, FormatUtils.DATE_HUMAN_READABLE);
+                startDate = LocalDate.parse(startDateStr, DATE_HUMAN_READABLE);
             } catch (IllegalArgumentException e) {
                 //ignore
             }
@@ -124,7 +124,7 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         LocalDate endDate = new LocalDate(startDate);
         if (!StringUtils.isEmpty(endDateStr)) {
             try {
-                endDate = LocalDate.parse(endDateStr, FormatUtils.DATE_HUMAN_READABLE);
+                endDate = LocalDate.parse(endDateStr, DATE_HUMAN_READABLE);
             } catch (IllegalArgumentException e) {
                 //ignore
             }
@@ -148,6 +148,12 @@ public class AdminBookingsReservationsController extends AdminBaseController<Res
         LocalTime endTime = request.getStartTime().plusMinutes(Constants.BOOKING_DEFAULT_DURATION);
         request.setEndTimeHour(endTime.getHourOfDay());
         request.setEndTimeMinute(endTime.getMinuteOfHour());
+        String date = httpRequest.getParameter("date");
+        if (!StringUtils.isEmpty(date)) {
+            LocalDate localDate = DATE_HUMAN_READABLE.parseLocalDate(date);
+            request.setStartDate(localDate);
+            request.setEndDate(localDate);
+        }
         return getAddView(request);
     }
 

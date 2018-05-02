@@ -6,9 +6,13 @@
     <div class="col-xs-12 col-lg-10 col-lg-offset-1">
         <div class="page-header"></div>
 
+        <c:if test="${fn:contains(sessionScope.privileges,'ManageBookings')}">
+            <div class="text-center"><a class="btn btn-primary unit" href="/admin/bookings/reservations?startDate=${Day}" style="width: 300px"><fmt:message key="AdministerBookingsAndReservations"/></a></div>
+            <div class="text-center"><a class="btn btn-primary unit" href="/admin/bookings/reservations/add?date=${Day}" style="width: 300px"><fmt:message key="AddReservation"/></a></div>
+        </c:if>
         <jsp:include page="/WEB-INF/jsp/include/module-description.jsp"/>
-        
-        <div class="panel panel-info unit">
+
+        <div class="panel panel-info unit-2">
             <div class="panel-heading"><h4><fmt:message key="Date"/></h4></div>
             <div class="panel-body">
 

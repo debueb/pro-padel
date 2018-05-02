@@ -119,7 +119,7 @@
                     </span>
                     
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
-                    <a href="/admin/bookings/reservations" class="btn btn-primary btn-block unit"><fmt:message key="Cancel"/></a>
+                    <a class="btn btn-primary btn-block btn-back unit"><fmt:message key="Cancel"/></a>
                 </spf:form>
             </div>
         </div>
