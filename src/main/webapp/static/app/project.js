@@ -184,30 +184,6 @@ var project = {
         });
     },
 
-    enablePrivateDataLinks: function () {
-        var that = this;
-        $('.private-data').livequery(function(){
-            $(this).on('click tap', function () {
-                var prefix = $(this).attr('data-prefix');
-                var fake = $(this).attr('data-fake');
-                document.location.href = prefix + that.rot47(fake);
-            });
-        });
-    },
-
-    rot47: function (s) {
-        var x = [];
-        for (var i = 0; i < s.length; i++) {
-            var j = s.charCodeAt(i);
-            if ((j >= 33) && (j <= 126)) {
-                x[i] = String.fromCharCode(33 + ((j + 14) % 94));
-            } else {
-                x[i] = String.fromCharCode(j);
-            }
-        }
-        return x.join('');
-    },
-
     enableSideMenu: function () {
         var isOpen = function () {
             return $('#site-canvas').hasClass('show-nav');
@@ -756,7 +732,6 @@ if (project.isNative() && lastPage && lastPage !== window.location.href){
     $(document).ready(function () {
         project.enableBackButton();
         project.enableForms();
-        project.enablePrivateDataLinks();
         project.enableDatePicker();
         project.enableFormAutoSubmit();
         project.enableSideMenu();

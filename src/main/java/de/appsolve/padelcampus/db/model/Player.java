@@ -237,14 +237,6 @@ public class Player extends Participant implements EmailContact, Validatable {
         this.notificationSkillLevels = notificationSkillLevels;
     }
 
-    public String getObfuscatedPhone() {
-        return CryptUtil.rot47(phone);
-    }
-
-    public String getObfuscatedEmail() {
-        return CryptUtil.rot47(email);
-    }
-
     @Override
     public String getEmailAddress() {
         return getEmail();

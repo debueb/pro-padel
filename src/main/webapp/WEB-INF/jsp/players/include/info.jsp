@@ -51,22 +51,6 @@
                         <div class="list-item-text"><fmt:message key="TeamsWith"><fmt:param>${Player}</fmt:param></fmt:message></div>
                         <div class="list-group-item-icon"><div class="fa fa-group"></div></div>
                     </a>
-                    <a class="list-group-item private-data" data-fake="${Player.obfuscatedPhone}" data-prefix="tel:">
-                        <div class="list-item-text"><fmt:message key="Call"/></div>
-                        <div class="list-group-item-icon"><div class="fa fa-phone"></div></div>
-                    </a>
-                    <a class="list-group-item private-data" data-fake="${Player.obfuscatedPhone}" data-prefix="sms:">
-                        <div class="list-item-text"><fmt:message key="SendSMS"/></div>
-                        <div class="list-group-item-icon"><div class="fa fa-envelope"></div></div>
-                    </a>
-                    <a class="list-group-item private-data" data-fake="${Player.obfuscatedEmail}" data-prefix="mailto:">
-                        <div class="list-item-text"><fmt:message key="SendMail"/></div>
-                        <div class="list-group-item-icon"><div class="fa fa-at"></div></div>
-                    </a>
-                    <a href="/players/player/${Player.UUID}/vcard.vcf" class="list-group-item no-ajaxify" download>
-                        <div class="list-item-text"><fmt:message key="AddToContacts"/></div>
-                        <div class="list-group-item-icon"><div class="fa fa-phone-square"></div></div>
-                    </a>  
                 </div>
             </c:otherwise>
         </c:choose>

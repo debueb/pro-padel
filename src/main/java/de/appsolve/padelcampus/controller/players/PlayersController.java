@@ -28,9 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -118,26 +116,6 @@ public class PlayersController extends BaseController {
         mav.addObject("Player", player);
         mav.addObject("Teams", teams);
         return mav;
-    }
-
-
-    @RequestMapping(value = "/player/{UUID}/vcard.vcf")
-    public void addToContacts(@PathVariable("UUID") String UUID, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Player player = playerDAO.findByUUID(UUID);
-        StringBuilder sb = new StringBuilder();
-        response.setHeader("Content-type", "text/x-vcard; charset=utf-8");
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + player.toString() + ".vcf\";");
-        sb.append("BEGIN:VCARD\n");
-        sb.append("VERSION:3.0\n");
-        sb.append("N:").append(player.getLastName()).append(";").append(player.getFirstName()).append(";;;\n");
-        sb.append("FN:").append(player.toString()).append("\n");
-        sb.append("EMAIL;type=INTERNET;type=WORK;type=pref:").append(player.getEmail()).append("\n");
-        sb.append("TEL;type=CELL;type=VOICE;type=pref:").append(player.getPhone()).append("\n");
-        sb.append("NOTE:Added by ").append(sessionUtil.getCustomer(request)).append("\n");
-        sb.append("URL:").append(RequestUtil.getBaseURL(request)).append("/players/player/").append(player.getUUID()).append("\n");
-        sb.append("END:VCARD");
-        response.getOutputStream().write(sb.toString().getBytes(Charset.forName("UTF-8")));
-        response.getOutputStream().flush();
     }
 
     @RequestMapping("/event/{id}")
