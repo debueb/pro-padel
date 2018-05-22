@@ -13,6 +13,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
+import java.util.Map;
 
 /**
  * @author dominik
@@ -41,6 +42,9 @@ public class Contact extends CustomerEntity implements EmailContact {
     @Column
     private Boolean notifyOnBookingCancellation;
 
+    @Transient
+    private Map<String, Object> substitutionData;
+
     @Override
     public String getEmailAddress() {
         return emailAddress;
@@ -53,6 +57,16 @@ public class Contact extends CustomerEntity implements EmailContact {
     @Override
     public String getEmailDisplayName() {
         return emailDisplayName;
+    }
+
+    @Override
+    public Map<String, Object> getSubstitutionData() {
+        return substitutionData;
+    }
+
+    @Override
+    public void setSubstitutionData(Map<String, Object> substitutionData) {
+        this.substitutionData = substitutionData;
     }
 
     public void setEmailDisplayName(String emailDisplayName) {

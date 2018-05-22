@@ -85,7 +85,7 @@ public class Mail {
     }
 
     public Set<EmailContact> getRecipients() {
-        return recipients == null ? new HashSet<EmailContact>() : recipients;
+        return recipients == null ? new HashSet<>() : recipients;
     }
 
     @SuppressWarnings("unchecked")

@@ -57,7 +57,7 @@
                                 <fmt:message key="TextEmail" var="TextEmail"/>
                                 <spf:option value="TextEmail" label="${TextEmail}"/>
                                 <fmt:message key="HTMLEmail" var="HTMLEmail"/>
-                                    <spf:option value="HTMLEmail" label="${HTMLEmail}"/>
+                                <spf:option value="HTMLEmail" label="${HTMLEmail}"/>
                                 <c:forEach var="Template" items="${Templates}">
                                     <spf:option value="${Template.id}" label="${Template.name}${not Template.published ? ' - TEMPLATE IS A DRAFT. PUBLISH IT FIRST' : ''}" disabled="${not Template.published}"/>
                                 </c:forEach>

@@ -5,6 +5,8 @@
  */
 package de.appsolve.padelcampus.data;
 
+import java.util.Map;
+
 /**
  * @author dominik
  */
@@ -13,5 +15,9 @@ public interface EmailContact {
     String getEmailAddress();
 
     String getEmailDisplayName();
+
+    Map<String, Object> getSubstitutionData();
+
+    void setSubstitutionData(Map<String, Object> substitutionData);
 
 }

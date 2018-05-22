@@ -15,14 +15,8 @@ import com.sparkpost.transport.RestConnection;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.data.MailResult;
-import de.appsolve.padelcampus.db.dao.CommunityDAOI;
-import de.appsolve.padelcampus.db.dao.EventDAOI;
-import de.appsolve.padelcampus.db.dao.PlayerDAOI;
-import de.appsolve.padelcampus.db.dao.TeamDAOI;
-import de.appsolve.padelcampus.db.model.Community;
-import de.appsolve.padelcampus.db.model.Event;
-import de.appsolve.padelcampus.db.model.Player;
-import de.appsolve.padelcampus.db.model.Team;
+import de.appsolve.padelcampus.db.dao.*;
+import de.appsolve.padelcampus.db.model.*;
 import de.appsolve.padelcampus.exceptions.MailException;
 import de.appsolve.padelcampus.spring.PlayerCollectionEditor;
 import de.appsolve.padelcampus.utils.MailUtils;
@@ -38,6 +32,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -46,12 +41,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -89,6 +81,12 @@ public class AdminMailController {
     @Autowired
     Environment environment;
 
+    @Autowired
+    EmailConfirmationDAOI emailConfirmationDAO;
+
+    @Autowired
+    Validator validator;
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Set.class, "recipients", playerCollectionEditor);
@@ -124,12 +122,44 @@ public class AdminMailController {
         return getMailView(allPlayers, request);
     }
 
+    @RequestMapping(method = GET, value = "/all/dgsvo")
+    public ModelAndView mailAllDgsvo(HttpServletRequest request) {
+        Set<Player> allPlayers = Sets.newHashSet(playerDAO.findAll());
+        return getMailView(allPlayers, request);
+    }
+
     @RequestMapping(method = POST)
-    public ModelAndView postMailAll(HttpServletRequest request, @Valid @ModelAttribute("Model") Mail mail, BindingResult result) {
+    public ModelAndView postMail(
+            HttpServletRequest request,
+            @ModelAttribute("Model") Mail mail,
+            BindingResult result) {
+        if (mail.getTemplateId() != null && (mail.getTemplateId().equals("TextEmail") || mail.getTemplateId().equals("HTMLEmail"))) {
+            validator.validate(mail, result);
+        }
         if (result.hasErrors()) {
             return getMailView(mail);
         }
         try {
+            if (mail.getTemplateId() != null && !mail.getTemplateId().equals("TextEmail") && !mail.getTemplateId().equals("HTMLEmail")) {
+                for (EmailContact contact : mail.getRecipients()) {
+                    Map<String, Object> substitutionData = new HashMap<>();
+
+                    //create uuid per contact
+                    String uuid = UUID.randomUUID().toString();
+
+                    //save in db
+                    EmailConfirmation emailConfirmation = new EmailConfirmation();
+                    emailConfirmation.setUuid(uuid);
+                    emailConfirmation.setEmail(contact.getEmailAddress());
+                    emailConfirmationDAO.saveOrUpdate(emailConfirmation);
+
+                    //add to map
+                    substitutionData.put("CONFIRM_EMAIL_LINK", RequestUtil.getBaseURL(request) + "/email/confirm/" + uuid);
+                    substitutionData.put("USERNAME", contact.getEmailDisplayName());
+                    contact.setSubstitutionData(substitutionData);
+                }
+            }
+
             MailResult mailResult = mailUtils.send(mail, request);
             return new ModelAndView("admin/mail-success", "MailResult", mailResult);
         } catch (IOException | MailException e) {

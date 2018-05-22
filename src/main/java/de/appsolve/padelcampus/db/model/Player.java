@@ -12,7 +12,6 @@ import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.SkillLevel;
 import de.appsolve.padelcampus.data.EmailContact;
-import de.appsolve.padelcampus.utils.CryptUtil;
 import de.appsolve.padelcampus.validation.constraints.Phone;
 import de.appsolve.padelcampus.validation.constraints.SelfValidating;
 import de.appsolve.padelcampus.validation.constraints.Validatable;
@@ -26,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -116,6 +116,9 @@ public class Player extends Participant implements EmailContact, Validatable {
 
     @Column
     private Boolean deleted;
+
+    @Transient
+    private Map<String, Object> substitutionData;
 
     public String getFirstName() {
         return firstName;
@@ -245,6 +248,16 @@ public class Player extends Participant implements EmailContact, Validatable {
     @Override
     public String getEmailDisplayName() {
         return toString();
+    }
+
+    @Override
+    public Map<String, Object> getSubstitutionData() {
+        return this.substitutionData;
+    }
+
+    @Override
+    public void setSubstitutionData(Map<String, Object> substitutionData) {
+        this.substitutionData = substitutionData;
     }
 
     public Gender getGender() {

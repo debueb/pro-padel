@@ -49,6 +49,9 @@ public class MailUtils {
                 if (EMAIL_PATTERN.matcher(contact.getEmailAddress()).matches()) {
                     RecipientAttributes recipientAttribs = new RecipientAttributes();
                     recipientAttribs.setAddress(new AddressAttributes(contact.getEmailAddress()));
+                    if (contact.getSubstitutionData() != null) {
+                        recipientAttribs.setSubstitutionData(contact.getSubstitutionData());
+                    }
                     recipientArray.add(recipientAttribs);
                 }
             }
