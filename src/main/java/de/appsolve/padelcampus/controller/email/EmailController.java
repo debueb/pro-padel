@@ -31,6 +31,7 @@ public class EmailController {
             throw new ResourceNotFoundException();
         }
         player.setAllowEmailContact(Boolean.TRUE);
+        player.setVerified(Boolean.TRUE);
         playerDAO.saveOrUpdate(player);
         return new ModelAndView("email/confirm/success");
     }

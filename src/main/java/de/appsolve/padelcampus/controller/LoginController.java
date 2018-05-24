@@ -178,7 +178,8 @@ public class LoginController extends BaseController {
             Mail mail = new Mail();
             mail.addRecipient(player);
             mail.setSubject(msg.get("RegistrationMailSubject"));
-            mail.setBody(StringEscapeUtils.unescapeJava(msg.get("RegistrationMailBody", new Object[]{playerToPersist.toString(), accountVerificationLink, RequestUtil.getBaseURL(request)})));
+            String key = player.getAllowEmailContact() ? "RegistrationMailBody2" : "RegistrationMailBody";
+            mail.setBody(StringEscapeUtils.unescapeJava(msg.get(key, new Object[]{playerToPersist.toString(), accountVerificationLink, RequestUtil.getBaseURL(request)})));
             try {
                 mailUtils.send(mail, request);
             } catch (IOException | MailException e) {
