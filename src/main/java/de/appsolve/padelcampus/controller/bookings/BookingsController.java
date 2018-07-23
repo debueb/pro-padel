@@ -317,6 +317,7 @@ public class BookingsController extends BaseController {
             switch (booking.getPaymentMethod()) {
                 case Subscription:
                 case Cash:
+                case ExternalVoucher:
                     if (booking.getConfirmed()) {
                         throw new Exception(msg.get("BookingAlreadyConfirmed"));
                     }
@@ -350,6 +351,7 @@ public class BookingsController extends BaseController {
             switch (booking.getPaymentMethod()) {
                 case Subscription:
                 case Cash:
+                case ExternalVoucher:
                     //no need to check payment confirmation
                     break;
                 default:

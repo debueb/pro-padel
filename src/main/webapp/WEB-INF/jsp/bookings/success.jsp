@@ -17,6 +17,7 @@
                         <div class="alert alert-success" role="alert">
                             <fmt:message key="BookingSuccessMessage"><fmt:param value="${sessionScope.booking.player.email}"/></fmt:message>
                             <c:if test="${sessionScope.booking.paymentMethod == 'Cash'}"><br/><fmt:message key="BookingCashMessage"/></c:if>
+                            <c:if test="${sessionScope.booking.paymentMethod == 'ExternalVoucher'}"><br/><fmt:message key="BookingExternalVoucherMessage"/></c:if>
                         </div>
                         <div class="unit-4">
                             <span style="height: 32px; line-height: 32px; padding-right: 10px; float: left;">

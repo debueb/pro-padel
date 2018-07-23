@@ -15,7 +15,7 @@
                     <div class="alert alert-danger unit"><spf:errors path="*"/></div>
 
                     <div class="relative unit-2">
-                        <spf:select class="form-control select-simple" path="paymentMethod">
+                        <spf:select class="form-control select-simple" path="paymentMethod" data-container="body">
                             <spf:options items="${Model.paymentMethods}" />
                         </spf:select>
                         <span class="explanation-select"><fmt:message key="PaymentMethod"/></span>

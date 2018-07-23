@@ -17,12 +17,14 @@
                         <div class="alert alert-success" role="alert">
                             <fmt:message key="BookingSuccessMessage"><fmt:param value="${sessionScope.booking.player.email}"/></fmt:message>
                             <c:if test="${sessionScope.booking.paymentMethod == 'Cash'}"><br/><fmt:message key="BookingCashMessage"/></c:if>
+                            <c:if test="${sessionScope.booking.paymentMethod == 'ExternalVoucher'}"><br/><fmt:message key="BookingExternalVoucherMessage"/></c:if>
                         </div>
                         <div class="unit-4">
                             <span style="height: 32px; line-height: 32px; padding-right: 10px; float: left;">
                                 <fmt:message key="ShareVia"/>
                             </span>
                             <jsp:include page="/WEB-INF/jsp/include/share.jsp"/>
+                            <a class="btn btn-primary btn-block unit-2" href="/home"><fmt:message key="GoToHomepage"/></a>
                         </div>
                     </c:otherwise>
                 </c:choose>

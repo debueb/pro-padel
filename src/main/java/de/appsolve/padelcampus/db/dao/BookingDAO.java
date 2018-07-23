@@ -87,7 +87,7 @@ public class BookingDAO extends GenericDAO<Booking> implements BookingDAOI {
         criteria.add(Restrictions.ge("bookingDate", startDate));
         criteria.add(Restrictions.le("bookingDate", endDate));
         criteria.add(Restrictions.isNotNull("offer"));
-        criteria.add(Restrictions.or(Restrictions.eq("paymentMethod", PaymentMethod.Subscription), Restrictions.eq("paymentMethod", PaymentMethod.Cash), Restrictions.eq("paymentMethod", PaymentMethod.Reservation), Restrictions.eq("paymentMethod", PaymentMethod.Voucher), Restrictions.eq("paymentConfirmed", true)));
+        criteria.add(Restrictions.or(Restrictions.eq("paymentMethod", PaymentMethod.Subscription), Restrictions.eq("paymentMethod", PaymentMethod.Cash), Restrictions.eq("paymentMethod", PaymentMethod.ExternalVoucher), Restrictions.eq("paymentMethod", PaymentMethod.Reservation), Restrictions.eq("paymentMethod", PaymentMethod.Voucher), Restrictions.eq("paymentConfirmed", true)));
         criteria.add(Restrictions.or(Restrictions.isNull("cancelled"), Restrictions.eq("cancelled", false)));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         criteria.addOrder(Order.asc("bookingDate"));

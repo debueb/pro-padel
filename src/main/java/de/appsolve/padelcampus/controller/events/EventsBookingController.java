@@ -284,6 +284,7 @@ public class EventsBookingController extends BaseController {
 
             switch (booking.getPaymentMethod()) {
                 case Cash:
+                case ExternalVoucher:
                     if (booking.getConfirmed()) {
                         throw new Exception(msg.get("BookingAlreadyConfirmed"));
                     }
@@ -314,7 +315,7 @@ public class EventsBookingController extends BaseController {
         ModelAndView mav = getBookingSuccessView();
         Booking booking = bookingDAO.findByUUIDWithEventAndPlayers(UUID);
         try {
-            if (!booking.getPaymentMethod().equals(PaymentMethod.Cash) && !booking.getPaymentConfirmed()) {
+            if (!(booking.getPaymentMethod().equals(PaymentMethod.Cash) || booking.getPaymentMethod().equals(PaymentMethod.ExternalVoucher)) && !booking.getPaymentConfirmed()) {
                 throw new Exception(msg.get("PaymentHasNotBeenConfirmed"));
             }
 

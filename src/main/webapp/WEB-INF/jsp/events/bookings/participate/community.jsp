@@ -15,7 +15,7 @@
                     <div class="alert alert-danger unit"><spf:errors path="*"/></div>
 
                     <div class="relative unit-4">
-                        <spf:select class="form-control select-simple form-top-element" path="paymentMethod">
+                        <spf:select class="form-control select-simple form-top-element" path="paymentMethod" data-container="body">
                             <c:forEach var="PaymentMethod" items="${Model.paymentMethods}">
                                 <spf:option value="${PaymentMethod}"><fmt:message key="${PaymentMethod}"/></spf:option>
                             </c:forEach>

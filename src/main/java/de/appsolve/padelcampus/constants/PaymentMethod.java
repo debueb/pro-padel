@@ -17,5 +17,6 @@ public enum PaymentMethod {
     CreditCard,
     DirectDebit,
     Voucher,
-    Reservation;
+    Reservation,
+    ExternalVoucher;
 }

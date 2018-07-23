@@ -590,6 +590,7 @@ public class BookingUtil {
         //always support subscriptions, cash and vouchers
         paymentMethods.add(PaymentMethod.Subscription);
         paymentMethods.add(PaymentMethod.Cash);
+        paymentMethods.add(PaymentMethod.ExternalVoucher);
         paymentMethods.add(PaymentMethod.Voucher);
 
         //check if PayPal config exists and is active
