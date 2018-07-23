@@ -10,6 +10,7 @@ import de.appsolve.padelcampus.constants.Currency;
 import de.appsolve.padelcampus.constants.EventType;
 import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.constants.PaymentMethod;
+import org.hibernate.annotations.SortNatural;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
@@ -20,6 +21,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import static de.appsolve.padelcampus.utils.FormatUtils.TIME_HUMAN_READABLE;
@@ -109,7 +111,8 @@ public class Event extends ComparableEntity {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<PaymentMethod> paymentMethods;
+    @SortNatural
+    private SortedSet<PaymentMethod> paymentMethods;
 
     @Column
     private Boolean allowSignup;
@@ -319,7 +322,7 @@ public class Event extends ComparableEntity {
         return paymentMethods;
     }
 
-    public void setPaymentMethods(Set<PaymentMethod> paymentMethods) {
+    public void setPaymentMethods(SortedSet<PaymentMethod> paymentMethods) {
         this.paymentMethods = paymentMethods;
     }
 
