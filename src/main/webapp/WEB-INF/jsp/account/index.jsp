@@ -31,6 +31,11 @@
                         <jsp:param name="icon" value="line-chart"/>
                     </jsp:include>
                     <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/account/balance"/>
+                        <jsp:param name="key" value="MyBalance"/>
+                        <jsp:param name="icon" value="euro"/>
+                    </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/account/changepassword"/>
                         <jsp:param name="key" value="ChangePassword"/>
                         <jsp:param name="icon" value="lock"/>
