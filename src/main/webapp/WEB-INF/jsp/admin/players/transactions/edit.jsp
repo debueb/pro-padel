@@ -38,7 +38,7 @@
                         <div class="datepicker" data-show-on-init="false" data-allow-past="true"></div>
                     </div>
                     <div class="relative">
-                        <spf:input path="amount" type="number" class="form-control form-bottom-element"/>
+                        <spf:input path="amount" type="number" class="form-control form-bottom-element" pattern="[0-9]+([\,|\.][0-9]+)?" step="0.01"/>
                         <div class="explanation"><fmt:message key="Amount" /></div>
                     </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
