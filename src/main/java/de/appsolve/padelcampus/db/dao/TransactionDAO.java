@@ -1,9 +1,12 @@
 package de.appsolve.padelcampus.db.dao;
 
-import com.google.common.collect.ImmutableMap;
 import de.appsolve.padelcampus.db.dao.generic.GenericDAO;
 import de.appsolve.padelcampus.db.model.Player;
 import de.appsolve.padelcampus.db.model.Transaction;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,6 +19,11 @@ public class TransactionDAO extends GenericDAO<Transaction> implements Transacti
 
     @Override
     public List<Transaction> findByPlayer(Player player) {
-        return super.findByAttributes(ImmutableMap.of("player", player));
+        Criteria criteria = getCriteria();
+        criteria.add(Restrictions.eq("player", player));
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        criteria.addOrder(Order.asc("date"));
+        criteria.addOrder(Order.asc("id"));
+        return criteria.list();
     }
 }
