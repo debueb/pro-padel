@@ -28,6 +28,7 @@
                             <spf:checkbox path="deleted" readonly="readonly"/><label for="deleted"><fmt:message key="DeactivatedAccount"/></label>
                         </div>
                     </c:if>
+                    <a class="btn btn-primary btn-block unit-2" href="/admin/players/${Model.UUID}/transactions"><fmt:message key="BalanceOf"><fmt:param value="${Model}" /></fmt:message></a>
                     <button class="btn btn-primary btn-block btn-form-submit unit-2" type="submit"><fmt:message key="Save"/></button>
                 </spf:form>
             </div>

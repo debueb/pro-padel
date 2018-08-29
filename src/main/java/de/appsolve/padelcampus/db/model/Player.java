@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -119,6 +120,9 @@ public class Player extends Participant implements EmailContact, Validatable {
 
     @Transient
     private Map<String, Object> substitutionData;
+
+    @Column
+    private BigDecimal balance;
 
     public String getFirstName() {
         return firstName;
@@ -258,6 +262,14 @@ public class Player extends Participant implements EmailContact, Validatable {
     @Override
     public void setSubstitutionData(Map<String, Object> substitutionData) {
         this.substitutionData = substitutionData;
+    }
+
+    public BigDecimal getBalance() {
+        return balance == null ? BigDecimal.ZERO : balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
     public Gender getGender() {

@@ -23,6 +23,7 @@
                         <th><fmt:message key="LastName"/></th>
                         <th><fmt:message key="PhoneNumber"/></th>
                         <th><fmt:message key="EmailAddress"/></th>
+                        <th><fmt:message key="Balance"/></th>
                         <th class="text-center"><fmt:message key="Registered"/></th>
                         <th class="text-center"><fmt:message key="AllowEmailContact"/></th>
                         <th class="text-center"><fmt:message key="SendMail"/></th>
@@ -31,11 +32,13 @@
                         <tbody>
                             <c:forEach var="Player" items="${Page.content}">
                                 <c:set var="editUrl" value="/admin/players/edit/${Player.id}"/>
+                                <c:set var="editTransactionsUrl" value="/admin/players/${Player.UUID}/transactions"/>
                                 <tr>
                                     <td><a class="block" href="${editUrl}">${Player.firstName}</a></td>
                                     <td><a class="block" href="${editUrl}">${Player.lastName}</a></td>
                                     <td><a class="block" href="${editUrl}">${Player.phone}</a></td>
                                     <td><a class="block" href="${editUrl}">${Player.email}</a></td>
+                                    <td><a class="block" href="${editTransactionsUrl}"><fmt:formatNumber value="${Player.balance}" minIntegerDigits="2" minFractionDigits="2" maxFractionDigits="2"/></a></td>
                                     <td><a type="btn btn-primary" class="fa block text-center ${empty Player.passwordHash ? 'fa-close' : 'fa-check'}" href="${editUrl}"></a></td>
                                     <td><a type="btn btn-primary" class="fa block text-center ${empty Player.allowEmailContact ? 'fa-close' : Player.allowEmailContact ? 'fa-check' : 'fa-close'}" href="${editUrl}"></a></td>
                                     <td><a class="block text-center" href="/admin/mail/player/${Player.UUID}"><i class="fa fa-envelope"></i></a></td>
