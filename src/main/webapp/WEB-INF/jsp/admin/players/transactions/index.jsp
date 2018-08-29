@@ -22,7 +22,7 @@
                         <thead>
                         <th><fmt:message key="Date"/></th>
                         <th><fmt:message key="Comment"/></th>
-                        <th><fmt:message key="Amount"/></th>
+                        <th class="text-align-right"><fmt:message key="Amount"/></th>
                         </thead>
                         <tbody>
                             <c:forEach var="Transaction" items="${Transactions}">
@@ -30,13 +30,13 @@
                                 <tr>
                                     <td><a class="block" href="${editUrl}"><joda:format value="${Transaction.date}" pattern="EE, dd. MM yyyy"/></a></td>
                                     <td><a class="block" href="${editUrl}">${Transaction.comment}</a></td>
-                                    <td><a class="block" href="${editUrl}"><fmt:formatNumber value="${Transaction.amount}" minIntegerDigits="2" minFractionDigits="2" maxFractionDigits="2"/></a></td>
+                                    <td class="text-align-right"><a class="block" href="${editUrl}"><fmt:formatNumber value="${Transaction.amount}" minIntegerDigits="2" minFractionDigits="2" maxFractionDigits="2"/></a></td>
                                 </tr>
                             </c:forEach>
                             <tr>
                                 <td></td>
-                                <td style="text-align: right;"><b><fmt:message key="BalanceTotal"/></b></td>
-                                <td><b><fmt:formatNumber value="${Player.balance}" minIntegerDigits="2" minFractionDigits="2" maxFractionDigits="2"/><b></td>
+                                <td class="text-align-right"><b><fmt:message key="BalanceTotal"/></b></td>
+                                <td class="text-align-right"><b><fmt:formatNumber value="${Player.balance}" minIntegerDigits="2" minFractionDigits="2" maxFractionDigits="2"/><b></td>
                             </tr>
                         </tbody>
                     </table>
