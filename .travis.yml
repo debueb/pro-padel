@@ -15,8 +15,8 @@ deploy:
   secret_access_key:
     secure: nGdoEN7DlePCBsz4C50I1MBxZxsjHh+ymzKw2E3cf5M1rud1FRt9Lnr7/L7GmxXAVQwwqnB3M3JWIToR8i48PeSnd3Pb6Wqab0TAE7/D4iGHyGIDpNpKM9rM+hOEvKtH1FaW5Ar+dIl3oyIeUhctAIRkFF/D95YfgqNdgnP+DnKwOCvaGxoSUASl7/UcQtriUsEp5cYPiq0TMQNg9WMCuNydLc9PwgGN6UQIcb3AX6rv3BE2KBEPL8H2Jffslnkvn2Wyw0l0XoaZfhl5kguT5rEIWy/aUPP5wdPfjdgsPMPH+BiZ2G9h8YR8SWHMqq9Vq//5iDCHnDoCHSJ96TRyx6McvHo3SWqUjwL9WTp2nLi+RlG7azADLg57ktDmJVhP+EZu+F2E838JV2U5LOA/xclfZdGEit2M/Y6NV5XYAQTi4dwOCzTvjsVxp9AOrzLI0hP0YGsJ//1xM+U/weALTU2ziAkbZmiwe3Xc/M11X/2A3GaEnB5ZwTCkCd/Gh2d9shwX2VI9Su3Dp3PPfCwoFcwBY6815VfvbqiRA6ZMnihrFe4ZWqsiwkgjrS5xYI0iUNSTWpjYk+iG892U8kqrWbZkePXxhzKBLSR3aYmbMAed86b9KG2KUd6mPlnaSrNyTz2ma/SGTsb+7uc2PfnZO6oAU9np4FDUU1Pv3S8wdT0=
   region: eu-central-1
-  app: walls
-  env: Walls-env
+  app: Walls
+  env: Walls-Tomcat
   on:
     repo: debueb/pro-padel
     branch: master
