@@ -135,6 +135,17 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public List<Player> findPlayersNotRegisteredForEmails() {
+        Criteria criteria = getCriteria();
+        criteria.add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted", false)));
+        criteria.add(Restrictions.or(Restrictions.isNull("allowEmailContact"), Restrictions.eq("allowEmailContact", false)));
+        criteria.add(Restrictions.ne("email", "hendrikhuebel@yahoo.de"));
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        return (List<Player>) criteria.list();
+    }
+
+    @Override
     protected Set<String> getIndexedProperties() {
         return new HashSet<>(Arrays.asList("firstName", "lastName", "email", "phone"));
     }

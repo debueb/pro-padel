@@ -251,7 +251,7 @@ public class Player extends Participant implements EmailContact, Validatable {
 
     @Override
     public String getEmailDisplayName() {
-        return toString();
+        return getFirstName();
     }
 
     @Override

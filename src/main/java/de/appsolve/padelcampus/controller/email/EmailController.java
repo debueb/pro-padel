@@ -35,4 +35,20 @@ public class EmailController {
         playerDAO.saveOrUpdate(player);
         return new ModelAndView("email/confirm/success");
     }
+
+    @RequestMapping("/email/unsubscribe/{uuid}")
+    public ModelAndView unsubscribe(@PathVariable String uuid) {
+        EmailConfirmation emailConfirmation = emailConfirmationDAO.findByAttribute("uuid", uuid);
+        if (emailConfirmation == null) {
+            throw new ResourceNotFoundException();
+        }
+        Player player = playerDAO.findByEmail(emailConfirmation.getEmail());
+        if (player == null) {
+            throw new ResourceNotFoundException();
+        }
+        player.setAllowEmailContact(Boolean.FALSE);
+        player.setVerified(Boolean.TRUE);
+        playerDAO.saveOrUpdate(player);
+        return new ModelAndView("email/confirm/unsubscribe");
+    }
 }

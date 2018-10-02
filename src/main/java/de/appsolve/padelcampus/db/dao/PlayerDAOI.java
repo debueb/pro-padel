@@ -30,4 +30,6 @@ public interface PlayerDAOI extends BaseEntityDAOI<Player> {
     public List<Player> findPlayersInterestedIn(MatchOffer offer);
 
     public List<Player> findPlayersRegisteredForEmails();
+
+    public List<Player> findPlayersNotRegisteredForEmails();
 }

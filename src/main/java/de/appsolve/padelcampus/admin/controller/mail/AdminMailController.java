@@ -122,9 +122,11 @@ public class AdminMailController {
         return getMailView(allPlayers, request);
     }
 
-    @RequestMapping(method = GET, value = "/all/dgsvo")
-    public ModelAndView mailAllDgsvo(HttpServletRequest request) {
-        Set<Player> allPlayers = Sets.newHashSet(playerDAO.findAll());
+    @RequestMapping(method = GET, value = "/all/unsubscribed")
+    public ModelAndView mailAllUnsubscribed(HttpServletRequest request) {
+        List<Player> players = playerDAO.findPlayersNotRegisteredForEmails();
+        LOG.info(String.format("Found %s players not subscribed for emails", players.size()));
+        Set<Player> allPlayers = Sets.newHashSet(players);
         return getMailView(allPlayers, request);
     }
 
@@ -155,6 +157,7 @@ public class AdminMailController {
 
                     //add to map
                     substitutionData.put("CONFIRM_EMAIL_LINK", RequestUtil.getBaseURL(request) + "/email/confirm/" + uuid);
+                    substitutionData.put("UNSUBSCRIBE_EMAIL_LINK", RequestUtil.getBaseURL(request) + "/email/unsubscribe/" + uuid);
                     substitutionData.put("USERNAME", contact.getEmailDisplayName());
                     contact.setSubstitutionData(substitutionData);
                 }
