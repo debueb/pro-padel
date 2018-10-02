@@ -5,12 +5,16 @@
  */
 package de.appsolve.padelcampus.data;
 
+import de.appsolve.padelcampus.constants.Gender;
+
 import java.util.Map;
 
 /**
  * @author dominik
  */
 public interface EmailContact {
+
+    Gender getGender();
 
     String getEmailAddress();
 

@@ -12,6 +12,7 @@ import com.sparkpost.model.TemplateItem;
 import com.sparkpost.model.responses.TemplateListResponse;
 import com.sparkpost.resources.ResourceTemplates;
 import com.sparkpost.transport.RestConnection;
+import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.data.EmailContact;
 import de.appsolve.padelcampus.data.Mail;
 import de.appsolve.padelcampus.data.MailResult;
@@ -159,6 +160,7 @@ public class AdminMailController {
                     substitutionData.put("CONFIRM_EMAIL_LINK", RequestUtil.getBaseURL(request) + "/email/confirm/" + uuid);
                     substitutionData.put("UNSUBSCRIBE_EMAIL_LINK", RequestUtil.getBaseURL(request) + "/email/unsubscribe/" + uuid);
                     substitutionData.put("USERNAME", contact.getEmailDisplayName());
+                    substitutionData.put("SALUTATION", contact.getGender().equals(Gender.male) ? "Lieber" : "Liebe");
                     contact.setSubstitutionData(substitutionData);
                 }
             }

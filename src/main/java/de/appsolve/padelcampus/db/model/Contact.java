@@ -7,6 +7,7 @@
 package de.appsolve.padelcampus.db.model;
 
 import de.appsolve.padelcampus.annotations.EmailWithTld;
+import de.appsolve.padelcampus.constants.Gender;
 import de.appsolve.padelcampus.data.EmailContact;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -44,6 +45,11 @@ public class Contact extends CustomerEntity implements EmailContact {
 
     @Transient
     private Map<String, Object> substitutionData;
+
+    @Override
+    public Gender getGender() {
+        return Gender.male;
+    }
 
     @Override
     public String getEmailAddress() {
