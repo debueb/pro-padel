@@ -50,7 +50,7 @@ public class ProOperatorsController extends BaseController implements ServletCon
 
     private static final Logger LOG = Logger.getLogger(ProOperatorsController.class);
     private final static Pattern DNS_SUBDOMAIN_PATTERN = Pattern.compile("(?:[A-Za-z0-9][A-Za-z0-9\\-]{0,61}[A-Za-z0-9]|[A-Za-z0-9])");
-    private final static String BACKEND_URL = "wallsde-env.ifm8qinp3z.eu-central-1.elasticbeanstalk.com";
+    private final static String BACKEND_URL = "walls-tomcat.ziiuzm5pmk.eu-central-1.elasticbeanstalk.com";
     private final static String CLOUDFLARE_URL = "pro-padel.de";
     @Autowired
     CustomerDAOI customerDAO;
