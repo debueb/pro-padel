@@ -129,7 +129,6 @@ public class PlayerDAO extends SortedBaseDAO<Player> implements PlayerDAOI {
         criteria.add(Restrictions.isNotNull("passwordHash"));
         criteria.add(Restrictions.isNotNull("allowEmailContact"));
         criteria.add(Restrictions.eq("allowEmailContact", true));
-        criteria.add(Restrictions.eq("verified", true));
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return (List<Player>) criteria.list();
     }
