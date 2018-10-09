@@ -22,6 +22,7 @@ import de.appsolve.padelcampus.utils.HtmlResourceUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -50,8 +51,6 @@ public class ProOperatorsController extends BaseController implements ServletCon
 
     private static final Logger LOG = Logger.getLogger(ProOperatorsController.class);
     private final static Pattern DNS_SUBDOMAIN_PATTERN = Pattern.compile("(?:[A-Za-z0-9][A-Za-z0-9\\-]{0,61}[A-Za-z0-9]|[A-Za-z0-9])");
-    private final static String BACKEND_URL = "walls-tomcat.ziiuzm5pmk.eu-central-1.elasticbeanstalk.com";
-    private final static String CLOUDFLARE_URL = "pro-padel.de";
     @Autowired
     CustomerDAOI customerDAO;
     @Autowired
@@ -65,6 +64,9 @@ public class ProOperatorsController extends BaseController implements ServletCon
     @Autowired
     ErrorReporter errorReporter;
     private ServletContext servletContext;
+
+    @Autowired
+    Environment environment;
 
     @RequestMapping()
     public ModelAndView operators() {
@@ -97,8 +99,10 @@ public class ProOperatorsController extends BaseController implements ServletCon
                 throw new Exception(msg.get("ProjectAlreadyExists"));
             }
 
+            String dnsHostname = environment.getProperty("DNS_HOSTNAME");
+            String cloudflareUrl = environment.getProperty("CLOUDFLARE_URL");
             //create DNS subdomain in cloudflare
-            String domainName = cloudFlareApiClient.addCnameRecord(projectName, CLOUDFLARE_URL, BACKEND_URL);
+            String domainName = cloudFlareApiClient.addCnameRecord(projectName, cloudflareUrl, dnsHostname);
 
             //save customer to DB
             HashSet<String> domainNames = new HashSet<>();
