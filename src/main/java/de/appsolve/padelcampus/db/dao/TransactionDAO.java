@@ -18,6 +18,7 @@ import java.util.List;
 public class TransactionDAO extends GenericDAO<Transaction> implements TransactionDAOI {
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Transaction> findByPlayer(Player player) {
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.eq("player", player));
