@@ -517,6 +517,11 @@ public class BookingsController extends BaseController {
             throw new Exception(msg.get("RequestedTimeIsInThePast"));
         }
 
+        LocalDate lastDay = bookingUtil.getLastBookableDay();
+        if (selectedDate.isAfter(lastDay)) {
+            throw new Exception(msg.get("RequestedTimeIsInTheFuture"));
+        }
+
         //create a list of possible booking durations taking into account calendar configurations and confirmed bookings
         List<CalendarConfig> configs = calendarConfigDAO.findFor(selectedDate);
         List<Booking> confirmedBookings = bookingDAO.findBlockedBookingsForDate(selectedDate);

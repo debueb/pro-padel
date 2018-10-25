@@ -45,8 +45,8 @@ public class Constants {
 
     public static final String COOKIE_LOGIN_TOKEN = "loginToken";
 
-    //allow next 3 months to be selected
-    public static final Integer CALENDAR_MAX_DATE = 90;
+    //allow next 3 weeks to be selected
+    public static final Integer CALENDAR_MAX_DATE = 21;
 
     public static final Integer CANCELLATION_POLICY_DEADLINE = 24;
 

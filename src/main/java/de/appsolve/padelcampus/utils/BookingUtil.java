@@ -261,7 +261,7 @@ public class BookingUtil {
         //calculate date configuration for datepicker
         LocalDate today = new LocalDate(DEFAULT_TIMEZONE);
         LocalDate firstDay = today.dayOfMonth().withMinimumValue();
-        LocalDate lastDay = today.plusDays(Constants.CALENDAR_MAX_DATE).dayOfMonth().withMaximumValue();
+        LocalDate lastDay = getLastBookableDay().plusDays(1);
         List<CalendarConfig> calendarConfigs = calendarConfigDAO.findBetween(firstDay, lastDay);
         Collections.sort(calendarConfigs);
         Map<String, DatePickerDayConfig> dayConfigs = getDayConfigMap(firstDay, lastDay, calendarConfigs);
@@ -274,7 +274,7 @@ public class BookingUtil {
         for (int i = 1; i <= CalendarWeekDay.values().length; i++) {
             LocalDate date = selectedDate.withDayOfWeek(i);
             weekDays.add(date);
-            if (!onlyFutureTimeSlots || !date.isBefore(today)) {
+            if ((!onlyFutureTimeSlots || !date.isBefore(today)) && lastDay.isAfter(date)) {
                 try {
                     //generate list of bookable time slots
                     timeSlots.addAll(getTimeSlotsForDate(date, calendarConfigs, confirmedBookings, onlyFutureTimeSlots, preventOverlapping));
@@ -439,6 +439,10 @@ public class BookingUtil {
             mail.addRecipient(booking.getPlayer());
             mailUtils.send(mail, request);
         }
+    }
+
+    public LocalDate getLastBookableDay() {
+        return new LocalDate(DEFAULT_TIMEZONE).plusDays(Constants.CALENDAR_MAX_DATE).dayOfWeek().withMaximumValue();
     }
 
     private Object[] getDetailBody(HttpServletRequest request, Booking booking) {
