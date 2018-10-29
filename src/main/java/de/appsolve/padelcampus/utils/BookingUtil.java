@@ -442,7 +442,7 @@ public class BookingUtil {
     }
 
     public LocalDate getLastBookableDay() {
-        return new LocalDate(DEFAULT_TIMEZONE).plusDays(Constants.CALENDAR_MAX_DATE).dayOfWeek().withMaximumValue();
+        return new LocalDate(DEFAULT_TIMEZONE).plusDays(Constants.CALENDAR_MAX_DATE);
     }
 
     private Object[] getDetailBody(HttpServletRequest request, Booking booking) {
