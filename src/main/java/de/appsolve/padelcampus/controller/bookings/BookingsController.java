@@ -499,7 +499,7 @@ public class BookingsController extends BaseController {
         LocalDate selectedDate = DATE_HUMAN_READABLE.parseLocalDate(day);
         ModelAndView indexView = new ModelAndView("bookings/index");
         indexView.addObject("Module", moduleUtil.getCustomerModule(request, ModuleType.Bookings));
-        bookingUtil.addWeekView(selectedDate, facilities, indexView, false, true);
+        bookingUtil.addWeekView(request, selectedDate, facilities, indexView, false, true);
         return indexView;
     }
 
@@ -517,7 +517,7 @@ public class BookingsController extends BaseController {
             throw new Exception(msg.get("RequestedTimeIsInThePast"));
         }
 
-        LocalDate lastDay = bookingUtil.getLastBookableDay();
+        LocalDate lastDay = bookingUtil.getLastBookableDay(request);
         if (selectedDate.isAfter(lastDay)) {
             throw new Exception(msg.get("RequestedTimeIsInTheFuture"));
         }

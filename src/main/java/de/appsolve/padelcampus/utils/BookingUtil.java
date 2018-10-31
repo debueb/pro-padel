@@ -12,6 +12,7 @@ import com.paypal.base.codec.binary.Base64;
 import de.appsolve.padelcampus.constants.CalendarWeekDay;
 import de.appsolve.padelcampus.constants.Constants;
 import de.appsolve.padelcampus.constants.PaymentMethod;
+import de.appsolve.padelcampus.constants.Privilege;
 import de.appsolve.padelcampus.data.*;
 import de.appsolve.padelcampus.db.dao.*;
 import de.appsolve.padelcampus.db.model.*;
@@ -83,6 +84,9 @@ public class BookingUtil {
 
     @Autowired
     PayMillConfigDAOI payMillConfigDAO;
+
+    @Autowired
+    SessionUtil sessionUtil;
 
     public static String generateUUID() {
         return UUID.randomUUID().toString();
@@ -257,11 +261,11 @@ public class BookingUtil {
         return isHoliday;
     }
 
-    public void addWeekView(LocalDate selectedDate, List<Facility> selectedFacilities, ModelAndView mav, Boolean onlyFutureTimeSlots, Boolean preventOverlapping) throws JsonProcessingException {
+    public void addWeekView(HttpServletRequest request, LocalDate selectedDate, List<Facility> selectedFacilities, ModelAndView mav, Boolean onlyFutureTimeSlots, Boolean preventOverlapping) throws JsonProcessingException {
         //calculate date configuration for datepicker
         LocalDate today = new LocalDate(DEFAULT_TIMEZONE);
         LocalDate firstDay = today.dayOfMonth().withMinimumValue();
-        LocalDate lastDay = getLastBookableDay().plusDays(1);
+        LocalDate lastDay = getLastBookableDay(request).plusDays(1);
         List<CalendarConfig> calendarConfigs = calendarConfigDAO.findBetween(firstDay, lastDay);
         Collections.sort(calendarConfigs);
         Map<String, DatePickerDayConfig> dayConfigs = getDayConfigMap(firstDay, lastDay, calendarConfigs);
@@ -441,8 +445,12 @@ public class BookingUtil {
         }
     }
 
-    public LocalDate getLastBookableDay() {
-        return new LocalDate(DEFAULT_TIMEZONE).plusDays(Constants.CALENDAR_MAX_DATE);
+    public LocalDate getLastBookableDay(HttpServletRequest request) {
+        Integer maxDate = Constants.CALENDAR_MAX_DATE;
+        if (sessionUtil.getPrivileges(request).contains(Privilege.ManageBookings)) {
+            maxDate = Constants.CALENDAR_MAX_DATE_ADMINS;
+        }
+        return new LocalDate(DEFAULT_TIMEZONE).plusDays(maxDate);
     }
 
     private Object[] getDetailBody(HttpServletRequest request, Booking booking) {
