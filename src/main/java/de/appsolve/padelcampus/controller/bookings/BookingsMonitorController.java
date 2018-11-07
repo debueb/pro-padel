@@ -49,6 +49,9 @@ public class BookingsMonitorController {
 
         }
         Booking booking = bookingDAO.findByUUID(bookingUUID);
+        if (booking == null){
+            return new ModelAndView("bookings/monitor/cancelled");
+        }
         if (booking.getPlayer() != null && booking.getPlayer().equals(user)) {
             return new ModelAndView("bookings/monitor/cancel", "Booking", booking);
         }
