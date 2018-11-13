@@ -71,12 +71,6 @@ var project = require('./project');
                 return content;
             };
 
-            $('#offline-msg-btn').on('click', function(){
-                $('#shadow').hide();
-                $('#offline-msg').hide();
-                return false;
-            });
-            
             var triggerStateChange = function(event, eventData){
                 var e = $.Event('statechange');
                 e.originalEvent = event;
@@ -87,12 +81,6 @@ var project = require('./project');
             // Ajaxify
             var $this = $(this);
             $this.find('a').click(function (event) {
-                if (!window.navigator.onLine){
-                    $('#shadow').show();
-                    $('#offline-msg').show();
-                    return false;
-                }
-
                 // Prepare
                 var $this       = $(this),
                     url         = this.href,
@@ -120,12 +108,6 @@ var project = require('./project');
             });
             
             $this.find('form').off().on('submit', function (event) {
-                if (!window.navigator.onLine){
-                    $('#shadow').show();
-                    $('#offline-msg').show();
-                    return false;
-                }
-                
                 if (window.tinymce){
                     window.tinymce.triggerSave();
                 }

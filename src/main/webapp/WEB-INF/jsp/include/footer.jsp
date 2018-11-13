@@ -28,11 +28,5 @@
             </div>
         </div>
     </div><!-- background -->
-    <div id="offline-msg">
-        <fmt:message key="Offline"/>
-        <div>
-            <a id="offline-msg-btn" class="btn btn-default unit" href="#">OK</i></a>
-        </div>
-    </div>
     </body>
 </html>
