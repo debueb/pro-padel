@@ -53,6 +53,11 @@
                         <jsp:param name="icon" value="gift"/>
                     </jsp:include>
                     <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
+                        <jsp:param name="href" value="/admin/bookings/mailsettings"/>
+                        <jsp:param name="key" value="MailSettings"/>
+                        <jsp:param name="icon" value="envelope"/>
+                    </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
                         <jsp:param name="href" value="/admin/bookings/settings"/>
                         <jsp:param name="key" value="CalendarSettings"/>
                         <jsp:param name="icon" value="calendar"/>

@@ -9,10 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import com.paypal.base.codec.binary.Base64;
-import de.appsolve.padelcampus.constants.CalendarWeekDay;
-import de.appsolve.padelcampus.constants.Constants;
-import de.appsolve.padelcampus.constants.PaymentMethod;
-import de.appsolve.padelcampus.constants.Privilege;
+import de.appsolve.padelcampus.constants.*;
 import de.appsolve.padelcampus.data.*;
 import de.appsolve.padelcampus.db.dao.*;
 import de.appsolve.padelcampus.db.model.*;
@@ -69,6 +66,9 @@ public class BookingUtil {
 
     @Autowired
     CalendarConfigUtil calendarConfigUtil;
+
+    @Autowired
+    BookingMailSettingsDAOI bookingMailSettingsDAO;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -379,18 +379,28 @@ public class BookingUtil {
         Mail mail = new Mail();
         mail.setSubject(msg.get("BookingSuccessfulMailSubject"));
         mail.setTemplateId("HTMLEmail");
-        mail.setHtmlBody(msg.get("BookingSuccessfulMailBodyHtml", new Object[]{
-                booking.getPlayer().toString(),
-                FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()),
-                FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()),
-                booking.getName(),
-                msg.get(booking.getPaymentMethod().toString()),
-                booking.getPaymentMethod() == PaymentMethod.ExternalVoucher ? "" : booking.getAmount(),
-                booking.getCurrency(),
-                CANCELLATION_POLICY_DEADLINE,
-                RequestUtil.getBaseURL(request) + "/bookings/booking/" + booking.getUUID() + "/cancel",
-                RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
-                RequestUtil.getBaseURL(request)}));
+        String htmlBodyTemplate = msg.get("BookingSuccessfulMailBodyHtml");
+        BookingMailSettings bookingMailSettings = bookingMailSettingsDAO.findFirst();
+        if (bookingMailSettings != null) {
+            if (!StringUtils.isEmpty(bookingMailSettings.getHtmlBodyTemplate())) {
+                htmlBodyTemplate = bookingMailSettings.getHtmlBodyTemplate();
+            }
+        }
+        // replace variables
+        htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.BOOKING_PLAYER.name(), booking.getPlayer().toString());
+        htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.BOOKING_DATE.name(), FormatUtils.DATE_MEDIUM.print(booking.getBookingDate()));
+        htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.BOOKING_TIME.name(), FormatUtils.TIME_HUMAN_READABLE.print(booking.getBookingTime()));
+        htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.BOOKING_OFFER.name(), booking.getName());
+        htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.BOOKING_PAYMENT_METHOD.name(), msg.get(booking.getPaymentMethod().toString()));
+        htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.BOOKING_AMOUNT.name(), booking.getPaymentMethod() == PaymentMethod.ExternalVoucher ? "" : booking.getAmount().toString());
+        htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.BOOKING_CURRENCY.name(), booking.getCurrency().getSymbol());
+        htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.BOOKING_CANCELLATION_POLICY_DEADLINE.name(), CANCELLATION_POLICY_DEADLINE.toString());
+        htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.BOOKING_CANCELLATION_URL.name(), RequestUtil.getBaseURL(request) + "/bookings/booking/" + booking.getUUID() + "/cancel");
+        htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.BOOKING_INVOICE_URL.name(), RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID());
+        htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.HOMEPAGE_URL.name(), RequestUtil.getBaseURL(request));
+
+        mail.setHtmlBody(htmlBodyTemplate);
+
         mail.addRecipient(booking.getPlayer());
         mail.setAttachments(getAttachments(booking));
         mailUtils.send(mail, request);
