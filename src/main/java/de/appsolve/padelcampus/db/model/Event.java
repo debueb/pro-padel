@@ -69,6 +69,7 @@ public class Event extends ComparableEntity {
     private Boolean active;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @OrderBy("firstName, lastName")
     private Set<Participant> participants;
 
     @Column

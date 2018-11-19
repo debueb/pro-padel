@@ -19,7 +19,10 @@ import de.appsolve.padelcampus.db.dao.*;
 import de.appsolve.padelcampus.db.dao.generic.BaseEntityDAOI;
 import de.appsolve.padelcampus.db.model.*;
 import de.appsolve.padelcampus.spring.*;
-import de.appsolve.padelcampus.utils.*;
+import de.appsolve.padelcampus.utils.BookingUtil;
+import de.appsolve.padelcampus.utils.EventsUtil;
+import de.appsolve.padelcampus.utils.GameUtil;
+import de.appsolve.padelcampus.utils.RankingUtil;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -63,12 +66,6 @@ public class AdminEventsController extends AdminBaseController<Event> {
     BaseEntityDAOI<Participant> participantDAO;
 
     @Autowired
-    TeamDAOI teamDAO;
-
-    @Autowired
-    PlayerDAOI playerDAO;
-
-    @Autowired
     CalendarConfigDAOI calendarConfigDAO;
 
     @Autowired
@@ -84,10 +81,10 @@ public class AdminEventsController extends AdminBaseController<Event> {
     GameUtil gameUtil;
 
     @Autowired
-    SessionUtil sessionUtil;
+    BookingUtil bookingUtil;
 
     @Autowired
-    BookingUtil bookingUtil;
+    PlayerDAOI playerDAO;
 
     @Autowired
     ParticipantCollectionEditor participantCollectionEditor;
@@ -581,6 +578,64 @@ public class AdminEventsController extends AdminBaseController<Event> {
         return redirectToIndex(request);
     }
 
+    @RequestMapping(method = GET, value = "/{eventId}/addguests")
+    public ModelAndView getAddGuests(@PathVariable("eventId") Long eventId) {
+        Event event = eventDAO.findById(eventId);
+        return getAddGuestsView(event, new Player(), 1L);
+    }
+
+    @RequestMapping(method = POST, value = "/{eventId}/addguests")
+    public ModelAndView postAddGuests(
+            @PathVariable("eventId") Long eventId,
+            @ModelAttribute("Player") Player player,
+            @RequestParam("NumberOfGuests") Long numberOfGuests,
+            HttpServletRequest request,
+            BindingResult result) {
+        Event event = eventDAO.findByIdFetchWithParticipants(eventId);
+        try {
+            Player primaryPlayer;
+            if (StringUtils.isEmpty(player.getUUID())) {
+                validator.validate(player, result);
+                if (result.hasErrors()) {
+                    return getAddGuestsView(event, player, numberOfGuests);
+                }
+                if (playerDAO.findByEmail(player.getEmail()) != null) {
+                    throw new Exception(msg.get("EmailAlreadyRegistered"));
+                }
+                player.setAllowEmailContact(false);
+                primaryPlayer = playerDAO.saveOrUpdate(player);
+            } else {
+                primaryPlayer = playerDAO.findByUUID(player.getUUID());
+            }
+            if (event.getParticipants().contains(primaryPlayer)) {
+                throw new Exception(msg.get("AlreadyParticipatesInThisEvent", new Object[]{primaryPlayer}));
+            }
+            for (long guestNumber = 1L; guestNumber <= numberOfGuests; guestNumber++) {
+                String domain = request.getServerName().equals("localhost") ? "localhost.local" : request.getServerName();
+                String guestEmail = String.format("%s-%s-Gast-%s@%s", primaryPlayer.getFirstName(), primaryPlayer.getLastName(), guestNumber, domain).replace(" ", "-");
+                Player guest = playerDAO.findByEmail(guestEmail);
+                if (guest == null) {
+                    guest = new Player();
+                    guest.setFirstName(primaryPlayer.getFirstName());
+                    guest.setLastName(String.format("%s Gast %s", primaryPlayer.getLastName(), guestNumber));
+                    guest.setAllowEmailContact(false);
+                    guest.setEmail(guestEmail);
+                    guest.setPhone(primaryPlayer.getPhone());
+                    guest.setGender(primaryPlayer.getGender());
+                    guest = playerDAO.saveOrUpdate(guest);
+                }
+                event.getParticipants().add(guest);
+            }
+            event.getParticipants().add(primaryPlayer);
+            eventDAO.saveOrUpdate(event);
+            return new ModelAndView("redirect:/admin/events/edit/" + eventId);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            result.addError(new ObjectError("id", e.getMessage()));
+            return getAddGuestsView(event, player, numberOfGuests);
+        }
+    }
+
     @Override
     protected ModelAndView getEditView(Event event) {
         ModelAndView mav = new ModelAndView("admin/events/edit", "Model", event);
@@ -675,6 +730,14 @@ public class AdminEventsController extends AdminBaseController<Event> {
         GameList formList = new GameList();
         formList.setList(games);
         mav.addObject("Model", formList);
+        return mav;
+    }
+
+    private ModelAndView getAddGuestsView(Event event, Player player, Long numberOfGuests) {
+        ModelAndView mav = new ModelAndView("admin/events/addguests");
+        mav.addObject("Event", event);
+        mav.addObject("Player", player);
+        mav.addObject("NumberOfGuests", numberOfGuests);
         return mav;
     }
 
