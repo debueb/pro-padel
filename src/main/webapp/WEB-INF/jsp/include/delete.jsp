@@ -23,7 +23,6 @@
 
                         <form method="POST">
                             <a class="btn btn-primary btn-back unit"><fmt:message key="Cancel"/></a>
-                            <jsp:include page="/WEB-INF/jsp/include/input-redirect.jsp"/>
                             <button class="btn btn-danger unit" style="margin-left: 10px;"><fmt:message key="Delete"/></button>
                         </form>
                     </c:otherwise>
