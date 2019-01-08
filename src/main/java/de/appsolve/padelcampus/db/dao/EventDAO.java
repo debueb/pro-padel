@@ -57,6 +57,16 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public List<Event> findAllActiveStartingWith(LocalDate date) {
+        Criteria crit = getCriteria();
+        crit.add(Restrictions.eq("active", true));
+        crit.add(Restrictions.ge("startDate", new LocalDate()));
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return (List<Event>) crit.list();
+    }
+
+    @Override
     public Event findByIdFetchWithGames(Long id) {
         return super.findByIdFetchEagerly(id, "games");
     }

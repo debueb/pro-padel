@@ -6,14 +6,20 @@
 
 package de.appsolve.padelcampus.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.appsolve.padelcampus.constants.ModuleType;
+import de.appsolve.padelcampus.data.JSEvent;
 import de.appsolve.padelcampus.data.Mail;
+import de.appsolve.padelcampus.db.dao.EventDAOI;
 import de.appsolve.padelcampus.db.dao.ModuleDAOI;
 import de.appsolve.padelcampus.db.dao.PageEntryDAOI;
+import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Module;
 import de.appsolve.padelcampus.db.model.PageEntry;
 import de.appsolve.padelcampus.exceptions.ResourceNotFoundException;
 import org.apache.log4j.Logger;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 import static de.appsolve.padelcampus.constants.Constants.BLOG_PAGE_SIZE;
@@ -48,7 +55,13 @@ public class RootController extends BaseController {
     ModuleDAOI moduleDAO;
 
     @Autowired
+    EventDAOI eventDAO;
+
+    @Autowired
     PageEntryDAOI pageEntryDAO;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @RequestMapping("/")
     public ModelAndView getIndex(HttpServletRequest request) {
@@ -104,8 +117,7 @@ public class RootController extends BaseController {
         if (!modules.isEmpty()) {
             Module homePageModule = modules.get(0);
             mav.addObject("Module", homePageModule);
-            List<PageEntry> pageEntries = pageEntryDAO.findByModule(homePageModule);
-            mav.addObject("PageEntries", pageEntries);
+            addPageEntries(homePageModule, mav);
         }
         return mav;
     }
@@ -126,10 +138,30 @@ public class RootController extends BaseController {
                 return blogView;
             default:
                 ModelAndView mav = new ModelAndView("page/index");
-                mav.addObject("PageEntries", pageEntryDAO.findByModule(module));
+                addPageEntries(module, mav);
                 mav.addObject("Module", module);
                 mav.addObject("Mail", new Mail());
                 return mav;
+        }
+    }
+
+    private void addPageEntries(Module module, ModelAndView mav) {
+        List<PageEntry> pageEntries = pageEntryDAO.findByModule(module);
+        mav.addObject("PageEntries", pageEntries);
+        for (PageEntry pageEntry : pageEntries) {
+            if (pageEntry.getShowEventCalendar()) {
+                List<Event> events = eventDAO.findAllActiveStartingWith(LocalDate.now());
+                List<JSEvent> jsEvents = new ArrayList<>();
+                for (Event event : events) {
+                    jsEvents.add(new JSEvent(event));
+                }
+                try {
+                    mav.addObject("Events", objectMapper.writeValueAsString(jsEvents));
+                } catch (JsonProcessingException e) {
+                    LOG.error(e);
+                }
+                break;
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ import de.appsolve.padelcampus.db.model.Event;
 import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Team;
 import org.hibernate.criterion.Criterion;
+import org.joda.time.LocalDate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -45,6 +46,8 @@ public interface EventDAOI extends BaseEntityDAOI<Event> {
     List<Event> findAllUpcomingWithParticipant(Team team);
 
     List<Event> findAllActive();
+
+    List<Event> findAllActiveStartingWith(LocalDate date);
 
     List<Event> findAllActiveFetchWithParticipantsAndPlayers();
 }
