@@ -45,3 +45,17 @@
     </div>
     <div class="unit-4"></div>
 </c:if>
+<c:if test="${PageEntry.showEventCalendar}">
+    <div class="row pageentry">
+        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
+            <div id="eventcalendar"></div>
+            <br><br>
+        </div>
+    </div>
+    <link rel='stylesheet' href='${contextPath}static/css/noconcat/fullcalendar/all.css' />
+    <script type="text/javascript">
+        window.eventcalendar = window.eventcalendar || {};
+        window.eventcalendar.events = ${Events};
+    </script>
+    <script src='${contextPath}static/js/noconcat/fullcalendar/all.js'></script>
+</c:if>
