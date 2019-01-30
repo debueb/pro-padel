@@ -47,6 +47,9 @@ public class PageEntry extends SortableEntity {
     @Column
     private Boolean showEventCalendar;
 
+    @Column
+    private Boolean showEventOverview;
+
     @ManyToOne(targetEntity = Module.class, fetch = FetchType.EAGER)
     private Module module;
 
@@ -104,6 +107,14 @@ public class PageEntry extends SortableEntity {
 
     public void setShowEventCalendar(Boolean showEventCalendar) {
         this.showEventCalendar = showEventCalendar;
+    }
+
+    public Boolean getShowEventOverview() {
+        return showEventOverview == null ? Boolean.FALSE : showEventOverview;
+    }
+
+    public void setShowEventOverview(Boolean showEventOverview) {
+        this.showEventOverview = showEventOverview;
     }
 
     public Module getModule() {
