@@ -37,6 +37,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static de.appsolve.padelcampus.constants.Constants.BLOG_PAGE_SIZE;
 import static de.appsolve.padelcampus.constants.Constants.PATH_HOME;
@@ -161,6 +163,32 @@ public class RootController extends BaseController {
                     LOG.error(e);
                 }
                 break;
+            }
+            if (pageEntry.getShowEventOverview()) {
+                LocalDate today = LocalDate.now();
+                List<Event> currentEvents = eventDAO.findAllActiveStartingWith(today);
+                Map<Integer, ArrayList<Event>> eventMap = new TreeMap<>();
+                for (Event event : currentEvents) {
+                    int monthOfYear = event.getStartDate().getMonthOfYear() - 1;
+                    if (eventMap.get(monthOfYear) == null) {
+                        eventMap.put(monthOfYear, new ArrayList<>());
+                    }
+                    eventMap.get(monthOfYear).add(event);
+                }
+
+                // add passed events of current month AFTER upcoming events of current month
+                LocalDate firstOfMonth = today.withDayOfMonth(1);
+                int currentMonth = firstOfMonth.getMonthOfYear() - 1;
+                List<Event> passedEvents = eventDAO.findAllActiveStartingWithEndingBefore(firstOfMonth, today);
+                if (passedEvents != null && !passedEvents.isEmpty()) {
+                    if (eventMap.get(currentMonth) == null) {
+                        eventMap.put(currentMonth, new ArrayList<>());
+                    }
+                    eventMap.get(currentMonth).addAll(passedEvents);
+                }
+
+                mav.addObject("EventMap", eventMap);
+                mav.addObject("Today", today);
             }
         }
     }

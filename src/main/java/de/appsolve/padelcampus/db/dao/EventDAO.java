@@ -6,6 +6,7 @@ import de.appsolve.padelcampus.db.model.Participant;
 import de.appsolve.padelcampus.db.model.Team;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.joda.time.LocalDate;
@@ -61,8 +62,21 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI {
     public List<Event> findAllActiveStartingWith(LocalDate date) {
         Criteria crit = getCriteria();
         crit.add(Restrictions.eq("active", true));
-        crit.add(Restrictions.ge("startDate", new LocalDate()));
+        crit.add(Restrictions.ge("startDate", date));
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        crit.addOrder(Order.asc("startDate"));
+        return (List<Event>) crit.list();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Event> findAllActiveStartingWithEndingBefore(LocalDate startDate, LocalDate endDate) {
+        Criteria crit = getCriteria();
+        crit.add(Restrictions.eq("active", true));
+        crit.add(Restrictions.ge("startDate", startDate));
+        crit.add(Restrictions.lt("endDate", endDate));
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        crit.addOrder(Order.asc("startDate"));
         return (List<Event>) crit.list();
     }
 

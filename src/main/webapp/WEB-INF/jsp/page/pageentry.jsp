@@ -59,3 +59,64 @@
     </script>
     <script src='${contextPath}static/js/noconcat/fullcalendar/all.js'></script>
 </c:if>
+
+<c:if test="${PageEntry.showEventOverview}">
+
+    <link rel='stylesheet' href='${contextPath}static/css/noconcat/eventoverview/eventoverview.css' />
+
+    <div class="row pageentry">
+        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
+            <div id="event-overview">
+                <c:forEach var="EventMapEntry" items="${EventMap}">
+                    <c:set var="Month" value="${EventMapEntry.key}"/>
+                    <c:set var="EventList" value="${EventMapEntry.value}"/>
+                    <c:set var="tooLate" value="false" />
+                    <div class="month">
+                        <div class="month-name"><fmt:message key="Month${Month}" /></div>
+                        <c:forEach var="Event" items="${EventList}">
+                            <c:if test="${not tooLate and Event.startDate lt Today}">
+                                <div class="month-name" style="text-align: left;"><fmt:message key="TooLateFor" />:</div>
+                                <c:set var="tooLate" value="true" />
+                            </c:if>
+                            <a class="month-event ${tooLate ? 'disabled' : ''}" href="/events/event/${Event.id}">
+                                <span class="month-event-date"><joda:format value="${Event.startDate}" pattern="EEE, dd." /></span>
+                                <span class="month-event-name">${Event.name}</span>
+                                <span class="month-event-arrow"><i class="fa fa-chevron-right"></i></span>
+                            </a>
+                        </c:forEach>
+                    </div>
+                </c:forEach>
+            </div>
+            <br><br><br>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#event-overview').slick({
+                infinite: false,
+                mobileFirst: true,
+                arrows: true,
+                adaptiveHeight: true,
+                initialSlide: 0,
+                responsive: [
+                    {
+                        breakpoint: 1679,
+                        settings: {
+                            slidesToShow: 3
+                        }
+                    }, {
+                        breakpoint: 992,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    }, {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 1
+                        }
+                    }]
+            });
+        });
+    </script>
+</c:if>

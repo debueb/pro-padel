@@ -1,0 +1,76 @@
+#event-overview .slick-track {
+    display: flex !important;
+}
+#event-overview .slick-slide {
+    height: inherit !important;
+}
+#event-overview {
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+    background: url('/static/images/bg-small.jpg') center center no-repeat;
+    background-size: cover;
+}
+#event-overview .month {
+    padding: 5px 10px;
+}
+#event-overview .month-name {
+    padding-bottom: 10px;
+    font-size: 1.5em;
+    z-index: 99;
+    text-align: center;
+}
+#event-overview a.month-event {
+    display: flex;
+    white-space: nowrap;
+    background: #289CD4;
+    padding: 3px;
+    margin-bottom: 2px;
+    color: #fff;
+}
+#event-overview a.month-event:hover {
+    background: #DAEC34;
+}
+#event-overview a.month-event:hover .month-event-date {
+    color: #309DD1;
+}
+#event-overview a.month-event:hover {
+    background: #DAEC34;
+}
+#event-overview a.month-event.disabled {
+    background: none;
+}
+#event-overview a.month-event.disabled:hover {
+    background: none;
+}
+#event-overview .month-event-date {
+    display: inline-block;
+    flex: 1;
+    color: rgba(217, 239, 8, 1);
+}
+#event-overview .month-event.disabled .month-event-date {
+    color: inherit;
+}
+#event-overview a.month-event.disabled:hover .month-event-date {
+    color: inherit;
+}
+#event-overview a.month-event.disabled .month-event-arrow {
+    display: none;
+}
+#event-overview .month-event-name {
+    display: inline-block;
+    flex: 5;
+    overflow: hidden;
+}
+#event-overview .month-event-arrow {
+    display: inline-block;
+    flex: 1;
+    text-align: right;
+    color: rgba(217, 239, 8, 1);
+}
+#event-overview .month {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(-45deg, rgba(27, 155, 216, .8) 0%, rgba(71, 175, 168, .8) 50%, rgba(217, 239, 8, .8) 100%);
+}

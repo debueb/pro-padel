@@ -37,13 +37,14 @@ public class BookingMonitorUtil {
             LocalDate date = booking.getBookingDate();
             LocalTime time = booking.getBookingTime();
             String dateStr = FormatUtils.DATE_MEDIUM.print(date);
+            String dateMedium = FormatUtils.DATE_HUMAN_READABLE.print(date);
             String timeStr = FormatUtils.TIME_HUMAN_READABLE.print(time);
             if (date.isAfter(LocalDate.now()) || date.equals(LocalDate.now()) && time.isAfter(LocalTime.now())) {
                 List<BookingMonitor> bookingMonitors = bookingMonitorDAO.findByDateAndTime(date, time);
                 if (bookingMonitors != null) {
                     for (BookingMonitor monitor : bookingMonitors) {
                         String subject = msg.get("BookingMonitorAvailableMailSubject", new Object[]{booking.getOffer(), dateStr, timeStr});
-                        String body = msg.get("BookingMonitorAvailableMailBody", new Object[]{monitor.getPlayer(), booking.getOffer(), dateStr, timeStr, baseURL + "/bookings", baseURL});
+                        String body = msg.get("BookingMonitorAvailableMailBody", new Object[]{monitor.getPlayer(), booking.getOffer(), dateStr, timeStr, String.format("%s/bookings?date=%s", baseURL, dateMedium), baseURL});
                         Mail mail = new Mail();
                         mail.addRecipient(monitor.getPlayer());
                         mail.setSubject(subject);

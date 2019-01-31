@@ -52,6 +52,9 @@
                     <div class="unit">
                         <spf:checkbox path="showEventCalendar" id="showEventCalendar"/><label for="showEventCalendar"><fmt:message key="ShowEventCalendar"/></label>
                     </div>
+                    <div class="unit">
+                        <spf:checkbox path="showEventOverview" id="showEventOverview"/><label for="showEventOverview"><fmt:message key="ShowEventOverview"/></label>
+                    </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
                 </spf:form>
             </div>
