@@ -29,16 +29,11 @@
     color: #fff;
 }
 #event-overview a.month-event:hover {
-    background: #DAEC34;
-}
-#event-overview a.month-event:hover .month-event-date {
-    color: #309DD1;
-}
-#event-overview a.month-event:hover {
-    background: #DAEC34;
+    background: #1494d2;
 }
 #event-overview a.month-event.disabled {
     background: none;
+    padding: 0px;
 }
 #event-overview a.month-event.disabled:hover {
     background: none;
@@ -67,6 +62,7 @@
     flex: 1;
     text-align: right;
     color: rgba(217, 239, 8, 1);
+    max-width: 20px;
 }
 #event-overview .month {
       position: relative;

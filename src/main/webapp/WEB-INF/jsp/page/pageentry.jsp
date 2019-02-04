@@ -75,7 +75,7 @@
                         <div class="month-name"><fmt:message key="Month${Month}" /></div>
                         <c:forEach var="Event" items="${EventList}">
                             <c:if test="${not tooLate and Event.startDate lt Today}">
-                                <div class="month-name" style="text-align: left;"><fmt:message key="TooLateFor" />:</div>
+                                <div class="month-name" style="text-align: left; margin-top: 10px;"><fmt:message key="TooLateFor" />:</div>
                                 <c:set var="tooLate" value="true" />
                             </c:if>
                             <a class="month-event ${tooLate ? 'disabled' : ''}" href="/events/event/${Event.id}">
