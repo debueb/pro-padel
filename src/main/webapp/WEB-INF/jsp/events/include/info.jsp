@@ -27,19 +27,16 @@
                         </c:if>
                     </div>
                 </div>
-                    
                 <c:if test="${not empty Model.startTime}">
                     <joda:format value="${Model.startTime}" pattern="HH:mm" var="startTimeFormatted"/>
-                    <c:if test="${not startTimeFormatted eq '00:00'}">
-                        <div class="row">
-                            <div class="col-xs-4 text-right">
-                            <fmt:message key="StartTime"/>
-                            </div>
-                            <div class="col-xs-8">
-                                ${startTimeFormatted}
-                            </div>
+                    <div class="row">
+                        <div class="col-xs-4 text-right">
+                        <fmt:message key="StartTime"/>
                         </div>
-                    </c:if>
+                        <div class="col-xs-8">
+                            ${startTimeFormatted}
+                        </div>
+                    </div>
                 </c:if>
                 <div class="row">    
                     <div class="col-xs-4 text-right">
