@@ -65,6 +65,8 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI {
         crit.add(Restrictions.ge("startDate", date));
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         crit.addOrder(Order.asc("startDate"));
+        crit.addOrder(Order.asc("startTimeHour"));
+        crit.addOrder(Order.asc("startTimeMinute"));
         return (List<Event>) crit.list();
     }
 
@@ -77,6 +79,8 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI {
         crit.add(Restrictions.lt("endDate", endDate));
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         crit.addOrder(Order.asc("startDate"));
+        crit.addOrder(Order.asc("startTimeHour"));
+        crit.addOrder(Order.asc("startTimeMinute"));
         return (List<Event>) crit.list();
     }
 
