@@ -95,10 +95,10 @@
                         <c:when test="${Model.eventType eq 'SingleRoundRobin'}">
                             <c:if test="${Model.showParticipants}">
                                 <jsp:include page="/WEB-INF/jsp/include/list-group-item.jsp">
-                                    <jsp:param name="href" value="/players/event/${Model.id}"/>
+                                    <jsp:param name="href" value="/teams/event/${Model.id}"/>
                                     <jsp:param name="anchor" value="#after-info"/>
-                                    <jsp:param name="key" value="Players"/>
-                                    <jsp:param name="icon" value="user"/>
+                                    <jsp:param name="key" value="Participants"/>
+                                    <jsp:param name="icon" value="users"/>
                                 </jsp:include>
                             </c:if>
                             <c:if test="${Model.showGames}">
