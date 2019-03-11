@@ -40,7 +40,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -166,7 +165,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
                     mailUtils.send(mail, request);
                 }
             }
-        } catch (MailException | IOException e) {
+        } catch (MailException e) {
             LOG.error("Error while sending mails about new match offer: " + e.getMessage());
         }
         return new ModelAndView("redirect:/matchoffers/" + model.getId());
@@ -286,7 +285,7 @@ public class MatchOffersController extends BaseEntityController<MatchOffer> {
 
             //persist changes
             matchOfferDAO.saveOrUpdate(offer);
-        } catch (MailException | IOException e) {
+        } catch (MailException e) {
             LOG.error(e);
             view.addObject("error", msg.get("FailedToSendEmail"));
             return view;

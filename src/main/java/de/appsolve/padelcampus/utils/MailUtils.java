@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -35,9 +34,10 @@ public class MailUtils {
     @Autowired
     Msg msg;
 
-    public MailResult send(Mail mail, HttpServletRequest request) throws MailException, IOException {
+    public MailResult send(Mail mail, HttpServletRequest request) throws MailException {
 
         String from = StringUtils.isEmpty(mail.getFrom()) ? getDefaultSender(request) : mail.getFrom();
+        String replyTo = (StringUtils.isEmpty(mail.getReplyTo()) || !EMAIL_PATTERN.matcher(mail.getReplyTo()).matches()) ? from : mail.getReplyTo();
 
         Client client = new Client(environment.getProperty("SPARKPOST_API_KEY"));
 
@@ -62,7 +62,7 @@ public class MailUtils {
 
             TemplateContentAttributes contentAttributes = new TemplateContentAttributes();
             contentAttributes.setFrom(new AddressAttributes(from));
-            contentAttributes.setReplyTo(from);
+            contentAttributes.setReplyTo(replyTo);
 
             String templateId = mail.getTemplateId();
             if (StringUtils.isEmpty(templateId)) {

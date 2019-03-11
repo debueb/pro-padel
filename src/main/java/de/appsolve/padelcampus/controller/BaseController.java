@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -72,12 +71,12 @@ public abstract class BaseController {
                 }
                 mail.setRecipients(Sets.newHashSet(contacts));
             }
-            mail.setSubject("[Feedback] " + mail.getSubject());
+            mail.setSubject(String.format("[Feedback %s] %s", mail.getReplyTo(), mail.getSubject()));
             mailUtils.send(mail, request);
             ModelAndView mav = new ModelAndView("contact/success");
             mav.addObject("path", getPath());
             return mav;
-        } catch (MailException | IOException e) {
+        } catch (MailException e) {
             LOG.error("Error while sending contact email", e);
             bindingResult.addError(new ObjectError("from", e.toString()));
             return defaultView;

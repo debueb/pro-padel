@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -185,7 +184,7 @@ public class AdminBookingsVoucherController extends AdminBaseController<Voucher>
                     mail.setBody(sb.toString());
                     try {
                         mailUtils.send(mail, request);
-                    } catch (MailException | IOException ex) {
+                    } catch (MailException ex) {
                         LOG.error("Error while sending voucher list to " + player.getEmail(), ex);
                     }
                 }

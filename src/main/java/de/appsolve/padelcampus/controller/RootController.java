@@ -28,9 +28,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +40,6 @@ import java.util.TreeMap;
 
 import static de.appsolve.padelcampus.constants.Constants.BLOG_PAGE_SIZE;
 import static de.appsolve.padelcampus.constants.Constants.PATH_HOME;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * @author dominik
@@ -90,7 +87,7 @@ public class RootController extends BaseController {
         return getHomePage();
     }
 
-    @RequestMapping("/{moduleId}")
+    @GetMapping("/{moduleId}")
     public ModelAndView getIndex(@PathVariable("moduleId") String moduleTitle, @PageableDefault(size = BLOG_PAGE_SIZE) Pageable pageable) {
         switch (moduleTitle) {
             case "autodisover":
@@ -106,9 +103,11 @@ public class RootController extends BaseController {
         }
     }
 
-    @RequestMapping(method = POST)
+    @PostMapping("/{moduleId}")
     public ModelAndView postIndex(HttpServletRequest request, @PageableDefault(size = BLOG_PAGE_SIZE) Pageable pageable, @PathVariable("moduleId") String moduleTitle, @ModelAttribute("Mail") Mail mail, BindingResult bindingResult) {
         ModelAndView defaultView = getModuleView(moduleTitle, pageable);
+        mail.setReplyTo(mail.getFrom());
+        mail.setFrom(mailUtils.getDefaultSender(request));
         return sendMail(request, defaultView, mail, bindingResult);
     }
 

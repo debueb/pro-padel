@@ -12,6 +12,7 @@
             <div class="panel-body">
                 <div class="alert alert-success" role="alert"><fmt:message key="EmailWasSentSuccessfully"/></div>
             </div>
+            <a class="btn btn-primary btn-block unit-2" href="/home"><fmt:message key="GoToHomepage"/></a>
         </div>
     </div>
 </div>

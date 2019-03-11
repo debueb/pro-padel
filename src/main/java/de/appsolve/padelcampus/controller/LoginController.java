@@ -35,7 +35,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.UUID;
 
 import static de.appsolve.padelcampus.constants.Constants.PATH_HOME;
@@ -182,7 +181,7 @@ public class LoginController extends BaseController {
             mail.setBody(StringEscapeUtils.unescapeJava(msg.get(key, new Object[]{playerToPersist.toString(), accountVerificationLink, RequestUtil.getBaseURL(request)})));
             try {
                 mailUtils.send(mail, request);
-            } catch (IOException | MailException e) {
+            } catch (MailException e) {
                 LOG.error(e.getMessage(), e);
             }
 

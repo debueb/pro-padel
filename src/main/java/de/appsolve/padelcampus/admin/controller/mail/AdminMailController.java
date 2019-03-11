@@ -42,7 +42,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -167,7 +166,7 @@ public class AdminMailController {
 
             MailResult mailResult = mailUtils.send(mail, request);
             return new ModelAndView("admin/mail-success", "MailResult", mailResult);
-        } catch (IOException | MailException e) {
+        } catch (MailException e) {
             result.addError(new ObjectError("*", e.getMessage()));
             return getMailView(mail);
         }
