@@ -58,32 +58,7 @@ public class ScoresController extends BaseController {
         List<ScoreEntry> scoreEntries;
         switch (event.getEventType()) {
             case PullRoundRobin:
-                //pull participants are individual players. game participants are teams
-                Set<Participant> teams = new HashSet<>();
-                for (Game game : eventGames) {
-                    teams.addAll(game.getParticipants());
-                }
-                List<ScoreEntry> teamScores = rankingUtil.getScores(teams, eventGames);
-                Map<Player, ScoreEntry> playerScores = new HashMap<>();
-                for (ScoreEntry teamScore : teamScores) {
-                    Team team = (Team) teamScore.getParticipant();
-                    for (Player player : team.getPlayers()) {
-                        ScoreEntry playerScore = playerScores.get(player);
-                        if (playerScore == null) {
-                            playerScore = new ScoreEntry();
-                            playerScore.setParticipant(player);
-                        }
-                        playerScore.setGamesPlayed(playerScore.getGamesPlayed() + teamScore.getGamesPlayed());
-                        playerScore.setGamesWon(playerScore.getGamesWon() + teamScore.getGamesWon());
-                        playerScore.setMatchesPlayed(playerScore.getMatchesPlayed() + teamScore.getMatchesPlayed());
-                        playerScore.setMatchesWon(playerScore.getMatchesWon() + teamScore.getMatchesWon());
-                        playerScore.setSetsPlayed(playerScore.getSetsPlayed() + teamScore.getSetsPlayed());
-                        playerScore.setSetsWon(playerScore.getSetsWon() + teamScore.getSetsWon());
-                        playerScores.put(player, playerScore);
-                    }
-                }
-                scoreEntries = new ArrayList<>(playerScores.values());
-                Collections.sort(scoreEntries);
+                scoreEntries = rankingUtil.getPullResults(eventGames);
                 break;
             case FriendlyGames:
                 //friendly games do not have participants. get them from all games

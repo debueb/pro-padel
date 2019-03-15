@@ -93,7 +93,12 @@
                             <spf:option data-icon="fa-${IconName}" value="${IconName}">${IconName}</spf:option>
                         </c:forEach>
                     </spf:select>
-                    
+
+                    <div class="select-toggle-Events relative">
+                        <spf:checkbox path="showEventScores" />
+                        <label class="checkbox" for="showEventScores1"><fmt:message key="ShowEventScores"/></label>
+                    </div>
+
                     <div class="select-toggle-Blog select-toggle-Bookings select-toggle-Events select-toggle-Link select-toggle-MatchOffers select-toggle-Page select-toggle-Ranking select-toggle-Staff">
                         <div>
                             <spf:checkbox path="showInMenu" />

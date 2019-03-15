@@ -469,4 +469,34 @@ public class RankingUtil {
         List<Game> games = gameBaseDAO.findAllYoungerThanForGenderWithPlayers(since, gender, customer);
         return games;
     }
+
+    public List<ScoreEntry> getPullResults(List<Game> eventGames) {
+        //pull participants are individual players. game participants are teams
+        Set<Participant> teams = new HashSet<>();
+        for (Game game : eventGames) {
+            teams.addAll(game.getParticipants());
+        }
+        List<ScoreEntry> teamScores = getScores(teams, eventGames);
+        Map<Player, ScoreEntry> playerScores = new HashMap<>();
+        for (ScoreEntry teamScore : teamScores) {
+            Team team = (Team) teamScore.getParticipant();
+            for (Player player : team.getPlayers()) {
+                ScoreEntry playerScore = playerScores.get(player);
+                if (playerScore == null) {
+                    playerScore = new ScoreEntry();
+                    playerScore.setParticipant(player);
+                }
+                playerScore.setGamesPlayed(playerScore.getGamesPlayed() + teamScore.getGamesPlayed());
+                playerScore.setGamesWon(playerScore.getGamesWon() + teamScore.getGamesWon());
+                playerScore.setMatchesPlayed(playerScore.getMatchesPlayed() + teamScore.getMatchesPlayed());
+                playerScore.setMatchesWon(playerScore.getMatchesWon() + teamScore.getMatchesWon());
+                playerScore.setSetsPlayed(playerScore.getSetsPlayed() + teamScore.getSetsPlayed());
+                playerScore.setSetsWon(playerScore.getSetsWon() + teamScore.getSetsWon());
+                playerScores.put(player, playerScore);
+            }
+        }
+        List<ScoreEntry> scoreEntries = new ArrayList<>(playerScores.values());
+        Collections.sort(scoreEntries);
+        return scoreEntries;
+    }
 }

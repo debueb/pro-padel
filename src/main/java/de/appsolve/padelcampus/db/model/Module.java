@@ -74,6 +74,8 @@ public class Module extends SortableEntity {
     @OrderBy("position")
     private SortedSet<Module> subModules;
 
+    private Boolean showEventScores;
+
     public ModuleType getModuleType() {
         return moduleType;
     }
@@ -214,6 +216,14 @@ public class Module extends SortableEntity {
 
     public void setSubModules(SortedSet<Module> subModules) {
         this.subModules = subModules;
+    }
+
+    public Boolean getShowEventScores() {
+        return showEventScores == null ? Boolean.FALSE : showEventScores;
+    }
+
+    public void setShowEventScores(Boolean showEventScores) {
+        this.showEventScores = showEventScores;
     }
 
     @Override

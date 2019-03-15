@@ -100,6 +100,17 @@ public class EventsController extends BaseController {
         Collections.sort(pastEvents, new EventByStartDateComparator(true));
 
         ModelAndView mav = new ModelAndView("events/index");
+        if (module.getShowEventScores()) {
+            List<Game> games = new ArrayList<>();
+            for (Event evt : currentEvents) {
+                if (evt.getEventType().equals(EventType.PullRoundRobin)) {
+                    Event event = eventDAO.findByIdFetchWithGames(evt.getId());
+                    games.addAll(event.getGames());
+                }
+            }
+            mav.addObject("ScoreEntries", rankingUtil.getPullResults(games));
+        }
+
         mav.addObject("CurrentEvents", currentEvents);
         mav.addObject("PastEvents", pastEvents);
         mav.addObject("Module", module);
