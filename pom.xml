@@ -178,6 +178,11 @@
             <artifactId>bugsnag</artifactId>
             <version>3.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>se.sawano.java</groupId>
+            <artifactId>alphanumeric-comparator</artifactId>
+            <version>1.4.1</version>
+        </dependency>
 
         <!-- OWASP ESAPI needed for XSS Filter -->
         <dependency>
