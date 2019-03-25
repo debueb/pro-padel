@@ -229,6 +229,9 @@
                     <div class="unit">
                         <spf:checkbox path="showEventType" id="showEventType"/><label for="showEventType"><fmt:message key="ShowEventType"/></label>
                     </div>
+                    <div class="unit">
+                        <spf:checkbox path="showInEventOverview" id="showInEventOverview"/><label for="showInEventOverview"><fmt:message key="ShowInEventOverview"/></label>
+                    </div>
                     <button class="btn btn-primary btn-block btn-form-submit unit" type="submit"><fmt:message key="Save"/></button>
                     <c:if test="${not empty Model.id and (Model.eventType eq 'Knockout')}">
                         <a class="btn btn-primary btn-block unit" href="${contextPath}/admin/events/edit/${Model.id}/draws"><fmt:message key="ToDraws"/></a>

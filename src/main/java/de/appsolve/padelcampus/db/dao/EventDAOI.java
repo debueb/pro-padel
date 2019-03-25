@@ -47,7 +47,7 @@ public interface EventDAOI extends BaseEntityDAOI<Event> {
 
     List<Event> findAllActive();
 
-    List<Event> findAllActiveStartingWith(LocalDate date);
+    List<Event> findAllForEventOverviewActiveStartingWith(LocalDate date);
 
     List<Event> findAllActiveFetchWithParticipantsAndPlayers();
 

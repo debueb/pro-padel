@@ -136,6 +136,9 @@ public class Event extends ComparableEntity {
     @OneToMany(fetch = FetchType.LAZY)
     private Set<Community> communities;
 
+    @Column
+    private Boolean showInEventOverview;
+
     public String getName() {
         return name;
     }
@@ -373,6 +376,14 @@ public class Event extends ComparableEntity {
 
     public void setConfirmationMailRemark(String confirmationMailRemark) {
         this.confirmationMailRemark = confirmationMailRemark;
+    }
+
+    public Boolean getShowInEventOverview() {
+        return showInEventOverview == null ? Boolean.TRUE : showInEventOverview;
+    }
+
+    public void setShowInEventOverview(Boolean showInEventOverview) {
+        this.showInEventOverview = showInEventOverview;
     }
 
     public Set<Community> getCommunities() {

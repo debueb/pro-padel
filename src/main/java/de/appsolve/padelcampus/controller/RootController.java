@@ -151,7 +151,7 @@ public class RootController extends BaseController {
         mav.addObject("PageEntries", pageEntries);
         for (PageEntry pageEntry : pageEntries) {
             if (pageEntry.getShowEventCalendar()) {
-                List<Event> events = eventDAO.findAllActiveStartingWith(LocalDate.now());
+                List<Event> events = eventDAO.findAllForEventOverviewActiveStartingWith(LocalDate.now());
                 List<JSEvent> jsEvents = new ArrayList<>();
                 for (Event event : events) {
                     jsEvents.add(new JSEvent(event));
@@ -165,7 +165,7 @@ public class RootController extends BaseController {
             }
             if (pageEntry.getShowEventOverview()) {
                 LocalDate today = LocalDate.now();
-                List<Event> currentEvents = eventDAO.findAllActiveStartingWith(today);
+                List<Event> currentEvents = eventDAO.findAllForEventOverviewActiveStartingWith(today);
                 Map<Integer, ArrayList<Event>> eventMap = new TreeMap<>();
                 for (Event event : currentEvents) {
                     int monthOfYear = event.getStartDate().getMonthOfYear() - 1;

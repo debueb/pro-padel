@@ -59,9 +59,10 @@ public class EventDAO extends GenericDAO<Event> implements EventDAOI {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Event> findAllActiveStartingWith(LocalDate date) {
+    public List<Event> findAllForEventOverviewActiveStartingWith(LocalDate date) {
         Criteria crit = getCriteria();
         crit.add(Restrictions.eq("active", true));
+        crit.add(Restrictions.eqOrIsNull("showInEventOverview", true));
         crit.add(Restrictions.ge("startDate", date));
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         crit.addOrder(Order.asc("startDate"));
