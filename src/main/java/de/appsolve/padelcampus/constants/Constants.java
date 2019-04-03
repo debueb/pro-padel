@@ -23,7 +23,7 @@ public class Constants {
     public static final int VOUCHER_NUM_CHARS = 6;
     public static final int VOUCHER_DEFAULT_VALIDITY_IN_DAYS = 365;
 
-    public static final int BOOKING_DEFAULT_VALID_FROM_HOUR = 07;
+    public static final int BOOKING_DEFAULT_VALID_FROM_HOUR = 8;
     public static final int BOOKING_DEFAULT_VALID_FROM_MINUTE = 00;
     public static final int BOOKING_DEFAULT_VALID_UNTIL_HOUR = 23;
     public static final int BOOKING_DEFAULT_VALID_UNTIL_MINUTE = 00;
