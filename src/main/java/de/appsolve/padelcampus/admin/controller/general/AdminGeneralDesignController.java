@@ -30,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -119,8 +118,6 @@ public class AdminGeneralDesignController extends BaseController {
         Customer customer = (Customer) sessionUtil.getCustomer(request);
         if (!companyLogo.isEmpty()) {
 
-            //delete old picture from FS if it exists. will be removed from DB automatically due to orphanRemoval=true
-            deleteImage(customer.getCompanyLogo());
             customer.setCompanyLogo(null);
             customerDAO.saveOrUpdate(customer);
 
@@ -131,7 +128,6 @@ public class AdminGeneralDesignController extends BaseController {
         }
         if (!touchIcon.isEmpty()) {
             //delete old picture from FS
-            deleteImage(customer.getTouchIcon());
             customer.setTouchIcon(null);
             customerDAO.saveOrUpdate(customer);
 
@@ -148,18 +144,5 @@ public class AdminGeneralDesignController extends BaseController {
     private ModelAndView getIndexView(List<CssAttribute> colors) {
         ModelAndView mav = new ModelAndView("admin/general/design/index", "Colors", colors);
         return mav;
-    }
-
-    private void deleteImage(Image image) {
-        if (image != null) {
-            File profileFile = new File(image.getFilePath());
-            if (profileFile.exists()) {
-                boolean deleteSuccess = profileFile.delete();
-                if (!deleteSuccess) {
-                    LOG.warn("Unale to delete file " + profileFile.getAbsolutePath());
-                }
-            }
-            imageDAO.deleteById(image.getId());
-        }
     }
 }
