@@ -10,7 +10,6 @@ public enum BookingMailVariables {
     BOOKING_CURRENCY,
     BOOKING_CANCELLATION_POLICY_DEADLINE,
     BOOKING_CANCELLATION_URL,
-    BOOKING_INVOICE_URL,
     HOMEPAGE_URL;
 
     public String getKey() {

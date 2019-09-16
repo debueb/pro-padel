@@ -396,7 +396,6 @@ public class BookingUtil {
         htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.BOOKING_CURRENCY.name(), booking.getCurrency().getSymbol());
         htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.BOOKING_CANCELLATION_POLICY_DEADLINE.name(), CANCELLATION_POLICY_DEADLINE.toString());
         htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.BOOKING_CANCELLATION_URL.name(), RequestUtil.getBaseURL(request) + "/bookings/booking/" + booking.getUUID() + "/cancel");
-        htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.BOOKING_INVOICE_URL.name(), RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID());
         htmlBodyTemplate = htmlBodyTemplate.replace(BookingMailVariables.HOMEPAGE_URL.name(), RequestUtil.getBaseURL(request));
 
         mail.setHtmlBody(htmlBodyTemplate);
@@ -418,7 +417,6 @@ public class BookingUtil {
                 booking.getPaymentMethod() == PaymentMethod.ExternalVoucher ? "" : booking.getAmount(),
                 booking.getCurrency(),
                 (StringUtils.isEmpty(booking.getEvent().getConfirmationMailRemark()) ? msg.get("None") : booking.getEvent().getConfirmationMailRemark()),
-                RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
                 RequestUtil.getBaseURL(request)}));
         mail.addRecipient(booking.getPlayer());
         mail.setAttachments(getAttachments(booking));
