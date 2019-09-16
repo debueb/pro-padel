@@ -1,6 +1,6 @@
 language: java
 jdk:
-- oraclejdk8
+  - openjdk8
 # https://docs.travis-ci.com/user/languages/java/
 # skip the installation step (mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V)
 install: true
