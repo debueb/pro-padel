@@ -33,10 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import static de.appsolve.padelcampus.constants.Constants.BLOG_PAGE_SIZE;
 import static de.appsolve.padelcampus.constants.Constants.PATH_HOME;
@@ -166,7 +163,7 @@ public class RootController extends BaseController {
             if (pageEntry.getShowEventOverview()) {
                 LocalDate today = LocalDate.now();
                 List<Event> currentEvents = eventDAO.findAllForEventOverviewActiveStartingWith(today);
-                Map<Integer, ArrayList<Event>> eventMap = new TreeMap<>();
+                Map<Integer, ArrayList<Event>> eventMap = new LinkedHashMap<>();
                 for (Event event : currentEvents) {
                     int monthOfYear = event.getStartDate().getMonthOfYear() - 1;
                     if (eventMap.get(monthOfYear) == null) {
