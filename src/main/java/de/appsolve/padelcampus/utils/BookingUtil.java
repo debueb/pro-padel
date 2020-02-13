@@ -470,7 +470,6 @@ public class BookingUtil {
                 msg.get(booking.getPaymentMethod().toString()),
                 booking.getAmount(),
                 booking.getCurrency(),
-                RequestUtil.getBaseURL(request) + "/invoices/booking/" + booking.getUUID(),
                 RequestUtil.getBaseURL(request) + "/admin/reports/booking/" + booking.getId()
         };
     }

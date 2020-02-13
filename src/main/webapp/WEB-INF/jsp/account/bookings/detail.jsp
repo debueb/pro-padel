@@ -13,18 +13,15 @@
                     <h4><fmt:message key="BookingData"/></h4>
 
                     <jsp:include page="/WEB-INF/jsp/bookings/include/booking-data.jsp"/>
-                    <div class="row">
-                        <div class="col-xs-4 booking-cell"><fmt:message key="Invoice"/>:</div>
-                        <div class="col-xs-8 booking-cell"><a href="/invoices/booking/${Booking.UUID}"><i class="fa fa-file-text"></i></a></div>
-                    </div>
-                        <c:choose>
-                            <c:when test="${empty Booking.offer}">
-                                <div class="alert alert-warning text-center"><fmt:message key="BookingCannotBeCancelled"/></div>
-                            </c:when>
-                            <c:otherwise>
-                                <a class="btn btn-primary btn-block unit" href="/bookings/booking/${Booking.UUID}/cancel"><fmt:message key="CancelBooking2"/></a>
-                            </c:otherwise>
-                        </c:choose>
+
+                    <c:choose>
+                        <c:when test="${empty Booking.offer}">
+                            <div class="alert alert-warning text-center"><fmt:message key="BookingCannotBeCancelled"/></div>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="btn btn-primary btn-block unit" href="/bookings/booking/${Booking.UUID}/cancel"><fmt:message key="CancelBooking2"/></a>
+                        </c:otherwise>
+                    </c:choose>
                 </spf:form>
             </div>
         </div>
