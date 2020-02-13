@@ -23,14 +23,12 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -70,6 +68,14 @@ public class AdminBookingsSettingsController extends AdminBaseController<Calenda
                 return offerDAO.findById(id);
             }
         });
+    }
+
+    @Override
+    public ModelAndView showIndex(HttpServletRequest request, Pageable pageable, @RequestParam(required = false, name = "search") String search) {
+        ModelAndView mav = new ModelAndView(getModuleName() + "/index");
+        mav.addObject("Models", calendarConfigDAO.findAll());
+        mav.addObject("moduleName", getModuleName());
+        return mav;
     }
 
     @Override
