@@ -82,56 +82,58 @@
                                         <c:forEach var="TimeRange" items="${RangeMap}">
                                             <c:set var="hourFilled" value="false" />
                                             <c:forEach var="TimeSlot" items="${TimeRange.timeSlots}">
-                                                <c:if test="${TimeSlot.date.dayOfWeek eq WeekDay.dayOfWeek}">
-                                                    <c:set var="bgColor" value="${TimeSlot.past ? '#e7e7e7' : Offer.hexColor}"/>
-                                                    <c:choose>
-                                                        <c:when test="${fn:contains(TimeSlot.availableOffers, Offer)}">
-                                                            <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
-                                                            <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
-                                                            <div class="booking-gallery-offer">
-                                                                <a href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${bgColor};${TimeSlot.past ? 'color: #ccc;' : ''}">
-                                                                    ${TimeSlot.pricePerMinDuration}
-                                                                </a>
-                                                            </div>
-                                                            <c:set var="hourFilled" value="true" />
-                                                        </c:when>
-                                                        <c:when test="${not empty TimeSlot.bookings}">
-                                                            <c:set var="timeSlotFilled" value="false"/>
-                                                            <c:forEach var="Booking" items="${TimeSlot.bookings}">
-                                                                <c:if test="${Booking.offer eq Offer}">
-                                                                    <c:choose>
-                                                                        <c:when test="${TimeSlot.endTime eq Booking.bookingEndTime}">
-                                                                            <fmt:formatNumber var="factor" value="${Booking.duration / TimeSlot.config.minInterval}"/>
-                                                                            <div class="booking-gallery-offer-taken" style="height: ${factor * 40}px;">
-                                                                                <div data-toggle="booking-tooltip"
-                                                                                     data-booking="${Booking.UUID}"
-                                                                                     data-placement="top"
-                                                                                     data-container="body"
-                                                                                     data-title="<joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/>">
-                                                                                    ${Booking.publicBooking ? empty Booking.comment ? Booking.player : Booking.comment : BookingMsg}
-                                                                                    <br/>
-                                                                                    <i class="fa fa-info-circle text-center"></i>
+                                                <c:if test="${fn:contains(TimeSlot.config.offers, Offer)}">
+                                                    <c:if test="${TimeSlot.date.dayOfWeek eq WeekDay.dayOfWeek}">
+                                                        <c:set var="bgColor" value="${TimeSlot.past ? '#e7e7e7' : Offer.hexColor}"/>
+                                                        <c:choose>
+                                                            <c:when test="${fn:contains(TimeSlot.availableOffers, Offer)}">
+                                                                <joda:format value="${TimeRange.startTime}" pattern="HH:mm" var="startTime"/>
+                                                                <c:set var="urlDetail" value="/bookings/${TimeSlot.date}/${startTime}"/>
+                                                                <div class="booking-gallery-offer">
+                                                                    <a href="${urlDetail}/offer/${Offer.id}" title="${Offer.name} ${startTime}" style="background-color: ${bgColor};${TimeSlot.past ? 'color: #ccc;' : ''}">
+                                                                        ${TimeSlot.pricePerMinDuration}
+                                                                    </a>
+                                                                </div>
+                                                                <c:set var="hourFilled" value="true" />
+                                                            </c:when>
+                                                            <c:when test="${not empty TimeSlot.bookings}">
+                                                                <c:set var="timeSlotFilled" value="false"/>
+                                                                <c:forEach var="Booking" items="${TimeSlot.bookings}">
+                                                                    <c:if test="${Booking.offer eq Offer}">
+                                                                        <c:choose>
+                                                                            <c:when test="${TimeSlot.endTime eq Booking.bookingEndTime}">
+                                                                                <fmt:formatNumber var="factor" value="${Booking.duration / TimeSlot.config.minInterval}"/>
+                                                                                <div class="booking-gallery-offer-taken" style="height: ${factor * 40}px;">
+                                                                                    <div data-toggle="booking-tooltip"
+                                                                                         data-booking="${Booking.UUID}"
+                                                                                         data-placement="top"
+                                                                                         data-container="body"
+                                                                                         data-title="<joda:format value="${Booking.bookingTime}" pattern="HH:mm"/> - <joda:format value="${Booking.bookingEndTime}" pattern="HH:mm"/>">
+                                                                                        ${Booking.publicBooking ? empty Booking.comment ? Booking.player : Booking.comment : BookingMsg}
+                                                                                        <br/>
+                                                                                        <i class="fa fa-info-circle text-center"></i>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                            <c:set var="timeSlotFilled" value="true"/>
-                                                                        </c:when>
-                                                                        <c:when test="${TimeSlot.startTime ge Booking.bookingTime}">
-                                                                            <c:set var="timeSlotFilled" value="true"/>
-                                                                        </c:when>
-                                                                        <c:when test="${not timeSlotFilled}">
-                                                                            <div class="booking-gallery-offer" style="background-color: ${bgColor};"></div>
-                                                                            <c:set var="timeSlotFilled" value="true"/>
-                                                                        </c:when>
-                                                                    </c:choose>
-                                                                </c:if>
-                                                                <c:set var="hourFilled" value="${timeSlotFilled}" />
-                                                            </c:forEach>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <div class="booking-gallery-offer" style="background-color: ${bgColor};"></div>
-                                                            <c:set var="hourFilled" value="true" />
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                                                                <c:set var="timeSlotFilled" value="true"/>
+                                                                            </c:when>
+                                                                            <c:when test="${TimeSlot.startTime ge Booking.bookingTime}">
+                                                                                <c:set var="timeSlotFilled" value="true"/>
+                                                                            </c:when>
+                                                                            <c:when test="${not timeSlotFilled}">
+                                                                                <div class="booking-gallery-offer" style="background-color: ${bgColor};"></div>
+                                                                                <c:set var="timeSlotFilled" value="true"/>
+                                                                            </c:when>
+                                                                        </c:choose>
+                                                                    </c:if>
+                                                                    <c:set var="hourFilled" value="${timeSlotFilled}" />
+                                                                </c:forEach>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <div class="booking-gallery-offer" style="background-color: ${bgColor};"></div>
+                                                                <c:set var="hourFilled" value="true" />
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </c:if>
                                                 </c:if>
                                             </c:forEach>
                                          <c:if test="${not hourFilled}">
